@@ -1,11 +1,11 @@
 <template>
 <div id="topbar">
     <div class="buttomarea">
-            <router-link to="/" class="buttomarea-item">今日任务</router-link>
-            <router-link to="/times" class="buttomarea-item">车次管理</router-link>
-            <router-link to="/client" class="buttomarea-item">客户管理</router-link>
-            <router-link to="/dirver" class="buttomarea-item">司机管理</router-link>
-            <router-link to="/car" class="buttomarea-item">车辆管理</router-link>
+            <router-link to="/" class="buttomarea-item" style="color: aliceblue;">今日任务</router-link>
+            <router-link to="/times" class="buttomarea-item" style="color: aliceblue;">车次管理</router-link>
+            <router-link to="/client" class="buttomarea-item" style="color: aliceblue;">客户管理</router-link>
+            <router-link to="/dirver" class="buttomarea-item" style="color: aliceblue;">司机管理</router-link>
+            <router-link to="/car" class="buttomarea-item" style="color: aliceblue;">车辆管理</router-link>
         
     </div>
 </div>
@@ -37,7 +37,6 @@ export default {
 .buttomarea-item {
     flex-basis: 20%;
     font-size: 40px;
-    color: aliceblue;
     padding: 30px 0;
 }
 

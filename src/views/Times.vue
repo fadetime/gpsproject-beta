@@ -1,98 +1,104 @@
 <template>
 <div id="times">
     <div class="topbutton">
-        <div class="findbutton">
-            <md-autocomplete v-model="selectedTimes" :md-options="times">
-                <label>查询</label>
-            </md-autocomplete>
+        <div class="topbutton-left">
+            <input type="text" v-model="selectCar" @keyup.enter="search" placeholder="搜索车次信息">
         </div>
-        <div class="addbutton">
-            <md-button class="md-accent" @click="addbutton">+ 添加</md-button>
+        <div class="topbutton-right">
+            <md-button class="md-raised md-primary" @click="addbutton" style="font-size:30px;width:140px;height:50px">+ 添加</md-button>
         </div>
     </div>
 
     <div class="centertable">
-        <div class="tabletitle">
-            <div class="tabletitle-item">
-                <span>路线名称</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>包含客户数量</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>备注</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>出车次数</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>操作</span>
-            </div>
-        </div>
+        <md-card style="background-color: #eff3f5">
+            <md-card-content>
+                <div class="tabletitle">
+                    <div class="tabletitle-item">
+                        <span>路线名称</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>包含客户数量</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>备注</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>出车次数</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>操作</span>
+                    </div>
+                </div>
+            </md-card-content>
+        </md-card>
 
-        <div class="tablebody" v-for="(item,index) in alltimesinfo" :key="index">
-            <div class="tabletitle-item">
-                <span>{{item.timesname}}</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>{{item.timesclientb.length}}</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>{{item.timesnote}}</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>{{item.timescount}}</span>
-            </div>
-            <div class="tabletitle-item">
-                <img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)">
-                <img src="../..//public/img/icons/dele.png" alt="delete" @click="removebutton(item)">
-            </div>
-        </div>
+        <md-card md-with-hover v-for="(item,index) in alltimesinfo" :key="index" style="background-color: #eff3f5;">
+            <md-card-content>
+                <div class="tablebody">
+                    <div class="tabletitle-item">
+                        <span>{{item.timesname}}</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>{{item.timesclientb.length}}</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>{{item.timesnote}}</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>{{item.timescount}}</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)" style="width:30px;margin:0 10px">
+                        <img src="../..//public/img/icons/dele.png" alt="delete" @click="removebutton(item)" style="width:40px;margin:0 10px">
+                    </div>
+                </div>
+            </md-card-content>
+        </md-card>
     </div>
     <!-- Dialog start-->
-    <md-dialog :md-active.sync="showDialog">
-        <md-dialog-title>车次管理</md-dialog-title>
+    <md-dialog :md-active.sync="showDialog" style="height:500px">
+        <md-dialog-title style="font-size:30px">车次管理</md-dialog-title>
 
         <md-tabs md-dynamic-height>
-            <md-tab md-label="添加车次">
-                <md-field>
-                    <label>路线名称</label>
-                    <md-input v-model="timesname"></md-input>
-                    <span class="md-helper-text" v-if="!timesname">车次标识信息，必填项目</span>
+            <md-tab md-label="添加车次" style="font-size:25px;color:#000">
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">路线名称</label>
+                    <md-input v-model="timesname" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+                    <span class="md-helper-text" style="font-size:20px;margin: -10px auto;" v-if="!timesname">车次标识信息，必填项目</span>
                 </md-field>
 
-                <md-field>
-                    <label>备注</label>
-                    <md-input v-model="timesnote"></md-input>
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">备注</label>
+                    <md-input v-model="timesnote" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                 </md-field>
             </md-tab>
-            <md-tab md-label="配置车辆">
-                <md-field>
-                    <label for="choicecar">选择车辆</label>
-                    <md-select v-model="choicecar" name="choicecar" id="choicecar" @md-selected="getacar">
+            <md-tab md-label="配置车辆" style="font-size:25px;color:#000">
+                <md-field style="margin:45px auto">
+                    <label for="choicecar" style="font-size:25px;color:#000">选择车辆</label>
+                    <md-select v-model="choicecar" name="choicecar" id="choicecar" @md-selected="getacar" style="border-bottom: 1px solid #000;font-size:25px;height:55px">
                         <md-option :value="item._id" v-for="(item,index) in allcarinfo" :key="index">{{item.carid}}</md-option>
                     </md-select>
                 </md-field>
-                <div>所选车牌号码：{{acarinfo.carid}}</div>
-                <div>所选车辆型号：{{acarinfo.carsize}}</div>
-                <div>所选出车次数：{{acarinfo.cartimes}}</div>
-                <div>所选车辆类型：{{acarinfo.cartype}}</div>
+                <div style="font-size:25px;color:#000;margin:20px auto">所选车牌号码：{{acarinfo.carid}}</div>
+                <div style="font-size:25px;color:#000;margin:20px auto">所选车辆型号：{{acarinfo.carsize}}</div>
+                <div style="font-size:25px;color:#000;margin:20px auto">所选出车次数：{{acarinfo.cartimes}}</div>
+                <div style="font-size:25px;color:#000;margin:20px auto">所选车辆类型：{{acarinfo.cartype}}</div>
             </md-tab>
-            <md-tab md-label="配置司机">
-                <md-field>
-                    <label for="choicedirver">选择司机</label>
+            <md-tab md-label="配置司机" style="font-size:25px;color:#000">
+                <md-field style="margin:45px auto">
+                    <label for="choicedirver" style="font-size:25px;color:#000">选择司机</label>
                     <md-select v-model="choicedirver" name="choicedirver" id="choicedirver" @md-selected="getadirver">
                         <md-option :value="item._id" v-for="(item,index) in alldirverinfo" :key="index">{{item.dirvername}}</md-option>
                     </md-select>
                 </md-field>
-                <div>所选司机姓名：{{adirverinfo.dirvername}}</div>
-                <div>司机准证号码：{{adirverinfo.dirverid}}</div>
-                <div>司机驾照配型：{{adirverinfo.dirvercard}}</div>
-                <div>司机电话号码：{{adirverinfo.dirverphone}}</div>
+                <div style="font-size:25px;color:#000;margin:20px auto">所选司机姓名：{{adirverinfo.dirvername}}</div>
+                <div style="font-size:25px;color:#000;margin:20px auto">司机准证号码：{{adirverinfo.dirverid}}</div>
+                <div style="font-size:25px;color:#000;margin:20px auto">司机驾照配型：{{adirverinfo.dirvercard}}</div>
+                <div style="font-size:25px;color:#000;margin:20px auto">司机电话号码：{{adirverinfo.dirverphone}}</div>
             </md-tab>
             <md-tab md-label="配置客户">
-                <md-field>
-                    <label for="choiceclient">选择客户</label>
+                <md-field style="margin:45px auto">
+                    <label for="choiceclient" style="font-size:25px;color:#000">选择客户</label>
                     <md-select v-model="choiceclientb" name="choiceclientb" id="choiceclientb" md-dense multiple>
                         <md-option :value="item._id" v-for="(item,index) in allclientbinfo" :key="index">{{item.clientbname}}</md-option>
                     </md-select>
@@ -100,10 +106,10 @@
             </md-tab>
         </md-tabs>
 
-        <md-dialog-actions>
-            <md-button class="md-primary" @click="showDialog = false">Close</md-button>
-            <md-button class="md-primary" v-if="savemode" @click="addtimes">Save</md-button>
-            <md-button class="md-primary" v-if="!savemode" @click="confirmEdit">edit</md-button>
+        <md-dialog-actions style="margin:0 auto 10px auto">
+            <md-button class="md-raised md-primary" @click="showDialog = false" style="font-size:30px;width:140px;height:50px">取消</md-button>
+            <md-button class="md-raised md-primary" v-if="savemode" @click="addtimes" style="font-size:30px;width:140px;height:50px">保存</md-button>
+            <md-button class="md-raised md-primary" v-else @click="confirmEdit" style="font-size:30px;width:140px;height:50px">修改</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- Dialog end-->
@@ -164,7 +170,8 @@ export default {
             aclientainfo: '',
             _id: '',
             savemode: true,
-            removeDialog: false
+            removeDialog: false,
+            selectCar: ''
         }
     },
     mounted() {
@@ -400,19 +407,35 @@ export default {
 .topbutton {
     display: -webkit-flex;
     display: flex;
-    -webkit-flex-flow: row-reverse wrap;
-    flex-flow: row-reverse wrap;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+
+.topbutton-left {
+    flex-basis: 30%;
+    text-align: left;
+    margin: 0 auto;
+}
+
+.topbutton-left input {
+    margin: 10px auto;
+    border-radius: 10px;
+    width: 300px;
+    height: 50px;
+    text-align: center;
+    -web-kit-appearance: none;
+    -moz-appearance: none;
+    outline: 0;
+    font-size: 30px;
+}
+
+.topbutton-right {
+    margin: 0 auto;
+    flex-basis: 50%;
+    text-align: right;
 }
 
 .centertable {
-    background-color: #eff3f5;
-}
-
-.findbutton {
-    order: 2;
-}
-
-.addbutton {
-    order: 1;
+    margin: 20px auto;
 }
 </style>

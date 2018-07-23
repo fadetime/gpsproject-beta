@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-	<top-bar></top-bar>
+	<top-bar v-if="$store.state.token"></top-bar>
     <router-view/>
 </div>
 </template>
@@ -10,6 +10,11 @@ import TopBar from './components/TopBar'
 export default {
     components: {
         TopBar
+    },
+    computed:{
+        checkLogin(){
+            return this.$store.state.token
+        }
     }
 }
 </script>

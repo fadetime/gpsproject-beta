@@ -2,47 +2,48 @@
 <div id="home">
     <div class="topbutton">
         <div class="topbutton-left">
-            <md-datepicker v-model="selectedDate" md-immediately md-closed="getMission()" />
+            <md-datepicker v-model="selectedDate" md-immediately md-closed="getMission()" style="border-radius: 0;" />
         </div>
         <div class="topbutton-right">
-            <md-button class="md-raised" @click="addMission">新建任务</md-button>
+            <md-button class="md-raised md-primary" @click="addMission" style="font-size:30px;width:140px;height:50px">新建任务</md-button>
         </div>
     </div>
     <div class="centertable" v-if="allmission.length != 0">
-        <div class="tabletitle">
-            <div class="tabletitle-item">
-                <span>车次</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>司机</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>车牌号</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>已送</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>总量</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>联系方式</span>
-            </div>
-            <div class="tabletitle-item">
-                <span>报表</span>
-            </div>
-        </div>
+        <md-card style="background-color: #eff3f5">
+            <md-card-content>
+                <div class="tabletitle">
+                    <div class="tabletitle-item">
+                        <span>车次</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>司机</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>车牌号</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>已送</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>总量</span>
+                    </div>
+                    <div class="tabletitle-item">
+                        <span>联系方式</span>
+                    </div>
+                </div>
+            </md-card-content>
+        </md-card>
+
         <div class="tablebody">
             <md-card md-with-hover v-for="(item,index) in allmission" :key="index" style="background-color: #eff3f5">
                 <md-card-content>
-                    <div @click="test" class="tabletitle2">
+                    <div @click="openMissionInfo(item)" class="tabletitle2">
                         <span class="tabletitle-item">{{item.missionline}}</span>
                         <span class="tabletitle-item">{{item.missiondirver}}</span>
                         <span class="tabletitle-item">{{item.missioncar}}</span>
                         <span class="tabletitle-item">已送数量</span>
                         <span class="tabletitle-item">{{item.missionclient.length}}</span>
                         <span class="tabletitle-item">{{item.missionphone}}</span>
-                        <span class="tabletitle-item">报表</span>
                     </div>
                 </md-card-content>
             </md-card>
@@ -53,10 +54,9 @@
     </div>
     <!-- add dialog start -->
     <md-dialog :md-active.sync="addDialog">
-        <md-dialog-title>添加今日任务</md-dialog-title>
+        <md-dialog-title style="font-size:30px">添加今日任务</md-dialog-title>
         <md-steppers md-linear :md-active-step.sync="active">
             <md-step id="first" md-label="选择车次" :md-done.sync="first" :md-error="firstStepError">
-
                 <div>
                     <md-field>
                         <label for="choseLine">选择出车线路</label>
@@ -168,14 +168,31 @@
     <!-- add dialog end -->
 
     <!-- detail dialog start -->
-    <md-dialog :md-active.sync="detaildialog">
-        <md-dialog-title>任务详情</md-dialog-title>
+    <md-dialog :md-active.sync="detaildialog" style="width: 500px;">
+        <md-dialog-title style="font-size:30px">任务详情</md-dialog-title>
+        <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
+            <div class="detailDialog-center">
+                <span class="detail-text-left">车次名称:</span><span>{{missionline}}</span>
+            </div>
+            <div class="detailDialog-center">
+                <span class="detail-text-left">司机姓名:</span><span>{{missiondriver}}</span>
+            </div>
+            <div class="detailDialog-center">
+                <span class="detail-text-left">车牌号码:</span><span>{{missioncar}}</span>
+            </div>
+            <div class="detailDialog-center">
+                <span class="detail-text-left">已送数量:</span><span>{{missionfinish}}</span>
+            </div>
+            <div class="detailDialog-center">
+                <span class="detail-text-left">客户总量:</span><span>{{missioncount}}</span>
+            </div>
+            <div class="detailDialog-center">
+                <span class="detail-text-left">联系方式:</span><span>{{missionphone}}</span>
+            </div>
+        </div>
 
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit.</p>
-
-        <md-dialog-actions>
-            <md-button class="md-primary" @click="detaildialog = false">Close</md-button>
-            <md-button class="md-primary" @click="detaildialog = false">Save</md-button>
+        <md-dialog-actions style="margin:0 auto 10px auto">
+            <md-button class="md-raised md-primary" @click="detaildialog = false" style="font-size:30px;width:140px;height:50px">关闭</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- detail dialog start -->
@@ -210,7 +227,13 @@ export default {
             detaildialog: false,
             error: false,
             errormsg: '发生未知错误',
-            firstStepError: null
+            firstStepError: null,
+            missionline: '',
+            missiondriver: '',
+            missioncar: '',
+            missioncount: '',
+            missionfinish: '',
+            missionphone: ''
         }
     },
     watch: {
@@ -233,12 +256,14 @@ export default {
         this.getMission()
     },
     methods: {
-        testset(item) {
-            console.log(item)
-        },
-        test() {
+        openMissionInfo(item) {
             this.detaildialog = true
-            console.log('#####')
+            this.missionline = item.missionline
+            this.missiondriver = item.missiondirver
+            this.missioncar = item.missioncar
+            this.missioncount = item.missionclient.length
+            this.missionfinish = 'finish'
+            this.missionphone = item.missionphone
         },
         getMission() {
             setTimeout(() => {
@@ -377,6 +402,7 @@ export default {
                     }, 3000)
                     if (res.data.code == 0) {
                         this.addDialog = false
+                        this.getMission()
                     }
                 })
                 .catch(err => {
@@ -392,14 +418,9 @@ export default {
 </script>
 
 <style scoped>
-.testclass {
-    border: none;
-    border-bottom: 1px solid;
-}
-
 #home {
     width: 80%;
-    margin: 0 auto;
+    margin: 30px auto;
 }
 
 .topbutton {
@@ -410,19 +431,19 @@ export default {
 }
 
 .topbutton-left {
-    flex-basis: 30%;
+    flex-basis: 20%;
     text-align: left;
     margin: 0 auto;
 }
 
 .topbutton-right {
     margin: 0 auto;
-    flex-basis: 50%;
+    flex-basis: 70%;
     text-align: right;
 }
 
 .centertable {
-    background-color: #eff3f5;
+    margin: 20px auto;
 }
 
 .tabletitle {
@@ -444,7 +465,9 @@ export default {
 
 .tabletitle-item {
     margin: 0 auto;
-    width: 100px;
+    width: 300px;
+    font-size: 25px;
+    line-height: 60px;
 }
 
 .tablebody {
@@ -478,5 +501,19 @@ export default {
     margin: 0 auto;
     flex-basis: 20%;
     text-align: center;
+}
+
+.detailDialog-center {
+    margin: 30px 40px;
+    font-size: 25px;
+    width: 100%
+}
+
+.detail-text-left{
+    margin:0 20px 0 0
+}
+
+.detail-text-right{
+    background-color: #f4f4f4
 }
 </style>

@@ -1,303 +1,330 @@
 <template>
 <div id="client">
     <div class="topbutton">
+
         <div class="topbutton-left">
-            <span @click="changepageA" :style="pagestylea">合作商</span>
+            <input type="text" v-model="searchclientb" @keyup.enter="searchb" placeholder="搜索客户信息" v-if="!clientpage">
+            <input type="text" v-model="searchclienta" @keyup.enter="searcha" placeholder="搜索合作商信息" v-else>
+        </div>
+
+        <div class="topbutton-center">
+            <md-button :class="classA" @click="changepageA" style="font-size:30px;width:140px;height:50px">合作商页</md-button>
+            <md-button :class="classB" @click="changepageB" style="font-size:30px;width:140px;height:50px">客户页面</md-button>
+            <!-- <span @click="changepageA" :style="pagestylea">合作商</span>
             <span>|</span>
-            <span @click="changepageB" :style="pagestyleb">客户</span>
+            <span @click="changepageB" :style="pagestyleb">客户</span> -->
         </div>
+
         <div class="topbutton-right">
-            <div class="findbutton">
-                <md-autocomplete v-model="selectedclient" :md-options="clients">
-                    <label>查询</label>
-                </md-autocomplete>
-            </div>
             <div class="addbutton">
-                <md-button class="md-accent" @click="showDialog">+ 添加</md-button>
+                <md-button class="md-raised md-primary" @click="showDialog" style="font-size:30px;width:140px;height:50px">+ 添加</md-button>
             </div>
         </div>
+
     </div>
 
-    <div v-if="!clientpage">
-        <div class="centertable">
-            <div class="tabletitle">
-                <div class="tabletitle-item">
-                    <span>名称</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>送货地址</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>联系电话</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>邮编</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>状态</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>操作</span>
-                </div>
-            </div>
-            <div class="tablebody" v-for="(item,index) in allclientbinfo" :key="index">
-                <div class="tabletitle-item">
-                    <span>{{item.clientbname}}</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>{{item.clientbaddress}}</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>{{item.clientbphone}}</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>{{item.clientbpostcode}}</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>{{item.clientbstatus}}</span>
-                </div>
-                <div class="tabletitle-item">
-                    <img src="../../public/img/icons/edit.png" alt="edit" @click="editClientB(item)">
-                    <img src="../..//public/img/icons/dele.png" alt="delete" @click="removeClientB(item)">
-                </div>
-            </div>
+    <div class="centertable">
+        <div v-if="!clientpage">
+            <md-card style="background-color: #eff3f5">
+                <md-card-content>
+                    <div class="tabletitle">
+                        <div class="tabletitle-item">
+                            <span>名称</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>送货地址</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>联系电话</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>邮编</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>状态</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>操作</span>
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+
+            <md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index" style="background-color: #eff3f5;">
+                <md-card-content>
+                    <div class="tablebody">
+                        <div class="tabletitle-item">
+                            <span>{{item.clientbname}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.clientbaddress}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.clientbphone}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.clientbpostcode}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.clientbstatus}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <img src="../../public/img/icons/edit.png" alt="edit" @click="editClientB(item)" style="width:30px;margin:0 10px">
+                            <img src="../..//public/img/icons/dele.png" alt="delete" @click="removeClientB(item)" style="width:40px;margin:0 10px">
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+        </div>
+
+        <div v-else>
+            <md-card style="background-color: #eff3f5">
+                <md-card-content>
+                    <div class="tabletitle">
+                        <div class="tabletitle-item">
+                            <span>名称</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>送货地址</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>联系电话</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>邮箱</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>合同起始时间</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>合同期限</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>操作</span>
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+
+            <md-card md-with-hover v-for="(item,index) in allclientainfo" :key="index" style="background-color: #eff3f5;">
+                <md-card-content>
+                    <div class="tablebody">
+                        <div class="tabletitle-item">
+                            <span>{{item.clientaname}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.clientaaddress}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.clientaphone}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.clientamail}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.clientatime|datefilter}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.clientacontract}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <img src="../../public/img/icons/edit.png" alt="edit" @click="editClientA(item)" style="width:30px;margin:0 10px">
+                            <img src="../..//public/img/icons/dele.png" alt="delete" @click="removeClientA(item)" style="width:40px;margin:0 10px">
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
         </div>
     </div>
 
     <!-- Dialog b start-->
-    <md-dialog :md-active.sync="showDialogb">
-        <md-dialog-title>客户管理</md-dialog-title>
-        <md-tabs md-dynamic-height>
-            <md-tab md-label="添加客户">
-                <md-field>
-                    <label>客户名称</label>
-                    <md-input v-model="clientbname"></md-input>
-                    <span class="md-helper-text" v-if="!clientbname">客户标识信息，必填项目</span>
-                </md-field>
+    <md-dialog :md-active.sync="showDialogb" style="width:500px">
+        <md-dialog-title style="font-size:30px">客户管理</md-dialog-title>
+        <div style="width:400px;margin:20px auto">
+            <md-field style="margin:45px auto">
+                <label style="font-size:25px;color:#000">客户名称</label>
+                <md-input v-model="clientbname" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+                <span class="md-helper-text" v-if="!clientbname">客户标识信息，必填项目</span>
+            </md-field>
 
-                <md-field>
-                    <label>客户地址</label>
-                    <md-input v-model="clientbaddress"></md-input>
-                    <span class="md-helper-text" v-if="!clientbaddress">客户地址标识信息</span>
-                </md-field>
+            <md-field style="margin:45px auto">
+                <label style="font-size:25px;color:#000">客户地址</label>
+                <md-input v-model="clientbaddress" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+                <span class="md-helper-text" v-if="!clientbaddress">客户地址标识信息</span>
+            </md-field>
 
-                <md-field>
-                    <label>客户电话</label>
-                    <md-input v-model="clientbphone"></md-input>
-                    <span class="md-helper-text" v-if="!clientbphone">客户电话标识信息</span>
-                </md-field>
+            <md-field style="margin:45px auto">
+                <label style="font-size:25px;color:#000">客户电话</label>
+                <md-input v-model="clientbphone" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+                <span class="md-helper-text" v-if="!clientbphone">客户电话标识信息</span>
+            </md-field>
 
-                <md-field>
-                    <label>客户状态</label>
-                    <md-input v-model="clientbstatus"></md-input>
-                    <span class="md-helper-text" v-if="!clientbstatus">客户状态标识信息</span>
-                </md-field>
+            <md-field style="margin:45px auto">
+                <label style="font-size:25px;color:#000">客户状态</label>
+                <md-input v-model="clientbstatus" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+                <span class="md-helper-text" v-if="!clientbstatus">客户状态标识信息</span>
+            </md-field>
 
-                <md-field>
-                    <label>客户邮编</label>
-                    <md-input v-model="clientbpostcode"></md-input>
-                    <span class="md-helper-text" v-if="!clientbpostcode">客户邮编标识信息</span>
-                </md-field>
+            <md-field style="margin:45px auto">
+                <label style="font-size:25px;color:#000">客户邮编</label>
+                <md-input v-model="clientbpostcode" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+                <span class="md-helper-text" v-if="!clientbpostcode">客户邮编标识信息</span>
+            </md-field>
 
-                <md-field>
-                    <label for="choseaname">服务商</label>
-                    <md-select v-model="choseaname" name="choseaname" id="choseaname">
-                        <md-option :value="item._id" v-for="(item,index) in allclientainfo" :key="index">{{item.clientaname}}</md-option>
-                    </md-select>
-                </md-field>
-            </md-tab>
-        </md-tabs>
+            <md-field style="margin:45px auto">
+                <label for="choseaname" style="font-size:25px;color:#000">服务商</label>
+                <md-select v-model="choseaname" name="choseaname" id="choseaname" style="border-bottom: 1px solid #000;font-size:25px;height:55px">
+                    <md-option :value="item._id" v-for="(item,index) in allclientainfo" :key="index">{{item.clientaname}}</md-option>
+                </md-select>
+            </md-field>
+        </div>
 
-        <md-dialog-actions>
-            <md-button class="md-primary" @click="showDialogb = false">Close</md-button>
-            <md-button class="md-primary" v-if="savemodeb" @click="addclientb">Save</md-button>
-            <md-button class="md-primary" v-if="!savemodeb" @click="confirmEditClientB">修改</md-button>
+        <md-dialog-actions style="margin:0 auto 10px auto">
+            <md-button class="md-raised md-primary" @click="showDialogb = false" style="font-size:30px;width:140px;height:50px">取消</md-button>
+            <md-button class="md-raised md-primary" v-if="savemodeb" @click="addclientb" style="font-size:30px;width:140px;height:50px">保存</md-button>
+            <md-button class="md-raised md-primary" v-else @click="confirmEditClientB" style="font-size:30px;width:140px;height:50px">修改</md-button>
         </md-dialog-actions>
+
     </md-dialog>
     <!-- Dialog b end-->
 
     <!-- deleteDialog b start-->
-    <md-dialog :md-active.sync="deleteDialogb">
-        <md-dialog-title>删除客户</md-dialog-title>
-        <div>
-            <span>客户名称:</span><span>{{clientbname}}</span>
+    <md-dialog :md-active.sync="deleteDialogb" style="width:500px">
+        <md-dialog-title style="font-size:30px">删除客户</md-dialog-title>
+        <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
+            <div class="rmDialog-center">
+                <span>客户名称:</span><span>{{clientbname}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>客户地址:</span><span>{{clientbaddress}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>客户电话:</span><span>{{clientbphone}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>客户状态:</span><span>{{clientbstatus}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>客户邮编:</span><span>{{clientbpostcode}}</span>
+            </div>
         </div>
-        <div>
-            <span>客户地址:</span><span>{{clientbaddress}}</span>
-        </div>
-        <div>
-            <span>客户电话:</span><span>{{clientbphone}}</span>
-        </div>
-        <div>
-            <span>客户状态:</span><span>{{clientbstatus}}</span>
-        </div>
-        <div>
-            <span>客户邮编:</span><span>{{clientbpostcode}}</span>
-        </div>
-        <md-dialog-actions>
-            <md-button class="md-primary" @click="deleteDialogb = false">关闭</md-button>
-            <md-button class="md-primary" @click="confirmdeleteB">删除</md-button>
+
+        <md-dialog-actions style="margin:0 auto 10px auto">
+            <md-button class="md-raised md-primary" @click="deleteDialogb = false" style="font-size:30px;width:140px;height:50px">取消</md-button>
+            <md-button class="md-raised md-primary" @click="confirmdeleteB" style="font-size:30px;width:140px;height:50px">删除</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- deleteDialog b end-->
 
-    <div v-if="clientpage">
-        <div class="centertable">
-            <div class="tabletitle">
-                <div class="tabletitle-item">
-                    <span>名称</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>送货地址</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>联系电话</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>邮箱</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>合同起始时间</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>合同期限</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>操作</span>
-                </div>
-            </div>
-            <div class="tablebody" v-for="(item,index) in allclientainfo" :key="index">
-                <div class="tabletitle-item">
-                    <span>{{item.clientaname}}</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>{{item.clientaaddress}}</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>{{item.clientaphone}}</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>{{item.clientamail}}</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>{{item.clientatime}}</span>
-                </div>
-                <div class="tabletitle-item">
-                    <span>{{item.clientacontract}}</span>
-                </div>
-                <div class="tabletitle-item">
-                    <img src="../../public/img/icons/edit.png" alt="edit" @click="editClientA(item)">
-                    <img src="../..//public/img/icons/dele.png" alt="delete" @click="removeClientA(item)">
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Dialog a start-->
-    <md-dialog :md-active.sync="showDialoga">
-        <md-dialog-title>合作商管理</md-dialog-title>
-        <md-tabs md-dynamic-height>
-            <md-tab md-label="添加合作商">
-                <md-field>
-                    <label>合作商名称</label>
-                    <md-input v-model="clientaname"></md-input>
+    <md-dialog :md-active.sync="showDialoga" style="width:900px">
+        <md-dialog-title style="font-size:30px">合作商管理</md-dialog-title>
+        <div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row;flex-flow: row;">
+            <div style="width:400px;margin:20px auto">
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">合作商名称</label>
+                    <md-input v-model="clientaname" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientaname">合作商标识信息，必填项目</span>
                 </md-field>
 
-                <md-field>
-                    <label>合作商地址</label>
-                    <md-input v-model="clientaaddress"></md-input>
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">合作商地址</label>
+                    <md-input v-model="clientaaddress" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientaaddress">合作商地址标识信息</span>
                 </md-field>
 
-                <md-field>
-                    <label>合作商电话</label>
-                    <md-input v-model="clientaphone"></md-input>
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">合作商电话</label>
+                    <md-input v-model="clientaphone" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientaphone">合作商电话标识信息</span>
                 </md-field>
 
-                <md-field>
-                    <label>合作商状态</label>
-                    <md-input v-model="clientastatus"></md-input>
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">合作商状态</label>
+                    <md-input v-model="clientastatus" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientastatus">合作商状态标识信息</span>
                 </md-field>
 
-                <md-field>
-                    <label>合作商邮编</label>
-                    <md-input v-model="clientapostcode"></md-input>
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">合作商邮编</label>
+                    <md-input v-model="clientapostcode" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientapostcode">合作商邮编标识信息</span>
                 </md-field>
-
-                <md-field>
-                    <label>合作商账户</label>
-                    <md-input v-model="clientausername"></md-input>
+            </div>
+            <div style="width:400px;margin:20px auto">
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">合作商账户</label>
+                    <md-input v-model="clientausername" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientausername">合作商登陆账户</span>
                 </md-field>
 
-                <md-field>
-                    <label>合作商密码</label>
-                    <md-input v-model="clientapsw"></md-input>
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">合作商密码</label>
+                    <md-input v-model="clientapsw" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientapsw">合作商登陆密码</span>
                 </md-field>
 
-                <md-field>
-                    <label>合作期限</label>
-                    <md-input v-model="clientacontract"></md-input>
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">合作期限</label>
+                    <md-input v-model="clientacontract" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientacontract">合作商登陆密码</span>
                 </md-field>
 
-                <md-field>
-                    <label>合同时间</label>
-                    <md-input v-model="clientatime"></md-input>
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">合同时间</label>
+                    <md-input v-model="clientatime" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientatime">合作商合同起始时间</span>
                 </md-field>
 
-                <md-field>
-                    <label>合作商邮箱</label>
-                    <md-input v-model="clientamail"></md-input>
+                <md-field style="margin:45px auto">
+                    <label style="font-size:25px;color:#000">合作商邮箱</label>
+                    <md-input v-model="clientamail" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientamail">合作商邮箱标识信息</span>
                 </md-field>
-            </md-tab>
-        </md-tabs>
+            </div>
+        </div>
 
-        <md-dialog-actions>
-            <md-button class="md-primary" @click="showDialoga = false">Close</md-button>
-            <md-button class="md-primary" v-if="savemodeb" @click="addclienta">Save</md-button>
-            <md-button class="md-primary" v-if="!savemodeb" @click="confirmEditClientA">edit</md-button>
+        <md-dialog-actions style="margin:0 auto 10px auto">
+            <md-button class="md-raised md-primary" @click="showDialoga = false" style="font-size:30px;width:140px;height:50px">取消</md-button>
+            <md-button class="md-raised md-primary" v-if="savemodeb" @click="addclienta" style="font-size:30px;width:140px;height:50px">保存</md-button>
+            <md-button class="md-raised md-primary" v-else @click="confirmEditClientA" style="font-size:30px;width:140px;height:50px">修改</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- Dialog a end-->
 
     <!-- deleteDialog a start-->
-    <md-dialog :md-active.sync="deleteDialoga">
-        <md-dialog-title>删除合作商</md-dialog-title>
-        <div>
-            <span>合作商名称:</span><span>{{clientaname}}</span>
+    <md-dialog :md-active.sync="deleteDialoga" style="width:500px">
+        <md-dialog-title style="font-size:30px">删除合作商</md-dialog-title>
+        <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
+            <div class="rmDialog-center">
+                <span>合作商名称:</span><span>{{clientaname}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>合作商地址:</span><span>{{clientaaddress}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>合作商电话:</span><span>{{clientaphone}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>合作商状态:</span><span>{{clientastatus}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>合作商邮编:</span><span>{{clientapostcode}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>合作商账户:</span><span>{{clientausername}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>合作期限:</span><span>{{clientacontract}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>合同时间:</span><span>{{clientatime}}</span>
+            </div>
+            <div class="rmDialog-center">
+                <span>合作商邮编:</span><span>{{clientamail}}</span>
+            </div>
         </div>
-        <div>
-            <span>合作商地址:</span><span>{{clientaaddress}}</span>
-        </div>
-        <div>
-            <span>合作商电话:</span><span>{{clientaphone}}</span>
-        </div>
-        <div>
-            <span>合作商状态:</span><span>{{clientastatus}}</span>
-        </div>
-        <div>
-            <span>合作商邮编:</span><span>{{clientapostcode}}</span>
-        </div>
-        <div>
-            <span>合作商账户:</span><span>{{clientausername}}</span>
-        </div>
-        <div>
-            <span>合作期限:</span><span>{{clientacontract}}</span>
-        </div>
-        <div>
-            <span>合同时间:</span><span>{{clientatime}}</span>
-        </div>
-        <div>
-            <span>合作商邮编:</span><span>{{clientamail}}</span>
-        </div>
+
         <md-dialog-actions>
             <md-button class="md-primary" @click="deleteDialoga = false">关闭</md-button>
             <md-button class="md-primary" @click="confirmRemoveClientA">删除</md-button>
@@ -328,6 +355,8 @@ export default {
             allclientbinfo: [],
             showDialoga: false,
             showDialogb: false,
+            classA: 'md-raised',
+            classB: 'md-raised md-primary',
             clientbname: '',
             clientbaddress: '',
             clientbphone: '',
@@ -352,7 +381,11 @@ export default {
             _id: '',
             savemodeb: true,
             deleteDialoga: false,
-            deleteDialogb: false
+            deleteDialogb: false,
+            searchclienta: '',
+            searchclientb: '',
+            searchedclienta: '',
+            searchedclientb: ''
         }
     },
     mounted() {
@@ -360,15 +393,40 @@ export default {
         this.getallclientb()
     },
     methods: {
+        searcha() {
+            if (this.searchclienta == '') {
+                this.getallclienta()
+            } else {
+                this.searchedclienta = this.allclientainfo.filter(element => {
+                    return element.clientaname.toLowerCase().indexOf(this.searchclienta.toLowerCase()) !== -1
+                })
+                this.allclientainfo = this.searchedclienta
+            }
+        },
+        searchb() {
+            if (this.searchclientb == '') {
+                this.getallclientb()
+            } else {
+                console.log('###')
+                this.searchedclientb = this.allclientbinfo.filter(element => {
+                    return element.clientbname.toLowerCase().indexOf(this.searchclientb.toLowerCase()) !== -1
+                })
+                this.allclientbinfo = this.searchedclientb
+            }
+        },
         changepageA() {
             this.clientpage = true
             this.pagestylea = 'font-weight:bold;'
             this.pagestyleb = ''
+            this.classA = 'md-raised md-primary'
+            this.classB = 'md-raised'
         },
         changepageB() {
             this.clientpage = false
             this.pagestyleb = 'font-weight:bold;'
             this.pagestylea = ''
+            this.classA = 'md-raised'
+            this.classB = 'md-raised md-primary'
         },
         showDialog() {
             if (!this.clientpage) {
@@ -537,17 +595,17 @@ export default {
             this.clientbphone = item.clientbphone
             this.clientbstatus = item.clientbstatus
             this.clientbpostcode = item.clientbpostcode
-            if(item.clientbserve ==null){
-                this.choseaname =''
+            if (item.clientbserve == null) {
+                this.choseaname = ''
                 this.error = true
-                    this.erromsg = '找不到此供应商信息，请重新选择'
-                    setTimeout(() => {
-                        this.error = false
-                    }, 4000)
-            }else{
+                this.erromsg = '找不到此供应商信息，请重新选择'
+                setTimeout(() => {
+                    this.error = false
+                }, 4000)
+            } else {
                 this.choseaname = item.clientbserve._id
             }
-            
+
         },
         confirmEditClientB() {
             axios.post('//127.0.0.1:3000/clientb/edit', {
@@ -624,7 +682,7 @@ export default {
             this.clientausername = item.clientausername
             this.clientapsw = item.clientapsw
             this.clientacontract = item.clientacontract
-            this.clientatime = item.clientatime
+            this.clientatime = new Date(item.clientatime).toLocaleDateString()
             this.clientamail = item.clientamail
         },
         removeClientA(item) {
@@ -638,7 +696,7 @@ export default {
             this.clientausername = item.clientausername
             this.clientapsw = item.clientapsw
             this.clientacontract = item.clientacontract
-            this.clientatime = item.clientatime
+            this.clientatime = new Date(item.clientatime).toLocaleDateString()
             this.clientamail = item.clientamail
         },
         confirmEditClientA() {
@@ -717,32 +775,36 @@ export default {
 }
 
 .topbutton-left {
-    flex-basis: 50%;
+    flex-basis: 30%;
     text-align: left;
+    margin: 0 auto;
+}
+
+.topbutton-left input {
+    margin: 10px auto;
+    border-radius: 10px;
+    width: 300px;
+    height: 50px;
+    text-align: center;
+    -web-kit-appearance: none;
+    -moz-appearance: none;
+    outline: 0;
+    font-size: 30px;
+}
+
+.topbutton-center {
+    flex-basis: 30%;
+    text-align: center;
+    margin: 0 auto;
 }
 
 .topbutton-right {
-    flex-basis: 50%;
+    flex-basis: 30%;
     text-align: right;
 }
 
-.topbutton-right {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row-reverse wrap;
-    flex-flow: row-reverse wrap;
-}
-
-.findbutton {
-    order: 2;
-}
-
-.addbutton {
-    order: 1;
-}
-
 .centertable {
-    background-color: #eff3f5;
+    margin: 20px auto;
 }
 
 .tabletitle {
@@ -753,6 +815,10 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
+    font-size: 25px;
+    font-weight: 600;
+    height: 60px;
+    line-height: 60px;
 }
 
 .tabletitle-item {
@@ -765,5 +831,13 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
+    font-size: 25px;
+    line-height: 50px;
+}
+
+.rmDialog-center {
+    margin: 30px 40px;
+    font-size: 25px;
+    width: 100%
 }
 </style>
