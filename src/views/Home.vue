@@ -4,10 +4,11 @@
         <div class="topbutton-left">
             <md-datepicker v-model="selectedDate" md-immediately md-closed="getMission()" style="border-radius: 0;" />
         </div>
-        <div class="topbutton-right">
-            <md-button class="md-raised md-primary" @click="addMission" style="font-size:30px;width:140px;height:50px">新建任务</md-button>
+        <div class="topbutton-right" style="padding-top:10px">
+            <md-button class="md-raised md-primary" @click="addMission" style="font-size:20px;width:100px;height:40px;">新建任务</md-button>
         </div>
     </div>
+
     <div class="centertable" v-if="allmission.length != 0">
         <md-card style="background-color: #eff3f5">
             <md-card-content>
@@ -50,25 +51,56 @@
         </div>
     </div>
     <div v-else>
-        <img src="../../public/img/ebuyLogo.png" alt="easylogo" style="margin:200px auto">
+        <img src="../../public/img/ebuyLogo.png" alt="easylogo" style="margin:100px auto;width:500px">
     </div>
     <!-- add dialog start -->
-    <md-dialog :md-active.sync="addDialog">
-        <md-dialog-title style="font-size:30px">添加今日任务</md-dialog-title>
+    <md-dialog :md-active.sync="addDialog" style="width:900px">
+        <md-dialog-title style="font-size:25px">添加今日任务</md-dialog-title>
         <md-steppers md-linear :md-active-step.sync="active">
             <md-step id="first" md-label="选择车次" :md-done.sync="first" :md-error="firstStepError">
-                <div>
-                    <md-field>
-                        <label for="choseLine">选择出车线路</label>
-                        <md-select v-model="choseLine" name="choseLine" id="choseLine" md-dense @md-selected="getLineInfo">
-                            <md-option :value="item._id" v-for="(item,index) in alltimesinfo" :key="index">{{item.timesname}}</md-option>
-                        </md-select>
-                    </md-field>
-                </div>
+                <div class="dialog-first-body">
+                    <div class="dialog-first-body-left">
+                        <div class="container">
+                            <div class="custom-selector">
+                                <div class="selector-header" style="position:relative" @click="callBody">
+                                    <div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorText}}</div>
+                                    <div style="position:absolute;top:0;right:0">
+                                        <img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow">
+                                    </div>
+                                </div>
+                                <div class="selector-body">
+                                    <div class="box" v-for="(item,index) in alltimesinfo" :key="index" @click="choseitem(item)">
+                                        <span style="font-size:20px">{{item.timesname}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <div>
-                    <p>线路名称：{{aLineInfo.timesname}}</p>
-                    <p>线路备注：{{aLineInfo.timesnote}}</p>
+                    <div class="dialog-first-body-right">
+                        <md-card md-with-hover style="width:90%;background-color: #eee">
+                            <md-card-header>
+                                <div class="md-title" style="font-size:20px;text-align:left">
+                                    <span>线路信息</span>
+                                </div>
+                                <div class="md-subhead" style="font-size:15px;text-align:left">
+                                    <span>请确认详细信息</span>
+                                </div>
+                            </md-card-header>
+
+                            <md-card-content v-if="aLineInfo">
+                                <div style="margin:0 20px">
+                                    <div style="text-align:left;margin:10px 0">
+                                        <span style="font-size:20px">线路名称：{{aLineInfo.timesname}}</span>
+                                    </div>
+                                    <div style="text-align:left;margin:10px 0">
+                                        <span style="font-size:20px">线路备注：{{aLineInfo.timesnote}}</span>
+                                    </div>
+                                </div>
+                            </md-card-content>
+
+                        </md-card>
+                    </div>
                 </div>
 
                 <div style="text-align:center">
@@ -77,38 +109,76 @@
 
             </md-step>
 
-            <md-step id="second" md-label="司机车辆" :md-done.sync="second">
+            <md-step id="second" md-label="司机车辆" :md-done.sync="second" :md-error="secondStepError">
                 <div>
-                    <div class="step-second">
+                    <div class="step-second" id="addmissionsecond">
                         <div class="step-second-item">
-                            <md-card md-with-hover>
+
+                            <div class="container">
+                                <div class="custom-selector">
+                                    <div class="selector-header" style="position:relative" @click="callDriver">
+                                        <div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorDriver.dirvername}}</div>
+                                        <div style="position:absolute;top:0;right:0">
+                                            <img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow" id="selector-arrow-driver">
+                                        </div>
+                                    </div>
+                                    <div class="selector-body" id="selector-body-driver">
+                                        <div class="box" id="selector-box-driver" v-for="(item,index) in alldirverinfo" :key="index" @click="choseDriverItem(item)">
+                                            <span style="font-size:20px">{{item.dirvername}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <md-card md-with-hover style="background-color: #eee">
                                 <md-card-header>
-                                    <div class="md-title">司机信息</div>
-                                    <div class="md-subhead">请确认详细信息</div>
+                                    <div class="md-title" style="font-size:20px;text-align:left">司机信息</div>
+                                    <div class="md-subhead" style="font-size:15px;text-align:left">请确认详细信息</div>
                                 </md-card-header>
 
                                 <md-card-content v-if="aLineInfo">
-                                    <p>司机姓名：{{aLineInfo.timesdirver.dirvername}}</p>
-                                    <p>司机电话：{{aLineInfo.timesdirver.dirverphone}}</p>
-                                    <p>司机驾照：{{aLineInfo.timesdirver.dirvercard}}</p>
-                                    <p>司机备注：{{aLineInfo.timesdirver.dirvernote}}</p>
+                                    <div style="margin:0 20px">
+                                        <p style="font-size:20px">司机姓名：{{selectorDriver.dirvername}}</p>
+                                        <p style="font-size:20px">司机电话：{{selectorDriver.dirverphone}}</p>
+                                        <p style="font-size:20px">司机驾照：{{selectorDriver.dirvercard}}</p>
+                                        <p style="font-size:20px">司机备注：{{selectorDriver.dirvernote}}</p>
+                                    </div>
                                 </md-card-content>
 
                             </md-card>
                         </div>
 
                         <div class="step-second-item">
-                            <md-card md-with-hover>
+
+                            <div class="container">
+                                <div class="custom-selector">
+                                    <div class="selector-header" style="position:relative" @click="callCar">
+                                        <div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorCar.carid}}</div>
+                                        <div style="position:absolute;top:0;right:0">
+                                            <img src="../../public/img/icons/arrowDown.png" alt="arrowDown" style="width:40px" class="arrow" id="selector-arrow-car">
+                                        </div>
+                                    </div>
+                                    <div class="selector-body" id="selector-body-car">
+                                        <div class="box" id="selector-box-car" v-for="(item,index) in allcarinfo" :key="index" @click="choseCarItem(item)">
+                                            <span style="font-size:20px">{{item.carid}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <md-card md-with-hover style="background-color: #eee">
                                 <md-card-header>
-                                    <div class="md-title">车辆信息</div>
-                                    <div class="md-subhead">请确认详细信息</div>
+                                    <div class="md-title" style="font-size:20px;text-align:left">车辆信息</div>
+                                    <div class="md-subhead" style="font-size:15px;text-align:left">请确认详细信息</div>
                                 </md-card-header>
 
                                 <md-card-content v-if="aLineInfo">
-                                    <p>车牌号码：{{aLineInfo.timescar.carid}}</p>
-                                    <p>车牌型号：{{aLineInfo.timescar.cartype}}</p>
-                                    <p>车牌尺寸：{{aLineInfo.timescar.carsize}}</p>
-                                    <p>车牌备注：{{aLineInfo.timescar.carnote}}</p>
+                                    <div style="margin:0 20px">
+                                        <p style="font-size:20px">车牌号码：{{selectorCar.carid}}</p>
+                                        <p style="font-size:20px">车辆型号：{{selectorCar.cartype}}</p>
+                                        <p style="font-size:20px">车辆尺寸：{{selectorCar.carsize}}</p>
+                                        <p style="font-size:20px">车辆备注：{{selectorCar.carnote}}</p>
+                                    </div>
                                 </md-card-content>
 
                             </md-card>
@@ -145,22 +215,22 @@
                     <div style="overflow:auto;height:500px">
                         <md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index" style="background-color: #f4f4f4">
                             <md-card-content>
-                                <input type="checkbox" :id="index" :value="item" v-model="aLineInfo.timesclientb">
-                                <label :for="index" class="step-third-title">
+                                <div class="step-third-title-body">
+                                    <label :for="index" class="step-third-title">
+                                            <input type="checkbox" :id="index" :value="item" v-model="aLineInfo.timesclientb" style="width:25px;height:25px">
                                         <span class="step-third-title-item">{{item.clientbname}}</span>
                                         <span class="step-third-title-item">{{item.clientbphone}}</span>
                                         <span class="step-third-title-item">{{item.clientbpostcode}}</span>
                                         <span class="step-third-title-item">{{item.clientbaddress}}</span>
                                         <span class="step-third-title-item">{{item.clientbserve.clientaname}}</span>
                                     </label>
-
+                                </div>
                             </md-card-content>
                         </md-card>
                     </div>
                     <div style="text-align:center">
                         <md-button class="md-raised md-primary" @click="saveMission">SAVE</md-button>
                     </div>
-
                 </div>
             </md-step>
         </md-steppers>
@@ -168,31 +238,58 @@
     <!-- add dialog end -->
 
     <!-- detail dialog start -->
-    <md-dialog :md-active.sync="detaildialog" style="width: 500px;">
-        <md-dialog-title style="font-size:30px">任务详情</md-dialog-title>
-        <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
-            <div class="detailDialog-center">
-                <span class="detail-text-left">车次名称:</span><span>{{missionline}}</span>
+    <md-dialog :md-active.sync="detaildialog" style="width: 800px;font-size:20px">
+        <div style="text-align:center;padding:20px 0">
+            <span style="font-size:30px">出车报表</span>
+        </div>
+
+        <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;padding:5px 0;overflow:hidden">
+            <div style="flex-basis:30%;text-align:left;margin:0 auto" :title="missiondriver">
+                <span>司机:{{missiondriver}}</span>
             </div>
-            <div class="detailDialog-center">
-                <span class="detail-text-left">司机姓名:</span><span>{{missiondriver}}</span>
-            </div>
-            <div class="detailDialog-center">
-                <span class="detail-text-left">车牌号码:</span><span>{{missioncar}}</span>
-            </div>
-            <div class="detailDialog-center">
-                <span class="detail-text-left">已送数量:</span><span>{{missionfinish}}</span>
-            </div>
-            <div class="detailDialog-center">
-                <span class="detail-text-left">客户总量:</span><span>{{missioncount}}</span>
-            </div>
-            <div class="detailDialog-center">
-                <span class="detail-text-left">联系方式:</span><span>{{missionphone}}</span>
+            <div style="flex-basis:30%;text-align:left;margin:0 auto;">
+                <span>车次:{{missionline}}</span>
             </div>
         </div>
 
+        <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;border-bottom:1px solid;padding:5px 0">
+            <div style="flex-basis:30%;text-align:left;margin:0 auto">
+                日期:{{missiondate}}
+            </div>
+            <div style="flex-basis:30%;text-align:left;margin:0 auto">
+                总单数:{{missioncount}}
+            </div>
+        </div>
+
+        <div style="padding:5px 0;border:1px solid #989898;width:90%;margin:10px auto">
+            <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;font-weight:600;padding:5px 0">
+                <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                    <span>序号</span>
+                </div>
+                <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                    <span>名字</span>
+                </div>
+                <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                    <span>时间</span>
+                </div>
+            </div>
+            <div style="height:400px;overflow:auto;">
+                <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;padding:5px 0" v-for="(item,index) in missionclient" :key="index">
+                    <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                        <span>{{index}}</span>
+                    </div>
+                    <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                        {{item.clientbname}}
+                    </div>
+                    <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                        05:01
+                    </div>
+                </div>
+            </div>
+        </div>
         <md-dialog-actions style="margin:0 auto 10px auto">
-            <md-button class="md-raised md-primary" @click="detaildialog = false" style="font-size:30px;width:140px;height:50px">关闭</md-button>
+            <md-button class="md-raised md-primary" @click="detaildialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
+            <md-button class="md-raised md-accent" @click="removeMission" style="font-size:20px;width:100px;height:40px">删除</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- detail dialog start -->
@@ -200,6 +297,18 @@
     <!-- error dialog start -->
     <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" />
     <!-- error dialog end -->
+
+    <!-- confirm dialog start -->
+    <md-dialog :md-active.sync="confirmDialog">
+        <md-dialog-title>确认删除此任务</md-dialog-title>
+
+        <md-dialog-actions>
+            <md-button class="md-raised md-primary" @click="confirmDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
+            <md-button class="md-raised md-accent" @click="confirmRemoveMission" style="font-size:20px;width:100px;height:40px">确认</md-button>
+        </md-dialog-actions>
+    </md-dialog>
+
+    <!-- confirm dialog end -->
 </div>
 </template>
 
@@ -212,12 +321,15 @@ export default {
             selectedDate: new Date(),
             active: 'first',
             addDialog: false,
+            confirmDialog: false,
             first: false,
             second: false,
             third: false,
             choseLine: '',
             allmission: [],
             allclientbinfo: [],
+            alldirverinfo: [],
+            allcarinfo: [],
             choseClientB: [],
             alltimesinfo: [],
             aLineInfo: '',
@@ -228,17 +340,26 @@ export default {
             error: false,
             errormsg: '发生未知错误',
             firstStepError: null,
+            secondStepError: null,
             missionline: '',
             missiondriver: '',
             missioncar: '',
             missioncount: '',
             missionfinish: '',
-            missionphone: ''
+            missionphone: '',
+            missiondate: '',
+            missionclient: [],
+            missionid: '',
+            selectorText: '请选择',
+            selectorDriver: '',
+            selectorCar: '',
+            bodyShowFlag: false,
+            driverShowFlag: false
         }
     },
     watch: {
         selectedDate: function () {
-            axios.post('//127.0.0.1:3000/mission', {
+            axios.post('//192.168.1.5:3000/mission', {
                     startdate: this.selectedDate
                 })
                 .then(res => {
@@ -256,23 +377,210 @@ export default {
         this.getMission()
     },
     methods: {
+        //remove mission start
+        removeMission() {
+            this.confirmDialog = true
+        },
+        //remove mission end
+
+        //confirm remove mission start
+        confirmRemoveMission() {
+            axios.post('//192.168.1.5:3000/mission/remove', {
+                    missionid: this.missionid
+                })
+                .then(doc => {
+                    this.confirmDialog = false
+                    if (doc.data.code == 0) {
+                        this.getMission()
+                        this.detaildialog =false
+                    }
+                    this.error = true
+                        this.errormsg = doc.data.msg
+                        setTimeout(() => {
+                            this.error = false
+                        }, 3000)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        //confirm remove mission start
+
+        // 下拉选择框部分 start
+
+        callCar() {
+            if (this.driverShowFlag) {
+                this.bodyHideCar()
+            } else {
+                this.bodyShowCar()
+            }
+        },
+
+        callDriver() {
+            if (this.driverShowFlag) {
+                this.bodyHideDriver()
+            } else {
+                this.bodyShowDriver()
+            }
+        },
+
+        callBody() {
+            if (this.bodyShowFlag) {
+                this.bodyHide()
+            } else {
+                this.bodyShow()
+            }
+        },
+
+        bodyShowCar() {
+            let body = document.querySelector('#selector-body-car')
+            let boxes = document.querySelectorAll('#selector-box-car')
+            let arrow = document.querySelector('#selector-arrow-car')
+            arrow.style.transform = 'rotate(0deg)'
+            body.style.height = '180px'
+            arrow.style.transition = '0.25s'
+            let height = 4
+            boxes.forEach(box => {
+                height += box.clientHeight
+            });
+            body.style.transition = '0.25s'
+            body.style.display = 'block'
+            this.driverShowFlag = true
+        },
+
+        bodyHideCar() {
+            let body = document.querySelector('#selector-body-car')
+            body.style.height = '0px'
+            body.style.transition = '0.25s'
+            let arrow = document.querySelector('#selector-arrow-car')
+            arrow.style.transform = 'rotate(-90deg)'
+            arrow.style.transition = '0.25s'
+            this.driverShowFlag = false
+        },
+
+        bodyShowDriver() {
+            let body = document.querySelector('#selector-body-driver')
+            let boxes = document.querySelectorAll('#selector-box-driver')
+            let arrow = document.querySelector('#selector-arrow-driver')
+            arrow.style.transform = 'rotate(0deg)'
+            body.style.height = '180px'
+            arrow.style.transition = '0.25s'
+            let height = 4
+            boxes.forEach(box => {
+                height += box.clientHeight
+            });
+            body.style.transition = '0.25s'
+            body.style.display = 'block'
+            this.driverShowFlag = true
+        },
+
+        bodyHideDriver() {
+            let body = document.querySelector('#selector-body-driver')
+            body.style.height = '0px'
+            body.style.transition = '0.25s'
+            let arrow = document.querySelector('#selector-arrow-driver')
+            arrow.style.transform = 'rotate(-90deg)'
+            arrow.style.transition = '0.25s'
+            this.driverShowFlag = false
+        },
+
+        bodyShow() {
+            let body = document.querySelector('.selector-body')
+            let boxes = document.querySelectorAll('.box')
+            let arrow = document.querySelector('.arrow')
+            arrow.style.transform = 'rotate(0deg)'
+            body.style.height = '180px'
+            arrow.style.transition = '0.25s'
+            let height = 4
+            boxes.forEach(box => {
+                height += box.clientHeight
+            });
+            body.style.transition = '0.25s'
+            body.style.display = 'block'
+            this.bodyShowFlag = true
+        },
+        bodyHide() {
+            let body = document.querySelector('.selector-body')
+            body.style.height = '0px'
+            body.style.transition = '0.25s'
+            let arrow = document.querySelector('.arrow')
+            arrow.style.transform = 'rotate(-90deg)'
+            arrow.style.transition = '0.25s'
+            this.bodyShowFlag = false
+        },
+
+        choseCarItem(item) {
+            this.bodyHideCar()
+            this.selectorCar = item
+        },
+
+        choseDriverItem(item) {
+            this.bodyHideDriver()
+            this.selectorDriver = item
+        },
+
+        choseitem(item) {
+            this.choseLine = item
+            this.bodyHide()
+            this.aLineInfo = item
+            this.selectorText = item.timesname
+
+            if (this.choseLine.timescar == null) {
+                this.choseLine.timescar = {
+                    carid: '信息错误请更新',
+                    carsize: '信息错误请更新',
+                    cartype: '信息错误请更新'
+                }
+            }
+
+            if (this.choseLine.timesdirver == null) {
+                this.choseLine.timesdirver = {
+                    dirvername: '信息错误请更新',
+                    dirverphone: '信息错误请更新',
+                    dirvercard: '信息错误请更新'
+                }
+            }
+
+            this.aLineInfo.timesclientb.forEach(element => {
+                if (element.clientbserve == null) {
+                    element.clientbserve = {
+                        clientaname: '客户未包含服务商'
+                    }
+                }
+            });
+        },
+        // 下拉选择框部分 end
+
+        //获取所有司机数据 start
+        getalldirver() {
+
+            axios.get('//192.168.1.5:3000/dirver')
+                .then((res) => {
+                    this.alldirverinfo = res.data
+                }).catch((err) => {
+                    console.log(err)
+                })
+        },
+        //获取所有司机数据 end
         openMissionInfo(item) {
+            let time = new Date(item.missiondate).toLocaleTimeString()
             this.detaildialog = true
             this.missionline = item.missionline
             this.missiondriver = item.missiondirver
             this.missioncar = item.missioncar
             this.missioncount = item.missionclient.length
+            this.missionclient = item.missionclient
             this.missionfinish = 'finish'
             this.missionphone = item.missionphone
+            this.missiondate = time
+            this.missionid = item._id
         },
         getMission() {
             setTimeout(() => {
-                axios.post('//127.0.0.1:3000/mission', {
+                axios.post('//192.168.1.5:3000/mission', {
                         startdate: this.selectedDate
                     })
                     .then(res => {
-                        console.log('数据获取成功')
-                        console.log(res.data)
                         this.allmission = res.data
                     })
                     .catch(err => {
@@ -283,14 +591,52 @@ export default {
         },
 
         setDone(id, index) {
+            if (id == 'first') {
+                if (this.choseLine == '') {
+                    this.firstStepError = ' '
+                } else {
+                    this[id] = true
+                    this.selectorDriver = {
+                        dirvername: this.aLineInfo.timesdirver.dirvername,
+                        dirverphone: this.aLineInfo.timesdirver.dirverphone,
+                        dirvercard: this.aLineInfo.timesdirver.dirvercard,
+                        dirvernote: this.aLineInfo.timesdirver.dirvernote
+                    }
+                    this.selectorCar = {
+                        carid: this.aLineInfo.timescar.carid,
+                        cartype: this.aLineInfo.timescar.cartype,
+                        carsize: this.aLineInfo.timescar.carsize,
+                        carnote: this.aLineInfo.timescar.carnote
+                    }
+                    this.firstStepError = null
+                    if (index) {
+                        this.active = index
+                    }
+                }
+            }
+            if (id == 'second') {
+                if (this.choseLine.timesdirver.dirvername == '信息错误请更新') {
+                    this.secondStepError = ' '
+                    this.error = true
+                    this.errormsg = '请更新司机信息'
+                    setTimeout(() => {
+                        this.error = false
+                    }, 3000)
+                }
 
-            if (this.choseLine == '') {
-                this.firstStepError = ' '
-            } else {
-                this[id] = true
-                this.firstStepError = null
-                if (index) {
-                    this.active = index
+                if (this.choseLine.timescar.carid == '信息错误请更新') {
+                    this.secondStepError = ' '
+                    this.error = true
+                    this.errormsg = '请更新车辆信息'
+                    setTimeout(() => {
+                        this.error = false
+                    }, 3000)
+                } else {
+                    this[id] = true
+                    this.secondStepError = null
+                    if (index) {
+                        this.active = index
+                    }
                 }
             }
         },
@@ -298,12 +644,14 @@ export default {
         addMission() {
             this.getallclientb()
             this.getalltimes()
+            this.getalldirver()
+            this.getallcar()
             this.addDialog = true
 
         },
 
         getalltimes() {
-            axios.get('//127.0.0.1:3000/times')
+            axios.get('//192.168.1.5:3000/times')
                 .then((res) => {
                     this.alltimesinfo = res.data.doc
                 }).catch((err) => {
@@ -311,39 +659,35 @@ export default {
                 })
         },
 
-        getLineInfo() {
-            if (this.choseLine == '') {
-                this.aLineInfo = {
-                    timesname: '请选择线路',
-                    timesnote: '请选择线路',
-                    timesdirver: {
-                        dirvername: '请选择线路',
-                        dirverphone: '请选择线路',
-                        dirvercard: '请选择线路',
-                        dirvernote: '请选择线路'
-                    },
-                    timescar: {
-                        carid: '请选择线路',
-                        carnote: '请选择线路',
-                        carsize: '请选择线路',
-                        cartype: '请选择线路'
-                    }
+        getallcar() {
+            axios.get('//192.168.1.5:3000/car')
+                .then((res) => {
+
+                    this.allcarinfo = res.data
+                }).catch((err) => {
+                    console.log(err)
+                })
+        },
+        getLineInfo(item) {
+            this.aLineInfo = {
+                timesname: '请选择线路',
+                timesnote: '请选择线路',
+                timesdirver: {
+                    dirvername: '请选择线路',
+                    dirverphone: '请选择线路',
+                    dirvercard: '请选择线路',
+                    dirvernote: '请选择线路'
+                },
+                timescar: {
+                    carid: '请选择线路',
+                    carnote: '请选择线路',
+                    carsize: '请选择线路',
+                    cartype: '请选择线路'
                 }
-            } else {
-                this.aLineInfo = this.alltimesinfo.find((element) => (
-                    element._id == this.choseLine
-                ))
-                this.aLineInfo.timesclientb.forEach(element => {
-                    if (element.clientbserve == null) {
-                        element.clientbserve = {
-                            clientaname: '客户未包含服务商'
-                        }
-                    }
-                });
             }
         },
         getallclienta() {
-            axios.get('//127.0.0.1:3000/clienta')
+            axios.get('//192.168.1.5:3000/clienta')
                 .then((res) => {
                     this.allclientainfo = res.data
                 }).catch((err) => {
@@ -351,7 +695,7 @@ export default {
                 })
         },
         getallclientb() {
-            axios.get('//127.0.0.1:3000/clientb')
+            axios.get('//192.168.1.5:3000/clientb')
                 .then((res) => {
                     this.allclientbinfo = res.data
                     this.allclientbinfo.forEach(element => {
@@ -361,7 +705,6 @@ export default {
                             }
                         }
                     });
-                    console.log(this.allclientbinfo)
                 }).catch((err) => {
                     console.log(err)
                 })
@@ -378,9 +721,9 @@ export default {
             let query = {
                 missionline: this.aLineInfo.timesname,
                 missionnote: this.aLineInfo.timesnote,
-                missiondirver: this.aLineInfo.timesdirver.dirvername,
+                missiondirver: this.selectorDriver.dirvername,
                 missionphone: this.aLineInfo.timesdirver.dirverphone,
-                missioncar: this.aLineInfo.timescar.carid,
+                missioncar: this.selectorCar.carid,
                 missionclient: this.aLineInfo.timesclientb.map((item) => {
                     let obj = {
                         clientbname: item.clientbname,
@@ -392,8 +735,7 @@ export default {
                     return obj
                 })
             }
-            console.log(query)
-            axios.post('//127.0.0.1:3000/mission/create', query)
+            axios.post('//192.168.1.5:3000/mission/create', query)
                 .then(res => {
                     this.error = true
                     this.errormsg = res.data.msg
@@ -414,13 +756,14 @@ export default {
                 })
         }
     }
+
 }
 </script>
 
 <style scoped>
 #home {
     width: 80%;
-    margin: 30px auto;
+    margin: 15px auto;
 }
 
 .topbutton {
@@ -443,7 +786,7 @@ export default {
 }
 
 .centertable {
-    margin: 20px auto;
+    margin: 5px auto;
 }
 
 .tabletitle {
@@ -465,9 +808,9 @@ export default {
 
 .tabletitle-item {
     margin: 0 auto;
-    width: 300px;
-    font-size: 25px;
-    line-height: 60px;
+    width: 250px;
+    font-size: 20px;
+    line-height: 50px;
 }
 
 .tablebody {
@@ -485,7 +828,7 @@ export default {
 }
 
 .step-second-item {
-    margin: 0 auto;
+    margin: 10px auto;
     flex-basis: 45%;
     /* text-align: right; */
 }
@@ -501,19 +844,92 @@ export default {
     margin: 0 auto;
     flex-basis: 20%;
     text-align: center;
+    font-size: 20px;
 }
 
 .detailDialog-center {
-    margin: 30px 40px;
-    font-size: 25px;
+    margin: 20px;
+    font-size: 20px;
     width: 100%
 }
 
-.detail-text-left{
-    margin:0 20px 0 0
+.detail-text-left {
+    margin: 0 20px 0 0;
 }
 
-.detail-text-right{
+.detail-text-right {
     background-color: #f4f4f4
 }
+
+.container {
+    /* width: 30%; */
+    margin: auto
+}
+
+#addmissionsecond .container {
+    margin: 0 auto 10px auto;
+}
+
+.arrow {
+    transform: rotate(-90deg);
+    transition: 0.25s
+}
+
+.selector-header {
+    cursor: pointer;
+    width: 300px;
+}
+
+.selector-body {
+    height: 0;
+    transition: 0.25s;
+    overflow: hidden;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    overflow: auto;
+    position: absolute;
+    z-index: 100;
+    background-color: #eee
+}
+
+.box {
+    cursor: pointer;
+    padding: 7px;
+    border-bottom: 1px solid #eee;
+    transition: 0.5s;
+    width: 300px
+}
+
+.box:hover {
+    background-color: dodgerblue;
+    color: white;
+    transition: 0.5s;
+}
+
+.dialog-first-body {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row;
+    flex-flow: row;
+    margin: 20px 0
+}
+
+.dialog-first-body-left {
+    margin: 0 auto;
+    flex-basis: 30%;
+    text-align: left;
+}
+
+.dialog-first-body-right {
+    margin: 0 auto;
+    flex-basis: 50%;
+    text-align: center;
+}
+
+/*.step-third-title-body {
+     display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row;
+    flex-flow: row;
+} */
 </style>

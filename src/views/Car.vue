@@ -5,7 +5,7 @@
             <input type="text" v-model="selectedCar" @keyup.enter="search" placeholder="搜索车牌信息">
         </div>
         <div class="topbutton-right">
-            <md-button class="md-raised md-primary" @click="showDialog = true,addmode=true" style="font-size:30px;width:140px;height:50px">+ 添加</md-button>
+            <md-button class="md-raised md-primary" @click="showDialog = true,addmode=true" style="font-size:20px;width:100px;height:40px;">+ 添加</md-button>
         </div>
     </div>
     <div class="centertable">
@@ -53,8 +53,8 @@
                         <span>{{item.carnote}}</span>
                     </div>
                     <div class="tabletitle-item">
-                        <img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)" style="width:30px;margin:0 10px">
-                        <img src="../..//public/img/icons/dele.png" alt="delete" @click="removebutton(item)" style="width:40px;margin:0 10px">
+                        <img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)" style="width:20px;margin:0 10px">
+                        <img src="../..//public/img/icons/dele.png" alt="delete" @click="removebutton(item)" style="width:30px;margin:0 10px">
                     </div>
                 </div>
             </md-card-content>
@@ -65,41 +65,41 @@
     <!-- Dialog start-->
     <md-dialog :md-active.sync="showDialog" style="width:500px">
         <md-dialog-title style="font-size:30px">车辆管理</md-dialog-title>
-        <div style="width:400px;margin:20px auto">
-            <md-field style="margin:45px auto">
-                <label style="font-size:25px;color:#000">车牌号码</label>
-                <md-input v-model="carid" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+        <div style="width:400px;margin:0 auto">
+            <md-field style="margin:20px auto">
+                <label style="font-size:20px;color:#000">车牌号码</label>
+                <md-input v-model="carid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                 <span class="md-helper-text" style="font-size:20px;margin: -10px auto;" v-if="!carid">车辆标识信息，必填项目</span>
             </md-field>
 
-            <md-field style="margin:45px auto">
-                <label style="font-size:25px;color:#000">车型</label>
-                <md-input v-model="cartype" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+            <md-field style="margin:20px auto">
+                <label style="font-size:20px;color:#000">车型</label>
+                <md-input v-model="cartype" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                 <span class="md-helper-text" style="font-size:20px;margin: -10px auto;" v-if="!cartype">请填写车型信息</span>
             </md-field>
 
-            <md-field style="margin:45px auto">
-                <label style="font-size:25px;color:#000">尺寸</label>
-                <md-input v-model="carsize" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+            <md-field style="margin:20px auto">
+                <label style="font-size:20px;color:#000">尺寸</label>
+                <md-input v-model="carsize" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                 <span class="md-helper-text" style="font-size:20px;margin: -10px auto;" v-if="!carsize">请填写车辆尺寸</span>
             </md-field>
 
-            <md-field style="margin:45px auto">
-                <label style="font-size:25px;color:#000">出车次数</label>
-                <md-input v-model="cartimes" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+            <md-field style="margin:20px auto">
+                <label style="font-size:20px;color:#000">出车次数</label>
+                <md-input v-model="cartimes" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                 <span class="md-helper-text" style="font-size:20px;margin: -10px auto;" v-if="!cartimes">如不填写默认为0</span>
             </md-field>
 
-            <md-field style="margin:45px auto">
-                <label style="font-size:25px;color:#000">备注</label>
-                <md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+            <md-field style="margin:20px auto">
+                <label style="font-size:20px;color:#000">备注</label>
+                <md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
             </md-field>
         </div>
 
         <md-dialog-actions style="margin:0 auto 10px auto">
-            <md-button class="md-raised md-primary" @click="showDialog = false" style="font-size:30px;width:140px;height:50px">取消</md-button>
-            <md-button class="md-raised md-primary" v-if="addmode" @click="addcar" style="font-size:30px;width:140px;height:50px">保存</md-button>
-            <md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:30px;width:140px;height:50px">修改</md-button>
+            <md-button class="md-raised md-primary" @click="showDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
+            <md-button class="md-raised md-primary" v-if="addmode" @click="addcar" style="font-size:20px;width:100px;height:40px">保存</md-button>
+            <md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:20px;width:100px;height:40px">修改</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- Dialog end-->
@@ -129,8 +129,8 @@
         </div>
 
         <md-dialog-actions style="margin:0 auto 10px auto">
-            <md-button class="md-raised md-primary" @click="removeDialog = false" style="font-size:30px;width:140px;height:50px">取消</md-button>
-            <md-button class="md-raised md-primary" @click="confirmremove" style="font-size:30px;width:140px;height:50px">删除</md-button>
+            <md-button class="md-raised md-primary" @click="removeDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
+            <md-button class="md-raised md-primary" @click="confirmremove" style="font-size:20px;width:100px;height:40px">删除</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- remove dialog end-->
@@ -215,7 +215,7 @@ export default {
 
         },
         confirmedit() {
-            axios.post('//127.0.0.1:3000/car/update', {
+            axios.post('//192.168.1.5:3000/car/update', {
                     _id: this._id,
                     carid: this.carid,
                     cartype: this.cartype,
@@ -245,7 +245,7 @@ export default {
                 })
         },
         confirmremove() {
-            axios.post('//127.0.0.1:3000/car/remove', {
+            axios.post('//192.168.1.5:3000/car/remove', {
                     _id: this._id
                 })
                 .then((res) => {
@@ -270,7 +270,7 @@ export default {
                 })
         },
         getallcar() {
-            axios.get('//127.0.0.1:3000/car')
+            axios.get('//192.168.1.5:3000/car')
                 .then((res) => {
 
                     this.allcarinfo = res.data
@@ -287,7 +287,7 @@ export default {
                     this.error = false
                 }, 3000)
             } else {
-                axios.post('//127.0.0.1:3000/car', {
+                axios.post('//192.168.1.5:3000/car', {
                         carid: this.carid,
                         cartype: this.cartype,
                         carsize: this.carsize,
@@ -334,7 +334,7 @@ export default {
 <style scoped>
 #car {
     width: 80%;
-    margin: 0 auto;
+    margin: 20px auto;
 }
 
 .topbutton {
@@ -351,15 +351,15 @@ export default {
 }
 
 .topbutton-left input {
-    margin: 10px auto;
+    margin: 5px auto;
     border-radius: 10px;
     width: 300px;
-    height: 50px;
+    height: 40px;
     text-align: center;
     -web-kit-appearance: none;
     -moz-appearance: none;
     outline: 0;
-    font-size: 30px;
+    font-size: 20px;
 }
 
 .topbutton-right {
@@ -380,15 +380,17 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 600;
-    height: 60px;
-    line-height: 60px;
+    height: 50px;
+    line-height: 50px;
 }
 
 .tabletitle-item {
     margin: 0 auto;
-    width: 300px;
+    width: 250px;
+    font-size: 20px;
+    line-height: 50px;
 }
 
 .tablebody {
@@ -409,8 +411,8 @@ export default {
 }
 
 .rmDialog-center {
-    margin: 30px 40px;
-    font-size: 25px;
+    margin: 20px;
+    font-size: 20px;
     width: 100%
 }
 </style>

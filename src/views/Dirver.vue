@@ -5,7 +5,7 @@
             <input type="text" v-model="searchDirver" @keyup.enter="search" placeholder="搜索司机信息">
         </div>
         <div class="topbutton-right">
-            <md-button class="md-raised md-primary" @click="adddirverbutton" style="font-size:30px;width:140px;height:50px">+ 添加</md-button>
+            <md-button class="md-raised md-primary" @click="adddirverbutton" style="font-size:20px;width:100px;height:40px;">+ 添加</md-button>
         </div>
     </div>
 
@@ -49,8 +49,8 @@
                         <span>{{item.dirvercard}}</span>
                     </div>
                     <div class="tabletitle-item">
-                        <img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)" style="width:30px;margin:0 10px">
-                        <img src="../..//public/img/icons/dele.png" alt="delete" @click="deletebutton(item)" style="width:40px;margin:0 10px">
+                        <img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)" style="width:20px;margin:0 10px">
+                        <img src="../..//public/img/icons/dele.png" alt="delete" @click="deletebutton(item)" style="width:30px;margin:0 10px">
                     </div>
                 </div>
             </md-card-content>
@@ -60,55 +60,55 @@
     <!-- Dialog start-->
     <md-dialog :md-active.sync="showDialog" style="width:500px">
         <md-dialog-title style="font-size:30px">司机管理</md-dialog-title>
-        <div style="width:400px;margin:20px auto">
-            <md-field style="margin:45px auto">
-                <label style="font-size:25px;color:#000">司机姓名</label>
-                <md-input v-model="dirvername" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                <span class="md-helper-text" v-if="!dirvername" style="font-size:20px;margin: -10px auto;">标识人员姓名</span>
+        <div style="width:400px;margin:0 auto">
+            <md-field style="margin:20px auto">
+                <label style="font-size:20px;color:#000">司机姓名</label>
+                <md-input v-model="dirvername" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                <span class="md-helper-text" v-if="!dirvername" style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
             </md-field>
 
-            <md-field style="margin:45px auto">
-                <label style="font-size:25px;color:#000">准证号码</label>
-                <md-input v-model="dirverid" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                <span class="md-helper-text" v-if="!dirverid" style="font-size:20px;margin: -10px auto;">人员标识信息，必填项目</span>
+            <md-field style="margin:20px auto">
+                <label style="font-size:20px;color:#000">准证号码</label>
+                <md-input v-model="dirverid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                <span class="md-helper-text" v-if="!dirverid" style="font-size:15px;margin: -10px auto;">人员标识信息，必填项目</span>
             </md-field>
 
-            <md-field style="margin:45px auto">
-                <label style="font-size:25px;color:#000">联系方式</label>
-                <md-input v-model="dirverphone" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                <span class="md-helper-text" v-if="!dirverphone" style="font-size:20px;margin: -10px auto;">标识联系方式</span>
+            <md-field style="margin:20px auto">
+                <label style="font-size:20px;color:#000">联系方式</label>
+                <md-input v-model="dirverphone" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                <span class="md-helper-text" v-if="!dirverphone" style="font-size:15px;margin: -10px auto;">标识联系方式</span>
             </md-field>
 
-            <md-field style="margin:45px auto">
-                <label for="dirvercard" style="font-size:25px;color:#000">驾照类型</label>
-                <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:25px;height:55px;max-width: 500px;">
+            <md-field style="margin:20px auto">
+                <label for="dirvercard" style="font-size:20px;color:#000">驾照类型</label>
+                <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:20px;height:55px;max-width: 500px;">
                     <md-option value="C1">C1</md-option>
                     <md-option value="C2">C2</md-option>
                     <md-option value="C3">C3</md-option>
                 </md-select>
             </md-field>
 
-            <md-field style="margin:45px auto">
-                <label style="font-size:25px;color:#000">用户名</label>
-                <md-input v-model="dirverusername" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                <span class="md-helper-text" v-if="!dirverusername" style="font-size:20px;margin: -10px auto;">标识联系方式</span>
+            <md-field style="margin:20px auto">
+                <label style="font-size:20px;color:#000">用户名</label>
+                <md-input v-model="dirverusername" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                <span class="md-helper-text" v-if="!dirverusername" style="font-size:15px;margin: -10px auto;">标识联系方式</span>
             </md-field>
 
-            <md-field style="margin:45px auto">
-                <label style="font-size:25px;color:#000">密码</label>
-                <md-input v-model="dirverpsw" type="password" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                <span class="md-helper-text" v-if="!dirverpsw" style="font-size:20px;margin: -10px auto;">标识密码</span>
+            <md-field style="margin:20px auto">
+                <label style="font-size:20px;color:#000">密码</label>
+                <md-input v-model="dirverpsw" type="password" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                <span class="md-helper-text" v-if="!dirverpsw" style="font-size:15px;margin: -10px auto;">标识密码</span>
             </md-field>
 
-            <md-field style="margin:45px auto">
-                <label style="font-size:25px;color:#000">备注</label>
-                <md-input v-model="dirvernote" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+            <md-field style="margin:20px auto">
+                <label style="font-size:20px;color:#000">备注</label>
+                <md-input v-model="dirvernote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
             </md-field>
         </div>
         <md-dialog-actions style="margin:0 auto 10px auto">
-            <md-button class="md-raised md-primary" @click="showDialog = false" style="font-size:30px;width:140px;height:50px">取消</md-button>
-            <md-button class="md-raised md-primary" v-if="savemode" @click="adddirver" style="font-size:30px;width:140px;height:50px">保存</md-button>
-            <md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:30px;width:140px;height:50px">修改</md-button>
+            <md-button class="md-raised md-primary" @click="showDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
+            <md-button class="md-raised md-primary" v-if="savemode" @click="adddirver" style="font-size:20px;width:100px;height:40px">保存</md-button>
+            <md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:20px;width:100px;height:40px">修改</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- Dialog end-->
@@ -216,7 +216,7 @@ export default {
             this.dirvernote = item.dirvernote
         },
         confirmdelete() {
-            axios.post('//127.0.0.1:3000/dirver/remove', {
+            axios.post('//192.168.1.5:3000/dirver/remove', {
                     _id: this._id
                 })
                 .then((res) => {
@@ -258,7 +258,7 @@ export default {
                     this.error = false
                 }, 3000)
             } else {
-                axios.post('//127.0.0.1:3000/dirver/edit', {
+                axios.post('//192.168.1.5:3000/dirver/edit', {
                         _id: this._id,
                         dirvername: this.dirvername,
                         dirverid: this.dirverid,
@@ -301,7 +301,7 @@ export default {
             }
         },
         getalldirver() {
-            axios.get('//127.0.0.1:3000/dirver')
+            axios.get('//192.168.1.5:3000/dirver')
                 .then((res) => {
                     this.alldirverinfo = res.data
                 }).catch((err) => {
@@ -316,7 +316,7 @@ export default {
                     this.error = false
                 }, 3000)
             } else {
-                axios.post('//127.0.0.1:3000/dirver', {
+                axios.post('//192.168.1.5:3000/dirver', {
                         dirvername: this.dirvername,
                         dirverid: this.dirverid,
                         dirverphone: this.dirverphone,
@@ -381,15 +381,15 @@ export default {
 }
 
 .topbutton-left input {
-    margin: 10px auto;
+    margin: 5px auto;
     border-radius: 10px;
     width: 300px;
-    height: 50px;
+    height: 40px;
     text-align: center;
     -web-kit-appearance: none;
     -moz-appearance: none;
     outline: 0;
-    font-size: 30px;
+    font-size: 20px;
 }
 
 .topbutton-right {
@@ -410,10 +410,10 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 600;
-    height: 60px;
-    line-height: 60px;
+    height: 50px;
+    line-height: 50px;
 }
 
 .tabletitle-item {
@@ -426,14 +426,17 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
+    font-size: 20px;
+    line-height: 50px;
 }
 
-.editdialog{
+.editdialog {
     width: 500px;
 }
+
 .rmDialog-center {
     margin: 30px 40px;
-    font-size: 25px;
+    font-size: 20px;
     width: 100%
 }
 </style>

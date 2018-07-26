@@ -9,9 +9,9 @@
         </div>
     </div>
 
-    <md-card md-with-hover style="width:600px;margin:350px auto">
+    <md-card md-with-hover style="width:500px;margin:220px auto">
         <md-ripple>
-            <md-card-header>
+            <md-card-header style="padding:10px">
                 <div class="card-title">Easybuy车辆管理系统</div>
             </md-card-header>
 
@@ -44,7 +44,7 @@ export default {
             console.log('###')
             console.log(this.email)
             console.log(this.password)
-            axios.post('//127.0.0.1:3000/clerks', {
+            axios.post('//192.168.1.5:3000/clerks', {
                     email: this.email,
                     password: this.password
                 })
@@ -68,12 +68,12 @@ export default {
 .toplogo {
     border: 1px solid;
     border-radius: 50%;
-    width: 200px;
-    height: 200px;
+    width: 190px;
+    height: 190px;
     line-height: 200px;
     position: absolute;
-    right: 213px;
-    top: -90px;
+    right: 171px;
+    top: -96px;
     box-shadow: 1px 1px 10px 0px;
     background-color: #ffffff;
     border: 3px solid #f7a1a1;

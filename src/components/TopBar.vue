@@ -31,13 +31,13 @@ export default {
     display: flex;
     -webkit-flex-flow: row wrap;
     flex-flow: row wrap;
-    padding-top: 30px;
+    padding-top: 10px;
 }
 
 .buttomarea-item {
     flex-basis: 20%;
-    font-size: 40px;
-    padding: 30px 0;
+    font-size: 30px;
+    padding: 20px 0;
 }
 
 .buttomarea a {
@@ -47,7 +47,7 @@ export default {
 
 #topbar a.router-link-exact-active {
     font-weight: bold;
-    font-size: 45px;
+    font-size: 35px;
 }
 
 .buttomarea-item:hover {
