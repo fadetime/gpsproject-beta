@@ -193,6 +193,8 @@
 
 <script>
 import axios from 'axios'
+import config from '../../public/js/config.js'
+
 export default {
     data() {
         return {
@@ -238,7 +240,7 @@ export default {
             this.choiceclientb = []
         },
         getalldirver() {
-            axios.get('//192.168.1.5:3000/dirver')
+            axios.get(config.server +'/dirver')
                 .then((res) => {
                     this.alldirverinfo = res.data
                 }).catch((err) => {
@@ -246,7 +248,7 @@ export default {
                 })
         },
         getallcar() {
-            axios.get('//192.168.1.5:3000/car')
+            axios.get(config.server +'/car')
                 .then((res) => {
                     this.allcarinfo = res.data
                 }).catch((err) => {
@@ -254,7 +256,7 @@ export default {
                 })
         },
         getallclientb() {
-            axios.get('//192.168.1.5:3000/clientb')
+            axios.get(config.server +'/clientb')
                 .then((res) => {
                     this.allclientbinfo = res.data
                 }).catch((err) => {
@@ -262,7 +264,7 @@ export default {
                 })
         },
         getalltimes() {
-            axios.get('//192.168.1.5:3000/times')
+            axios.get(config.server +'/times')
                 .then((res) => {
                     this.alltimesinfo = res.data.doc
                 }).catch((err) => {
@@ -298,7 +300,7 @@ export default {
                     this.error = false
                 }, 3000)
             } else {
-                axios.post('//192.168.1.5:3000/times', {
+                axios.post(config.server +'/times', {
                         timesname: this.timesname,
                         timescar: this.choicecar,
                         timesnote: this.timesnote,
@@ -335,7 +337,7 @@ export default {
             }
         },
         changeclientb() {
-            axios.post('//192.168.1.5:3000/clientb/changeline', {
+            axios.post(config.server +'/clientb/changeline', {
                 choiceclientb: this.choiceclientb,
                 timesname: this.timesname
             }).then((res) => {
@@ -377,7 +379,7 @@ export default {
                     this.error = false
                 }, 3000)
             } else {
-                axios.post('//192.168.1.5:3000/times/edit', {
+                axios.post(config.server +'/times/edit', {
                         _id: this._id,
                         timesname: this.timesname,
                         timescar: this.choicecar,
@@ -417,7 +419,7 @@ export default {
             this.timesclientnumber = item.timesclientnumber
         },
         confirmremove() {
-            axios.post('//192.168.1.5:3000/times/remove', {
+            axios.post(config.server +'/times/remove', {
                     _id: this._id
                 })
                 .then((res) => {

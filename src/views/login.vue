@@ -16,10 +16,13 @@
             </md-card-header>
 
             <md-card-content>
+                
                 <input type="text" v-model="email" class="inputbox">
                 <br>
                 <input type="text" class="inputbox" v-model="password">
-                <br>
+                <div v-if="errmsg" style="color:#d74342">
+                    <span>{{errmsg}}</span>
+                </div>
             </md-card-content>
 
             <md-card-actions>
@@ -32,29 +35,31 @@
 
 <script>
 import axios from 'axios'
+import config from "../../public/js/config.js"
+
 export default {
     data() {
         return {
             email: 'admin@admin.com',
-            password: '1'
+            password: '1',
+            errmsg: ''
         }
     },
     methods: {
         login() {
-            console.log('###')
-            console.log(this.email)
-            console.log(this.password)
-            axios.post('//192.168.1.5:3000/clerks', {
+            axios.post(config.server + '/clerks', {
                     email: this.email,
                     password: this.password
                 })
                 .then(doc => {
-                    console.log(doc.data.msg)
-                    localStorage.token = this.email
-                    let item = this.email
-                    this.$store.dispatch('setToken', item)
-                    console.log(this.$store.state.token)
-                    this.$router.push('/')
+                    this.errmsg = doc.data.msg
+                    if (doc.data.status == 0) {
+                        localStorage.token = this.email
+                        let item = this.email
+                        this.$store.dispatch('setToken', item)
+                        console.log(this.$store.state.token)
+                        this.$router.push('/')
+                    }
                 })
                 .catch(err => {
                     console.log(err)
@@ -87,11 +92,11 @@ export default {
     text-align: center;
     -web-kit-appearance: none;
     -moz-appearance: none;
-    outline:0;
+    outline: 0;
 }
 
-.card-title{
-    font-family:sans-serif;
+.card-title {
+    font-family: sans-serif;
     font-size: 35px;
     font-weight: 700;
     margin: 40px auto;

@@ -3,7 +3,7 @@
     <top-bar v-if="$store.state.token"></top-bar>
     <router-view/>
     <div id="logout" style="text-align:right" @click="logout" v-if="$store.state.token">
-        <h1><a href="#" class="home" style="color:#d74342"><b>S</b><span>ign out</span></a></h1>
+        <h1><a href="#" class="home" style="color:#d74342"><b><img src="../public/img/mLogo.png" style="width:60px" alt="logo"></b><span>easy buy</span></a></h1>
     </div>
 </div>
 </template>
@@ -94,17 +94,17 @@ body {
 #logout h1 a::before {
     font-size: 72px;
     position: relative;
-    top: -5px;
+    top: 5px;
     letter-spacing: 13px;
     left: 11px;
 }
 
 #logout h1 a::after {
-    content: ">";
+    content: ")";
 }
 
 #logout h1 a::before {
-    content: "<";
+    content: "(";
 }
 
 #logout h1 a b,

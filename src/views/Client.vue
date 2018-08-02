@@ -383,6 +383,8 @@
 
 <script>
 import axios from 'axios'
+import config from '../../public/js/config.js'
+
 export default {
     data() {
         return {
@@ -494,7 +496,7 @@ export default {
             }
         },
         getallclienta() {
-            axios.get('//192.168.1.5:3000/clienta')
+            axios.get(config.server +'/clienta')
                 .then((res) => {
                     this.allclientainfo = res.data
                 }).catch((err) => {
@@ -502,7 +504,7 @@ export default {
                 })
         },
         getallclientb() {
-            axios.get('//192.168.1.5:3000/clientb')
+            axios.get(config.server +'/clientb')
                 .then((res) => {
                     this.allclientbinfo = res.data
                 }).catch((err) => {
@@ -517,7 +519,7 @@ export default {
                     this.error1 = false
                 }, 3000)
             } else {
-                axios.post('//192.168.1.5:3000/clienta', {
+                axios.post(config.server +'/clienta', {
                         clientaname: this.clientaname,
                         clientaaddress: this.clientaaddress,
                         clientaphone: this.clientaphone,
@@ -580,7 +582,7 @@ export default {
                     this.error1 = false
                 }, 3000)
             } else {
-                axios.post('//192.168.1.5:3000/clientb', {
+                axios.post(config.server +'/clientb', {
                         clientbname: this.clientbname,
                         clientbaddress: this.clientbaddress,
                         clientbphone: this.clientbphone,
@@ -648,7 +650,7 @@ export default {
 
         },
         confirmEditClientB() {
-            axios.post('//192.168.1.5:3000/clientb/edit', {
+            axios.post(config.server +'/clientb/edit', {
                     _id: this._id,
                     clientbname: this.clientbname,
                     clientbaddress: this.clientbaddress,
@@ -688,7 +690,7 @@ export default {
             this.clientbserve = item.clientbserve
         },
         confirmdeleteB() {
-            axios.post('//192.168.1.5:3000/clientb/remove', {
+            axios.post(config.server +'/clientb/remove', {
                     _id: this._id
                 })
                 .then((doc) => {
@@ -740,7 +742,7 @@ export default {
             this.clientamail = item.clientamail
         },
         confirmEditClientA() {
-            axios.post('//192.168.1.5:3000/clienta/edit', {
+            axios.post(config.server +'/clienta/edit', {
                     _id: this._id,
                     clientaname: this.clientaname,
                     clientaaddress: this.clientaaddress,
@@ -774,7 +776,7 @@ export default {
                 })
         },
         confirmRemoveClientA() {
-            axios.post('//192.168.1.5:3000/clienta/remove', {
+            axios.post(config.server +'/clienta/remove', {
                     _id: this._id
                 })
                 .then((doc) => {

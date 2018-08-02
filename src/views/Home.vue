@@ -42,7 +42,7 @@
                         <span class="tabletitle-item">{{item.missionline}}</span>
                         <span class="tabletitle-item">{{item.missiondirver}}</span>
                         <span class="tabletitle-item">{{item.missioncar}}</span>
-                        <span class="tabletitle-item">已送数量</span>
+                        <span class="tabletitle-item">{{item.count}}</span>
                         <span class="tabletitle-item">{{item.missionclient.length}}</span>
                         <span class="tabletitle-item">{{item.missionphone}}</span>
                     </div>
@@ -282,7 +282,8 @@
                         {{item.clientbname}}
                     </div>
                     <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                        05:01
+                        <span v-if="item.finishdate">{{item.finishdate | timefilter}}</span>
+                        <span v-else style="color:#f9cf97">未送达</span>
                     </div>
                 </div>
             </div>
@@ -314,6 +315,8 @@
 
 <script>
 import axios from 'axios'
+import config from '../../public/js/config.js'
+
 export default {
     name: 'home',
     data() {
@@ -359,7 +362,7 @@ export default {
     },
     watch: {
         selectedDate: function () {
-            axios.post('//192.168.1.5:3000/mission', {
+            axios.post(config.server +'/mission', {
                     startdate: this.selectedDate
                 })
                 .then(res => {
@@ -385,7 +388,7 @@ export default {
 
         //confirm remove mission start
         confirmRemoveMission() {
-            axios.post('//192.168.1.5:3000/mission/remove', {
+            axios.post(config.server +'/mission/remove', {
                     missionid: this.missionid
                 })
                 .then(doc => {
@@ -554,7 +557,7 @@ export default {
         //获取所有司机数据 start
         getalldirver() {
 
-            axios.get('//192.168.1.5:3000/dirver')
+            axios.get(config.server +'/dirver')
                 .then((res) => {
                     this.alldirverinfo = res.data
                 }).catch((err) => {
@@ -577,11 +580,13 @@ export default {
         },
         getMission() {
             setTimeout(() => {
-                axios.post('//192.168.1.5:3000/mission', {
+                axios.post(config.server +'/mission', {
                         startdate: this.selectedDate
                     })
                     .then(res => {
                         this.allmission = res.data
+                        console.log(this.allmission)
+                        this.countfinish()
                     })
                     .catch(err => {
                         console.log('获取数据失败')
@@ -590,6 +595,16 @@ export default {
             }, 100)
         },
 
+        countfinish(){
+            this.allmission.forEach(x => {
+                x.count =0
+                x.missionclient.forEach(y => {
+                    if(y.finishdate){
+                        x.count +=1
+                    }
+                })
+            });
+        },
         setDone(id, index) {
             if (id == 'first') {
                 if (this.choseLine == '') {
@@ -647,11 +662,10 @@ export default {
             this.getalldirver()
             this.getallcar()
             this.addDialog = true
-
         },
 
         getalltimes() {
-            axios.get('//192.168.1.5:3000/times')
+            axios.get(config.server +'/times')
                 .then((res) => {
                     this.alltimesinfo = res.data.doc
                 }).catch((err) => {
@@ -660,7 +674,7 @@ export default {
         },
 
         getallcar() {
-            axios.get('//192.168.1.5:3000/car')
+            axios.get(config.server +'/car')
                 .then((res) => {
 
                     this.allcarinfo = res.data
@@ -687,7 +701,7 @@ export default {
             }
         },
         getallclienta() {
-            axios.get('//192.168.1.5:3000/clienta')
+            axios.get(config.server +'/clienta')
                 .then((res) => {
                     this.allclientainfo = res.data
                 }).catch((err) => {
@@ -695,7 +709,7 @@ export default {
                 })
         },
         getallclientb() {
-            axios.get('//192.168.1.5:3000/clientb')
+            axios.get(config.server +'/clientb')
                 .then((res) => {
                     this.allclientbinfo = res.data
                     this.allclientbinfo.forEach(element => {
@@ -727,7 +741,7 @@ export default {
                 missionclient: this.aLineInfo.timesclientb.map((item) => {
                     let obj = {
                         clientbname: item.clientbname,
-                        clientbaddress: item.lientbaddress,
+                        clientbaddress: item.clientbaddress,
                         clientbphone: item.clientbphone,
                         clientbpostcode: item.clientbpostcode,
                         clientbserve: item.clientbserve.clientaname
@@ -735,7 +749,7 @@ export default {
                     return obj
                 })
             }
-            axios.post('//192.168.1.5:3000/mission/create', query)
+            axios.post(config.server +'/mission/create', query)
                 .then(res => {
                     this.error = true
                     this.errormsg = res.data.msg

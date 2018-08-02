@@ -152,113 +152,125 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
+import config from "../../public/js/config.js";
+
 export default {
     data() {
         return {
-            selecteddirver: '',
-            searchDirver: '',
+            selecteddirver: "",
+            searchDirver: "",
             searchedDriver: [],
             dirvers: [],
             showDialog: false,
             deleteDialog: false,
-            _id: '',
-            dirvername: '',
-            dirverid: '',
-            dirverphone: '',
-            dirvercard: '',
-            dirverusername: '',
-            dirverpsw: '',
-            dirvernote: '',
+            _id: "",
+            dirvername: "",
+            dirverid: "",
+            dirverphone: "",
+            dirvercard: "",
+            dirverusername: "",
+            dirverpsw: "",
+            dirvernote: "",
             alldirverinfo: [],
             successdmsg: false,
             error: false,
-            errormsg: '发生未知错误',
+            errormsg: "发生未知错误",
             savemode: true
-        }
+        };
     },
     mounted() {
-        this.getalldirver()
+        this.getalldirver();
     },
     methods: {
         search(item) {
-            if (this.searchDirver == '') {
-                this.getalldirver()
+            if (this.searchDirver == "") {
+                this.getalldirver();
             } else {
                 this.searchedDriver = this.alldirverinfo.filter(element => {
-                    return element.dirvername.toLowerCase().indexOf(this.searchDirver.toLowerCase()) !== -1
-                })
-                this.alldirverinfo = this.searchedDriver
+                    return (
+                        element.dirvername
+                        .toLowerCase()
+                        .indexOf(this.searchDirver.toLowerCase()) !== -1
+                    );
+                });
+                this.alldirverinfo = this.searchedDriver;
             }
-
         },
         adddirverbutton() {
-            this.showDialog = true
-            this.savemode = true
-            this._id = ''
-            this.dirvername = ''
-            this.dirverid = ''
-            this.dirverphone = ''
-            this.dirvercard = ''
-            this.dirverusername = ''
-            this.dirverpsw = ''
-            this.dirvernote = ''
+            this.showDialog = true;
+            this.savemode = true;
+            this._id = "";
+            this.dirvername = "";
+            this.dirverid = "";
+            this.dirverphone = "";
+            this.dirvercard = "";
+            this.dirverusername = "";
+            this.dirverpsw = "";
+            this.dirvernote = "";
         },
         deletebutton(item) {
-            this.deleteDialog = true
-            this._id = item._id
-            this.dirvername = item.dirvername
-            this.dirverid = item.dirverid
-            this.dirverphone = item.dirverphone
-            this.dirvercard = item.dirvercard
-            this.dirverusername = item.dirverusername
-            this.dirverpsw = item.dirverpsw
-            this.dirvernote = item.dirvernote
+            this.deleteDialog = true;
+            this._id = item._id;
+            this.dirvername = item.dirvername;
+            this.dirverid = item.dirverid;
+            this.dirverphone = item.dirverphone;
+            this.dirvercard = item.dirvercard;
+            this.dirverusername = item.dirverusername;
+            this.dirverpsw = item.dirverpsw;
+            this.dirvernote = item.dirvernote;
         },
         confirmdelete() {
-            axios.post('//192.168.1.5:3000/dirver/remove', {
+            axios
+                .post(config.server + "/dirver/remove", {
                     _id: this._id
                 })
-                .then((res) => {
-                    this.errormsg = res.data.msg
-                    this.error = true
+                .then(res => {
+                    this.errormsg = res.data.msg;
+                    this.error = true;
                     setTimeout(() => {
-                        this.error = false
-                    }, 3000)
+                        this.error = false;
+                    }, 3000);
                     if (res.data.code == 0) {
-                        this.getalldirver()
-                        this.deleteDialog = false
+                        this.getalldirver();
+                        this.deleteDialog = false;
                     }
                 })
-                .catch((err) => {
-                    this.error = true
-                    this.errormsg = err
+                .catch(err => {
+                    this.error = true;
+                    this.errormsg = err;
                     setTimeout(() => {
-                        this.error = false
-                    }, 3000)
-                })
+                        this.error = false;
+                    }, 3000);
+                });
         },
         editbutton(item) {
-            this.savemode = false
-            this._id = item._id
-            this.dirvername = item.dirvername
-            this.dirverid = item.dirverid
-            this.dirverphone = item.dirverphone
-            this.dirvercard = item.dirvercard
-            this.dirverusername = item.dirverusername
-            this.dirverpsw = item.dirverpsw
-            this.dirvernote = item.dirvernote
-            this.showDialog = true
+            this.savemode = false;
+            this._id = item._id;
+            this.dirvername = item.dirvername;
+            this.dirverid = item.dirverid;
+            this.dirverphone = item.dirverphone;
+            this.dirvercard = item.dirvercard;
+            this.dirverusername = item.dirverusername;
+            this.dirverpsw = item.dirverpsw;
+            this.dirvernote = item.dirvernote;
+            this.showDialog = true;
         },
         confirmedit() {
-            if (!this.dirvername || !this.dirverid || !this.dirverusername || !this.dirverpsw || !this.dirverphone) {
-                this.error = true
-                this.errormsg = '请填写必要信息'
+            if (!this.dirvername ||
+                !this.dirverid ||
+                !this.dirverusername ||
+                !this.dirverpsw ||
+                !this.dirverphone
+            ) {
+                this.error = true;
+                this.errormsg = "请填写必要信息";
                 setTimeout(() => {
-                    this.error = false
-                }, 3000)
+                    this.error = false;
+                }, 3000);
             } else {
-                axios.post('//192.168.1.5:3000/dirver/edit', {
+                axios
+                    .post(config.server +"/dirver/edit", {
                         _id: this._id,
                         dirvername: this.dirvername,
                         dirverid: this.dirverid,
@@ -268,55 +280,61 @@ export default {
                         dirverpsw: this.dirverpsw,
                         dirvernote: this.dirvernote
                     })
-                    .then((response) => {
+                    .then(response => {
                         if (response.data.code == 1) {
-                            this.error = true
-                            this.errormsg = response.data.msg
+                            this.error = true;
+                            this.errormsg = response.data.msg;
                             setTimeout(() => {
-                                this.error = false
-                            }, 3000)
+                                this.error = false;
+                            }, 3000);
                         } else {
-                            this.successdmsg = true
-                            this.showDialog = false
-                            this.carid = ''
-                            this.cartype = ''
-                            this.carsize = ''
-                            this.cartimes = ''
-                            this.carnote = ''
-                            this.getalldirver()
+                            this.successdmsg = true;
+                            this.showDialog = false;
+                            this.carid = "";
+                            this.cartype = "";
+                            this.carsize = "";
+                            this.cartimes = "";
+                            this.carnote = "";
+                            this.getalldirver();
                             setTimeout(() => {
-                                this.successdmsg = false
-                            }, 3000)
+                                this.successdmsg = false;
+                            }, 3000);
                         }
-
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         console.log(error);
-                        this.error = true
-                        this.errormsg = response.data.msg
+                        this.error = true;
+                        this.errormsg = response.data.msg;
                         setTimeout(() => {
-                            this.error = false
-                        }, 3000)
+                            this.error = false;
+                        }, 3000);
                     });
             }
         },
         getalldirver() {
-            axios.get('//192.168.1.5:3000/dirver')
-                .then((res) => {
-                    this.alldirverinfo = res.data
-                }).catch((err) => {
-                    console.log(err)
+            axios
+                .get(config.server +"/dirver")
+                .then(res => {
+                    this.alldirverinfo = res.data;
                 })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         adddirver() {
-            if (!this.dirvername || !this.dirverid || !this.dirverusername || !this.dirverpsw) {
-                this.error = true
-                this.errormsg = '请填写必要信息'
+            if (!this.dirvername ||
+                !this.dirverid ||
+                !this.dirverusername ||
+                !this.dirverpsw
+            ) {
+                this.error = true;
+                this.errormsg = "请填写必要信息";
                 setTimeout(() => {
-                    this.error = false
-                }, 3000)
+                    this.error = false;
+                }, 3000);
             } else {
-                axios.post('//192.168.1.5:3000/dirver', {
+                axios
+                    .post(config.server +"/dirver", {
                         dirvername: this.dirvername,
                         dirverid: this.dirverid,
                         dirverphone: this.dirverphone,
@@ -325,40 +343,39 @@ export default {
                         dirverpsw: this.dirverpsw,
                         dirvernote: this.dirvernote
                     })
-                    .then((response) => {
+                    .then(response => {
                         if (response.data.code == 1) {
-                            this.error = true
-                            this.errormsg = response.data.msg
+                            this.error = true;
+                            this.errormsg = response.data.msg;
                             setTimeout(() => {
-                                this.error = false
-                            }, 3000)
+                                this.error = false;
+                            }, 3000);
                         } else {
-                            this.successdmsg = true
-                            this.showDialog = false
-                            this.carid = ''
-                            this.cartype = ''
-                            this.carsize = ''
-                            this.cartimes = ''
-                            this.carnote = ''
-                            this.getalldirver()
+                            this.successdmsg = true;
+                            this.showDialog = false;
+                            this.carid = "";
+                            this.cartype = "";
+                            this.carsize = "";
+                            this.cartimes = "";
+                            this.carnote = "";
+                            this.getalldirver();
                             setTimeout(() => {
-                                this.successdmsg = false
-                            }, 3000)
+                                this.successdmsg = false;
+                            }, 3000);
                         }
-
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         console.log(error);
-                        this.error = true
-                        this.errormsg = response.data.msg
+                        this.error = true;
+                        this.errormsg = response.data.msg;
                         setTimeout(() => {
-                            this.error = false
-                        }, 3000)
+                            this.error = false;
+                        }, 3000);
                     });
             }
         }
     }
-}
+};
 </script>
 
 <style scoped>
@@ -437,6 +454,6 @@ export default {
 .rmDialog-center {
     margin: 30px 40px;
     font-size: 20px;
-    width: 100%
+    width: 100%;
 }
 </style>

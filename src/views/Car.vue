@@ -144,6 +144,8 @@
 
 <script>
 import axios from 'axios'
+import config from "../../public/js/config.js"
+
 export default {
     name: 'Car',
     data() {
@@ -215,7 +217,7 @@ export default {
 
         },
         confirmedit() {
-            axios.post('//192.168.1.5:3000/car/update', {
+            axios.post(config.server + '/car/update', {
                     _id: this._id,
                     carid: this.carid,
                     cartype: this.cartype,
@@ -245,7 +247,7 @@ export default {
                 })
         },
         confirmremove() {
-            axios.post('//192.168.1.5:3000/car/remove', {
+            axios.post(config.server + '/car/remove', {
                     _id: this._id
                 })
                 .then((res) => {
@@ -270,7 +272,7 @@ export default {
                 })
         },
         getallcar() {
-            axios.get('//192.168.1.5:3000/car')
+            axios.get(config.server + '/car')
                 .then((res) => {
 
                     this.allcarinfo = res.data
@@ -287,7 +289,7 @@ export default {
                     this.error = false
                 }, 3000)
             } else {
-                axios.post('//192.168.1.5:3000/car', {
+                axios.post(config.server + '/car', {
                         carid: this.carid,
                         cartype: this.cartype,
                         carsize: this.carsize,
