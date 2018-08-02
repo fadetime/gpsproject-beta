@@ -63,39 +63,43 @@
     </div>
 
     <!-- Dialog start-->
-    <md-dialog :md-active.sync="showDialog" style="width:500px">
-        <md-dialog-title style="font-size:30px">车辆管理</md-dialog-title>
-        <div style="width:400px;margin:0 auto">
-            <md-field style="margin:20px auto">
-                <label style="font-size:20px;color:#000">车牌号码</label>
-                <md-input v-model="carid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                <span class="md-helper-text" style="font-size:20px;margin: -10px auto;" v-if="!carid">车辆标识信息，必填项目</span>
-            </md-field>
-
-            <md-field style="margin:20px auto">
-                <label style="font-size:20px;color:#000">车型</label>
-                <md-input v-model="cartype" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                <span class="md-helper-text" style="font-size:20px;margin: -10px auto;" v-if="!cartype">请填写车型信息</span>
-            </md-field>
-
-            <md-field style="margin:20px auto">
-                <label style="font-size:20px;color:#000">尺寸</label>
-                <md-input v-model="carsize" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                <span class="md-helper-text" style="font-size:20px;margin: -10px auto;" v-if="!carsize">请填写车辆尺寸</span>
-            </md-field>
-
-            <md-field style="margin:20px auto">
-                <label style="font-size:20px;color:#000">出车次数</label>
-                <md-input v-model="cartimes" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                <span class="md-helper-text" style="font-size:20px;margin: -10px auto;" v-if="!cartimes">如不填写默认为0</span>
-            </md-field>
-
-            <md-field style="margin:20px auto">
-                <label style="font-size:20px;color:#000">备注</label>
-                <md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-            </md-field>
+    <md-dialog :md-active.sync="showDialog" style="width:600px">
+        <div class="dialog-title">
+            <span>车辆管理</span>
         </div>
+        <div class="dialog-body">
+            <div class="dialog-body-item">
+                <md-field style="margin:30px auto">
+                    <label style="font-size:20px;color:#000">车牌号码</label>
+                    <md-input v-model="carid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                    <span class="md-helper-text" style="font-size:15px;margin: -2px auto;" v-if="!carid">车辆标识信息，必填项目</span>
+                </md-field>
 
+                <md-field style="margin:30px auto">
+                    <label style="font-size:20px;color:#000">车型</label>
+                    <md-input v-model="cartype" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                    <span class="md-helper-text" style="font-size:15px;margin: -2px auto;" v-if="!cartype">请填写车型信息</span>
+                </md-field>
+
+                <md-field style="margin:30px auto">
+                    <label style="font-size:20px;color:#000">尺寸</label>
+                    <md-input v-model="carsize" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                    <span class="md-helper-text" style="font-size:15px;margin: -2px auto;" v-if="!carsize">请填写车辆尺寸</span>
+                </md-field>
+            </div>
+            <div class="dialog-body-item">
+                <md-field style="margin:30px auto">
+                    <label style="font-size:20px;color:#000">出车次数</label>
+                    <md-input v-model="cartimes" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                    <span class="md-helper-text" style="font-size:15px;margin: -2px auto;" v-if="!cartimes">如不填写默认为0</span>
+                </md-field>
+
+                <md-field style="margin:30px auto">
+                    <label style="font-size:20px;color:#000">备注</label>
+                    <md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                </md-field>
+            </div>
+        </div>
         <md-dialog-actions style="margin:0 auto 10px auto">
             <md-button class="md-raised md-primary" @click="showDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
             <md-button class="md-raised md-primary" v-if="addmode" @click="addcar" style="font-size:20px;width:100px;height:40px">保存</md-button>
@@ -337,6 +341,28 @@ export default {
 #car {
     width: 80%;
     margin: 20px auto;
+}
+
+.dialog-title {
+    text-align: left;
+    padding: 20px 0 0 15px;
+}
+
+.dialog-title span {
+    font-size: 30px
+}
+
+.dialog-body {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+
+.dialog-body-item {
+    flex-basis: 40%;
+    text-align: left;
+    margin: 0 auto;
 }
 
 .topbutton {

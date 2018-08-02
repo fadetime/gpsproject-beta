@@ -304,7 +304,7 @@
                     <div class="dialogb-body-status">
                         <div class="dialogb-body-status-left">
                             <div>
-                                <input type="radio" name="statusa" v-model="clientastatus" value="active">
+                                <input type="radio" name="statusa" v-model="clientastatus" value="active" checked="checked" />
                             </div>
                             <div style="padding-top: 3px;">
                                 <span style="font-size:20px;color:#000">active</span>
