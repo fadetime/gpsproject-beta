@@ -78,7 +78,7 @@
 
                 <md-field style="margin:30px auto">
                     <label style="font-size:20px;color:#000">联系方式</label>
-                    <md-input v-model="dirverphone" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                    <md-input v-model="dirverphone" type="number" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!dirverphone" style="font-size:15px;margin: -10px auto;">标识联系方式</span>
                 </md-field>
 

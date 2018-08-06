@@ -276,7 +276,7 @@
             <div style="height:400px;overflow:auto;">
                 <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;padding:5px 0" v-for="(item,index) in missionclient" :key="index">
                     <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                        <span>{{index}}</span>
+                        <span>{{index+1}}</span>
                     </div>
                     <div style="flex-basis:30%;text-align:center;margin:0 auto">
                         {{item.clientbname}}

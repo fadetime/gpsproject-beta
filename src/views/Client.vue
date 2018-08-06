@@ -153,7 +153,7 @@
 
                 <md-field style="margin:20px auto">
                     <label style="font-size:20px;color:#000">客户电话</label>
-                    <md-input v-model="clientbphone" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                    <md-input v-model="clientbphone" type="number" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientbphone">客户电话标识信息</span>
                 </md-field>
             </div>
@@ -256,7 +256,7 @@
 
                 <md-field style="margin:20px auto">
                     <label style="font-size:20px;color:#000">合作商电话</label>
-                    <md-input v-model="clientaphone" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+                    <md-input v-model="clientaphone" type="number" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
                     <span class="md-helper-text" v-if="!clientaphone">合作商电话标识信息</span>
                 </md-field>
 
