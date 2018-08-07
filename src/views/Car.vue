@@ -5,7 +5,7 @@
             <input type="text" v-model="selectedCar" @keyup.enter="search" placeholder="搜索车牌信息">
         </div>
         <div class="topbutton-right">
-            <md-button class="md-raised md-primary" @click="showDialog = true,addmode=true" style="font-size:20px;width:100px;height:40px;">+ 添加</md-button>
+            <md-button class="md-raised md-primary" @click="newCar" style="font-size:20px;width:100px;height:40px;">+ 添加</md-button>
         </div>
     </div>
     <div class="centertable">
@@ -19,7 +19,7 @@
                         <span>车型</span>
                     </div>
                     <div class="tabletitle-item">
-                        <span>尺寸</span>
+                        <span>尾门</span>
                     </div>
                     <div class="tabletitle-item">
                         <span>出车次数</span>
@@ -44,7 +44,7 @@
                         <span>{{item.cartype}}</span>
                     </div>
                     <div class="tabletitle-item">
-                        <span>{{item.carsize}}</span>
+                        <span>{{item.tailgate}}</span>
                     </div>
                     <div class="tabletitle-item">
                         <span>{{item.cartimes}}</span>
@@ -81,20 +81,33 @@
                     <span class="md-helper-text" style="font-size:15px;margin: -2px auto;" v-if="!cartype">请填写车型信息</span>
                 </md-field>
 
-                <md-field style="margin:30px auto">
-                    <label style="font-size:20px;color:#000">尺寸</label>
-                    <md-input v-model="carsize" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" style="font-size:15px;margin: -2px auto;" v-if="!carsize">请填写车辆尺寸</span>
-                </md-field>
             </div>
             <div class="dialog-body-item">
-                <md-field style="margin:30px auto">
-                    <label style="font-size:20px;color:#000">出车次数</label>
-                    <md-input v-model="cartimes" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" style="font-size:15px;margin: -2px auto;" v-if="!cartimes">如不填写默认为0</span>
-                </md-field>
+                <div style="margin:30px auto">
+                    <span style="font-size:20px;color:#000">尾门(tailgate)</span>
+                </div>
+                <div class="dialog-body-radio">
+                    <div class="dialog-body-radio-item">
+                        <div>
+                            <input type="radio" name="cartailgate" v-model="tailgate" value="yes">
+                        </div>
+                        <div style="font-size:15px;color:#000;padding-top:3px">
+                            <span>YES</span>
+                        </div>
+                        
+                    </div>
+                    <div class="dialog-body-radio-item">
+                        <div>
+                            <input type="radio" name="cartailgate" v-model="tailgate" value="no">
+                        </div>
+                        <div style="font-size:15px;color:#000;padding-top:3px">
+                            <span>NO</span>
+                        </div>
+                        
+                    </div>
+                </div>
 
-                <md-field style="margin:30px auto">
+                <md-field style="margin:20px auto">
                     <label style="font-size:20px;color:#000">备注</label>
                     <md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                 </md-field>
@@ -113,22 +126,28 @@
         <md-dialog-title style="font-size:30px">删除车辆</md-dialog-title>
         <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
             <div class="rmDialog-center">
-                <span style="text-align:left">车牌号码:</span><span>{{carid}}</span>
+                <span style="text-align:left">车牌号码:</span> &nbsp;
+                <span>{{carid}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>车辆类型:</span><span>{{cartype}}</span>
+                <span>车辆类型:</span> &nbsp;
+                <span>{{cartype}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>车辆尺寸:</span><span>{{carsize}}</span>
+                <span>尾门:</span> &nbsp;
+                <span>{{tailgate}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>出车次数:</span><span>{{cartimes}}</span>
+                <span>出车次数:</span> &nbsp;
+                <span>{{cartimes}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>车辆备注:</span><span>{{carnote}}</span>
+                <span>车辆备注:</span> &nbsp;
+                <span>{{carnote}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>加入时间:</span><span>{{cardate}}</span>
+                <span>加入时间:</span> &nbsp;
+                <span>{{cardate | datefilter}}</span>
             </div>
         </div>
 
@@ -162,7 +181,6 @@ export default {
             error3: false,
             carid: '',
             cartype: '',
-            carsize: '',
             cartimes: '',
             carnote: '',
             cardate: '',
@@ -170,6 +188,7 @@ export default {
             showDialog: false,
             removeDialog: false,
             selectedCar: '',
+            tailgate: '',
             searchCar: [],
             allcarinfo: [],
             employees: [
@@ -189,6 +208,13 @@ export default {
         this.getallcar()
     },
     methods: {
+        newCar() {
+            this.showDialog = true
+            this.addmode = true
+            this.carid = ''
+            this.cartype = ''
+            this.carnote = ''
+        },
         search(item) {
             if (this.selectedCar == '') {
                 this.getallcar()
@@ -205,8 +231,7 @@ export default {
             this._id = item._id
             this.carid = item.carid
             this.cartype = item.cartype
-            this.carsize = item.carsize
-            this.cartimes = item.cartimes
+            this.tailgate = item.tailgate
             this.carnote = item.carnote
             this.showDialog = true
         },
@@ -214,9 +239,10 @@ export default {
             this._id = item._id
             this.carid = item.carid
             this.cartype = item.cartype
-            this.carsize = item.carsize
+            this.tailgate = item.tailgate
             this.cartimes = item.cartimes
             this.carnote = item.carnote
+            this.cardate = item.cardate
             this.removeDialog = true
 
         },
@@ -225,8 +251,7 @@ export default {
                     _id: this._id,
                     carid: this.carid,
                     cartype: this.cartype,
-                    carsize: this.carsize,
-                    cartimes: this.cartimes,
+                    tailgate: this.tailgate,
                     carnote: this.carnote
                 })
                 .then((res) => {
@@ -280,15 +305,15 @@ export default {
                 .then((res) => {
 
                     this.allcarinfo = res.data
-
+                    console.log(this.allcarinfo)
                 }).catch((err) => {
                     console.log(err)
                 })
         },
         addcar() {
-            if (!this.carid || !this.cartype || !this.carsize || !this.cartimes) {
+            if (!this.carid || !this.cartype || !this.tailgate) {
                 this.error = true
-                this.errormsg = res.data.msg
+                this.errormsg = '请填写必要信息'
                 setTimeout(() => {
                     this.error = false
                 }, 3000)
@@ -296,8 +321,7 @@ export default {
                 axios.post(config.server + '/car', {
                         carid: this.carid,
                         cartype: this.cartype,
-                        carsize: this.carsize,
-                        cartimes: this.cartimes,
+                        tailgate: this.tailgate,
                         carnote: this.carnote,
                     })
                     .then((response) => {
@@ -314,8 +338,7 @@ export default {
                             this.showDialog = false
                             this.carid = ''
                             this.cartype = ''
-                            this.carsize = ''
-                            this.cartimes = ''
+                            this.tailgate = ''
                             this.carnote = ''
                             setTimeout(() => {
                                 this.error = false
@@ -442,5 +465,26 @@ export default {
     margin: 20px;
     font-size: 20px;
     width: 100%
+}
+
+.dialog-body-radio {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+
+.dialog-body-radio input {
+    width: 20px;
+    height: 20px;
+}
+
+.dialog-body-radio-item {
+    flex-basis: 45%;
+    margin: 0 auto;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row;
+    flex-flow: row;
 }
 </style>

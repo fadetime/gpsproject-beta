@@ -96,7 +96,7 @@
                             <md-card-content>
                                 <div style="margin:20px">
                                     <div style="text-align:left;margin:10px 0"><span style="font-size:20px">所选车牌号码：{{acarinfo.carid}}</span></div>
-                                    <div style="text-align:left;margin:10px 0"><span style="font-size:20px">所选车辆型号：{{acarinfo.carsize}}</span></div>
+                                    <div style="text-align:left;margin:10px 0"><span style="font-size:20px">所选有无尾门：{{acarinfo.tailgate}}</span></div>
                                     <div style="text-align:left;margin:10px 0"><span style="font-size:20px">所选出车次数：{{acarinfo.cartimes}}</span></div>
                                     <div style="text-align:left;margin:10px 0"><span style="font-size:20px">所选车辆类型：{{acarinfo.cartype}}</span></div>
                                 </div>
@@ -237,6 +237,7 @@ export default {
             this.timesnote = ''
             this.choicecar = ''
             this.choicedirver = ''
+            this.adirverinfo =''
             this.choiceclientb = []
         },
         getalldirver() {
@@ -358,6 +359,7 @@ export default {
             })
         },
         editbutton(item) {
+            console.log(item)
             this.savemode = false
             this.showDialog = true
             this._id = item._id

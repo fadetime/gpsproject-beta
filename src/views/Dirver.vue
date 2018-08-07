@@ -123,22 +123,34 @@
         <md-dialog-title style="font-size:30px">删除司机</md-dialog-title>
         <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
             <div class="rmDialog-center">
-                <span>司机姓名:</span><span>{{dirvername}}</span>
+                <span>司机姓名:</span>
+                &nbsp;
+                <span>{{dirvername}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>车辆类型:</span><span>{{dirverid}}</span>
+                <span>车辆类型:</span>
+                &nbsp;
+                <span>{{dirverid}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>车辆尺寸:</span><span>{{dirverphone}}</span>
+                <span>车辆尺寸:</span>
+                &nbsp;
+                <span>{{dirverphone}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>出车次数:</span><span>{{dirvercard}}</span>
+                <span>出车次数:</span>
+                &nbsp;
+                <span>{{dirvercard}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>车辆备注:</span><span>{{dirverusername}}</span>
+                <span>车辆备注:</span>
+                &nbsp;
+                <span>{{dirverusername}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>加入时间:</span><span>{{dirvernote}}</span>
+                <span>加入时间:</span>
+                &nbsp;
+                <span>{{dirvernote}}</span>
             </div>
         </div>
         <md-dialog-actions style="margin:0 auto 10px auto">
@@ -257,7 +269,7 @@ export default {
             this.dirverphone = item.dirverphone;
             this.dirvercard = item.dirvercard;
             this.dirverusername = item.dirverusername;
-            this.dirverpsw = item.dirverpsw;
+            this.dirverpsw = ''
             this.dirvernote = item.dirvernote;
             this.showDialog = true;
         },
@@ -265,7 +277,6 @@ export default {
             if (!this.dirvername ||
                 !this.dirverid ||
                 !this.dirverusername ||
-                !this.dirverpsw ||
                 !this.dirverphone
             ) {
                 this.error = true;
@@ -274,9 +285,20 @@ export default {
                     this.error = false;
                 }, 3000);
             } else {
-                axios
-                    .post(config.server + "/dirver/edit", {
-                        _id: this._id,
+                let editinfo
+                if(this.dirverpsw==''){
+                    editinfo = {
+                         _id: this._id,
+                        dirvername: this.dirvername,
+                        dirverid: this.dirverid,
+                        dirverphone: this.dirverphone,
+                        dirvercard: this.dirvercard,
+                        dirverusername: this.dirverusername,
+                        dirvernote: this.dirvernote
+                    }
+                }else{
+                    editinfo = {
+                         _id: this._id,
                         dirvername: this.dirvername,
                         dirverid: this.dirverid,
                         dirverphone: this.dirverphone,
@@ -284,7 +306,10 @@ export default {
                         dirverusername: this.dirverusername,
                         dirverpsw: this.dirverpsw,
                         dirvernote: this.dirvernote
-                    })
+                    }
+                }
+                axios
+                    .post(config.server + "/dirver/edit", editinfo)
                     .then(response => {
                         if (response.data.code == 1) {
                             this.error = true;
@@ -295,11 +320,6 @@ export default {
                         } else {
                             this.successdmsg = true;
                             this.showDialog = false;
-                            this.carid = "";
-                            this.cartype = "";
-                            this.carsize = "";
-                            this.cartimes = "";
-                            this.carnote = "";
                             this.getalldirver();
                             setTimeout(() => {
                                 this.successdmsg = false;
@@ -358,11 +378,6 @@ export default {
                         } else {
                             this.successdmsg = true;
                             this.showDialog = false;
-                            this.carid = "";
-                            this.cartype = "";
-                            this.carsize = "";
-                            this.cartimes = "";
-                            this.carnote = "";
                             this.getalldirver();
                             setTimeout(() => {
                                 this.successdmsg = false;

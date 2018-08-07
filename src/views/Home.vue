@@ -176,7 +176,7 @@
                                     <div style="margin:0 20px">
                                         <p style="font-size:20px">车牌号码：{{selectorCar.carid}}</p>
                                         <p style="font-size:20px">车辆型号：{{selectorCar.cartype}}</p>
-                                        <p style="font-size:20px">车辆尺寸：{{selectorCar.carsize}}</p>
+                                        <p style="font-size:20px">有无尾门：{{selectorCar.tailgate}}</p>
                                         <p style="font-size:20px">车辆备注：{{selectorCar.carnote}}</p>
                                     </div>
                                 </md-card-content>
@@ -531,7 +531,7 @@ export default {
             if (this.choseLine.timescar == null) {
                 this.choseLine.timescar = {
                     carid: '信息错误请更新',
-                    carsize: '信息错误请更新',
+                    tailgate: '信息错误请更新',
                     cartype: '信息错误请更新'
                 }
             }
@@ -620,7 +620,7 @@ export default {
                     this.selectorCar = {
                         carid: this.aLineInfo.timescar.carid,
                         cartype: this.aLineInfo.timescar.cartype,
-                        carsize: this.aLineInfo.timescar.carsize,
+                        tailgate: this.aLineInfo.timescar.tailgate,
                         carnote: this.aLineInfo.timescar.carnote
                     }
                     this.firstStepError = null
@@ -695,7 +695,7 @@ export default {
                 timescar: {
                     carid: '请选择线路',
                     carnote: '请选择线路',
-                    carsize: '请选择线路',
+                    tailgate: '请选择线路',
                     cartype: '请选择线路'
                 }
             }
