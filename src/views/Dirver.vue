@@ -84,7 +84,7 @@
 
                 <md-field style="margin:20px auto" :class="cardclass">
                     <label for="dirvercard" style="font-size:20px">驾照类型</label>
-                    <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:20px;height:55px;max-width: 500px;">
+                    <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:20px;height:55px;max-width: 500px;padding-top:21px">
                         <md-option value="C1">C1</md-option>
                         <md-option value="C2">C2</md-option>
                         <md-option value="C3">C3</md-option>
@@ -98,7 +98,7 @@
                     <span class="md-error" style="font-size:15px;margin: -10px auto;">标识联系方式</span>
                 </md-field>
 
-                <md-field style="margin:30px auto" :class="passclass">
+                <md-field style="margin:30px auto" :class="pswclass">
                     <label style="font-size:20px">密码</label>
                     <md-input v-model="dirverpsw" type="password" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                     <span class="md-error" style="font-size:15px;margin: -10px auto;">标识密码</span>
@@ -123,33 +123,57 @@
         <md-dialog-title style="font-size:30px">删除司机</md-dialog-title>
         <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
             <div class="rmDialog-center">
-                <span>司机姓名:</span> &nbsp;
-                <span>{{dirvername}}</span>
+                <div class="rmDialog-center-left">
+                    <span>司机姓名:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{dirvername}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>车辆类型:</span> &nbsp;
-                <span>{{dirverid}}</span>
+                <div class="rmDialog-center-left">
+                    <span>车辆类型:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{dirverid}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>车辆尺寸:</span> &nbsp;
-                <span>{{dirverphone}}</span>
+                <div class="rmDialog-center-left">
+                    <span>车辆尺寸:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{dirverphone}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>出车次数:</span> &nbsp;
-                <span>{{dirvercard}}</span>
+                <div class="rmDialog-center-left">
+                    <span>出车次数:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{dirvercard}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>车辆备注:</span> &nbsp;
-                <span>{{dirverusername}}</span>
+                <div class="rmDialog-center-left">
+                    <span>车辆备注:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{dirverusername}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>加入时间:</span> &nbsp;
-                <span>{{dirvernote}}</span>
+                <div class="rmDialog-center-left">
+                    <span>司机备注:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{dirvernote}}</span>
+                </div>
             </div>
         </div>
         <md-dialog-actions style="margin:0 auto 10px auto">
-            <md-button class="md-raised md-primary" @click="deleteDialog = false" style="font-size:30px;width:140px;height:50px">取消</md-button>
-            <md-button class="md-raised md-primary" @click="confirmdelete" style="font-size:30px;width:140px;height:50px">删除</md-button>
+            <md-button class="md-raised md-primary" @click="deleteDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
+            <md-button class="md-raised md-accent" @click="confirmdelete" style="font-size:20px;width:100px;height:40px">删除</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- deleteDialog end-->
@@ -306,16 +330,34 @@ export default {
             this.showDialog = true;
         },
         confirmedit() {
-            if (!this.dirvername ||
-                !this.dirverid ||
-                !this.dirverusername ||
-                !this.dirverphone
+            if (!this.dirvername || !this.dirverid || !this.dirverusername ||
+                !this.dirverphone || !this.dirvercard || !this.dirverusername
             ) {
-                this.error = true;
-                this.errormsg = "请填写必要信息";
-                setTimeout(() => {
-                    this.error = false;
-                }, 3000);
+                if (!this.dirvername) {
+                    this.nameErr = true
+                } else {
+                    this.nameErr = false
+                }
+                if (!this.dirverid) {
+                    this.passErr = true
+                } else {
+                    this.passErr = false
+                }
+                if (!this.dirverphone) {
+                    this.phonErr = true
+                } else {
+                    this.phonErr = false
+                }
+                if (!this.dirvercard) {
+                    this.cardErr = true
+                } else {
+                    this.cardErr = false
+                }
+                if (!this.dirverusername) {
+                    this.userdErr = true
+                } else {
+                    this.userdErr = false
+                }
             } else {
                 let editinfo
                 if (this.dirverpsw == '') {
@@ -556,8 +598,22 @@ export default {
 }
 
 .rmDialog-center {
-    margin: 30px 40px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row;
+    flex-flow: row;
+    margin: 20px;
     font-size: 20px;
-    width: 100%;
+    width: 100%
+}
+
+.rmDialog-center-left {
+    flex-basis: 25%;
+    text-align: left;
+}
+
+.rmDialog-center-right {
+    flex-basis: 60%;
+    text-align: left;
 }
 </style>

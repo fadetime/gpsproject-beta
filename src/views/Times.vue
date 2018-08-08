@@ -162,25 +162,49 @@
         <md-dialog-title style="font-size:30px;color:#d74342">删除路线信息</md-dialog-title>
         <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
             <div class="rmDialog-center">
-                <span>路线名称:</span><span>{{timesname}}</span>
+                <div class="rmDialog-center-left">
+                    <span>路线名称:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{timesname}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>路线备注:</span><span>{{timesnote}}</span>
+                <div class="rmDialog-center-left">
+                    <span>路线备注:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{timesnote}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>匹配车辆:</span><span>{{choicecar}}</span>
+                <div class="rmDialog-center-left">
+                    <span>匹配车辆:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{choicecar}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>匹配司机:</span><span>{{choicedirver}}</span>
+                <div class="rmDialog-center-left">
+                    <span>匹配司机:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{choicedirver}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>客户数量:</span><span>{{timesclientnumber}}</span>
+                <div class="rmDialog-center-left">
+                    <span>客户数量:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{timesclientnumber}}</span>
+                </div>
             </div>
         </div>
-        <md-dialog-actions>
-            <md-button class="md-raised md-primary" @click="removeDialog = false">关闭</md-button>
-            <md-button class="md-raised md-primary" @click="confirmremove">删除</md-button>
-            
+        <md-dialog-actions style="margin:0 auto 10px auto">
+            <md-button class="md-raised md-primary" @click="removeDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
+            <md-button class="md-raised md-accent" @click="confirmremove" style="font-size:20px;width:100px;height:40px">删除</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- remove dialog end-->
@@ -526,9 +550,24 @@ export default {
     font-size: 20px;
     line-height: 50px;
 }
+
 .rmDialog-center {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row;
+    flex-flow: row;
     margin: 20px;
     font-size: 20px;
     width: 100%
+}
+
+.rmDialog-center-left {
+    flex-basis: 25%;
+    text-align: left;
+}
+
+.rmDialog-center-right {
+    flex-basis: 60%;
+    text-align: left;
 }
 </style>

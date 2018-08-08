@@ -215,25 +215,50 @@
         <md-dialog-title style="font-size:30px;color:#d74342">删除客户</md-dialog-title>
         <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
             <div class="rmDialog-center">
-                <span>客户名称:</span><span>{{clientbname}}</span>
+                <div class="rmDialog-center-left">
+                    <span>客户名称:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientbname}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>客户地址:</span><span>{{clientbaddress}}</span>
+                <div class="rmDialog-center-left">
+                    <span>客户地址:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientbaddress}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>客户电话:</span><span>{{clientbphone}}</span>
+                <div class="rmDialog-center-left">
+                    <span>客户电话:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientbphone}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>客户状态:</span><span>{{clientbstatus}}</span>
+                <div class="rmDialog-center-left">
+                    <span>客户状态:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientbstatus}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>客户邮编:</span><span>{{clientbpostcode}}</span>
+                <div class="rmDialog-center-left">
+                    <span>客户邮编:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientbpostcode}}</span>
+                </div>
             </div>
         </div>
 
         <md-dialog-actions style="margin:0 auto 10px auto">
             <md-button class="md-raised md-primary" @click="deleteDialogb = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
-            <md-button class="md-raised md-primary" @click="confirmdeleteB" style="font-size:20px;width:100px;height:40px">删除</md-button>
+            <md-button class="md-raised md-accent" @click="confirmdeleteB" style="font-size:20px;width:100px;height:40px">删除</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- deleteDialog b end-->
@@ -339,37 +364,82 @@
         <md-dialog-title style="font-size:30px;color:#d74342">删除合作商</md-dialog-title>
         <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
             <div class="rmDialog-center">
-                <span>合作商名称:</span><span>{{clientaname}}</span>
+                <div class="rmDialog-center-left">
+                    <span>合作商名称:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientaname}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>合作商地址:</span><span>{{clientaaddress}}</span>
+                <div class="rmDialog-center-left">
+                    <span>合作商地址:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientaaddress}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>合作商电话:</span><span>{{clientaphone}}</span>
+                <div class="rmDialog-center-left">
+                    <span>合作商电话:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientaphone}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>合作商状态:</span><span>{{clientastatus}}</span>
+                <div class="rmDialog-center-left">
+                    <span>合作商状态:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientastatus}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>合作商邮编:</span><span>{{clientapostcode}}</span>
+                <div class="rmDialog-center-left">
+                    <span>合作商邮编:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientapostcode}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>合作商账户:</span><span>{{clientausername}}</span>
+                <div class="rmDialog-center-left">
+                    <span>合作商账户:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientausername}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>合作期限:</span><span>{{clientacontract}}</span>
+                <div class="rmDialog-center-left">
+                    <span>合作期限:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientacontract}}年</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>合同时间:</span><span>{{clientatime}}</span>
+                <div class="rmDialog-center-left">
+                    <span>合同时间:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientatime}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>合作商邮编:</span><span>{{clientamail}}</span>
+                <div class="rmDialog-center-left">
+                    <span>合作商邮编:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{clientamail}}</span>
+                </div>
             </div>
         </div>
 
         <md-dialog-actions style="margin:0 auto 10px auto">
             <md-button class="md-raised md-primary" @click="deleteDialoga = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
-            <md-button class="md-raised md-primary" @click="confirmRemoveClientA" style="font-size:20px;width:100px;height:40px">删除</md-button>
+            <md-button class="md-raised md-accent" @click="confirmRemoveClientA" style="font-size:20px;width:100px;height:40px">删除</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- deleteDialog a end-->
@@ -712,7 +782,7 @@ export default {
 
         },
         addclientb() {
-            if (!this.clientbname || !this.clientbaddress || !this.clientbphone || !this.clientbpostcode||!this.choseaname) {
+            if (!this.clientbname || !this.clientbaddress || !this.clientbphone || !this.clientbpostcode || !this.choseaname) {
                 if (!this.clientbname) {
                     this.errname = true
                 } else {
@@ -1106,9 +1176,23 @@ export default {
 }
 
 .rmDialog-center {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row;
+    flex-flow: row;
     margin: 20px;
     font-size: 20px;
     width: 100%
+}
+
+.rmDialog-center-left {
+    flex-basis: 28%;
+    text-align: left;
+}
+
+.rmDialog-center-right {
+    flex-basis: 60%;
+    text-align: left;
 }
 
 .dialogb-body {

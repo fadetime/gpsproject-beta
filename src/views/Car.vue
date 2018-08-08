@@ -126,34 +126,58 @@
         <md-dialog-title style="font-size:30px">删除车辆</md-dialog-title>
         <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
             <div class="rmDialog-center">
-                <span style="text-align:left">车牌号码:</span> &nbsp;
-                <span>{{carid}}</span>
+                <div class="rmDialog-center-left">
+                    <span>车牌号码:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{carid}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>车辆类型:</span> &nbsp;
-                <span>{{cartype}}</span>
+                <div class="rmDialog-center-left">
+                    <span>车辆类型:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{cartype}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>尾门:</span> &nbsp;
-                <span>{{tailgate}}</span>
+                <div class="rmDialog-center-left">
+                    <span>有无尾门:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{tailgate}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>出车次数:</span> &nbsp;
-                <span>{{cartimes}}</span>
+                <div class="rmDialog-center-left">
+                    <span>出车次数:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{cartimes}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>车辆备注:</span> &nbsp;
-                <span>{{carnote}}</span>
+                <div class="rmDialog-center-left">
+                    <span>车辆备注:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{carnote}}</span>
+                </div>
             </div>
             <div class="rmDialog-center">
-                <span>加入时间:</span> &nbsp;
-                <span>{{cardate | datefilter}}</span>
+                <div class="rmDialog-center-left">
+                    <span>加入时间:</span>
+                </div>
+                <div class="rmDialog-center-right">
+                    <span>{{cardate | datefilter}}</span>
+                </div>
             </div>
         </div>
 
         <md-dialog-actions style="margin:0 auto 10px auto">
             <md-button class="md-raised md-primary" @click="removeDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
-            <md-button class="md-raised md-primary" @click="confirmremove" style="font-size:20px;width:100px;height:40px">删除</md-button>
+            <md-button class="md-raised md-accent" @click="confirmremove" style="font-size:20px;width:100px;height:40px">删除</md-button>
         </md-dialog-actions>
     </md-dialog>
     <!-- remove dialog end-->
@@ -192,8 +216,8 @@ export default {
             searchCar: [],
             allcarinfo: [],
             searching: false,
-            idErr:false,
-            typeErr:false
+            idErr: false,
+            typeErr: false
         }
     },
     mounted() {
@@ -470,9 +494,23 @@ export default {
 }
 
 .rmDialog-center {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row;
+    flex-flow: row;
     margin: 20px;
     font-size: 20px;
     width: 100%
+}
+
+.rmDialog-center-left {
+    flex-basis: 25%;
+    text-align: left;
+}
+
+.rmDialog-center-right {
+    flex-basis: 60%;
+    text-align: left;
 }
 
 .dialog-body-radio {
