@@ -69,22 +69,22 @@
         </div>
         <div class="dialog-body">
             <div class="dialog-body-item">
-                <md-field style="margin:30px auto">
-                    <label style="font-size:20px;color:#000">车牌号码</label>
+                <md-field style="margin:30px auto" :class="idclass">
+                    <label style="font-size:20px">车牌号码</label>
                     <md-input v-model="carid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" style="font-size:15px;margin: -2px auto;" v-if="!carid">车辆标识信息，必填项目</span>
+                    <span class="md-error" style="font-size:15px;margin: -2px auto">车辆标识信息，必填项目</span>
                 </md-field>
 
-                <md-field style="margin:30px auto">
-                    <label style="font-size:20px;color:#000">车型</label>
+                <md-field style="margin:30px auto" :class="typeclass">
+                    <label style="font-size:20px">车型</label>
                     <md-input v-model="cartype" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" style="font-size:15px;margin: -2px auto;" v-if="!cartype">请填写车型信息</span>
+                    <span class="md-error" style="font-size:15px;margin: -2px auto">请填写车型信息</span>
                 </md-field>
 
             </div>
             <div class="dialog-body-item">
                 <div style="margin:30px auto">
-                    <span style="font-size:20px;color:#000">尾门(tailgate)</span>
+                    <span style="font-size:20px;color:rgba(0,0,0,0.54)">尾门(tailgate)</span>
                 </div>
                 <div class="dialog-body-radio">
                     <div class="dialog-body-radio-item">
@@ -94,7 +94,7 @@
                         <div style="font-size:15px;color:#000;padding-top:3px">
                             <span>YES</span>
                         </div>
-                        
+
                     </div>
                     <div class="dialog-body-radio-item">
                         <div>
@@ -103,12 +103,12 @@
                         <div style="font-size:15px;color:#000;padding-top:3px">
                             <span>NO</span>
                         </div>
-                        
+
                     </div>
                 </div>
 
                 <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">备注</label>
+                    <label style="font-size:20px;color:rgba(0,0,0,0.54)">备注</label>
                     <md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                 </md-field>
             </div>
@@ -188,24 +188,28 @@ export default {
             showDialog: false,
             removeDialog: false,
             selectedCar: '',
-            tailgate: '',
+            tailgate: 'no',
             searchCar: [],
             allcarinfo: [],
-            employees: [
-                'Algeria',
-                'Argentina',
-                'Brazil',
-                'Canada',
-                'Italy',
-                'Japan',
-                'United Kingdom',
-                'United States'
-            ],
-            searching: false
+            searching: false,
+            idErr:false,
+            typeErr:false
         }
     },
     mounted() {
         this.getallcar()
+    },
+    computed: {
+        idclass() {
+            return {
+                'md-invalid': this.idErr
+            }
+        },
+        typeclass() {
+            return {
+                'md-invalid': this.typeErr
+            }
+        },
     },
     methods: {
         newCar() {
@@ -224,7 +228,6 @@ export default {
                 })
                 this.allcarinfo = this.searchCar
             }
-
         },
         editbutton(item) {
             this.addmode = false
@@ -312,11 +315,16 @@ export default {
         },
         addcar() {
             if (!this.carid || !this.cartype || !this.tailgate) {
-                this.error = true
-                this.errormsg = '请填写必要信息'
-                setTimeout(() => {
-                    this.error = false
-                }, 3000)
+                if (!this.carid) {
+                    this.idErr = true
+                } else {
+                    this.idErr = false
+                }
+                if (!this.cartype) {
+                    this.typeErr = true
+                } else {
+                    this.typeErr = false
+                }
             } else {
                 axios.post(config.server + '/car', {
                         carid: this.carid,

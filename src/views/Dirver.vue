@@ -64,26 +64,26 @@
         </div>
         <div class="dialog-body">
             <div class="dialog-body-item">
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">司机姓名</label>
+                <md-field style="margin:20px auto" :class="nameclass">
+                    <label style="font-size:20px">司机姓名</label>
                     <md-input v-model="dirvername" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!dirvername" style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
+                    <span class="md-error" style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
                 </md-field>
 
-                <md-field style="margin:30px auto">
-                    <label style="font-size:20px;color:#000">准证号码</label>
+                <md-field style="margin:30px auto" :class="passclass">
+                    <label style="font-size:20px">准证号码</label>
                     <md-input v-model="dirverid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!dirverid" style="font-size:15px;margin: -10px auto;">人员标识信息，必填项目</span>
+                    <span class="md-error" style="font-size:15px;margin: -10px auto;">人员标识信息，必填项目</span>
                 </md-field>
 
-                <md-field style="margin:30px auto">
-                    <label style="font-size:20px;color:#000">联系方式</label>
+                <md-field style="margin:30px auto" :class="phonclass">
+                    <label style="font-size:20px">联系方式</label>
                     <md-input v-model="dirverphone" type="number" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!dirverphone" style="font-size:15px;margin: -10px auto;">标识联系方式</span>
+                    <span class="md-error" style="font-size:15px;margin: -10px auto;">标识联系方式</span>
                 </md-field>
 
-                <md-field style="margin:20px auto">
-                    <label for="dirvercard" style="font-size:20px;color:#000">驾照类型</label>
+                <md-field style="margin:20px auto" :class="cardclass">
+                    <label for="dirvercard" style="font-size:20px">驾照类型</label>
                     <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:20px;height:55px;max-width: 500px;">
                         <md-option value="C1">C1</md-option>
                         <md-option value="C2">C2</md-option>
@@ -92,20 +92,20 @@
                 </md-field>
             </div>
             <div class="dialog-body-item">
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">用户名</label>
+                <md-field style="margin:20px auto" :class="userclass">
+                    <label style="font-size:20px">用户名</label>
                     <md-input v-model="dirverusername" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!dirverusername" style="font-size:15px;margin: -10px auto;">标识联系方式</span>
+                    <span class="md-error" style="font-size:15px;margin: -10px auto;">标识联系方式</span>
                 </md-field>
 
-                <md-field style="margin:30px auto">
-                    <label style="font-size:20px;color:#000">密码</label>
+                <md-field style="margin:30px auto" :class="passclass">
+                    <label style="font-size:20px">密码</label>
                     <md-input v-model="dirverpsw" type="password" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!dirverpsw" style="font-size:15px;margin: -10px auto;">标识密码</span>
+                    <span class="md-error" style="font-size:15px;margin: -10px auto;">标识密码</span>
                 </md-field>
 
                 <md-field style="margin:30px auto">
-                    <label style="font-size:20px;color:#000">备注</label>
+                    <label style="font-size:20px">备注</label>
                     <md-input v-model="dirvernote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                 </md-field>
             </div>
@@ -123,33 +123,27 @@
         <md-dialog-title style="font-size:30px">删除司机</md-dialog-title>
         <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
             <div class="rmDialog-center">
-                <span>司机姓名:</span>
-                &nbsp;
+                <span>司机姓名:</span> &nbsp;
                 <span>{{dirvername}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>车辆类型:</span>
-                &nbsp;
+                <span>车辆类型:</span> &nbsp;
                 <span>{{dirverid}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>车辆尺寸:</span>
-                &nbsp;
+                <span>车辆尺寸:</span> &nbsp;
                 <span>{{dirverphone}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>出车次数:</span>
-                &nbsp;
+                <span>出车次数:</span> &nbsp;
                 <span>{{dirvercard}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>车辆备注:</span>
-                &nbsp;
+                <span>车辆备注:</span> &nbsp;
                 <span>{{dirverusername}}</span>
             </div>
             <div class="rmDialog-center">
-                <span>加入时间:</span>
-                &nbsp;
+                <span>加入时间:</span> &nbsp;
                 <span>{{dirvernote}}</span>
             </div>
         </div>
@@ -193,11 +187,49 @@ export default {
             successdmsg: false,
             error: false,
             errormsg: "发生未知错误",
-            savemode: true
+            savemode: true,
+            nameErr: false,
+            passErr: false,
+            phonErr: false,
+            cardErr: false,
+            userdErr: false,
+            pswdErr: false,
         };
     },
     mounted() {
         this.getalldirver();
+    },
+    computed: {
+        nameclass() {
+            return {
+                'md-invalid': this.nameErr
+            }
+        },
+        passclass() {
+            return {
+                'md-invalid': this.passErr
+            }
+        },
+        phonclass() {
+            return {
+                'md-invalid': this.phonErr
+            }
+        },
+        cardclass() {
+            return {
+                'md-invalid': this.cardErr
+            }
+        },
+        userclass() {
+            return {
+                'md-invalid': this.userdErr
+            }
+        },
+        pswclass() {
+            return {
+                'md-invalid': this.pswdErr
+            }
+        },
     },
     methods: {
         search(item) {
@@ -286,9 +318,9 @@ export default {
                 }, 3000);
             } else {
                 let editinfo
-                if(this.dirverpsw==''){
+                if (this.dirverpsw == '') {
                     editinfo = {
-                         _id: this._id,
+                        _id: this._id,
                         dirvername: this.dirvername,
                         dirverid: this.dirverid,
                         dirverphone: this.dirverphone,
@@ -296,9 +328,9 @@ export default {
                         dirverusername: this.dirverusername,
                         dirvernote: this.dirvernote
                     }
-                }else{
+                } else {
                     editinfo = {
-                         _id: this._id,
+                        _id: this._id,
                         dirvername: this.dirvername,
                         dirverid: this.dirverid,
                         dirverphone: this.dirverphone,
@@ -347,17 +379,47 @@ export default {
                 });
         },
         adddirver() {
-            if (!this.dirvername ||
-                !this.dirverid ||
-                !this.dirverusername ||
-                !this.dirverpsw
+            if (!this.dirvername || !this.dirverid || !this.dirverusername ||
+                !this.dirverpsw || !this.dirverphone ||
+                !this.dirvercard || !this.dirverusername
             ) {
-                this.error = true;
-                this.errormsg = "请填写必要信息";
-                setTimeout(() => {
-                    this.error = false;
-                }, 3000);
+                if (!this.dirvername) {
+                    this.nameErr = true
+                } else {
+                    this.nameErr = false
+                }
+                if (!this.dirverid) {
+                    this.passErr = true
+                } else {
+                    this.passErr = false
+                }
+                if (!this.dirverphone) {
+                    this.phonErr = true
+                } else {
+                    this.phonErr = false
+                }
+                if (!this.dirvercard) {
+                    this.cardErr = true
+                } else {
+                    this.cardErr = false
+                }
+                if (!this.dirverusername) {
+                    this.userdErr = true
+                } else {
+                    this.userdErr = false
+                }
+                if (!this.dirverpsw) {
+                    this.pswdErr = true
+                } else {
+                    this.pswdErr = false
+                }
             } else {
+                this.nameErr = false
+                this.passErr = false
+                this.phonErr = false
+                this.cardErr = false
+                this.userdErr = false
+                this.pswdErr = false
                 axios
                     .post(config.server + "/dirver", {
                         dirvername: this.dirvername,
@@ -403,12 +465,13 @@ export default {
     width: 80%;
     margin: 20px auto;
 }
-.dialog-title{
+
+.dialog-title {
     text-align: left;
-    padding:20px 0 0 15px;
+    padding: 20px 0 0 15px;
 }
 
-.dialog-title span{
+.dialog-title span {
     font-size: 30px
 }
 

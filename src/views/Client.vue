@@ -139,42 +139,43 @@
         <md-dialog-title style="font-size:30px">客户管理</md-dialog-title>
         <div class="dialogb-body">
             <div class="dialogb-body-left">
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">客户名称</label>
+                <md-field style="margin:20px auto" :class="classname">
+                    <label style="font-size:20px">客户名称</label>
                     <md-input v-model="clientbname" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientbname">客户标识信息，必填项目</span>
+                    <span class="md-error">客户标识信息，必填项目</span>
                 </md-field>
 
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">客户地址</label>
+                <md-field style="margin:20px auto" :class="classadd">
+                    <label style="font-size:20px">客户地址</label>
                     <md-input v-model="clientbaddress" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientbaddress">客户地址标识信息</span>
+                    <span class="md-error">客户地址标识信息</span>
                 </md-field>
 
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">客户电话</label>
+                <md-field style="margin:20px auto" :class="classpho">
+                    <label style="font-size:20px">客户电话</label>
                     <md-input v-model="clientbphone" type="number" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientbphone">客户电话标识信息</span>
+                    <span class="md-error">客户电话标识信息</span>
                 </md-field>
             </div>
             <div class="dialogb-body-right">
 
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">客户邮编</label>
+                <md-field style="margin:20px auto" :class="classpos">
+                    <label style="font-size:20px">客户邮编</label>
                     <md-input v-model="clientbpostcode" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientbpostcode">客户邮编标识信息</span>
+                    <span class="md-error">客户邮编标识信息</span>
                 </md-field>
 
-                <md-field style="margin:20px auto">
-                    <label for="choseaname" style="font-size:20px;color:#000">服务商</label>
-                    <md-select v-model="choseaname" name="choseaname" id="choseaname" style="border-bottom: 1px solid #000;font-size:20px;height:55px">
+                <md-field style="margin:20px auto" :class="classser">
+                    <label for="choseaname" style="font-size:20px">服务商</label>
+                    <md-select v-model="choseaname" name="choseaname" id="choseaname" style="border-bottom: 1px solid #000;font-size:20px;height:55px;padding-top:21px">
                         <md-option :value="item._id" v-for="(item,index) in allclientainfo" :key="index">{{item.clientaname}}</md-option>
                     </md-select>
+                    <span class="md-error">所属服务商</span>
                 </md-field>
 
-                <div>
+                <div style="padding-top:10px">
                     <div>
-                        <span style="font-size:20px;color:#000">客户状态</span>
+                        <span style="font-size:20px">客户状态</span>
                     </div>
                     <div class="dialogb-body-status">
                         <div class="dialogb-body-status-left">
@@ -182,7 +183,7 @@
                                 <input type="radio" name="status" v-model="clientbstatus" value="active">
                             </div>
                             <div style="padding-top: 3px;">
-                                <span style="font-size:20px;color:#000">active</span>
+                                <span style="font-size:20px">active</span>
                             </div>
                         </div>
                         <div class="dialogb-body-status-right">
@@ -190,7 +191,7 @@
                                 <input type="radio" name="status" v-model="clientbstatus" value="inactive">
                             </div>
                             <div style="padding-top: 3px;">
-                                <span style="font-size:20px;color:#000">inactive</span>
+                                <span style="font-size:20px">inactive</span>
                             </div>
 
                         </div>
@@ -242,72 +243,73 @@
         <md-dialog-title style="font-size:30px">合作商管理</md-dialog-title>
         <div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row;flex-flow: row;">
             <div style="width:400px;margin:0 auto">
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">合作商名称</label>
+
+                <md-field style="margin:20px auto" :class="nameclass">
+                    <label style="font-size:20px">合作商名称</label>
                     <md-input v-model="clientaname" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientaname">合作商标识信息，必填项目</span>
+                    <span class="md-error">合作商标识信息，必填项目</span>
                 </md-field>
 
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">合作商地址</label>
+                <md-field style="margin:20px auto" :class="addclass">
+                    <label style="font-size:20px">合作商地址</label>
                     <md-input v-model="clientaaddress" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientaaddress">合作商地址标识信息</span>
+                    <span class="md-error">合作商地址标识信息，必填项目</span>
                 </md-field>
 
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">合作商电话</label>
+                <md-field style="margin:20px auto" :class="phoclass">
+                    <label style="font-size:20px">合作商电话</label>
                     <md-input v-model="clientaphone" type="number" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientaphone">合作商电话标识信息</span>
+                    <span class="md-error">合作商电话标识信息，必填项目</span>
                 </md-field>
 
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">合同时间</label>
-                    <md-input v-model="clientatime" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientatime">合作商合同起始时间</span>
+                <md-field style="margin:20px auto" :class="timclass">
+                    <label style="font-size:20px">合同时间</label>
+                    <md-input v-model="clientatime" type="date" style="border-bottom: 1px solid #000;font-size:15px;height:55px;padding-top:21px"></md-input>
+                    <span class="md-error">合作商合同起始时间，必填项目</span>
                 </md-field>
 
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">合作商邮编</label>
-                    <md-input v-model="clientapostcode" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientapostcode">合作商邮编标识信息</span>
+                <md-field style="margin:20px auto" :class="posclass">
+                    <label style="font-size:20px">合作商邮编</label>
+                    <md-input v-model="clientapostcode" type="number" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+                    <span class="md-error">合作商邮编标识信息，必填项目</span>
                 </md-field>
             </div>
             <div style="width:400px;margin:0 auto">
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">合作商账户</label>
+                <md-field style="margin:20px auto" :class="usrclass">
+                    <label style="font-size:20px">合作商账户</label>
                     <md-input v-model="clientausername" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientausername">合作商登陆账户</span>
+                    <span class="md-error">合作商登陆账户，必填项目</span>
                 </md-field>
 
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">合作商密码</label>
+                <md-field style="margin:20px auto" :class="pswclass">
+                    <label style="font-size:20px">合作商密码</label>
                     <md-input v-model="clientapsw" type="password" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientapsw">合作商登陆密码</span>
+                    <span class="md-error">合作商登陆密码，必填项目</span>
                 </md-field>
 
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">合作期限</label>
-                    <md-input v-model="clientacontract" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientacontract">合作商登陆密码</span>
+                <md-field style="margin:20px auto" :class="conclass">
+                    <label style="font-size:20px">合作期限</label>
+                    <md-input v-model="clientacontract" type="number" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+                    <span class="md-error" v-if="!clientacontract">合同有限年限，必填项目</span>
                 </md-field>
 
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:#000">合作商邮箱</label>
-                    <md-input v-model="clientamail" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
-                    <span class="md-helper-text" v-if="!clientamail">合作商邮箱标识信息</span>
+                <md-field style="margin:20px auto" :class="maiclass">
+                    <label style="font-size:20px">合作商邮箱</label>
+                    <md-input v-model="clientamail" type="email" style="border-bottom: 1px solid #000;font-size:25px;height:55px"></md-input>
+                    <span class="md-error" v-if="!clientamail">合作商邮箱标识信息，必填项目</span>
                 </md-field>
 
                 <div>
                     <div>
-                        <span style="font-size:20px;color:#000">合作商状态</span>
+                        <span style="font-size:20px">合作商状态</span>
                     </div>
                     <div class="dialogb-body-status">
                         <div class="dialogb-body-status-left">
                             <div>
-                                <input type="radio" name="statusa" v-model="clientastatus" value="active" checked="checked" />
+                                <input type="radio" name="statusa" v-model="clientastatus" value="active" />
                             </div>
                             <div style="padding-top: 3px;">
-                                <span style="font-size:20px;color:#000">active</span>
+                                <span style="font-size:20px">active</span>
                             </div>
                         </div>
                         <div class="dialogb-body-status-right">
@@ -315,7 +317,7 @@
                                 <input type="radio" name="statusa" v-model="clientastatus" value="inactive">
                             </div>
                             <div style="padding-top: 3px;">
-                                <span style="font-size:20px;color:#000">inactive</span>
+                                <span style="font-size:20px">inactive</span>
                             </div>
 
                         </div>
@@ -402,7 +404,7 @@ export default {
             clientbname: '',
             clientbaddress: '',
             clientbphone: '',
-            clientbstatus: '',
+            clientbstatus: 'active',
             clientbpostcode: '',
             successdmsg: false,
             error1: false,
@@ -412,7 +414,7 @@ export default {
             clientaname: '',
             clientaaddress: '',
             clientaphone: '',
-            clientastatus: '',
+            clientastatus: 'active',
             clientapostcode: '',
             clientausername: '',
             clientapsw: '',
@@ -427,12 +429,98 @@ export default {
             searchclienta: '',
             searchclientb: '',
             searchedclienta: '',
-            searchedclientb: ''
+            searchedclientb: '',
+            nameErr: false,
+            addErr: false,
+            phoErr: false,
+            conErr: false,
+            posErr: false,
+            usrErr: false,
+            pswErr: false,
+            timErr: false,
+            maiErr: false,
+            errname: false,
+            erradd: false,
+            errpho: false,
+            errpos: false,
+            errser: false
         }
     },
     mounted() {
         this.getallclienta()
         this.getallclientb()
+    },
+    computed: {
+        nameclass() {
+            return {
+                'md-invalid': this.nameErr
+            }
+        },
+        addclass() {
+            return {
+                'md-invalid': this.addErr
+            }
+        },
+        phoclass() {
+            return {
+                'md-invalid': this.phoErr
+            }
+        },
+        conclass() {
+            return {
+                'md-invalid': this.conErr
+            }
+        },
+        posclass() {
+            return {
+                'md-invalid': this.posErr
+            }
+        },
+        usrclass() {
+            return {
+                'md-invalid': this.usrErr
+            }
+        },
+        pswclass() {
+            return {
+                'md-invalid': this.pswErr
+            }
+        },
+        timclass() {
+            return {
+                'md-invalid': this.timErr
+            }
+        },
+        maiclass() {
+            return {
+                'md-invalid': this.maiErr
+            }
+        },
+        classname() {
+            return {
+                'md-invalid': this.errname
+            }
+        },
+        classadd() {
+            return {
+                'md-invalid': this.erradd
+            }
+        },
+        classpho() {
+            return {
+                'md-invalid': this.errpho
+            }
+        },
+        classpos() {
+            return {
+                'md-invalid': this.errpos
+            }
+        },
+        classser() {
+            return {
+                'md-invalid': this.errser
+            }
+        },
     },
     methods: {
         searcha() {
@@ -477,7 +565,6 @@ export default {
                 this.clientbname = ''
                 this.clientbaddress = ''
                 this.clientbphone = ''
-                this.clientbstatus = ''
                 this.clientbpostcode = ''
                 this.clientbserve = ''
             } else {
@@ -486,7 +573,6 @@ export default {
                 this.clientaname = ''
                 this.clientaaddress = ''
                 this.clientaphone = ''
-                this.clientastatus = ''
                 this.clientapostcode = ''
                 this.clientausername = ''
                 this.clientapsw = ''
@@ -496,7 +582,7 @@ export default {
             }
         },
         getallclienta() {
-            axios.get(config.server +'/clienta')
+            axios.get(config.server + '/clienta')
                 .then((res) => {
                     this.allclientainfo = res.data
                 }).catch((err) => {
@@ -504,7 +590,7 @@ export default {
                 })
         },
         getallclientb() {
-            axios.get(config.server +'/clientb')
+            axios.get(config.server + '/clientb')
                 .then((res) => {
                     this.allclientbinfo = res.data
                 }).catch((err) => {
@@ -512,14 +598,63 @@ export default {
                 })
         },
         addclienta() {
-            if (!this.clientaname || !this.clientaphone || !this.clientausername || !this.clientapsw) {
-                this.error = true
-                this.erromsg = '请填写必要信息'
-                setTimeout(() => {
-                    this.error1 = false
-                }, 3000)
+            if (!this.clientaname || !this.clientaaddress || !this.clientaphone || !this.clientapostcode || !this.clientausername || !this.clientapsw || !this.clientacontract || !this.clientatime || !this.clientamail) {
+                if (!this.clientaname) {
+                    this.nameErr = true
+                } else {
+                    this.nameErr = false
+                }
+                if (!this.clientaaddress) {
+                    this.addErr = true
+                } else {
+                    this.addErr = false
+                }
+                if (!this.clientaphone) {
+                    this.phoErr = true
+                } else {
+                    this.phoErr = false
+                }
+                if (!this.clientacontract) {
+                    this.conErr = true
+                } else {
+                    this.conErr = false
+                }
+                if (!this.clientapostcode) {
+                    this.posErr = true
+                } else {
+                    this.posErr = false
+                }
+                if (!this.clientausername) {
+                    this.usrErr = true
+                } else {
+                    this.usrErr = false
+                }
+                if (!this.clientapsw) {
+                    this.pswErr = true
+                } else {
+                    this.pswErr = false
+                }
+                if (!this.clientatime) {
+                    this.timErr = true
+                } else {
+                    this.timErr = false
+                }
+                if (!this.clientamail) {
+                    this.maiErr = true
+                } else {
+                    this.maiErr = false
+                }
             } else {
-                axios.post(config.server +'/clienta', {
+                this.nameErr = false
+                this.addErr = false
+                this.phoErr = false
+                this.conErr = false
+                this.posErr = false
+                this.usrErr = false
+                this.pswErr = false
+                this.timErr = false
+                this.maiErr = false
+                axios.post(config.server + '/clienta', {
                         clientaname: this.clientaname,
                         clientaaddress: this.clientaaddress,
                         clientaphone: this.clientaphone,
@@ -574,15 +709,37 @@ export default {
                         }, 3000)
                     });
             }
+
         },
         addclientb() {
-            if (!this.clientbname || !this.clientbaddress || !this.clientbphone || !this.clientbpostcode) {
-                this.error1 = true
-                setTimeout(() => {
-                    this.error1 = false
-                }, 3000)
+            if (!this.clientbname || !this.clientbaddress || !this.clientbphone || !this.clientbpostcode||!this.choseaname) {
+                if (!this.clientbname) {
+                    this.errname = true
+                } else {
+                    this.errname = false
+                }
+                if (!this.clientbaddress) {
+                    this.erradd = true
+                } else {
+                    this.erradd = false
+                }
+                if (!this.clientbphone) {
+                    this.errpho = true
+                } else {
+                    this.errpho = false
+                }
+                if (!this.clientbpostcode) {
+                    this.errpos = true
+                } else {
+                    this.errpos = false
+                }
+                if (!this.choseaname) {
+                    this.errser = true
+                } else {
+                    this.errser = false
+                }
             } else {
-                axios.post(config.server +'/clientb', {
+                axios.post(config.server + '/clientb', {
                         clientbname: this.clientbname,
                         clientbaddress: this.clientbaddress,
                         clientbphone: this.clientbphone,
@@ -650,7 +807,7 @@ export default {
 
         },
         confirmEditClientB() {
-            axios.post(config.server +'/clientb/edit', {
+            axios.post(config.server + '/clientb/edit', {
                     _id: this._id,
                     clientbname: this.clientbname,
                     clientbaddress: this.clientbaddress,
@@ -690,7 +847,7 @@ export default {
             this.clientbserve = item.clientbserve
         },
         confirmdeleteB() {
-            axios.post(config.server +'/clientb/remove', {
+            axios.post(config.server + '/clientb/remove', {
                     _id: this._id
                 })
                 .then((doc) => {
@@ -722,9 +879,18 @@ export default {
             this.clientastatus = item.clientastatus
             this.clientapostcode = item.clientapostcode
             this.clientausername = item.clientausername
-            this.clientapsw = item.clientapsw
+            this.clientapsw = ''
             this.clientacontract = item.clientacontract
-            this.clientatime = new Date(item.clientatime).toLocaleDateString()
+            let year = new Date(item.clientatime).getFullYear()
+            let month = new Date(item.clientatime).getMonth() + 1
+            if (month < 10) {
+                month = '0' + month
+            }
+            let day = new Date(item.clientatime).getDate()
+            if (day < 10) {
+                day = '0' + day
+            }
+            this.clientatime = year + '-' + month + '-' + day
             this.clientamail = item.clientamail
         },
         removeClientA(item) {
@@ -736,47 +902,109 @@ export default {
             this.clientastatus = item.clientastatus
             this.clientapostcode = item.clientapostcode
             this.clientausername = item.clientausername
-            this.clientapsw = item.clientapsw
             this.clientacontract = item.clientacontract
             this.clientatime = new Date(item.clientatime).toLocaleDateString()
             this.clientamail = item.clientamail
         },
         confirmEditClientA() {
-            axios.post(config.server +'/clienta/edit', {
-                    _id: this._id,
-                    clientaname: this.clientaname,
-                    clientaaddress: this.clientaaddress,
-                    clientaphone: this.clientaphone,
-                    clientastatus: this.clientastatus,
-                    clientapostcode: this.clientapostcode,
-                    clientausername: this.clientausername,
-                    clientapsw: this.clientapsw,
-                    clientacontract: this.clientacontract,
-                    clientatime: this.clientatime,
-                    clientamail: this.clientamail
-                })
-                .then((doc) => {
-                    this.error = true
-                    this.erromsg = doc.data.msg
-                    setTimeout(() => {
-                        this.error = false
-                    }, 3000)
-                    if (doc.data.code == 0) {
-                        this.showDialoga = false
-                        this.getallclienta()
+            if (!this.clientaname || !this.clientaaddress || !this.clientaphone || !this.clientapostcode || !this.clientausername || !this.clientacontract || !this.clientatime || !this.clientamail) {
+                if (!this.clientaname) {
+                    this.nameErr = true
+                } else {
+                    this.nameErr = false
+                }
+                if (!this.clientaaddress) {
+                    this.addErr = true
+                } else {
+                    this.addErr = false
+                }
+                if (!this.clientaphone) {
+                    this.phoErr = true
+                } else {
+                    this.phoErr = false
+                }
+                if (!this.clientacontract) {
+                    this.conErr = true
+                } else {
+                    this.conErr = false
+                }
+                if (!this.clientapostcode) {
+                    this.posErr = true
+                } else {
+                    this.posErr = false
+                }
+                if (!this.clientausername) {
+                    this.usrErr = true
+                } else {
+                    this.usrErr = false
+                }
+                if (!this.clientatime) {
+                    this.timErr = true
+                } else {
+                    this.timErr = false
+                }
+                if (!this.clientamail) {
+                    this.maiErr = true
+                } else {
+                    this.maiErr = false
+                }
+            } else {
+                let editInfo
+                if (this.clientapsw) {
+                    editInfo = {
+                        _id: this._id,
+                        clientaname: this.clientaname,
+                        clientaaddress: this.clientaaddress,
+                        clientaphone: this.clientaphone,
+                        clientastatus: this.clientastatus,
+                        clientapostcode: this.clientapostcode,
+                        clientausername: this.clientausername,
+                        clientapsw: this.clientapsw,
+                        clientacontract: this.clientacontract,
+                        clientatime: this.clientatime,
+                        clientamail: this.clientamail
                     }
-                })
-                .catch((err) => {
-                    console.log(err)
-                    this.error = true
-                    this.erromsg = err
-                    setTimeout(() => {
-                        this.error = false
-                    }, 3000)
-                })
+                } else {
+                    editInfo = {
+                        _id: this._id,
+                        clientaname: this.clientaname,
+                        clientaaddress: this.clientaaddress,
+                        clientaphone: this.clientaphone,
+                        clientastatus: this.clientastatus,
+                        clientapostcode: this.clientapostcode,
+                        clientausername: this.clientausername,
+                        clientacontract: this.clientacontract,
+                        clientatime: this.clientatime,
+                        clientamail: this.clientamail
+                    }
+                }
+                axios.post(config.server + '/clienta/edit', editInfo)
+                    .then((doc) => {
+                        console.log('#####')
+                        console.log(this.clientatime)
+                        this.error = true
+                        this.erromsg = doc.data.msg
+                        setTimeout(() => {
+                            this.error = false
+                        }, 3000)
+                        if (doc.data.code == 0) {
+                            this.showDialoga = false
+                            this.getallclienta()
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        this.error = true
+                        this.erromsg = err
+                        setTimeout(() => {
+                            this.error = false
+                        }, 3000)
+                    })
+            }
+
         },
         confirmRemoveClientA() {
-            axios.post(config.server +'/clienta/remove', {
+            axios.post(config.server + '/clienta/remove', {
                     _id: this._id
                 })
                 .then((doc) => {
