@@ -308,6 +308,15 @@ export default {
                     .then(res => {
                         this.allcarinfo = res.data.doc
                         this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                        if (res.data.code === 1) {
+                            this.error = true 
+                            this.errormsg = res.data.msg
+                            this.selectedCar = ''
+                            this.getallcar()
+                            setTimeout(() => {
+                                this.error = false
+                            }, 3000)
+                        }
                     })
                     .catch(err => {
                         console.log(err)

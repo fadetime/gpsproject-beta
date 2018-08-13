@@ -74,7 +74,6 @@
             </ul>
         </div>
     </div>
-
     <!-- Dialog start-->
     <md-dialog :md-active.sync="showDialog" style="width:700px">
         <md-dialog-title style="font-size:20px">车次管理</md-dialog-title>
@@ -302,7 +301,7 @@ export default {
     methods: {
         search() {
             this.pageNow = 1
-            if (this.searchclienta == '') {
+            if (this.selectCar == '') {
                 this.findMode = false
                 this.getalltimes()
             } else {
@@ -315,6 +314,15 @@ export default {
                     .then(res => {
                         this.alltimesinfo = res.data.doc
                         this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                        if (res.data.code === 1) {
+                            this.error = true 
+                            this.errorMessage = res.data.msg
+                            this.selectCar = ''
+                            this.getalltimes()
+                            setTimeout(() => {
+                                this.error = false
+                            }, 3000)
+                        }
                     })
                     .catch(err => {
                         console.log(err)
@@ -406,6 +414,7 @@ export default {
                 })
                 .then((res) => {
                     this.alltimesinfo = res.data.doc
+                    console.log(res.data.doc)
                     this.pageCount = Math.ceil(res.data.count / this.pageSize)
                 }).catch((err) => {
                     console.log(err)

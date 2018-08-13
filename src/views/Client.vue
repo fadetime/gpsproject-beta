@@ -728,7 +728,7 @@ export default {
             }
 
         },
-        
+
         pageButtonB(item) {
             // console.log(this.pageNow)
             if (item === 'A') {
@@ -784,6 +784,15 @@ export default {
                     .then(res => {
                         this.allclientainfo = res.data.doc
                         this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                        if (res.data.code === 1) {
+                            this.error = true 
+                            this.erromsg = res.data.msg
+                            this.searchclienta = ''
+                            this.getallclienta()
+                            setTimeout(() => {
+                                this.error = false
+                            }, 3000)
+                        }
                     })
                     .catch(err => {
                         console.log(err)
@@ -805,6 +814,15 @@ export default {
                     .then(res => {
                         this.allclientbinfo = res.data.doc
                         this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                        if (res.data.code === 1) {
+                            this.error = true 
+                            this.erromsg = res.data.msg
+                            this.searchclientb = ''
+                            this.getallclientb()
+                            setTimeout(() => {
+                                this.error = false
+                            }, 3000)
+                        }
                     })
                     .catch(err => {
                         console.log(err)
