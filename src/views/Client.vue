@@ -140,13 +140,13 @@
         <div class="page-bar-body" v-if="pageCountA!=1">
             <ul style="width:410px">
                 <li @click="pageButtonA('A')">
-                    <span>上一页1</span>
+                    <span>上一页</span>
                 </li>
                 <li v-for="(item,index) in pagesA" :key="index" @click="pageButtonA(item)" :class="{'active':pageNow == item}">
                     <span>{{item}}</span>
                 </li>
                 <li @click="pageButtonA('B')">
-                    <span>下一页1</span>
+                    <span>下一页</span>
                 </li>
                 <li>
                     <span>共<i>{{pageCountA}}</i>页</span>
@@ -559,6 +559,8 @@ export default {
             pageNow: 1, // 当前页码
             pageSize: 2, //每页显示条数
             showItem: 5, // 最少显示5个页码
+            findAmode: false,
+            findBmode: false
         }
     },
     created() {
@@ -590,6 +592,7 @@ export default {
             }
             return pag
         },
+
         pages: function () {
             let pag = []
             if (this.pageNow < this.showItem) { //如果当前的激活的项 小于要显示的条数
@@ -610,16 +613,19 @@ export default {
             }
             return pag
         },
+
         nameclass() {
             return {
                 'md-invalid': this.nameErr
             }
         },
+
         addclass() {
             return {
                 'md-invalid': this.addErr
             }
         },
+
         phoclass() {
             return {
                 'md-invalid': this.phoErr
@@ -695,17 +701,34 @@ export default {
             } else {
                 this.pageNow = item
             }
-            axios.post(config.server + '/clienta/get', {
-                    pageSize: this.pageSize,
-                    pageNow: this.pageNow
-                })
-                .then((res) => {
-                    this.allclientainfo = res.data.doc
-                    this.pageCountA = Math.ceil(res.data.count / this.pageSize)
-                }).catch((err) => {
-                    console.log(err)
-                })
+            if (this.findAmode === false) {
+                axios.post(config.server + '/clienta/get', {
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then((res) => {
+                        this.allclientainfo = res.data.doc
+                        this.pageCountA = Math.ceil(res.data.count / this.pageSize)
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+            } else {
+                axios.post(config.server + '/clienta/find', {
+                        word: this.searchclienta,
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then(res => {
+                        this.allclientainfo = res.data.doc
+                        this.pageCountA = Math.ceil(res.data.count / this.pageSize)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+
         },
+        
         pageButtonB(item) {
             // console.log(this.pageNow)
             if (item === 'A') {
@@ -719,45 +742,73 @@ export default {
             } else {
                 this.pageNow = item
             }
-            axios.post(config.server + '/clientb/get', {
-                    pageSize: this.pageSize,
-                    pageNow: this.pageNow
-                })
-                .then((res) => {
-                    this.allclientbinfo = res.data.doc
-                    this.pageCount = Math.ceil(res.data.count / this.pageSize)
-                }).catch((err) => {
-                    console.log(err)
-                })
+            if (this.findBmode === false) {
+                axios.post(config.server + '/clientb/get', {
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then((res) => {
+                        this.allclientbinfo = res.data.doc
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+            } else {
+                axios.post(config.server + '/clientb/find', {
+                        word: this.searchclientb,
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then(res => {
+                        this.allclientbinfo = res.data.doc
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
         },
+
         searcha() {
+            this.pageNow = 1
             if (this.searchclienta == '') {
+                this.findAmode = false
                 this.getallclienta()
             } else {
-                this.searchedclienta = this.allclientainfo.filter(element => {
-                    return element.clientaname.toLowerCase().indexOf(this.searchclienta.toLowerCase()) !== -1
-                })
-                this.allclientainfo = this.searchedclienta
+                this.findAmode = true
+                axios.post(config.server + '/clienta/find', {
+                        word: this.searchclienta,
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then(res => {
+                        this.allclientainfo = res.data.doc
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             }
         },
         searchb() {
+            this.pageNow = 1
             if (this.searchclientb == '') {
+                this.findBmode = false
                 this.getallclientb()
             } else {
-                axios.post(config.server + '/clientb/find',{
-                    word:this.searchclientb,
-                    pageSize:this.pageSize,
-                    pageNow:this.pageNow
-                })
-                .then(res => {
-                    this.allclientbinfo = res.data.doc
-                    this.pageCount = Math.ceil(res.data.count / this.pageSize)
-                    console.log(this.pageCount)
-                    console.log(res)
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+                this.findBmode = true
+                axios.post(config.server + '/clientb/find', {
+                        word: this.searchclientb,
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then(res => {
+                        this.allclientbinfo = res.data.doc
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             }
         },
         changepageA() {
@@ -766,7 +817,9 @@ export default {
             this.pagestyleb = ''
             this.classA = 'md-raised md-primary'
             this.classB = 'md-raised'
-            this.pageNow=1
+            this.pageNow = 1
+            this.searchclienta=''
+            this.getallclienta()
         },
         changepageB() {
             this.clientpage = false
@@ -774,7 +827,9 @@ export default {
             this.pagestylea = ''
             this.classA = 'md-raised'
             this.classB = 'md-raised md-primary'
-            this.pageNow=1
+            this.pageNow = 1
+            this.searchclientb = ''
+            this.getallclientb()
         },
         showDialog() {
             if (!this.clientpage) {
@@ -807,7 +862,6 @@ export default {
                 .then((res) => {
                     this.allclientainfo = res.data.doc
                     this.pageCountA = Math.ceil(res.data.count / this.pageSize)
-                    console.log(this.pageCountA)
                 }).catch((err) => {
                     console.log(err)
                 })

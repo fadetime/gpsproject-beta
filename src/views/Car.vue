@@ -59,7 +59,25 @@
                 </div>
             </md-card-content>
         </md-card>
-
+        <!-- 客户页码 -->
+        <div class="page-bar">
+            <div class="page-bar-body" v-if="pageCount!=1">
+                <ul style="width:410px">
+                    <li @click="pageButton('A')">
+                        <span>上一页</span>
+                    </li>
+                    <li v-for="(item,index) in pages" :key="index" @click="pageButton(item)" :class="{'active':pageNow == item}">
+                        <span>{{item}}</span>
+                    </li>
+                    <li @click="pageButton('B')">
+                        <span>下一页</span>
+                    </li>
+                    <li>
+                        <span>共<i>{{pageCount}}</i>页</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <!-- Dialog start-->
@@ -217,23 +235,56 @@ export default {
             allcarinfo: [],
             searching: false,
             idErr: false,
-            typeErr: false
+            typeErr: false,
+            pageCount: 0, // 总页码
+            pageNow: 1, // 当前页码
+            pageSize: 2, //每页显示条数
+            showItem: 5, // 最少显示5个页码
+            findMode: false,
         }
     },
+
     mounted() {
+
         this.getallcar()
+
     },
+
     computed: {
+
+        pages: function () {
+            let pag = []
+            if (this.pageNow < this.showItem) { //如果当前的激活的项 小于要显示的条数
+                //总页数和要显示的条数那个大就显示多少条
+                let i = Math.min(this.showItem, this.pageCount);
+                while (i) {
+                    pag.unshift(i--);
+                }
+            } else { //当前页数大于显示页数了
+                let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
+                    i = this.showItem;
+                if (middle > (this.pageCount - this.showItem)) {
+                    middle = (this.pageCount - this.showItem) + 1
+                }
+                while (i--) {
+                    pag.push(middle++);
+                }
+            }
+            return pag
+        },
+
         idclass() {
             return {
                 'md-invalid': this.idErr
             }
         },
+
         typeclass() {
             return {
                 'md-invalid': this.typeErr
             }
         },
+
     },
     methods: {
         newCar() {
@@ -245,12 +296,22 @@ export default {
         },
         search(item) {
             if (this.selectedCar == '') {
+                this.findMode = false
                 this.getallcar()
             } else {
-                this.searchCar = this.allcarinfo.filter(element => {
-                    return element.carid.toLowerCase().indexOf(this.selectedCar.toLowerCase()) !== -1
-                })
-                this.allcarinfo = this.searchCar
+                this.findMode = true
+                axios.post(config.server + '/car/find', {
+                        word: this.selectedCar,
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then(res => {
+                        this.allcarinfo = res.data.doc
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             }
         },
         editbutton(item) {
@@ -273,6 +334,46 @@ export default {
             this.removeDialog = true
 
         },
+
+        pageButton(item) {
+            if (item === 'A') {
+                if (this.pageNow > 1) {
+                    this.pageNow = this.pageNow - 1
+                }
+            } else if (item === 'B') {
+                if (this.pageNow < this.pageCount) {
+                    this.pageNow = this.pageNow + 1
+                }
+            } else {
+                this.pageNow = item
+            }
+            if (this.findmode === false) {
+                axios.post(config.server + '/car/get', {
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then((res) => {
+                        this.allcarinfo = res.data.doc
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+            } else {
+                axios.post(config.server + '/car/find', {
+                        word: this.selectedCar,
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then(res => {
+                        this.allcarinfo = res.data.doc
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+        },
+
         confirmedit() {
             axios.post(config.server + '/car/update', {
                     _id: this._id,
@@ -327,16 +428,21 @@ export default {
                     console.log(err)
                 })
         },
-        getallcar() {
-            axios.get(config.server + '/car')
-                .then((res) => {
 
-                    this.allcarinfo = res.data
+        getallcar() {
+            axios.post(config.server + '/car/get', {
+                    pageSize: this.pageSize,
+                    pageNow: this.pageNow
+                })
+                .then((res) => {
+                    this.allcarinfo = res.data.doc
+                    this.pageCount = Math.ceil(res.data.count / this.pageSize)
                     console.log(this.allcarinfo)
                 }).catch((err) => {
                     console.log(err)
                 })
         },
+
         addcar() {
             if (!this.carid || !this.cartype || !this.tailgate) {
                 if (!this.carid) {

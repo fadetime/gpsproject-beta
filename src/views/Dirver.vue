@@ -55,7 +55,25 @@
                 </div>
             </md-card-content>
         </md-card>
-
+        <!-- 司机页码 -->
+        <div class="page-bar">
+            <div class="page-bar-body" v-if="pageCount!=1">
+                <ul style="width:410px">
+                    <li @click="pageButton('A')">
+                        <span>上一页</span>
+                    </li>
+                    <li v-for="(item,index) in pages" :key="index" @click="pageButton(item)" :class="{'active':pageNow == item}">
+                        <span>{{item}}</span>
+                    </li>
+                    <li @click="pageButton('B')">
+                        <span>下一页</span>
+                    </li>
+                    <li>
+                        <span>共<i>{{pageCount}}</i>页</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
     <!-- Dialog start-->
     <md-dialog :md-active.sync="showDialog" style="width:700px">
@@ -218,12 +236,37 @@ export default {
             cardErr: false,
             userdErr: false,
             pswdErr: false,
+            pageCount: 0, // 总页码
+            pageNow: 1, // 当前页码
+            pageSize: 2, //每页显示条数
+            showItem: 5, // 最少显示5个页码
+            findMode: false
         };
     },
     mounted() {
         this.getalldirver();
     },
     computed: {
+        pages: function () {
+            let pag = []
+            if (this.pageNow < this.showItem) { //如果当前的激活的项 小于要显示的条数
+                //总页数和要显示的条数那个大就显示多少条
+                let i = Math.min(this.showItem, this.pageCount);
+                while (i) {
+                    pag.unshift(i--);
+                }
+            } else { //当前页数大于显示页数了
+                let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
+                    i = this.showItem;
+                if (middle > (this.pageCount - this.showItem)) {
+                    middle = (this.pageCount - this.showItem) + 1
+                }
+                while (i--) {
+                    pag.push(middle++);
+                }
+            }
+            return pag
+        },
         nameclass() {
             return {
                 'md-invalid': this.nameErr
@@ -257,17 +300,24 @@ export default {
     },
     methods: {
         search(item) {
+            this.pageNow = 1
             if (this.searchDirver == "") {
+                this.findMode = false
                 this.getalldirver();
             } else {
-                this.searchedDriver = this.alldirverinfo.filter(element => {
-                    return (
-                        element.dirvername
-                        .toLowerCase()
-                        .indexOf(this.searchDirver.toLowerCase()) !== -1
-                    );
-                });
-                this.alldirverinfo = this.searchedDriver;
+                this.findMode = true
+                axios.post(config.server + "/dirver/find", {
+                        word: this.searchDirver,
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then(res => {
+                        this.alldirverinfo = res.data.doc;
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             }
         },
         adddirverbutton() {
@@ -317,6 +367,7 @@ export default {
                     }, 3000);
                 });
         },
+
         editbutton(item) {
             this.savemode = false;
             this._id = item._id;
@@ -329,6 +380,48 @@ export default {
             this.dirvernote = item.dirvernote;
             this.showDialog = true;
         },
+
+        pageButton(item) {
+            if (item === 'A') {
+                
+                if (this.pageNow > 1) {
+                    this.pageNow = this.pageNow - 1
+                }
+            } else if (item === 'B') {
+                if (this.pageNow < this.pageCount) {
+                    this.pageNow = this.pageNow + 1
+                }
+            } else {
+                this.pageNow = item
+            }
+            if (this.findMode === false) {
+                axios.post(config.server + "/dirver/get", {
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then(res => {
+                        this.alldirverinfo = res.data.doc;
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                axios.post(config.server + "/dirver/find", {
+                        word: this.searchDirver,
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then(res => {
+                        this.alldirverinfo = res.data.doc;
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+        },
+
         confirmedit() {
             if (!this.dirvername || !this.dirverid || !this.dirverusername ||
                 !this.dirverphone || !this.dirvercard || !this.dirverusername
@@ -411,10 +504,13 @@ export default {
             }
         },
         getalldirver() {
-            axios
-                .get(config.server + "/dirver")
+            axios.post(config.server + "/dirver/get", {
+                    pageSize: this.pageSize,
+                    pageNow: this.pageNow
+                })
                 .then(res => {
-                    this.alldirverinfo = res.data;
+                    this.alldirverinfo = res.data.doc;
+                    this.pageCount = Math.ceil(res.data.count / this.pageSize)
                 })
                 .catch(err => {
                     console.log(err);

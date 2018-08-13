@@ -56,6 +56,25 @@
         </md-card>
     </div>
 
+    <div class="page-bar">
+        <div class="page-bar-body" v-if="pageCount!=1">
+            <ul style="width:410px">
+                <li @click="pageButton('A')">
+                    <span>上一页</span>
+                </li>
+                <li v-for="(item,index) in pages" :key="index" @click="pageButton(item)" :class="{'active':pageNow == item}">
+                    <span>{{item}}</span>
+                </li>
+                <li @click="pageButton('B')">
+                    <span>下一页</span>
+                </li>
+                <li>
+                    <span>共<i>{{pageCount}}</i>页</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <!-- Dialog start-->
     <md-dialog :md-active.sync="showDialog" style="width:700px">
         <md-dialog-title style="font-size:20px">车次管理</md-dialog-title>
@@ -243,7 +262,12 @@ export default {
             _id: '',
             savemode: true,
             removeDialog: false,
-            selectCar: ''
+            selectCar: '',
+            pageCount: 0,
+            pageNow: 1,
+            pageSize: 2,
+            showItem: 5,
+            findMode: false
         }
     },
     mounted() {
@@ -252,7 +276,51 @@ export default {
         this.getallclientb()
         this.getalltimes()
     },
+
+    computed: {
+        pages: function () {
+            let pag = []
+            if (this.pageNow < this.showItem) { //如果当前的激活的项 小于要显示的条数
+                //总页数和要显示的条数那个大就显示多少条
+                let i = Math.min(this.showItem, this.pageCount);
+                while (i) {
+                    pag.unshift(i--);
+                }
+            } else { //当前页数大于显示页数了
+                let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
+                    i = this.showItem;
+                if (middle > (this.pageCount - this.showItem)) {
+                    middle = (this.pageCount - this.showItem) + 1
+                }
+                while (i--) {
+                    pag.push(middle++);
+                }
+            }
+            return pag
+        },
+    },
     methods: {
+        search() {
+            this.pageNow = 1
+            if (this.searchclienta == '') {
+                this.findMode = false
+                this.getalltimes()
+            } else {
+                this.findMode = true
+                axios.post(config.server + '/times/find', {
+                        word: this.selectCar,
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then(res => {
+                        this.alltimesinfo = res.data.doc
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+        },
         addbutton() {
             this.savemode = true
             this.showDialog = true
@@ -261,37 +329,84 @@ export default {
             this.timesnote = ''
             this.choicecar = ''
             this.choicedirver = ''
-            this.adirverinfo =''
+            this.adirverinfo = ''
             this.choiceclientb = []
         },
+
+        pageButton(item) {
+            if (item === 'A') {
+                if (this.pageNow > 1) {
+                    this.pageNow = this.pageNow - 1
+                }
+            } else if (item === 'B') {
+                if (this.pageNow < this.pageCount) {
+                    this.pageNow = this.pageNow + 1
+                }
+            } else {
+                this.pageNow = item
+            }
+            if (this.findBmode === false) {
+                axios.post(config.server + '/times/get', {
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then((res) => {
+                        this.alltimesinfo = res.data.doc
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+            } else {
+                axios.post(config.server + '/times/find', {
+                        word: this.selectCar,
+                        pageSize: this.pageSize,
+                        pageNow: this.pageNow
+                    })
+                    .then(res => {
+                        this.alltimesinfo = res.data.doc
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+        },
+
         getalldirver() {
-            axios.get(config.server +'/dirver')
+            axios.get(config.server + '/dirver')
                 .then((res) => {
                     this.alldirverinfo = res.data
                 }).catch((err) => {
                     console.log(err)
                 })
         },
+
         getallcar() {
-            axios.get(config.server +'/car')
+            axios.get(config.server + '/car')
                 .then((res) => {
                     this.allcarinfo = res.data
                 }).catch((err) => {
                     console.log(err)
                 })
         },
+
         getallclientb() {
-            axios.get(config.server +'/clientb')
+            axios.get(config.server + '/clientb')
                 .then((res) => {
                     this.allclientbinfo = res.data
                 }).catch((err) => {
                     console.log(err)
                 })
         },
+
         getalltimes() {
-            axios.get(config.server +'/times')
+            axios.post(config.server + '/times/get', {
+                    pageSize: this.pageSize,
+                    pageNow: this.pageNow
+                })
                 .then((res) => {
                     this.alltimesinfo = res.data.doc
+                    this.pageCount = Math.ceil(res.data.count / this.pageSize)
                 }).catch((err) => {
                     console.log(err)
                 })
@@ -325,7 +440,7 @@ export default {
                     this.error = false
                 }, 3000)
             } else {
-                axios.post(config.server +'/times', {
+                axios.post(config.server + '/times', {
                         timesname: this.timesname,
                         timescar: this.choicecar,
                         timesnote: this.timesnote,
@@ -362,7 +477,7 @@ export default {
             }
         },
         changeclientb() {
-            axios.post(config.server +'/clientb/changeline', {
+            axios.post(config.server + '/clientb/changeline', {
                 choiceclientb: this.choiceclientb,
                 timesname: this.timesname
             }).then((res) => {
@@ -405,7 +520,7 @@ export default {
                     this.error = false
                 }, 3000)
             } else {
-                axios.post(config.server +'/times/edit', {
+                axios.post(config.server + '/times/edit', {
                         _id: this._id,
                         timesname: this.timesname,
                         timescar: this.choicecar,
@@ -445,7 +560,7 @@ export default {
             this.timesclientnumber = item.timesclientnumber
         },
         confirmremove() {
-            axios.post(config.server +'/times/remove', {
+            axios.post(config.server + '/times/remove', {
                     _id: this._id
                 })
                 .then((res) => {
