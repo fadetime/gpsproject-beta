@@ -3,7 +3,7 @@
     <div class="topbutton">
 
         <div class="topbutton-left">
-            <input type="text" v-model="searchclientb" @keyup.enter="searchb" placeholder="搜索客户信息" v-if="!clientpage">
+            <input type="text" v-model="searchclientb" @keyup.enter="searchb" placeholder="搜索客户名称" v-if="!clientpage">
             <input type="text" v-model="searchclienta" @keyup.enter="searcha" placeholder="搜索合作商信息" v-else>
         </div>
 
@@ -134,6 +134,46 @@
         </div>
     </div>
 
+    <!-- page bar start-->
+    <!-- 合作商页码 -->
+    <div class="page-bar" v-if="clientpage">
+        <div class="page-bar-body" v-if="pageCountA!=1">
+            <ul style="width:410px">
+                <li @click="pageButtonA('A')">
+                    <span>上一页1</span>
+                </li>
+                <li v-for="(item,index) in pagesA" :key="index" @click="pageButtonA(item)" :class="{'active':pageNow == item}">
+                    <span>{{item}}</span>
+                </li>
+                <li @click="pageButtonA('B')">
+                    <span>下一页1</span>
+                </li>
+                <li>
+                    <span>共<i>{{pageCountA}}</i>页</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- 客户页码 -->
+    <div class="page-bar" v-else>
+        <div class="page-bar-body" v-if="pageCount!=1">
+            <ul style="width:410px">
+                <li @click="pageButtonB('A')">
+                    <span>上一页</span>
+                </li>
+                <li v-for="(item,index) in pages" :key="index" @click="pageButtonB(item)" :class="{'active':pageNow == item}">
+                    <span>{{item}}</span>
+                </li>
+                <li @click="pageButtonB('B')">
+                    <span>下一页</span>
+                </li>
+                <li>
+                    <span>共<i>{{pageCount}}</i>页</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- page bar end-->
     <!-- Dialog b start-->
     <md-dialog :md-active.sync="showDialogb" style="width:500px">
         <md-dialog-title style="font-size:30px">客户管理</md-dialog-title>
@@ -513,14 +553,63 @@ export default {
             erradd: false,
             errpho: false,
             errpos: false,
-            errser: false
+            errser: false,
+            pageCount: 0, // 总页码
+            pageCountA: 0,
+            pageNow: 1, // 当前页码
+            pageSize: 2, //每页显示条数
+            showItem: 5, // 最少显示5个页码
         }
+    },
+    created() {
+
     },
     mounted() {
         this.getallclienta()
         this.getallclientb()
+
     },
     computed: {
+        pagesA: function () {
+            let pag = []
+            if (this.pageNow < this.showItem) { //如果当前的激活的项 小于要显示的条数
+                //总页数和要显示的条数那个大就显示多少条
+                let i = Math.min(this.showItem, this.pageCountA);
+                while (i) {
+                    pag.unshift(i--);
+                }
+            } else { //当前页数大于显示页数了
+                let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
+                    i = this.showItem;
+                if (middle > (this.pageCountA - this.showItem)) {
+                    middle = (this.pageCountA - this.showItem) + 1
+                }
+                while (i--) {
+                    pag.push(middle++);
+                }
+            }
+            return pag
+        },
+        pages: function () {
+            let pag = []
+            if (this.pageNow < this.showItem) { //如果当前的激活的项 小于要显示的条数
+                //总页数和要显示的条数那个大就显示多少条
+                let i = Math.min(this.showItem, this.pageCount);
+                while (i) {
+                    pag.unshift(i--);
+                }
+            } else { //当前页数大于显示页数了
+                let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
+                    i = this.showItem;
+                if (middle > (this.pageCount - this.showItem)) {
+                    middle = (this.pageCount - this.showItem) + 1
+                }
+                while (i--) {
+                    pag.push(middle++);
+                }
+            }
+            return pag
+        },
         nameclass() {
             return {
                 'md-invalid': this.nameErr
@@ -593,6 +682,54 @@ export default {
         },
     },
     methods: {
+        pageButtonA(item) {
+            // console.log(this.pageNow)
+            if (item === 'A') {
+                if (this.pageNow > 1) {
+                    this.pageNow = this.pageNow - 1
+                }
+            } else if (item === 'B') {
+                if (this.pageNow < this.pageCountA) {
+                    this.pageNow = this.pageNow + 1
+                }
+            } else {
+                this.pageNow = item
+            }
+            axios.post(config.server + '/clienta/get', {
+                    pageSize: this.pageSize,
+                    pageNow: this.pageNow
+                })
+                .then((res) => {
+                    this.allclientainfo = res.data.doc
+                    this.pageCountA = Math.ceil(res.data.count / this.pageSize)
+                }).catch((err) => {
+                    console.log(err)
+                })
+        },
+        pageButtonB(item) {
+            // console.log(this.pageNow)
+            if (item === 'A') {
+                if (this.pageNow > 1) {
+                    this.pageNow = this.pageNow - 1
+                }
+            } else if (item === 'B') {
+                if (this.pageNow < this.pageCount) {
+                    this.pageNow = this.pageNow + 1
+                }
+            } else {
+                this.pageNow = item
+            }
+            axios.post(config.server + '/clientb/get', {
+                    pageSize: this.pageSize,
+                    pageNow: this.pageNow
+                })
+                .then((res) => {
+                    this.allclientbinfo = res.data.doc
+                    this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                }).catch((err) => {
+                    console.log(err)
+                })
+        },
         searcha() {
             if (this.searchclienta == '') {
                 this.getallclienta()
@@ -607,11 +744,20 @@ export default {
             if (this.searchclientb == '') {
                 this.getallclientb()
             } else {
-                console.log('###')
-                this.searchedclientb = this.allclientbinfo.filter(element => {
-                    return element.clientbname.toLowerCase().indexOf(this.searchclientb.toLowerCase()) !== -1
+                axios.post(config.server + '/clientb/find',{
+                    word:this.searchclientb,
+                    pageSize:this.pageSize,
+                    pageNow:this.pageNow
                 })
-                this.allclientbinfo = this.searchedclientb
+                .then(res => {
+                    this.allclientbinfo = res.data.doc
+                    this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    console.log(this.pageCount)
+                    console.log(res)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
             }
         },
         changepageA() {
@@ -620,6 +766,7 @@ export default {
             this.pagestyleb = ''
             this.classA = 'md-raised md-primary'
             this.classB = 'md-raised'
+            this.pageNow=1
         },
         changepageB() {
             this.clientpage = false
@@ -627,6 +774,7 @@ export default {
             this.pagestylea = ''
             this.classA = 'md-raised'
             this.classB = 'md-raised md-primary'
+            this.pageNow=1
         },
         showDialog() {
             if (!this.clientpage) {
@@ -652,17 +800,26 @@ export default {
             }
         },
         getallclienta() {
-            axios.get(config.server + '/clienta')
+            axios.post(config.server + '/clienta/get', {
+                    pageSize: this.pageSize,
+                    pageNow: this.pageNow
+                })
                 .then((res) => {
-                    this.allclientainfo = res.data
+                    this.allclientainfo = res.data.doc
+                    this.pageCountA = Math.ceil(res.data.count / this.pageSize)
+                    console.log(this.pageCountA)
                 }).catch((err) => {
                     console.log(err)
                 })
         },
         getallclientb() {
-            axios.get(config.server + '/clientb')
+            axios.post(config.server + '/clientb/get', {
+                    pageSize: this.pageSize,
+                    pageNow: this.pageNow
+                })
                 .then((res) => {
-                    this.allclientbinfo = res.data
+                    this.allclientbinfo = res.data.doc
+                    this.pageCount = Math.ceil(res.data.count / this.pageSize)
                 }).catch((err) => {
                     console.log(err)
                 })
@@ -1246,5 +1403,56 @@ export default {
 .dialogb-body-status-right input {
     width: 20px;
     height: 20px;
+}
+
+.page-bar {
+    position: fixed;
+    bottom: 100px;
+    width: 50%;
+}
+
+.page-bar-body {
+    position: absolute;
+    right: 400px;
+    width: 1px;
+}
+
+.page-bar ul li {
+    margin: 0;
+    padding: 0;
+}
+
+.page-bar li {
+    list-style: none;
+}
+
+.page-bar span {
+    border: 1px solid #ddd;
+    text-decoration: none;
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    cursor: pointer
+}
+
+.page-bar span:hover {
+    background-color: #eee;
+}
+
+.page-bar .active span {
+    color: #fff;
+    cursor: default;
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+
+.page-bar i {
+    font-style: normal;
+    color: #d44950;
+    margin: 0px 4px;
+    font-size: 12px;
 }
 </style>
