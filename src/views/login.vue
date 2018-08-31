@@ -19,7 +19,7 @@
                 
                 <input type="text" v-model="email" class="inputbox">
                 <br>
-                <input type="text" class="inputbox" v-model="password">
+                <input type="password" class="inputbox" v-model="password">
                 <div v-if="errmsg" style="color:#d74342">
                     <span>{{errmsg}}</span>
                 </div>

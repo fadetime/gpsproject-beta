@@ -80,115 +80,181 @@
         </div>
     </div>
 
-    <!-- Dialog start-->
-    <md-dialog :md-active.sync="showDialog" style="width:600px">
-        <div class="dialog-title">
-            <span>车辆管理</span>
-        </div>
-        <div class="dialog-body">
-            <div class="dialog-body-item">
-                <md-field style="margin:30px auto" :class="idclass">
-                    <label style="font-size:20px">车牌号码</label>
-                    <md-input v-model="carid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-error" style="font-size:15px;margin: -2px auto">车辆标识信息，必填项目</span>
-                </md-field>
+    <!-- New car dialog start -->
+    <div v-if="newCarDialog" :class="dialogbackground" @click="closeDialog">
+        <div :class="interdialog" @click.stop>
+            <div class="dialog-title">
+                <span>车辆管理</span>
+            </div>
+            <div class="dialog-body">
+                <div class="dialog-body-item" style="padding-top:24px">
+                    <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
+                    <div class="photoarea" @click="uploadFile" v-if="!carImage">
+                        <md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon>
+                        <img :src="updateImagePreview" alt="newimg" v-else>
+                    </div>
+                    <div class="photoarea" v-else>
+                        <img :src="carImage | imgurl" alt="newimg">
+                    </div>
 
-                <md-field style="margin:30px auto" :class="typeclass">
-                    <label style="font-size:20px">车型</label>
-                    <md-input v-model="cartype" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-error" style="font-size:15px;margin: -2px auto">请填写车型信息</span>
-                </md-field>
+                </div>
+                <div class="dialog-body-item">
+                    <md-field style="margin:0 auto" :class="idclass">
+                        <label style="font-size:20px">车牌号码</label>
+                        <md-input v-model="carid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                        <span class="md-error" style="font-size:15px;margin: -2px auto">车辆标识信息，必填项目</span>
+                    </md-field>
+
+                    <!-- 下拉框 -->
+                    <div class="container">
+                        <div class="custom-selector">
+                            <div class="selector-header" style="position:relative" @click="callCarType">
+                                <div style="border-bottom: 1px solid;text-align:left;font-size:20px;color:rgba(0,0,0,0.54);" v-if="!cartype">车型</div>
+                                <div style="border-bottom: 1px solid;padding:32px 0;text-align:left;font-size:20px;color:rgba(0,0,0,0.54);">{{cartype}}</div>
+                                <div style="position:absolute;top:32px;right:0">
+                                    <img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow" id="selector-arrow-type">
+                                </div>
+                            </div>
+                            <div class="selector-body" id="selector-body-type">
+                                <div class="box" id="selector-box-type" v-for="(item,index) in allCarType" :key="index" @click="choseTypeItem(item)">
+                                    <span style="font-size:20px">{{item}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 下拉框 -->
+                    <md-field style="margin:20px auto">
+                        <label style="font-size:20px">备注</label>
+                        <md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                    </md-field>
+
+                </div>
+            </div>
+            <div class="dialog-body">
+                <div class="dialog-body-item">
+                    <div style="margin:16px auto">
+                        <span style="font-size:20px;color:rgba(0,0,0,0.54)">尾门(tailgate)</span>
+                    </div>
+                    <div class="dialog-body-radio">
+                        <div class="dialog-body-radio-item">
+                            <div>
+                                <input type="radio" name="cartailgate" v-model="tailgate" value="yes">
+                            </div>
+                            <div style="font-size:15px;color:#000;padding-top:3px">
+                                <span>YES</span>
+                            </div>
+
+                        </div>
+                        <div class="dialog-body-radio-item">
+                            <div>
+                                <input type="radio" name="cartailgate" v-model="tailgate" value="no">
+                            </div>
+                            <div style="font-size:15px;color:#000;padding-top:3px">
+                                <span>NO</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dialog-body-item">
+                    <div style="margin:16px auto">
+                        <span style="font-size:20px;color:rgba(0,0,0,0.54)">冷藏</span>
+                    </div>
+                    <div class="dialog-body-radio">
+                        <div class="dialog-body-radio-item">
+                            <div>
+                                <input type="radio" name="carstore" v-model="coolstore" value="yes">
+                            </div>
+                            <div style="font-size:15px;color:#000;padding-top:3px">
+                                <span>YES</span>
+                            </div>
+
+                        </div>
+                        <div class="dialog-body-radio-item">
+                            <div>
+                                <input type="radio" name="carstore" v-model="coolstore" value="no">
+                            </div>
+                            <div style="font-size:15px;color:#000;padding-top:3px">
+                                <span>NO</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
 
             </div>
-            <div class="dialog-body-item">
-                <div style="margin:30px auto">
-                    <span style="font-size:20px;color:rgba(0,0,0,0.54)">尾门(tailgate)</span>
-                </div>
-                <div class="dialog-body-radio">
-                    <div class="dialog-body-radio-item">
-                        <div>
-                            <input type="radio" name="cartailgate" v-model="tailgate" value="yes">
-                        </div>
-                        <div style="font-size:15px;color:#000;padding-top:3px">
-                            <span>YES</span>
-                        </div>
-
-                    </div>
-                    <div class="dialog-body-radio-item">
-                        <div>
-                            <input type="radio" name="cartailgate" v-model="tailgate" value="no">
-                        </div>
-                        <div style="font-size:15px;color:#000;padding-top:3px">
-                            <span>NO</span>
-                        </div>
-
-                    </div>
-                </div>
-
-                <md-field style="margin:20px auto">
-                    <label style="font-size:20px;color:rgba(0,0,0,0.54)">备注</label>
-                    <md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                </md-field>
+            <div style="margin:36px auto 10px auto">
+                <md-button class="md-raised md-primary" @click="closeDialog" style="font-size:20px;width:100px;height:40px">取消</md-button>
+                <md-button class="md-raised md-primary" v-if="addmode" @click="addcar" style="font-size:20px;width:100px;height:40px">保存</md-button>
+                <md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:20px;width:100px;height:40px">修改</md-button>
             </div>
+
         </div>
-        <md-dialog-actions style="margin:0 auto 10px auto">
-            <md-button class="md-raised md-primary" @click="showDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
-            <md-button class="md-raised md-primary" v-if="addmode" @click="addcar" style="font-size:20px;width:100px;height:40px">保存</md-button>
-            <md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:20px;width:100px;height:40px">修改</md-button>
-        </md-dialog-actions>
-    </md-dialog>
-    <!-- Dialog end-->
+    </div>
+    <!-- New car dialog end -->
 
     <!-- remove dialog start-->
     <md-dialog :md-active.sync="removeDialog" class="editdialog">
         <md-dialog-title style="font-size:30px">删除车辆</md-dialog-title>
-        <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>车牌号码:</span>
+        <div style="margin:0 20px 20px 20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
+            <div class="deldialog">
+                <div class="deldialog-left">
+                    <div class="photoarea">
+                        <img src="../../public/img/ebuyLogo.png" alt="ebuylogo" style="object-fit:unset;padding:50px 0" v-if="!carImage">
+                        <img :src="carImage | imgurl" alt="newimg" v-else>
+                    </div>
                 </div>
-                <div class="rmDialog-center-right">
-                    <span>{{carid}}</span>
-                </div>
-            </div>
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>车辆类型:</span>
-                </div>
-                <div class="rmDialog-center-right">
-                    <span>{{cartype}}</span>
-                </div>
-            </div>
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>有无尾门:</span>
-                </div>
-                <div class="rmDialog-center-right">
-                    <span>{{tailgate}}</span>
-                </div>
-            </div>
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>出车次数:</span>
-                </div>
-                <div class="rmDialog-center-right">
-                    <span>{{cartimes}}</span>
-                </div>
-            </div>
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>车辆备注:</span>
-                </div>
-                <div class="rmDialog-center-right">
-                    <span>{{carnote}}</span>
-                </div>
-            </div>
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>加入时间:</span>
-                </div>
-                <div class="rmDialog-center-right">
-                    <span>{{cardate | datefilter}}</span>
+                <div class="deldialog-right">
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>车牌号码:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{carid}}</span>
+                        </div>
+                    </div>
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>车辆类型:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{cartype}}</span>
+                        </div>
+                    </div>
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>有无尾门:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{tailgate}}</span>
+                        </div>
+                    </div>
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>出车次数:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{cartimes}}</span>
+                        </div>
+                    </div>
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>车辆备注:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{carnote}}</span>
+                        </div>
+                    </div>
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>加入时间:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{cardate | datefilter}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -201,7 +267,7 @@
     <!-- remove dialog end-->
 
     <!-- error start -->
-    <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" style="font-size:25px" />
+    <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" style="font-size:25px;z-index:999" />
     <!-- error end -->
 
 </div>
@@ -210,6 +276,7 @@
 <script>
 import axios from 'axios'
 import config from "../../public/js/config.js"
+import lrz from 'lrz'
 
 export default {
     name: 'Car',
@@ -227,10 +294,11 @@ export default {
             carnote: '',
             cardate: '',
             _id: '',
-            showDialog: false,
             removeDialog: false,
+            newCarDialog: false,
             selectedCar: '',
             tailgate: 'no',
+            coolstore: 'no',
             searchCar: [],
             allcarinfo: [],
             searching: false,
@@ -238,9 +306,17 @@ export default {
             typeErr: false,
             pageCount: 0, // 总页码
             pageNow: 1, // 当前页码
-            pageSize: 2, //每页显示条数
+            pageSize: 10, //每页显示条数
             showItem: 5, // 最少显示5个页码
             findMode: false,
+            interdialog: 'interdialog',
+            updateImagePreview: '',
+            updateImage: '',
+            carImage: '',
+            dialogbackground: 'windowdialog',
+            callFlag:false,
+            allCarType:['Van','10ft Lorry','14ft Lorry','24ft Lorry'],
+            selectorCarType:'车型'
         }
     },
 
@@ -287,12 +363,80 @@ export default {
 
     },
     methods: {
+        // 下拉框部分 start
+        callCarType() {
+            if(this.callFlag) {
+                this.bodyHideCarType()
+            }else{
+                this.bodyShowCarType()
+            }
+        },
+
+        bodyHideCarType() {
+            let body = document.querySelector('#selector-body-type')
+            body.style.height = '0px'
+            body.style.transition = '0.25s'
+            let arrow = document.querySelector('#selector-arrow-type')
+            arrow.style.transform = 'rotate(-90deg)'
+            arrow.style.transition = '0.25s'
+            this.callFlag = false
+        },
+
+        bodyShowCarType() {
+            let body = document.querySelector('#selector-body-type')
+            let boxes = document.querySelectorAll('#selector-box-type')
+            let arrow = document.querySelector('#selector-arrow-type')
+            arrow.style.transform = 'rotate(0deg)'
+            body.style.height = '180px'
+            arrow.style.transition = '0.25s'
+            let height = 4
+            boxes.forEach(box => {
+                height += box.clientHeight
+            });
+            body.style.transition = '0.25s'
+            body.style.display = 'block'
+            this.callFlag = true
+        },
+
+        choseTypeItem(item) {
+            this.selectorCarType = item
+            this.cartype = item
+            this.bodyHideCarType()
+        },
+        // 下拉框部分 end
+        uploadFile() {
+            document.getElementById('upload_file').click()
+        },
+
+        fileChange(el) {
+            if (typeof FileReader === 'undefined') {
+                return alert('浏览器不支持上传图片')
+            }
+            console.log('###')
+            if (!el.target.files[0].size) return; //判断是否有文件数量
+            this.updateImagePreview = window.URL.createObjectURL(el.target.files[0])
+            this.updateImage = el.target.files[0]
+            el.target.value = ''
+        },
+
+        closeDialog() {
+            this.interdialog = 'interdialog animated zoomOut faster'
+            this.dialogbackground = 'windowdialog animated fadeOut faster'
+            this.callFlag = false
+            setTimeout(() => {
+                this.newCarDialog = false
+                this.updateImagePreview = null
+            }, 200)
+        },
+
         newCar() {
-            this.showDialog = true
             this.addmode = true
             this.carid = ''
             this.cartype = ''
             this.carnote = ''
+            this.dialogbackground = 'windowdialog animated fadeIn faster'
+            this.newCarDialog = true
+            this.interdialog = 'interdialog animated zoomIn faster'
         },
         search(item) {
             if (this.selectedCar == '') {
@@ -309,7 +453,7 @@ export default {
                         this.allcarinfo = res.data.doc
                         this.pageCount = Math.ceil(res.data.count / this.pageSize)
                         if (res.data.code === 1) {
-                            this.error = true 
+                            this.error = true
                             this.errormsg = res.data.msg
                             this.selectedCar = ''
                             this.getallcar()
@@ -329,8 +473,12 @@ export default {
             this.carid = item.carid
             this.cartype = item.cartype
             this.tailgate = item.tailgate
+            this.coolstore = item.coolstore
             this.carnote = item.carnote
-            this.showDialog = true
+            this.carImage = item.image
+            this.newCarDialog = true
+            this.interdialog = 'interdialog animated zoomIn faster'
+            this.dialogbackground = 'windowdialog animated fadeIn faster'
         },
         removebutton(item) {
             this._id = item._id
@@ -339,6 +487,7 @@ export default {
             this.tailgate = item.tailgate
             this.cartimes = item.cartimes
             this.carnote = item.carnote
+            this.carImage = item.image
             this.cardate = item.cardate
             this.removeDialog = true
 
@@ -395,8 +544,8 @@ export default {
                     if (res.data.code == 0) {
                         this.error = true
                         this.errormsg = res.data.msg
-                        this.showDialog = false
                         this.getallcar()
+                        this.closeDialog()
                         setTimeout(() => {
                             this.error = false
                         }, 3000)
@@ -453,7 +602,7 @@ export default {
         },
 
         addcar() {
-            if (!this.carid || !this.cartype || !this.tailgate) {
+            if (!this.carid || !this.cartype) {
                 if (!this.carid) {
                     this.idErr = true
                 } else {
@@ -465,42 +614,60 @@ export default {
                     this.typeErr = false
                 }
             } else {
-                axios.post(config.server + '/car', {
-                        carid: this.carid,
-                        cartype: this.cartype,
-                        tailgate: this.tailgate,
-                        carnote: this.carnote,
+                let payload = new FormData()
+                let maxSize = 200 * 1024 //200KB
+                lrz(this.updateImage, {
+                        quality: 0.5
                     })
-                    .then((response) => {
-                        if (response.data.code == 1 || response.data.code == 2) {
-                            this.error = true
-                            this.errormsg = response.data.msg
-                            setTimeout(() => {
-                                this.error = false
-                            }, 3000)
-                        } else {
-                            this.getallcar()
-                            this.error = true
-                            this.errormsg = response.data.msg
-                            this.showDialog = false
-                            this.carid = ''
-                            this.cartype = ''
-                            this.tailgate = ''
-                            this.carnote = ''
-                            setTimeout(() => {
-                                this.error = false
-                            }, 3000)
+                    .then(res => {
+                        if (this.updateImage.size > maxSize) {
+                            this.updateImage = res.file
                         }
-
+                        payload.append("image", this.updateImage)
+                        payload.append("carid", this.carid)
+                        payload.append("cartype", this.cartype)
+                        payload.append("tailgate", this.tailgate)
+                        payload.append("coolstore", this.coolstore)
+                        payload.append("carnote", this.carnote)
+                        axios({
+                                method: 'post',
+                                url: config.server + '/car',
+                                data: payload,
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            })
+                            .then(response => {
+                                if (response.data.code == 1 || response.data.code == 2) {
+                                    this.error = true
+                                    this.errormsg = response.data.msg
+                                    setTimeout(() => {
+                                        this.error = false
+                                    }, 3000)
+                                } else {
+                                    this.getallcar()
+                                    this.error = true
+                                    this.errormsg = response.data.msg
+                                    this.closeDialog()
+                                    this.carid = ''
+                                    this.cartype = ''
+                                    this.tailgate = ''
+                                    this.carnote = ''
+                                    this.selectorCarType = '车型'
+                                    setTimeout(() => {
+                                        this.error = false
+                                    }, 3000)
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                error = true
+                                errormsg = error
+                                setTimeout(() => {
+                                    this.error = false
+                                }, 3000)
+                            });
                     })
-                    .catch((error) => {
-                        console.log(error);
-                        error = true
-                        errormsg = error
-                        setTimeout(() => {
-                            this.error = false
-                        }, 3000)
-                    });
             }
         }
     }
@@ -515,7 +682,7 @@ export default {
 
 .dialog-title {
     text-align: left;
-    padding: 20px 0 0 15px;
+    padding: 26px 0 0 26px;
 }
 
 .dialog-title span {
@@ -605,7 +772,7 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
-    width: 500px;
+    width: 600px;
 }
 
 .rmDialog-center {
@@ -619,12 +786,12 @@ export default {
 }
 
 .rmDialog-center-left {
-    flex-basis: 25%;
+    flex-basis: 35%;
     text-align: left;
 }
 
 .rmDialog-center-right {
-    flex-basis: 60%;
+    flex-basis: 65%;
     text-align: left;
 }
 
@@ -633,6 +800,8 @@ export default {
     display: flex;
     -webkit-flex-flow: row wrap;
     flex-flow: row wrap;
+    border-bottom: 1px solid;
+    padding: 12px 0;
 }
 
 .dialog-body-radio input {
@@ -647,5 +816,96 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
+}
+
+.windowdialog {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 20;
+}
+
+.interdialog {
+    position: absolute;
+    top: 16%;
+    left: 0;
+    right: 0;
+    background: white;
+    width: 600px;
+    height: 560px;
+    margin: auto;
+}
+
+@media screen and (max-width: 600px) {
+    .interdialog {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: white;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.photoarea {
+    margin: 0 auto;
+    text-align: center;
+    border: 3px dashed #696969;
+    width: 250px;
+    height: 250px;
+    background-color: #eee;
+}
+
+.photoarea img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.deldialog {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+
+.deldialog-left {
+    flex-basis: 50%;
+    padding: 12px 0;
+}
+
+.deldialog-right {
+    flex-basis: 50%;
+}
+
+.selector-body {
+    height: 0;
+    transition: 0.25s;
+    overflow: hidden;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    overflow: auto;
+    position: absolute;
+    z-index: 100;
+    background-color: #eee
+}
+
+.box {
+    cursor: pointer;
+    padding: 7px;
+    border-bottom: 1px solid #eee;
+    transition: 0.5s;
+    width: 243px
+}
+
+.box:hover {
+    background-color: dodgerblue;
+    color: white;
+    transition: 0.5s;
 }
 </style>

@@ -566,7 +566,7 @@ export default {
         },
         //获取所有司机数据 end
         openMissionInfo(item) {
-            let time = new Date(item.missiondate).toLocaleTimeString()
+            let time = new Date(item.missiondate).toLocaleDateString()
             this.detaildialog = true
             this.missionline = item.missionline
             this.missiondriver = item.missiondirver

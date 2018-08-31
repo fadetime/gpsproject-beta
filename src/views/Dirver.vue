@@ -80,53 +80,70 @@
         <div class="dialog-title">
             <span>司机管理</span>
         </div>
-        <div class="dialog-body">
-            <div class="dialog-body-item">
-                <md-field style="margin:20px auto" :class="nameclass">
-                    <label style="font-size:20px">司机姓名</label>
-                    <md-input v-model="dirvername" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-error" style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
-                </md-field>
+        <div style="overflow: auto;">
+            <div class="dialog-body">
+                <div class="dialog-body-item" style="padding-top:24px">
+                    <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
+                    <div class="photoarea" @click="uploadFile" v-if="!driverImage">
+                        <md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon>
+                        <img :src="updateImagePreview" alt="newimg" v-else>
+                    </div>
+                    <div class="photoarea" @click="uploadFile" v-else>
+                        <img :src="driverImage | imgurl" alt="newimg">
+                    </div>
+                </div>
+                <div class="dialog-body-item">
+                    <md-field style="margin:0 auto" :class="nameclass">
+                        <label style="font-size:20px">司机姓名</label>
+                        <md-input v-model="dirvername" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                        <span class="md-error" style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
+                    </md-field>
 
-                <md-field style="margin:30px auto" :class="passclass">
-                    <label style="font-size:20px">准证号码</label>
-                    <md-input v-model="dirverid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-error" style="font-size:15px;margin: -10px auto;">人员标识信息，必填项目</span>
-                </md-field>
-
-                <md-field style="margin:30px auto" :class="phonclass">
-                    <label style="font-size:20px">联系方式</label>
-                    <md-input v-model="dirverphone" type="number" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-error" style="font-size:15px;margin: -10px auto;">标识联系方式</span>
-                </md-field>
-
-                <md-field style="margin:20px auto" :class="cardclass">
-                    <label for="dirvercard" style="font-size:20px">驾照类型</label>
-                    <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:20px;height:55px;max-width: 500px;padding-top:21px">
-                        <md-option value="C1">C1</md-option>
-                        <md-option value="C2">C2</md-option>
-                        <md-option value="C3">C3</md-option>
-                    </md-select>
-                </md-field>
+                    <md-field style="margin:30px auto" :class="passclass">
+                        <label style="font-size:20px">准证号码</label>
+                        <md-input v-model="dirverid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                        <span class="md-error" style="font-size:15px;margin: -10px auto;">人员标识信息，必填项目</span>
+                    </md-field>
+                    <md-field style="margin:30px auto" :class="phonclass">
+                        <label style="font-size:20px">联系方式</label>
+                        <md-input v-model="dirverphone" style="border-bottom: 1px solid #000;font-size:20px;height:55px" @change="check_phone($event)"></md-input>
+                        <span class="md-error" style="font-size:15px;margin: -10px auto;">请输入8位整数</span>
+                    </md-field>
+                </div>
             </div>
-            <div class="dialog-body-item">
-                <md-field style="margin:20px auto" :class="userclass">
-                    <label style="font-size:20px">用户名</label>
-                    <md-input v-model="dirverusername" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-error" style="font-size:15px;margin: -10px auto;">标识联系方式</span>
-                </md-field>
+            <div class="dialog-body">
+                <div class="dialog-body-item">
+                    <md-field style="margin:0 auto" :class="userclass">
+                        <label style="font-size:20px">用户名</label>
+                        <md-input v-model="dirverusername" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                        <span class="md-error" style="font-size:15px;margin: -10px auto;">登陆用户名</span>
+                    </md-field>
 
-                <md-field style="margin:30px auto" :class="pswclass">
-                    <label style="font-size:20px">密码</label>
-                    <md-input v-model="dirverpsw" type="password" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    <span class="md-error" style="font-size:15px;margin: -10px auto;">标识密码</span>
-                </md-field>
+                    <md-field style="margin:20px auto" :class="cardclass">
+                        <label for="dirvercard" style="font-size:20px">驾照类型</label>
+                        <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:20px;height:55px;max-width: 500px;padding-top:21px">
+                            <md-option value="C1">C1</md-option>
+                            <md-option value="C2">C2</md-option>
+                            <md-option value="C3">C3</md-option>
+                        </md-select>
+                    </md-field>
+                </div>
 
-                <md-field style="margin:30px auto">
-                    <label style="font-size:20px">备注</label>
-                    <md-input v-model="dirvernote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                </md-field>
+                <div class="dialog-body-item">
+
+                    <md-field style="margin:0 auto" :class="pswclass">
+                        <label style="font-size:20px">密码</label>
+                        <md-input v-model="dirverpsw" type="password" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                        <span class="md-error" style="font-size:15px;margin: -10px auto;">标识密码</span>
+                    </md-field>
+
+                    <md-field style="margin:20px auto">
+                        <label style="font-size:20px">备注</label>
+                        <md-input v-model="dirvernote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                    </md-field>
+                </div>
             </div>
+
         </div>
         <md-dialog-actions style="margin:0 auto 10px auto">
             <md-button class="md-raised md-primary" @click="showDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
@@ -207,6 +224,7 @@
 <script>
 import axios from "axios";
 import config from "../../public/js/config.js";
+import lrz from 'lrz'
 
 export default {
     data() {
@@ -238,9 +256,12 @@ export default {
             pswdErr: false,
             pageCount: 0, // 总页码
             pageNow: 1, // 当前页码
-            pageSize: 2, //每页显示条数
+            pageSize: 10, //每页显示条数
             showItem: 5, // 最少显示5个页码
-            findMode: false
+            findMode: false,
+            updateImagePreview: '',
+            updateImage: '',
+            driverImage: ''
         };
     },
     mounted() {
@@ -299,6 +320,29 @@ export default {
         },
     },
     methods: {
+        check_phone(event) {
+            let value = event.target.value
+            if (!/^[0-9]{8}$/.test(value)) {
+                this.phonErr = true
+            } else {
+                this.phonErr = false
+            }
+        },
+        fileChange(el) {
+            if (typeof FileReader === 'undefined') {
+                return alert('浏览器不支持上传图片')
+            }
+            if (!el.target.files[0].size) return; //判断是否有文件数量
+            this.updateImagePreview = window.URL.createObjectURL(el.target.files[0])
+            this.updateImage = el.target.files[0]
+            this.driverImage = ''
+            el.target.value = ''
+        },
+
+        uploadFile() {
+            document.getElementById('upload_file').click()
+        },
+
         search(item) {
             this.pageNow = 1
             if (this.searchDirver == "") {
@@ -315,7 +359,7 @@ export default {
                         this.alldirverinfo = res.data.doc;
                         this.pageCount = Math.ceil(res.data.count / this.pageSize)
                         if (res.data.code === 1) {
-                            this.error = true 
+                            this.error = true
                             this.errormsg = res.data.msg
                             this.searchDirver = ''
                             this.getalldirver()
@@ -330,6 +374,7 @@ export default {
             }
         },
         adddirverbutton() {
+            this.updateImagePreview = ''
             this.showDialog = true;
             this.savemode = true;
             this._id = "";
@@ -378,6 +423,7 @@ export default {
         },
 
         editbutton(item) {
+            this.updateImagePreview = ''
             this.savemode = false;
             this._id = item._id;
             this.dirvername = item.dirvername;
@@ -387,12 +433,13 @@ export default {
             this.dirverusername = item.dirverusername;
             this.dirverpsw = ''
             this.dirvernote = item.dirvernote;
+            this.driverImage = item.image
             this.showDialog = true;
         },
 
         pageButton(item) {
             if (item === 'A') {
-                
+
                 if (this.pageNow > 1) {
                     this.pageNow = this.pageNow - 1
                 }
@@ -433,7 +480,7 @@ export default {
 
         confirmedit() {
             if (!this.dirvername || !this.dirverid || !this.dirverusername ||
-                !this.dirverphone || !this.dirvercard || !this.dirverusername
+                !this.dirverphone || !this.dirvercard || this.phonErr || !this.dirverusername
             ) {
                 if (!this.dirvername) {
                     this.nameErr = true
@@ -447,8 +494,6 @@ export default {
                 }
                 if (!this.dirverphone) {
                     this.phonErr = true
-                } else {
-                    this.phonErr = false
                 }
                 if (!this.dirvercard) {
                     this.cardErr = true
@@ -461,31 +506,41 @@ export default {
                     this.userdErr = false
                 }
             } else {
-                let editinfo
-                if (this.dirverpsw == '') {
-                    editinfo = {
-                        _id: this._id,
-                        dirvername: this.dirvername,
-                        dirverid: this.dirverid,
-                        dirverphone: this.dirverphone,
-                        dirvercard: this.dirvercard,
-                        dirverusername: this.dirverusername,
-                        dirvernote: this.dirvernote
-                    }
-                } else {
-                    editinfo = {
-                        _id: this._id,
-                        dirvername: this.dirvername,
-                        dirverid: this.dirverid,
-                        dirverphone: this.dirverphone,
-                        dirvercard: this.dirvercard,
-                        dirverusername: this.dirverusername,
-                        dirverpsw: this.dirverpsw,
-                        dirvernote: this.dirvernote
-                    }
+                let payload = new FormData()
+                let maxSize = 200 * 1024 //200KB
+
+                if (this.dirverpsw != '') {
+                    payload.append("dirverpsw", this.dirverpsw)
                 }
-                axios
-                    .post(config.server + "/dirver/edit", editinfo)
+                if (this.updateImagePreview != '') {
+                    console.log('enter change img')
+                    lrz(this.updateImage, {
+                            quality: 0.5
+                        })
+                        .then(res => {
+                            if (this.updateImage.size > maxSize) {
+                                this.updateImage = res.file
+                            }
+                            console.log(this.updateImage)
+                            console.log('#####')
+                        })
+                }
+                payload.append("_id", this._id)
+                payload.append("dirvername", this.dirvername)
+                payload.append("dirverid", this.dirverid)
+                payload.append("dirverphone", this.dirverphone)
+                payload.append("dirvercard", this.dirvercard)
+                payload.append("dirverusername", this.dirverusername)
+                payload.append("dirvernote", this.dirvernote)
+                payload.append("image", this.updateImage)
+                axios({
+                        method: 'post',
+                        url: config.server + '/dirver/edit',
+                        data: payload,
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
                     .then(response => {
                         if (response.data.code == 1) {
                             this.error = true;
@@ -502,7 +557,7 @@ export default {
                             }, 3000);
                         }
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         console.log(error);
                         this.error = true;
                         this.errormsg = response.data.msg;
@@ -510,6 +565,7 @@ export default {
                             this.error = false;
                         }, 3000);
                     });
+
             }
         },
         getalldirver() {
@@ -527,7 +583,7 @@ export default {
         },
         adddirver() {
             if (!this.dirvername || !this.dirverid || !this.dirverusername ||
-                !this.dirverpsw || !this.dirverphone ||
+                !this.dirverpsw || !this.dirverphone || this.phonErr ||
                 !this.dirvercard || !this.dirverusername
             ) {
                 if (!this.dirvername) {
@@ -542,8 +598,6 @@ export default {
                 }
                 if (!this.dirverphone) {
                     this.phonErr = true
-                } else {
-                    this.phonErr = false
                 }
                 if (!this.dirvercard) {
                     this.cardErr = true
@@ -567,40 +621,56 @@ export default {
                 this.cardErr = false
                 this.userdErr = false
                 this.pswdErr = false
-                axios
-                    .post(config.server + "/dirver", {
-                        dirvername: this.dirvername,
-                        dirverid: this.dirverid,
-                        dirverphone: this.dirverphone,
-                        dirvercard: this.dirvercard,
-                        dirverusername: this.dirverusername,
-                        dirverpsw: this.dirverpsw,
-                        dirvernote: this.dirvernote
+                let payload = new FormData()
+                let maxSize = 200 * 1024 //200KB
+                lrz(this.updateImage, {
+                        quality: 0.5
                     })
-                    .then(response => {
-                        if (response.data.code == 1) {
-                            this.error = true;
-                            this.errormsg = response.data.msg;
-                            setTimeout(() => {
-                                this.error = false;
-                            }, 3000);
-                        } else {
-                            this.successdmsg = true;
-                            this.showDialog = false;
-                            this.getalldirver();
-                            setTimeout(() => {
-                                this.successdmsg = false;
-                            }, 3000);
+                    .then(res => {
+                        if (this.updateImage.size > maxSize) {
+                            this.updateImage = res.file
                         }
+                        payload.append("image", this.updateImage)
+                        payload.append("dirvername", this.dirvername)
+                        payload.append("dirverid", this.dirverid)
+                        payload.append("dirverphone", this.dirverphone)
+                        payload.append("dirvercard", this.dirvercard)
+                        payload.append("dirverusername", this.dirverusername)
+                        payload.append("dirverpsw", this.dirverpsw)
+                        payload.append("dirvernote", this.dirvernote)
+                        axios({
+                                method: 'post',
+                                url: config.server + '/dirver',
+                                data: payload,
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            })
+                            .then(response => {
+                                if (response.data.code == 1) {
+                                    this.error = true;
+                                    this.errormsg = response.data.msg;
+                                    setTimeout(() => {
+                                        this.error = false;
+                                    }, 3000);
+                                } else {
+                                    this.successdmsg = true;
+                                    this.showDialog = false;
+                                    this.getalldirver();
+                                    setTimeout(() => {
+                                        this.successdmsg = false;
+                                    }, 3000);
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                this.error = true;
+                                this.errormsg = response.data.msg;
+                                setTimeout(() => {
+                                    this.error = false;
+                                }, 3000);
+                            });
                     })
-                    .catch(error => {
-                        console.log(error);
-                        this.error = true;
-                        this.errormsg = response.data.msg;
-                        setTimeout(() => {
-                            this.error = false;
-                        }, 3000);
-                    });
             }
         }
     }
@@ -720,5 +790,20 @@ export default {
 .rmDialog-center-right {
     flex-basis: 60%;
     text-align: left;
+}
+
+.photoarea {
+    margin: 0 auto;
+    text-align: center;
+    border: 3px dashed #696969;
+    width: 250px;
+    height: 250px;
+    background-color: #eee;
+}
+
+.photoarea img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 </style>

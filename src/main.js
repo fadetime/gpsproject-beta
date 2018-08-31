@@ -8,6 +8,10 @@ import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 import DateFilter from '../public/js/dateFilter'
 import TimeFilter from '../public/js/timeFilter'
+import 'animate.css'
+import imgUrl from '../public/js/imgUrl'
+
+Vue.filter('imgurl',imgUrl)
 
 Vue.use(VueMaterial)
 Vue.config.productionTip = false
