@@ -122,9 +122,11 @@
                     <md-field style="margin:20px auto" :class="cardclass">
                         <label for="dirvercard" style="font-size:20px">驾照类型</label>
                         <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:20px;height:55px;max-width: 500px;padding-top:21px">
-                            <md-option value="C1">C1</md-option>
-                            <md-option value="C2">C2</md-option>
-                            <md-option value="C3">C3</md-option>
+                            <md-option value="Class 3A">Class 3A</md-option>
+                            <md-option value="Class 3">Class 3</md-option>
+                            <md-option value="Class 4A">Class 4A</md-option>
+                            <md-option value="Class 4">Class 4</md-option>
+                            <md-option value="Class 5">Class 5</md-option>
                         </md-select>
                     </md-field>
                 </div>
@@ -155,58 +157,70 @@
 
     <!-- deleteDialog start-->
     <md-dialog :md-active.sync="deleteDialog" class="editdialog">
+        <!-- <div style="font-size:30px">
+            <span>删除司机</span>
+        </div> -->
         <md-dialog-title style="font-size:30px">删除司机</md-dialog-title>
-        <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>司机姓名:</span>
-                </div>
-                <div class="rmDialog-center-right">
-                    <span>{{dirvername}}</span>
+        <div style="padding:0 10px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow-x:hidden;overflow-y:auto;margin:0 20px" class="deldialog">
+            <div class="deldialog-left">
+                <div class="photoarea">
+                    <img src="../../public/img/ebuyLogo.png" alt="ebuylogo" style="object-fit:unset;padding:50px 0" v-if="!driverImage">
+                    <img :src="driverImage | imgurl" alt="newimg" v-else>
                 </div>
             </div>
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>车辆类型:</span>
+            <div class="deldialog-right">
+                <div class="rmDialog-center">
+                    <div class="rmDialog-center-left">
+                        <span>司机姓名:</span>
+                    </div>
+                    <div class="rmDialog-center-right">
+                        <span>{{dirvername}}</span>
+                    </div>
                 </div>
-                <div class="rmDialog-center-right">
-                    <span>{{dirverid}}</span>
+                <div class="rmDialog-center">
+                    <div class="rmDialog-center-left">
+                        <span>车辆类型:</span>
+                    </div>
+                    <div class="rmDialog-center-right">
+                        <span>{{dirverid}}</span>
+                    </div>
+                </div>
+                <div class="rmDialog-center">
+                    <div class="rmDialog-center-left">
+                        <span>车辆尺寸:</span>
+                    </div>
+                    <div class="rmDialog-center-right">
+                        <span>{{dirverphone}}</span>
+                    </div>
+                </div>
+                <div class="rmDialog-center">
+                    <div class="rmDialog-center-left">
+                        <span>出车次数:</span>
+                    </div>
+                    <div class="rmDialog-center-right">
+                        <span>{{dirvercard}}</span>
+                    </div>
+                </div>
+                <div class="rmDialog-center">
+                    <div class="rmDialog-center-left">
+                        <span>车辆备注:</span>
+                    </div>
+                    <div class="rmDialog-center-right">
+                        <span>{{dirverusername}}</span>
+                    </div>
+                </div>
+                <div class="rmDialog-center">
+                    <div class="rmDialog-center-left">
+                        <span>司机备注:</span>
+                    </div>
+                    <div class="rmDialog-center-right">
+                        <span>{{dirvernote}}</span>
+                    </div>
                 </div>
             </div>
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>车辆尺寸:</span>
-                </div>
-                <div class="rmDialog-center-right">
-                    <span>{{dirverphone}}</span>
-                </div>
-            </div>
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>出车次数:</span>
-                </div>
-                <div class="rmDialog-center-right">
-                    <span>{{dirvercard}}</span>
-                </div>
-            </div>
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>车辆备注:</span>
-                </div>
-                <div class="rmDialog-center-right">
-                    <span>{{dirverusername}}</span>
-                </div>
-            </div>
-            <div class="rmDialog-center">
-                <div class="rmDialog-center-left">
-                    <span>司机备注:</span>
-                </div>
-                <div class="rmDialog-center-right">
-                    <span>{{dirvernote}}</span>
-                </div>
-            </div>
+
         </div>
-        <md-dialog-actions style="margin:0 auto 10px auto">
+        <md-dialog-actions style="margin:10px auto 10px auto">
             <md-button class="md-raised md-primary" @click="deleteDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
             <md-button class="md-raised md-accent" @click="confirmdelete" style="font-size:20px;width:100px;height:40px">删除</md-button>
         </md-dialog-actions>
@@ -396,6 +410,7 @@ export default {
             this.dirverusername = item.dirverusername;
             this.dirverpsw = item.dirverpsw;
             this.dirvernote = item.dirvernote;
+            this.driverImage = item.image
         },
         confirmdelete() {
             axios
@@ -513,7 +528,6 @@ export default {
                     payload.append("dirverpsw", this.dirverpsw)
                 }
                 if (this.updateImagePreview != '') {
-                    console.log('enter change img')
                     lrz(this.updateImage, {
                             quality: 0.5
                         })
@@ -521,8 +535,23 @@ export default {
                             if (this.updateImage.size > maxSize) {
                                 this.updateImage = res.file
                             }
-                            console.log(this.updateImage)
-                            console.log('#####')
+                            let payloadImg = new FormData()
+                            payloadImg.append("_id", this._id)
+                            payloadImg.append("image", this.updateImage)
+                            axios({
+                                method: 'post',
+                                url: config.server + '/dirver/edit/img',
+                                data:payloadImg,
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            })
+                            .then(response => {
+                                // console.log(response)
+                            })
+                            .catch(error => {
+                                console.log(error)
+                            })
                         })
                 }
                 payload.append("_id", this._id)
@@ -532,7 +561,7 @@ export default {
                 payload.append("dirvercard", this.dirvercard)
                 payload.append("dirverusername", this.dirverusername)
                 payload.append("dirvernote", this.dirvernote)
-                payload.append("image", this.updateImage)
+
                 axios({
                         method: 'post',
                         url: config.server + '/dirver/edit',
@@ -769,7 +798,7 @@ export default {
 }
 
 .editdialog {
-    width: 500px;
+    width: 600px;
 }
 
 .rmDialog-center {
@@ -783,7 +812,7 @@ export default {
 }
 
 .rmDialog-center-left {
-    flex-basis: 25%;
+    flex-basis: 35%;
     text-align: left;
 }
 
@@ -805,5 +834,21 @@ export default {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.deldialog {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+
+.deldialog-left {
+    flex-basis: 50%;
+    padding: 12px 0;
+}
+
+.deldialog-right {
+    flex-basis: 50%;
 }
 </style>

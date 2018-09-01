@@ -93,7 +93,7 @@
                         <md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon>
                         <img :src="updateImagePreview" alt="newimg" v-else>
                     </div>
-                    <div class="photoarea" v-else>
+                    <div class="photoarea" @click="uploadFile" v-else>
                         <img :src="carImage | imgurl" alt="newimg">
                     </div>
 
@@ -109,8 +109,8 @@
                     <div class="container">
                         <div class="custom-selector">
                             <div class="selector-header" style="position:relative" @click="callCarType">
-                                <div style="border-bottom: 1px solid;text-align:left;font-size:20px;color:rgba(0,0,0,0.54);" v-if="!cartype">车型</div>
-                                <div style="border-bottom: 1px solid;padding:32px 0;text-align:left;font-size:20px;color:rgba(0,0,0,0.54);">{{cartype}}</div>
+                                <div style="text-align:left;font-size:20px;color:rgba(0,0,0,0.54);position:absolute;padding-top:24px" v-if="!cartype">车型</div>
+                                <div style="border-bottom: 1px solid;padding:37px 0;text-align:left;font-size:20px;color:rgba(0,0,0,0.54);">{{cartype}}</div>
                                 <div style="position:absolute;top:32px;right:0">
                                     <img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow" id="selector-arrow-type">
                                 </div>
@@ -416,6 +416,7 @@ export default {
             if (!el.target.files[0].size) return; //判断是否有文件数量
             this.updateImagePreview = window.URL.createObjectURL(el.target.files[0])
             this.updateImage = el.target.files[0]
+            this.carImage = ''
             el.target.value = ''
         },
 
@@ -533,6 +534,35 @@ export default {
         },
 
         confirmedit() {
+            if(this.updateImagePreview) {
+                console.log('enter edit img mode')
+                let payload = new FormData()
+                let maxSize = 200 * 1024 //200KB
+                lrz(this.updateImage, {
+                        quality: 0.5
+                    })
+                    .then(res => {
+                        if (this.updateImage.size > maxSize) {
+                            this.updateImage = res.file
+                        }
+                        payload.append("image", this.updateImage)
+                        payload.append("_id", this._id)
+                        axios({
+                                method: 'post',
+                                url: config.server + '/car/update/img',
+                                data: payload,
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            })
+                            .then(doc => {
+                                // console.log(doc)
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                    })
+            }
             axios.post(config.server + '/car/update', {
                     _id: this._id,
                     carid: this.carid,
@@ -595,7 +625,6 @@ export default {
                 .then((res) => {
                     this.allcarinfo = res.data.doc
                     this.pageCount = Math.ceil(res.data.count / this.pageSize)
-                    console.log(this.allcarinfo)
                 }).catch((err) => {
                     console.log(err)
                 })

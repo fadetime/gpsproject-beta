@@ -264,7 +264,7 @@ export default {
             selectCar: '',
             pageCount: 0,
             pageNow: 1,
-            pageSize: 2,
+            pageSize: 10,
             showItem: 5,
             findMode: false
         }
