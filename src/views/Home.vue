@@ -239,55 +239,57 @@
 
     <!-- detail dialog start -->
     <md-dialog :md-active.sync="detaildialog" style="width: 800px;font-size:20px">
-        <div style="text-align:center;padding:20px 0">
-            <span style="font-size:30px">出车报表</span>
+        <div style="text-align:center;font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:20px">
+            <span style="color:#fff">出车报表</span>
         </div>
-
-        <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;padding:5px 0;overflow:hidden">
-            <div style="flex-basis:30%;text-align:left;margin:0 auto" :title="missiondriver">
-                <span>司机:{{missiondriver}}</span>
-            </div>
-            <div style="flex-basis:30%;text-align:left;margin:0 auto;">
-                <span>车次:{{missionline}}</span>
-            </div>
-        </div>
-
-        <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;border-bottom:1px solid;padding:5px 0">
-            <div style="flex-basis:30%;text-align:left;margin:0 auto">
-                日期:{{missiondate}}
-            </div>
-            <div style="flex-basis:30%;text-align:left;margin:0 auto">
-                总单数:{{missioncount}}
-            </div>
-        </div>
-
-        <div style="padding:5px 0;border:1px solid #989898;width:90%;margin:10px auto">
-            <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;font-weight:600;padding:5px 0">
-                <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                    <span>序号</span>
+        <div style="overflow:hidden auto">
+            <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;padding:5px 0">
+                <div style="flex-basis:30%;text-align:left;margin:0 auto" :title="missiondriver">
+                    <span>司机:{{missiondriver}}</span>
                 </div>
-                <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                    <span>名字</span>
-                </div>
-                <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                    <span>时间</span>
+                <div style="flex-basis:30%;text-align:left;margin:0 auto;">
+                    <span>车次:{{missionline}}</span>
                 </div>
             </div>
-            <div style="height:400px;overflow:auto;">
-                <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;padding:5px 0" v-for="(item,index) in missionclient" :key="index">
+
+            <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;border-bottom:1px solid;padding:5px 0">
+                <div style="flex-basis:30%;text-align:left;margin:0 auto">
+                    日期:{{missiondate}}
+                </div>
+                <div style="flex-basis:30%;text-align:left;margin:0 auto">
+                    总单数:{{missioncount}}
+                </div>
+            </div>
+
+            <div style="padding:5px 0;border:1px solid #989898;width:90%;margin:10px auto">
+                <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;font-weight:600;padding:5px 0">
                     <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                        <span>{{index+1}}</span>
+                        <span>序号</span>
                     </div>
                     <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                        {{item.clientbname}}
+                        <span>名字</span>
                     </div>
                     <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                        <span v-if="item.finishdate">{{item.finishdate | timefilter}}</span>
-                        <span v-else style="color:#f9cf97">未送达</span>
+                        <span>时间</span>
+                    </div>
+                </div>
+                <div style="height:400px;overflow:auto;">
+                    <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;padding:5px 0" v-for="(item,index) in missionclient" :key="index">
+                        <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                            <span>{{index+1}}</span>
+                        </div>
+                        <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                            {{item.clientbname}}
+                        </div>
+                        <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                            <span v-if="item.finishdate">{{item.finishdate | timefilter}}</span>
+                            <span v-else style="color:#f9cf97">未送达</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <md-dialog-actions style="margin:0 auto 10px auto">
             <md-button class="md-raised md-primary" @click="detaildialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
             <md-button class="md-raised md-accent" @click="removeMission" style="font-size:20px;width:100px;height:40px">删除</md-button>
@@ -362,7 +364,7 @@ export default {
     },
     watch: {
         selectedDate: function () {
-            axios.post(config.server +'/mission', {
+            axios.post(config.server + '/mission', {
                     startdate: this.selectedDate
                 })
                 .then(res => {
@@ -388,20 +390,20 @@ export default {
 
         //confirm remove mission start
         confirmRemoveMission() {
-            axios.post(config.server +'/mission/remove', {
+            axios.post(config.server + '/mission/remove', {
                     missionid: this.missionid
                 })
                 .then(doc => {
                     this.confirmDialog = false
                     if (doc.data.code == 0) {
                         this.getMission()
-                        this.detaildialog =false
+                        this.detaildialog = false
                     }
                     this.error = true
-                        this.errormsg = doc.data.msg
-                        setTimeout(() => {
-                            this.error = false
-                        }, 3000)
+                    this.errormsg = doc.data.msg
+                    setTimeout(() => {
+                        this.error = false
+                    }, 3000)
                 })
                 .catch(err => {
                     console.log(err)
@@ -557,7 +559,7 @@ export default {
         //获取所有司机数据 start
         getalldirver() {
 
-            axios.get(config.server +'/dirver')
+            axios.get(config.server + '/dirver')
                 .then((res) => {
                     this.alldirverinfo = res.data
                 }).catch((err) => {
@@ -580,12 +582,11 @@ export default {
         },
         getMission() {
             setTimeout(() => {
-                axios.post(config.server +'/mission', {
+                axios.post(config.server + '/mission', {
                         startdate: this.selectedDate
                     })
                     .then(res => {
                         this.allmission = res.data
-                        console.log(this.allmission)
                         this.countfinish()
                     })
                     .catch(err => {
@@ -595,12 +596,12 @@ export default {
             }, 100)
         },
 
-        countfinish(){
+        countfinish() {
             this.allmission.forEach(x => {
-                x.count =0
+                x.count = 0
                 x.missionclient.forEach(y => {
-                    if(y.finishdate){
-                        x.count +=1
+                    if (y.finishdate) {
+                        x.count += 1
                     }
                 })
             });
@@ -665,7 +666,7 @@ export default {
         },
 
         getalltimes() {
-            axios.get(config.server +'/times')
+            axios.get(config.server + '/times')
                 .then((res) => {
                     this.alltimesinfo = res.data.doc
                 }).catch((err) => {
@@ -674,7 +675,7 @@ export default {
         },
 
         getallcar() {
-            axios.get(config.server +'/car')
+            axios.get(config.server + '/car')
                 .then((res) => {
 
                     this.allcarinfo = res.data
@@ -701,7 +702,7 @@ export default {
             }
         },
         getallclienta() {
-            axios.get(config.server +'/clienta')
+            axios.get(config.server + '/clienta')
                 .then((res) => {
                     this.allclientainfo = res.data
                 }).catch((err) => {
@@ -709,7 +710,7 @@ export default {
                 })
         },
         getallclientb() {
-            axios.get(config.server +'/clientb')
+            axios.get(config.server + '/clientb')
                 .then((res) => {
                     this.allclientbinfo = res.data
                     this.allclientbinfo.forEach(element => {
@@ -749,7 +750,7 @@ export default {
                     return obj
                 })
             }
-            axios.post(config.server +'/mission/create', query)
+            axios.post(config.server + '/mission/create', query)
                 .then(res => {
                     this.error = true
                     this.errormsg = res.data.msg

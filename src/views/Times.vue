@@ -76,8 +76,9 @@
     </div>
     <!-- Dialog start-->
     <md-dialog :md-active.sync="showDialog" style="width:700px">
-        <md-dialog-title style="font-size:20px">车次管理</md-dialog-title>
-
+        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+            <span style="color:#fff">车次管理</span>
+        </md-dialog-title>
         <md-tabs md-dynamic-height>
             <md-tab md-label="添加车次" style="font-size:20px;color:#000">
                 <md-field style="margin:45px auto;width:60%">
@@ -177,8 +178,10 @@
 
     <!-- remove dialog start-->
     <md-dialog :md-active.sync="removeDialog" style="width:500px" class="editdialog">
-        <md-dialog-title style="font-size:30px;color:#d74342">删除路线信息</md-dialog-title>
-        <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
+        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+            <span style="color:#fff">删除路线信息</span>
+        </md-dialog-title>
+        <div style="margin:0 20px 20px 20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow:hidden auto">
             <div class="rmDialog-center">
                 <div class="rmDialog-center-left">
                     <span>路线名称:</span>
@@ -220,10 +223,12 @@
                 </div>
             </div>
         </div>
-        <md-dialog-actions style="margin:0 auto 10px auto">
-            <md-button class="md-raised md-primary" @click="removeDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
-            <md-button class="md-raised md-accent" @click="confirmremove" style="font-size:20px;width:100px;height:40px">删除</md-button>
-        </md-dialog-actions>
+        <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
+            <md-dialog-actions style="margin:0 auto 10px auto">
+                <md-button class="md-raised md-primary" @click="removeDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
+                <md-button class="md-raised md-accent" @click="confirmremove" style="font-size:20px;width:100px;height:40px">删除</md-button>
+            </md-dialog-actions>
+        </div>
     </md-dialog>
     <!-- remove dialog end-->
 
@@ -315,7 +320,7 @@ export default {
                         this.alltimesinfo = res.data.doc
                         this.pageCount = Math.ceil(res.data.count / this.pageSize)
                         if (res.data.code === 1) {
-                            this.error = true 
+                            this.error = true
                             this.errorMessage = res.data.msg
                             this.selectCar = ''
                             this.getalltimes()

@@ -176,10 +176,12 @@
     <!-- page bar end-->
     <!-- Dialog b start-->
     <md-dialog :md-active.sync="showDialogb" style="width:500px">
-        <md-dialog-title style="font-size:30px">客户管理</md-dialog-title>
+        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+            <span style="color:#fff">客户管理</span>
+        </md-dialog-title>
         <div class="dialogb-body" style="overflow: auto">
             <div class="dialogb-body-left">
-                <md-field style="margin:20px auto" :class="classname">
+                <md-field style="margin:0 auto" :class="classname">
                     <label style="font-size:20px">客户名称</label>
                     <md-input v-model="clientbname" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                     <span class="md-error">客户标识信息，必填项目</span>
@@ -199,7 +201,7 @@
             </div>
             <div class="dialogb-body-right">
 
-                <md-field style="margin:20px auto" :class="classpos">
+                <md-field style="margin:0 auto" :class="classpos">
                     <label style="font-size:20px">客户邮编</label>
                     <md-input v-model="clientbpostcode" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                     <span class="md-error">客户邮编标识信息</span>
@@ -252,8 +254,10 @@
 
     <!-- deleteDialog b start-->
     <md-dialog :md-active.sync="deleteDialogb" style="width:500px">
-        <md-dialog-title style="font-size:30px;color:#d74342">删除客户</md-dialog-title>
-        <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
+        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+            <span style="color:#fff">删除客户</span>
+        </md-dialog-title>
+        <div style="margin:0 20px 20px 20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow:hidden auto">
             <div class="rmDialog-center">
                 <div class="rmDialog-center-left">
                     <span>客户名称:</span>
@@ -295,21 +299,23 @@
                 </div>
             </div>
         </div>
-
-        <md-dialog-actions style="margin:0 auto 10px auto">
-            <md-button class="md-raised md-primary" @click="deleteDialogb = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
-            <md-button class="md-raised md-accent" @click="confirmdeleteB" style="font-size:20px;width:100px;height:40px">删除</md-button>
-        </md-dialog-actions>
+        <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
+            <md-dialog-actions style="margin:0 auto 10px auto">
+                <md-button class="md-raised md-primary" @click="deleteDialogb = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
+                <md-button class="md-raised md-accent" @click="confirmdeleteB" style="font-size:20px;width:100px;height:40px">删除</md-button>
+            </md-dialog-actions>
+        </div>
     </md-dialog>
     <!-- deleteDialog b end-->
 
     <!-- Dialog a start-->
     <md-dialog :md-active.sync="showDialoga" style="width:900px">
-        <md-dialog-title style="font-size:30px">合作商管理</md-dialog-title>
+        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+            <span style="color:#fff">合作商管理</span>
+        </md-dialog-title>
         <div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row;flex-flow: row;overflow: auto">
             <div style="width:400px;margin:0 auto">
-
-                <md-field style="margin:20px auto" :class="nameclass">
+                <md-field style="margin:0 auto" :class="nameclass">
                     <label style="font-size:20px">合作商名称</label>
                     <md-input v-model="clientaname" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                     <span class="md-error">合作商标识信息，必填项目</span>
@@ -340,7 +346,7 @@
                 </md-field>
             </div>
             <div style="width:400px;margin:0 auto">
-                <md-field style="margin:20px auto" :class="usrclass">
+                <md-field style="margin:0 auto" :class="usrclass">
                     <label style="font-size:20px">合作商账户</label>
                     <md-input v-model="clientausername" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
                     <span class="md-error">合作商登陆账户，必填项目</span>
@@ -402,8 +408,10 @@
 
     <!-- deleteDialog a start-->
     <md-dialog :md-active.sync="deleteDialoga" style="width:500px">
-        <md-dialog-title style="font-size:30px;color:#d74342">删除合作商</md-dialog-title>
-        <div style="margin:20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;">
+        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+            <span style="color:#fff">删除合作商</span>
+        </md-dialog-title>
+        <div style="margin:0 20px 20px 20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow:hidden auto">
             <div class="rmDialog-center">
                 <div class="rmDialog-center-left">
                     <span>合作商名称:</span>
@@ -477,11 +485,12 @@
                 </div>
             </div>
         </div>
-
-        <md-dialog-actions style="margin:0 auto 10px auto">
-            <md-button class="md-raised md-primary" @click="deleteDialoga = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
-            <md-button class="md-raised md-accent" @click="confirmRemoveClientA" style="font-size:20px;width:100px;height:40px">删除</md-button>
-        </md-dialog-actions>
+        <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
+            <md-dialog-actions style="margin:0 auto 10px auto">
+                <md-button class="md-raised md-primary" @click="deleteDialoga = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
+                <md-button class="md-raised md-accent" @click="confirmRemoveClientA" style="font-size:20px;width:100px;height:40px">删除</md-button>
+            </md-dialog-actions>
+        </div>
     </md-dialog>
     <!-- deleteDialog a end-->
 

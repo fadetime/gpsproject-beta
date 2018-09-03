@@ -16,7 +16,6 @@ export default {
     },
     mounted() {
         if (localStorage.token) {
-            console.log(localStorage.token)
             let item = localStorage.token
             this.$store.dispatch('setToken', item)
             this.$router.push('/')

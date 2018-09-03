@@ -77,9 +77,9 @@
     </div>
     <!-- Dialog start-->
     <md-dialog :md-active.sync="showDialog" style="width:700px">
-        <div class="dialog-title">
-            <span>司机管理</span>
-        </div>
+        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+            <span style="color:#fff">司机管理</span>
+        </md-dialog-title>
         <div style="overflow: auto;">
             <div class="dialog-body">
                 <div class="dialog-body-item" style="padding-top:24px">
@@ -157,11 +157,10 @@
 
     <!-- deleteDialog start-->
     <md-dialog :md-active.sync="deleteDialog" class="editdialog">
-        <!-- <div style="font-size:30px">
-            <span>删除司机</span>
-        </div> -->
-        <md-dialog-title style="font-size:30px">删除司机</md-dialog-title>
-        <div style="padding:0 10px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow-x:hidden;overflow-y:auto;margin:0 20px" class="deldialog">
+        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+            <span style="color:#fff">删除司机</span>
+        </md-dialog-title>
+        <div style="padding:0 10px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow-x:hidden;overflow-y:auto;margin:0 20px 20px" class="deldialog">
             <div class="deldialog-left">
                 <div class="photoarea">
                     <img src="../../public/img/ebuyLogo.png" alt="ebuylogo" style="object-fit:unset;padding:50px 0" v-if="!driverImage">
@@ -220,10 +219,12 @@
             </div>
 
         </div>
-        <md-dialog-actions style="margin:10px auto 10px auto">
+        <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
+        <md-dialog-actions style="margin:5px auto">
             <md-button class="md-raised md-primary" @click="deleteDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
             <md-button class="md-raised md-accent" @click="confirmdelete" style="font-size:20px;width:100px;height:40px">删除</md-button>
         </md-dialog-actions>
+        </div>
     </md-dialog>
     <!-- deleteDialog end-->
     <!-- successd mesage start -->
@@ -539,19 +540,19 @@ export default {
                             payloadImg.append("_id", this._id)
                             payloadImg.append("image", this.updateImage)
                             axios({
-                                method: 'post',
-                                url: config.server + '/dirver/edit/img',
-                                data:payloadImg,
-                                headers: {
-                                    'Content-Type': 'multipart/form-data'
-                                }
-                            })
-                            .then(response => {
-                                // console.log(response)
-                            })
-                            .catch(error => {
-                                console.log(error)
-                            })
+                                    method: 'post',
+                                    url: config.server + '/dirver/edit/img',
+                                    data: payloadImg,
+                                    headers: {
+                                        'Content-Type': 'multipart/form-data'
+                                    }
+                                })
+                                .then(response => {
+                                    // console.log(response)
+                                })
+                                .catch(error => {
+                                    console.log(error)
+                                })
                         })
                 }
                 payload.append("_id", this._id)
