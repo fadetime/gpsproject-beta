@@ -4,6 +4,7 @@
             <router-link to="/" class="buttomarea-item" style="color: aliceblue;">今日任务</router-link>
             <router-link to="/times" class="buttomarea-item" style="color: aliceblue;">车次管理</router-link>
             <router-link to="/client" class="buttomarea-item" style="color: aliceblue;">客户管理</router-link>
+            <router-link to="/area" class="buttomarea-item" style="color: aliceblue;">区域管理</router-link>
             <router-link to="/dirver" class="buttomarea-item" style="color: aliceblue;">司机管理</router-link>
             <router-link to="/car" class="buttomarea-item" style="color: aliceblue;">车辆管理</router-link>
         
@@ -35,8 +36,8 @@ export default {
 }
 
 .buttomarea-item {
-    flex-basis: 20%;
-    font-size: 30px;
+    flex-basis: 15%;
+    font-size: 25px;
     padding: 20px 0;
 }
 
@@ -47,7 +48,7 @@ export default {
 
 #topbar a.router-link-exact-active {
     font-weight: bold;
-    font-size: 35px;
+    font-size: 30px;
 }
 
 .buttomarea-item:hover {

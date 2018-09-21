@@ -19,10 +19,10 @@
                         <span>车型</span>
                     </div>
                     <div class="tabletitle-item">
-                        <span>尾门</span>
+                        <span>包含尾门</span>
                     </div>
                     <div class="tabletitle-item">
-                        <span>出车次数</span>
+                        <span>包含冷藏</span>
                     </div>
                     <div class="tabletitle-item">
                         <span>备注</span>
@@ -47,7 +47,7 @@
                         <span>{{item.tailgate}}</span>
                     </div>
                     <div class="tabletitle-item">
-                        <span>{{item.cartimes}}</span>
+                        <span>{{item.coolstore}}</span>
                     </div>
                     <div class="tabletitle-item">
                         <span>{{item.carnote}}</span>
@@ -86,6 +86,7 @@
         </md-dialog-title>
 
         <div style="overflow-x: hidden;overflow-y:auto">
+            
             <div class="dialog-body">
                 <div class="dialog-body-item" style="padding-top:24px">
                     <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
@@ -531,7 +532,6 @@ export default {
 
         confirmedit() {
             if (this.updateImagePreview) {
-                console.log('enter edit img mode')
                 let payload = new FormData()
                 let maxSize = 200 * 1024 //200KB
                 lrz(this.updateImage, {

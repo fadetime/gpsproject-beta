@@ -6,6 +6,9 @@ import Dirver from './views/Dirver.vue'
 import Client from './views/Client.vue'
 import Car from './views/Car.vue'
 import login from './views/login.vue'
+import Admin from './views/Admin.vue'
+import Area from './views/Area.vue'
+import Log from './views/Log.vue'
 import AuthGuard from './auth-guard'
 
 Vue.use(Router)
@@ -41,12 +44,28 @@ export default new Router({
 			name: 'car',
 			component: Car,
 			beforeEnter: AuthGuard
-		}
-		,
+		},
 		{
 			path: '/login',
 			name: 'login',
 			component: login
+		},
+		{
+			path: '/admin',
+			name: 'admin',
+			component: Admin,
+			beforeEnter: AuthGuard
+		},
+		{
+			path: '/area',
+			name: 'area',
+			component: Area
+		},
+		{
+			path: '/log',
+			name: 'log',
+			component: Log
 		}
+
 	]
 })

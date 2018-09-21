@@ -99,11 +99,17 @@
                         <span class="md-error" style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
                     </md-field>
 
-                    <md-field style="margin:30px auto" :class="passclass">
-                        <label style="font-size:20px">准证号码</label>
-                        <md-input v-model="dirverid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                        <span class="md-error" style="font-size:15px;margin: -10px auto;">人员标识信息，必填项目</span>
+                    <md-field style="margin:20px auto" :class="cardclass">
+                        <label for="dirvercard" style="font-size:20px">驾照类型</label>
+                        <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:20px;height:55px;max-width: 500px;padding-top:21px">
+                            <md-option value="Class 3A">Class 3A</md-option>
+                            <md-option value="Class 3">Class 3</md-option>
+                            <md-option value="Class 4A">Class 4A</md-option>
+                            <md-option value="Class 4">Class 4</md-option>
+                            <md-option value="Class 5">Class 5</md-option>
+                        </md-select>
                     </md-field>
+
                     <md-field style="margin:30px auto" :class="phonclass">
                         <label style="font-size:20px">联系方式</label>
                         <md-input v-model="dirverphone" style="border-bottom: 1px solid #000;font-size:20px;height:55px" @change="check_phone($event)"></md-input>
@@ -119,24 +125,18 @@
                         <span class="md-error" style="font-size:15px;margin: -10px auto;">登陆用户名</span>
                     </md-field>
 
-                    <md-field style="margin:20px auto" :class="cardclass">
-                        <label for="dirvercard" style="font-size:20px">驾照类型</label>
-                        <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:20px;height:55px;max-width: 500px;padding-top:21px">
-                            <md-option value="Class 3A">Class 3A</md-option>
-                            <md-option value="Class 3">Class 3</md-option>
-                            <md-option value="Class 4A">Class 4A</md-option>
-                            <md-option value="Class 4">Class 4</md-option>
-                            <md-option value="Class 5">Class 5</md-option>
-                        </md-select>
+                    <md-field style="margin:20px auto" :class="pswclass">
+                        <label style="font-size:20px">密码</label>
+                        <md-input v-model="dirverpsw" type="password" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                        <span class="md-error" style="font-size:15px;margin: -10px auto;">标识密码</span>
                     </md-field>
                 </div>
 
                 <div class="dialog-body-item">
-
-                    <md-field style="margin:0 auto" :class="pswclass">
-                        <label style="font-size:20px">密码</label>
-                        <md-input v-model="dirverpsw" type="password" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                        <span class="md-error" style="font-size:15px;margin: -10px auto;">标识密码</span>
+                    <md-field style="margin:0 auto" :class="passclass">
+                        <label style="font-size:20px">准证号码</label>
+                        <md-input v-model="dirverid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
+                        <span class="md-error" style="font-size:15px;margin: -10px auto;">人员标识信息，必填项目</span>
                     </md-field>
 
                     <md-field style="margin:20px auto">
@@ -220,10 +220,10 @@
 
         </div>
         <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
-        <md-dialog-actions style="margin:5px auto">
-            <md-button class="md-raised md-primary" @click="deleteDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
-            <md-button class="md-raised md-accent" @click="confirmdelete" style="font-size:20px;width:100px;height:40px">删除</md-button>
-        </md-dialog-actions>
+            <md-dialog-actions style="margin:5px auto">
+                <md-button class="md-raised md-primary" @click="deleteDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
+                <md-button class="md-raised md-accent" @click="confirmdelete" style="font-size:20px;width:100px;height:40px">删除</md-button>
+            </md-dialog-actions>
         </div>
     </md-dialog>
     <!-- deleteDialog end-->
@@ -239,7 +239,7 @@
 <script>
 import axios from "axios";
 import config from "../../public/js/config.js";
-import lrz from 'lrz'
+import lrz from "lrz";
 
 export default {
     data() {
@@ -274,9 +274,9 @@ export default {
             pageSize: 10, //每页显示条数
             showItem: 5, // 最少显示5个页码
             findMode: false,
-            updateImagePreview: '',
-            updateImage: '',
-            driverImage: ''
+            updateImagePreview: "",
+            updateImage: "",
+            driverImage: ""
         };
     },
     mounted() {
@@ -284,112 +284,115 @@ export default {
     },
     computed: {
         pages: function () {
-            let pag = []
-            if (this.pageNow < this.showItem) { //如果当前的激活的项 小于要显示的条数
+            let pag = [];
+            if (this.pageNow < this.showItem) {
+                //如果当前的激活的项 小于要显示的条数
                 //总页数和要显示的条数那个大就显示多少条
                 let i = Math.min(this.showItem, this.pageCount);
                 while (i) {
                     pag.unshift(i--);
                 }
-            } else { //当前页数大于显示页数了
+            } else {
+                //当前页数大于显示页数了
                 let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
                     i = this.showItem;
-                if (middle > (this.pageCount - this.showItem)) {
-                    middle = (this.pageCount - this.showItem) + 1
+                if (middle > this.pageCount - this.showItem) {
+                    middle = this.pageCount - this.showItem + 1;
                 }
                 while (i--) {
                     pag.push(middle++);
                 }
             }
-            return pag
+            return pag;
         },
         nameclass() {
             return {
-                'md-invalid': this.nameErr
-            }
+                "md-invalid": this.nameErr
+            };
         },
         passclass() {
             return {
-                'md-invalid': this.passErr
-            }
+                "md-invalid": this.passErr
+            };
         },
         phonclass() {
             return {
-                'md-invalid': this.phonErr
-            }
+                "md-invalid": this.phonErr
+            };
         },
         cardclass() {
             return {
-                'md-invalid': this.cardErr
-            }
+                "md-invalid": this.cardErr
+            };
         },
         userclass() {
             return {
-                'md-invalid': this.userdErr
-            }
+                "md-invalid": this.userdErr
+            };
         },
         pswclass() {
             return {
-                'md-invalid': this.pswdErr
-            }
-        },
+                "md-invalid": this.pswdErr
+            };
+        }
     },
     methods: {
         check_phone(event) {
-            let value = event.target.value
+            let value = event.target.value;
             if (!/^[0-9]{8}$/.test(value)) {
-                this.phonErr = true
+                this.phonErr = true;
             } else {
-                this.phonErr = false
+                this.phonErr = false;
             }
         },
         fileChange(el) {
-            if (typeof FileReader === 'undefined') {
-                return alert('浏览器不支持上传图片')
+            if (typeof FileReader === "undefined") {
+                return alert("浏览器不支持上传图片");
             }
             if (!el.target.files[0].size) return; //判断是否有文件数量
-            this.updateImagePreview = window.URL.createObjectURL(el.target.files[0])
-            this.updateImage = el.target.files[0]
-            this.driverImage = ''
-            el.target.value = ''
+            this.updateImagePreview = window.URL.createObjectURL(el.target.files[0]);
+            this.updateImage = el.target.files[0];
+            this.driverImage = "";
+            el.target.value = "";
         },
 
         uploadFile() {
-            document.getElementById('upload_file').click()
+            document.getElementById("upload_file").click();
         },
 
         search(item) {
-            this.pageNow = 1
+            this.pageNow = 1;
             if (this.searchDirver == "") {
-                this.findMode = false
+                this.findMode = false;
                 this.getalldirver();
             } else {
-                this.findMode = true
-                axios.post(config.server + "/dirver/find", {
+                this.findMode = true;
+                axios
+                    .post(config.server + "/dirver/find", {
                         word: this.searchDirver,
                         pageSize: this.pageSize,
                         pageNow: this.pageNow
                     })
                     .then(res => {
                         this.alldirverinfo = res.data.doc;
-                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize);
                         if (res.data.code === 1) {
-                            this.error = true
-                            this.errormsg = res.data.msg
-                            this.searchDirver = ''
-                            this.getalldirver()
+                            this.error = true;
+                            this.errormsg = res.data.msg;
+                            this.searchDirver = "";
+                            this.getalldirver();
                             setTimeout(() => {
-                                this.error = false
-                            }, 3000)
+                                this.error = false;
+                            }, 3000);
                         }
                     })
                     .catch(err => {
-                        console.log(err)
-                    })
+                        console.log(err);
+                    });
             }
         },
         adddirverbutton() {
-            this.updateImagePreview = ''
+            this.updateImagePreview = "";
             this.showDialog = true;
             this.savemode = true;
             this._id = "";
@@ -411,7 +414,7 @@ export default {
             this.dirverusername = item.dirverusername;
             this.dirverpsw = item.dirverpsw;
             this.dirvernote = item.dirvernote;
-            this.driverImage = item.image
+            this.driverImage = item.image;
         },
         confirmdelete() {
             axios
@@ -439,7 +442,7 @@ export default {
         },
 
         editbutton(item) {
-            this.updateImagePreview = ''
+            this.updateImagePreview = "";
             this.savemode = false;
             this._id = item._id;
             this.dirvername = item.dirvername;
@@ -447,128 +450,133 @@ export default {
             this.dirverphone = item.dirverphone;
             this.dirvercard = item.dirvercard;
             this.dirverusername = item.dirverusername;
-            this.dirverpsw = ''
+            this.dirverpsw = "";
             this.dirvernote = item.dirvernote;
-            this.driverImage = item.image
+            this.driverImage = item.image;
             this.showDialog = true;
         },
 
         pageButton(item) {
-            if (item === 'A') {
-
+            if (item === "A") {
                 if (this.pageNow > 1) {
-                    this.pageNow = this.pageNow - 1
+                    this.pageNow = this.pageNow - 1;
                 }
-            } else if (item === 'B') {
+            } else if (item === "B") {
                 if (this.pageNow < this.pageCount) {
-                    this.pageNow = this.pageNow + 1
+                    this.pageNow = this.pageNow + 1;
                 }
             } else {
-                this.pageNow = item
+                this.pageNow = item;
             }
             if (this.findMode === false) {
-                axios.post(config.server + "/dirver/get", {
+                axios
+                    .post(config.server + "/dirver/get", {
                         pageSize: this.pageSize,
                         pageNow: this.pageNow
                     })
                     .then(res => {
                         this.alldirverinfo = res.data.doc;
-                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize);
                     })
                     .catch(err => {
                         console.log(err);
                     });
             } else {
-                axios.post(config.server + "/dirver/find", {
+                axios
+                    .post(config.server + "/dirver/find", {
                         word: this.searchDirver,
                         pageSize: this.pageSize,
                         pageNow: this.pageNow
                     })
                     .then(res => {
                         this.alldirverinfo = res.data.doc;
-                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                        this.pageCount = Math.ceil(res.data.count / this.pageSize);
                     })
                     .catch(err => {
-                        console.log(err)
-                    })
+                        console.log(err);
+                    });
             }
         },
 
         confirmedit() {
-            if (!this.dirvername || !this.dirverid || !this.dirverusername ||
-                !this.dirverphone || !this.dirvercard || this.phonErr || !this.dirverusername
+            if (!this.dirvername ||
+                !this.dirverid ||
+                !this.dirverusername ||
+                !this.dirverphone ||
+                !this.dirvercard ||
+                this.phonErr ||
+                !this.dirverusername
             ) {
                 if (!this.dirvername) {
-                    this.nameErr = true
+                    this.nameErr = true;
                 } else {
-                    this.nameErr = false
+                    this.nameErr = false;
                 }
                 if (!this.dirverid) {
-                    this.passErr = true
+                    this.passErr = true;
                 } else {
-                    this.passErr = false
+                    this.passErr = false;
                 }
                 if (!this.dirverphone) {
-                    this.phonErr = true
+                    this.phonErr = true;
                 }
                 if (!this.dirvercard) {
-                    this.cardErr = true
+                    this.cardErr = true;
                 } else {
-                    this.cardErr = false
+                    this.cardErr = false;
                 }
                 if (!this.dirverusername) {
-                    this.userdErr = true
+                    this.userdErr = true;
                 } else {
-                    this.userdErr = false
+                    this.userdErr = false;
                 }
             } else {
-                let payload = new FormData()
-                let maxSize = 200 * 1024 //200KB
+                let payload = new FormData();
+                let maxSize = 200 * 1024; //200KB
 
-                if (this.dirverpsw != '') {
-                    payload.append("dirverpsw", this.dirverpsw)
+                if (this.dirverpsw != "") {
+                    payload.append("dirverpsw", this.dirverpsw);
                 }
-                if (this.updateImagePreview != '') {
+                if (this.updateImagePreview != "") {
                     lrz(this.updateImage, {
-                            quality: 0.5
-                        })
-                        .then(res => {
-                            if (this.updateImage.size > maxSize) {
-                                this.updateImage = res.file
-                            }
-                            let payloadImg = new FormData()
-                            payloadImg.append("_id", this._id)
-                            payloadImg.append("image", this.updateImage)
-                            axios({
-                                    method: 'post',
-                                    url: config.server + '/dirver/edit/img',
-                                    data: payloadImg,
-                                    headers: {
-                                        'Content-Type': 'multipart/form-data'
-                                    }
-                                })
-                                .then(response => {
-                                    // console.log(response)
-                                })
-                                .catch(error => {
-                                    console.log(error)
-                                })
-                        })
+                        quality: 0.5
+                    }).then(res => {
+                        if (this.updateImage.size > maxSize) {
+                            this.updateImage = res.file;
+                        }
+                        let payloadImg = new FormData();
+                        payloadImg.append("_id", this._id);
+                        payloadImg.append("image", this.updateImage);
+                        axios({
+                                method: "post",
+                                url: config.server + "/dirver/edit/img",
+                                data: payloadImg,
+                                headers: {
+                                    "Content-Type": "multipart/form-data"
+                                }
+                            })
+                            .then(response => {
+                                // console.log(response)
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            });
+                    });
                 }
-                payload.append("_id", this._id)
-                payload.append("dirvername", this.dirvername)
-                payload.append("dirverid", this.dirverid)
-                payload.append("dirverphone", this.dirverphone)
-                payload.append("dirvercard", this.dirvercard)
-                payload.append("dirverusername", this.dirverusername)
-                payload.append("dirvernote", this.dirvernote)
+                payload.append("_id", this._id);
+                payload.append("dirvername", this.dirvername);
+                payload.append("dirverid", this.dirverid);
+                payload.append("dirverphone", this.dirverphone);
+                payload.append("dirvercard", this.dirvercard);
+                payload.append("dirverusername", this.dirverusername);
+                payload.append("dirvernote", this.dirvernote);
 
                 axios({
-                        method: 'post',
-                        url: config.server + '/dirver/edit',
+                        method: "post",
+                        url: config.server + "/dirver/edit",
                         data: payload,
                         headers: {
-                            'Content-Type': 'multipart/form-data'
+                            "Content-Type": "multipart/form-data"
                         }
                     })
                     .then(response => {
@@ -587,7 +595,7 @@ export default {
                             }, 3000);
                         }
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         console.log(error);
                         this.error = true;
                         this.errormsg = response.data.msg;
@@ -595,85 +603,91 @@ export default {
                             this.error = false;
                         }, 3000);
                     });
-
             }
         },
         getalldirver() {
-            axios.post(config.server + "/dirver/get", {
+            axios
+                .post(config.server + "/dirver/get", {
                     pageSize: this.pageSize,
                     pageNow: this.pageNow
                 })
                 .then(res => {
                     this.alldirverinfo = res.data.doc;
-                    this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                    this.pageCount = Math.ceil(res.data.count / this.pageSize);
                 })
                 .catch(err => {
                     console.log(err);
                 });
         },
         adddirver() {
-            if (!this.dirvername || !this.dirverid || !this.dirverusername ||
-                !this.dirverpsw || !this.dirverphone || this.phonErr ||
-                !this.dirvercard || !this.dirverusername
+            if (!this.dirvername ||
+                !this.dirverid ||
+                !this.dirverusername ||
+                !this.dirverpsw ||
+                !this.dirverphone ||
+                this.phonErr ||
+                !this.dirvercard ||
+                !this.dirverusername
             ) {
                 if (!this.dirvername) {
-                    this.nameErr = true
+                    this.nameErr = true;
                 } else {
-                    this.nameErr = false
+                    this.nameErr = false;
                 }
                 if (!this.dirverid) {
-                    this.passErr = true
+                    this.passErr = true;
                 } else {
-                    this.passErr = false
+                    this.passErr = false;
                 }
                 if (!this.dirverphone) {
-                    this.phonErr = true
+                    this.phonErr = true;
                 }
                 if (!this.dirvercard) {
-                    this.cardErr = true
+                    this.cardErr = true;
                 } else {
-                    this.cardErr = false
+                    this.cardErr = false;
                 }
                 if (!this.dirverusername) {
-                    this.userdErr = true
+                    this.userdErr = true;
                 } else {
-                    this.userdErr = false
+                    this.userdErr = false;
                 }
                 if (!this.dirverpsw) {
-                    this.pswdErr = true
+                    this.pswdErr = true;
                 } else {
-                    this.pswdErr = false
+                    this.pswdErr = false;
                 }
             } else {
-                this.nameErr = false
-                this.passErr = false
-                this.phonErr = false
-                this.cardErr = false
-                this.userdErr = false
-                this.pswdErr = false
-                let payload = new FormData()
-                let maxSize = 200 * 1024 //200KB
-                lrz(this.updateImage, {
+                this.nameErr = false;
+                this.passErr = false;
+                this.phonErr = false;
+                this.cardErr = false;
+                this.userdErr = false;
+                this.pswdErr = false;
+                let payload = new FormData();
+                let maxSize = 200 * 1024; //200KB
+
+                if (this.updateImage) {
+                    lrz(this.updateImage, {
                         quality: 0.5
-                    })
-                    .then(res => {
+                    }).then(res => {
                         if (this.updateImage.size > maxSize) {
-                            this.updateImage = res.file
+                            this.updateImage = res.file;
                         }
-                        payload.append("image", this.updateImage)
-                        payload.append("dirvername", this.dirvername)
-                        payload.append("dirverid", this.dirverid)
-                        payload.append("dirverphone", this.dirverphone)
-                        payload.append("dirvercard", this.dirvercard)
-                        payload.append("dirverusername", this.dirverusername)
-                        payload.append("dirverpsw", this.dirverpsw)
-                        payload.append("dirvernote", this.dirvernote)
+                        payload.append("image", this.updateImage);
+                        payload.append("dirvername", this.dirvername);
+                        payload.append("dirverid", this.dirverid);
+                        payload.append("dirverphone", this.dirverphone);
+                        payload.append("dirvercard", this.dirvercard);
+                        payload.append("dirverusername", this.dirverusername);
+                        payload.append("dirverpsw", this.dirverpsw);
+                        payload.append("dirvernote", this.dirvernote);
                         axios({
-                                method: 'post',
-                                url: config.server + '/dirver',
+                                method: "post",
+                                url: config.server + "/dirver",
                                 data: payload,
                                 headers: {
-                                    'Content-Type': 'multipart/form-data'
+                                    "Content-Type": "multipart/form-data"
                                 }
                             })
                             .then(response => {
@@ -692,7 +706,7 @@ export default {
                                     }, 3000);
                                 }
                             })
-                            .catch((error) => {
+                            .catch(error => {
                                 console.log(error);
                                 this.error = true;
                                 this.errormsg = response.data.msg;
@@ -700,7 +714,48 @@ export default {
                                     this.error = false;
                                 }, 3000);
                             });
-                    })
+                    });
+                } else {
+                    payload.append("dirvername", this.dirvername);
+                    payload.append("dirverid", this.dirverid);
+                    payload.append("dirverphone", this.dirverphone);
+                    payload.append("dirvercard", this.dirvercard);
+                    payload.append("dirverusername", this.dirverusername);
+                    payload.append("dirverpsw", this.dirverpsw);
+                    payload.append("dirvernote", this.dirvernote);
+                    axios({
+                            method: "post",
+                            url: config.server + "/dirver",
+                            data: payload,
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        })
+                        .then(response => {
+                            if (response.data.code == 1) {
+                                this.error = true;
+                                this.errormsg = response.data.msg;
+                                setTimeout(() => {
+                                    this.error = false;
+                                }, 3000);
+                            } else {
+                                this.successdmsg = true;
+                                this.showDialog = false;
+                                this.getalldirver();
+                                setTimeout(() => {
+                                    this.successdmsg = false;
+                                }, 3000);
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            this.error = true;
+                            this.errormsg = response.data.msg;
+                            setTimeout(() => {
+                                this.error = false;
+                            }, 3000);
+                        });
+                }
             }
         }
     }
@@ -719,7 +774,7 @@ export default {
 }
 
 .dialog-title span {
-    font-size: 30px
+    font-size: 30px;
 }
 
 .dialog-body {
@@ -809,7 +864,7 @@ export default {
     flex-flow: row;
     margin: 20px;
     font-size: 20px;
-    width: 100%
+    width: 100%;
 }
 
 .rmDialog-center-left {

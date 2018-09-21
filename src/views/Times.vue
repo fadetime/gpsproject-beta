@@ -419,7 +419,6 @@ export default {
                 })
                 .then((res) => {
                     this.alltimesinfo = res.data.doc
-                    console.log(res.data.doc)
                     this.pageCount = Math.ceil(res.data.count / this.pageSize)
                 }).catch((err) => {
                     console.log(err)

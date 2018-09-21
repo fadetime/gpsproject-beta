@@ -2,7 +2,7 @@
 <div id="app">
     <top-bar v-if="$store.state.token"></top-bar>
     <router-view/>
-    <div id="logout" style="text-align:right" @click="logout" v-if="$store.state.token">
+    <div id="logout" style="text-align:right" @click="changePage" v-if="$store.state.token" v-show="!showLogo">
         <h1><a href="#" class="home" style="color:#d74342"><b><img src="../public/img/mLogo.png" style="width:60px" alt="logo"></b><span>easy buy</span></a></h1>
     </div>
 </div>
@@ -26,15 +26,14 @@ export default {
     computed: {
         checkLogin() {
             return this.$store.state.token
+        },
+        showLogo() {
+            return localStorage.getItem('showLogo')
         }
     },
     methods:{
-        logout(){
-            this.$router.push('/login')
-            console.log('111')
-            let item = null
-            this.$store.dispatch('setToken', item)
-            localStorage.removeItem('token')
+        changePage(){
+            this.$router.push('/admin')
         }
     }
 }
@@ -73,6 +72,7 @@ body {
     position: fixed;
     bottom: 0;
     right: 20px;
+    z-index: 3;
 }
 
 #logout h1 {
