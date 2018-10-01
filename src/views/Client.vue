@@ -136,12 +136,9 @@
 
         <!-- page bar start-->
         <!-- 合作商页码 -->
-        <div style="height:80px">
-            <!-- 占位符 -->
-        </div>
         <div class="page-bar" v-if="clientpage">
             <div class="page-bar-body"  v-if="pageCountA!=1">
-                <ul  style="width:510px">
+                <ul  style="width:420px">
                     <li @click="pageButtonA('A')">
                         <span>上一页</span>
                     </li>
@@ -159,7 +156,29 @@
             </div>
         </div>
         <!-- 客户页码 -->
-        <div class="page-bar" v-else>
+        <div v-else>
+            <div style="display:flex;justify-content: center;">
+                <div class="page-bar">
+                    <ul style="width:420px">
+                    <li @click="pageButtonB('A')">
+                        <span>上一页</span>
+                    </li>
+                    <li v-for="(item,index) in pages" :key="index" @click="pageButtonB(item)" :class="{'active':pageNow == item}">
+                        <span>{{item}}</span>
+                    </li>
+                    <li @click="pageButtonB('B')">
+                        <span>下一页</span>
+                    </li>
+                    <li>
+                        <span>共<i>{{pageCount}}</i>页</span>
+                    </li>
+                </ul>
+                </div>
+                
+            </div>
+            
+        </div>
+        <!-- <div class="page-bar" v-else>
             <div class="page-bar-body" v-if="pageCount!=1">
                 <ul style="width:510px">
                     <li @click="pageButtonB('A')">
@@ -176,7 +195,7 @@
                     </li>
                 </ul>
             </div>
-        </div>
+        </div> -->
         <!-- page bar end-->
         <!-- Dialog b start-->
         <md-dialog :md-active.sync="showDialogb" style="width:600px">
@@ -1834,7 +1853,7 @@ export default {
 }
 
 .topbutton-center {
-    flex-basis: 30%;
+    flex-basis: 40%;
     text-align: center;
     margin: 0 auto;
 }
@@ -1948,19 +1967,6 @@ export default {
 .dialogb-body-status-right input {
     width: 20px;
     height: 20px;
-}
-
-.page-bar {
-    position: fixed; 
-    bottom: 90px;
-    width: 50%;
-    
-}
-
-.page-bar-body {
-    position: absolute;
-    right: 400px;
-    width: 1px;
 }
 
 .page-bar ul li {

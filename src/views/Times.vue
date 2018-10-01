@@ -57,7 +57,7 @@
         </div>
 
         <div class="page-bar">
-            <div class="page-bar-body" v-if="pageCount!=1">
+            <div class="page-bar-body" v-if="pageCount>0">
                 <ul style="width:410px">
                     <li @click="pageButton('A')">
                         <span>上一页</span>
@@ -555,8 +555,7 @@ export default {
             }
         },
         addbutton() {
-            this.savemode = true;
-            this.showDialog = true;
+            
             this.acarinfo = "";
             this._id = "";
             this.timesname = "";
@@ -565,6 +564,8 @@ export default {
             this.choicedirver = "";
             this.adirverinfo = "";
             this.choiceclientb = [];
+            this.savemode = true;
+            this.showDialog = true;
         },
 
         pageButton(item) {
