@@ -40,8 +40,8 @@ import config from "../../public/js/config.js"
 export default {
     data() {
         return {
-            email: 'admin@admin.com',
-            password: '1',
+            email: '',
+            password: '',
             errmsg: ''
         }
     },

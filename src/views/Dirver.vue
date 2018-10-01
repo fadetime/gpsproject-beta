@@ -1,239 +1,242 @@
 <template>
-<div id="dirver">
-    <div class="topbutton">
-        <div class="topbutton-left">
-            <input type="text" v-model="searchDirver" @keyup.enter="search" placeholder="搜索司机信息">
-        </div>
-        <div class="topbutton-right">
-            <md-button class="md-raised md-primary" @click="adddirverbutton" style="font-size:20px;width:100px;height:40px;">+ 添加</md-button>
-        </div>
-    </div>
-
-    <div class="centertable">
-
-        <md-card style="background-color: #eff3f5">
-            <md-card-content>
-                <div class="tabletitle">
-                    <div class="tabletitle-item">
-                        <span>姓名</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>准证号码</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>联系方式</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>驾照类型</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>操作</span>
-                    </div>
-                </div>
-            </md-card-content>
-        </md-card>
-
-        <md-card md-with-hover v-for="(item,index) in alldirverinfo" :key="index" style="background-color: #eff3f5;">
-            <md-card-content>
-                <div class="tablebody">
-                    <div class="tabletitle-item">
-                        <span>{{item.dirvername}}</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>{{item.dirverid}}</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>{{item.dirverphone}}</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>{{item.dirvercard}}</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)" style="width:20px;margin:0 10px">
-                        <img src="../..//public/img/icons/dele.png" alt="delete" @click="deletebutton(item)" style="width:30px;margin:0 10px">
-                    </div>
-                </div>
-            </md-card-content>
-        </md-card>
-        <!-- 司机页码 -->
-        <div class="page-bar">
-            <div class="page-bar-body" v-if="pageCount!=1">
-                <ul style="width:410px">
-                    <li @click="pageButton('A')">
-                        <span>上一页</span>
-                    </li>
-                    <li v-for="(item,index) in pages" :key="index" @click="pageButton(item)" :class="{'active':pageNow == item}">
-                        <span>{{item}}</span>
-                    </li>
-                    <li @click="pageButton('B')">
-                        <span>下一页</span>
-                    </li>
-                    <li>
-                        <span>共<i>{{pageCount}}</i>页</span>
-                    </li>
-                </ul>
+    <div id="dirver">
+        <div class="topbutton">
+            <div class="topbutton-left">
+                <input type="text" v-model="searchDirver" @keyup.enter="search" placeholder="搜索司机信息">
+            </div>
+            <div class="topbutton-right">
+                <md-button class="md-raised md-primary" @click="adddirverbutton" style="font-size:20px;width:100px;height:40px;">+ 添加</md-button>
             </div>
         </div>
-    </div>
-    <!-- Dialog start-->
-    <md-dialog :md-active.sync="showDialog" style="width:700px">
-        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
-            <span style="color:#fff">司机管理</span>
-        </md-dialog-title>
-        <div style="overflow: auto;">
-            <div class="dialog-body">
-                <div class="dialog-body-item" style="padding-top:24px">
-                    <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
-                    <div class="photoarea" @click="uploadFile" v-if="!driverImage">
-                        <md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon>
-                        <img :src="updateImagePreview" alt="newimg" v-else>
-                    </div>
-                    <div class="photoarea" @click="uploadFile" v-else>
-                        <img :src="driverImage | imgurl" alt="newimg">
-                    </div>
-                </div>
-                <div class="dialog-body-item">
-                    <md-field style="margin:0 auto" :class="nameclass">
-                        <label style="font-size:20px">司机姓名</label>
-                        <md-input v-model="dirvername" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                        <span class="md-error" style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
-                    </md-field>
 
-                    <md-field style="margin:20px auto" :class="cardclass">
-                        <label for="dirvercard" style="font-size:20px">驾照类型</label>
-                        <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:20px;height:55px;max-width: 500px;padding-top:21px">
-                            <md-option value="Class 3A">Class 3A</md-option>
-                            <md-option value="Class 3">Class 3</md-option>
-                            <md-option value="Class 4A">Class 4A</md-option>
-                            <md-option value="Class 4">Class 4</md-option>
-                            <md-option value="Class 5">Class 5</md-option>
-                        </md-select>
-                    </md-field>
+        <div class="centertable">
 
-                    <md-field style="margin:30px auto" :class="phonclass">
-                        <label style="font-size:20px">联系方式</label>
-                        <md-input v-model="dirverphone" style="border-bottom: 1px solid #000;font-size:20px;height:55px" @change="check_phone($event)"></md-input>
-                        <span class="md-error" style="font-size:15px;margin: -10px auto;">请输入8位整数</span>
-                    </md-field>
+            <md-card style="background-color: #eff3f5">
+                <md-card-content>
+                    <div class="tabletitle">
+                        <div class="tabletitle-item">
+                            <span>姓名</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>准证号码</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>联系方式</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>驾照类型</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>操作</span>
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+
+            <md-card md-with-hover v-for="(item,index) in alldirverinfo" :key="index" style="background-color: #eff3f5;">
+                <md-card-content>
+                    <div class="tablebody">
+                        <div class="tabletitle-item">
+                            <span>{{item.dirvername}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.dirverid}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.dirverphone}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.dirvercard}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)" style="width:20px;margin:0 10px">
+                            <img src="../..//public/img/icons/dele.png" alt="delete" @click="deletebutton(item)" style="width:30px;margin:0 10px">
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+            <!-- 司机页码 -->
+            <div class="page-bar">
+                <div class="page-bar-body" v-if="pageCount!=1">
+                    <ul style="width:410px">
+                        <li @click="pageButton('A')">
+                            <span>上一页</span>
+                        </li>
+                        <li v-for="(item,index) in pages" :key="index" @click="pageButton(item)" :class="{'active':pageNow == item}">
+                            <span>{{item}}</span>
+                        </li>
+                        <li @click="pageButton('B')">
+                            <span>下一页</span>
+                        </li>
+                        <li>
+                            <span>共
+                                <i>{{pageCount}}</i>页</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="dialog-body">
-                <div class="dialog-body-item">
-                    <md-field style="margin:0 auto" :class="userclass">
-                        <label style="font-size:20px">用户名</label>
-                        <md-input v-model="dirverusername" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                        <span class="md-error" style="font-size:15px;margin: -10px auto;">登陆用户名</span>
-                    </md-field>
-
-                    <md-field style="margin:20px auto" :class="pswclass">
-                        <label style="font-size:20px">密码</label>
-                        <md-input v-model="dirverpsw" type="password" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                        <span class="md-error" style="font-size:15px;margin: -10px auto;">标识密码</span>
-                    </md-field>
-                </div>
-
-                <div class="dialog-body-item">
-                    <md-field style="margin:0 auto" :class="passclass">
-                        <label style="font-size:20px">准证号码</label>
-                        <md-input v-model="dirverid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                        <span class="md-error" style="font-size:15px;margin: -10px auto;">人员标识信息，必填项目</span>
-                    </md-field>
-
-                    <md-field style="margin:20px auto">
-                        <label style="font-size:20px">备注</label>
-                        <md-input v-model="dirvernote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    </md-field>
-                </div>
-            </div>
-
         </div>
-        <md-dialog-actions style="margin:0 auto 10px auto">
-            <md-button class="md-raised md-primary" @click="showDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
-            <md-button class="md-raised md-primary" v-if="savemode" @click="adddirver" style="font-size:20px;width:100px;height:40px">保存</md-button>
-            <md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:20px;width:100px;height:40px">修改</md-button>
-        </md-dialog-actions>
-    </md-dialog>
-    <!-- Dialog end-->
+        <!-- Dialog start-->
+        <md-dialog :md-active.sync="showDialog" style="width:700px">
+            <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:12px">
+                <span style="color:#fff">司机管理</span>
+            </md-dialog-title>
+            <md-dialog-content style="padding: 0 24px;">
+                <div style="border: 3px dashed #eee">
+                    <div class="dialog-body">
+                        <div class="dialog-body-item" style="padding-top:24px">
+                            <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
+                            <div class="photoarea" @click="uploadFile" v-if="!driverImage">
+                                <md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon>
+                                <img :src="updateImagePreview" alt="newimg" v-else>
+                            </div>
+                            <div class="photoarea" @click="uploadFile" v-else>
+                                <img :src="driverImage | imgurl" alt="newimg">
+                            </div>
+                        </div>
+                        <div class="dialog-body-item">
+                            <md-field style="margin:0 auto" :class="nameclass">
+                                <label style="font-size:20px">司机姓名</label>
+                                <md-input v-model="dirvername" style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+                                <span class="md-error" style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
+                            </md-field>
 
-    <!-- deleteDialog start-->
-    <md-dialog :md-active.sync="deleteDialog" class="editdialog">
-        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
-            <span style="color:#fff">删除司机</span>
-        </md-dialog-title>
-        <div style="padding:0 10px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow-x:hidden;overflow-y:auto;margin:0 20px 20px" class="deldialog">
-            <div class="deldialog-left">
-                <div class="photoarea">
-                    <img src="../../public/img/ebuyLogo.png" alt="ebuylogo" style="object-fit:unset;padding:50px 0" v-if="!driverImage">
-                    <img :src="driverImage | imgurl" alt="newimg" v-else>
-                </div>
-            </div>
-            <div class="deldialog-right">
-                <div class="rmDialog-center">
-                    <div class="rmDialog-center-left">
-                        <span>司机姓名:</span>
-                    </div>
-                    <div class="rmDialog-center-right">
-                        <span>{{dirvername}}</span>
-                    </div>
-                </div>
-                <div class="rmDialog-center">
-                    <div class="rmDialog-center-left">
-                        <span>车辆类型:</span>
-                    </div>
-                    <div class="rmDialog-center-right">
-                        <span>{{dirverid}}</span>
-                    </div>
-                </div>
-                <div class="rmDialog-center">
-                    <div class="rmDialog-center-left">
-                        <span>车辆尺寸:</span>
-                    </div>
-                    <div class="rmDialog-center-right">
-                        <span>{{dirverphone}}</span>
-                    </div>
-                </div>
-                <div class="rmDialog-center">
-                    <div class="rmDialog-center-left">
-                        <span>出车次数:</span>
-                    </div>
-                    <div class="rmDialog-center-right">
-                        <span>{{dirvercard}}</span>
-                    </div>
-                </div>
-                <div class="rmDialog-center">
-                    <div class="rmDialog-center-left">
-                        <span>车辆备注:</span>
-                    </div>
-                    <div class="rmDialog-center-right">
-                        <span>{{dirverusername}}</span>
-                    </div>
-                </div>
-                <div class="rmDialog-center">
-                    <div class="rmDialog-center-left">
-                        <span>司机备注:</span>
-                    </div>
-                    <div class="rmDialog-center-right">
-                        <span>{{dirvernote}}</span>
-                    </div>
-                </div>
-            </div>
+                            <md-field style="margin:20px auto" :class="cardclass">
+                                <label for="dirvercard" style="font-size:20px">驾照类型</label>
+                                <md-select v-model="dirvercard" name="dirvercard" id="dirvercard" style="border-bottom: 1px solid #000;font-size:18px;height:55px;max-width: 500px;padding-top:21px">
+                                    <md-option value="Class 3A">Class 3A</md-option>
+                                    <md-option value="Class 3">Class 3</md-option>
+                                    <md-option value="Class 4A">Class 4A</md-option>
+                                    <md-option value="Class 4">Class 4</md-option>
+                                    <md-option value="Class 5">Class 5</md-option>
+                                </md-select>
+                            </md-field>
 
-        </div>
-        <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
-            <md-dialog-actions style="margin:5px auto">
-                <md-button class="md-raised md-primary" @click="deleteDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
-                <md-button class="md-raised md-accent" @click="confirmdelete" style="font-size:20px;width:100px;height:40px">删除</md-button>
+                            <md-field style="margin:30px auto" :class="phonclass">
+                                <label style="font-size:20px">联系方式</label>
+                                <md-input v-model="dirverphone" style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center" @change="check_phone($event)"></md-input>
+                                <span class="md-error" style="font-size:15px;margin: -10px auto;">请输入8位整数</span>
+                            </md-field>
+                        </div>
+                    </div>
+                    <div class="dialog-body">
+                        <div class="dialog-body-item">
+                            <md-field style="margin:0 auto" :class="userclass">
+                                <label style="font-size:20px">用户名</label>
+                                <md-input v-model="dirverusername" style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+                                <span class="md-error" style="font-size:15px;margin: -10px auto;">登陆用户名</span>
+                            </md-field>
+
+                            <md-field style="margin:20px auto" :class="pswclass">
+                                <label style="font-size:20px">密码</label>
+                                <md-input v-model="dirverpsw" type="password" style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+                                <span class="md-error" style="font-size:15px;margin: -10px auto;">标识密码</span>
+                            </md-field>
+                        </div>
+
+                        <div class="dialog-body-item">
+                            <md-field style="margin:0 auto" :class="passclass">
+                                <label style="font-size:20px">准证号码</label>
+                                <md-input v-model="dirverid" style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+                                <span class="md-error" style="font-size:15px;margin: -10px auto;">人员标识信息，必填项目</span>
+                            </md-field>
+
+                            <md-field style="margin:20px auto">
+                                <label style="font-size:20px">备注</label>
+                                <md-input v-model="dirvernote" style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+                            </md-field>
+                        </div>
+                    </div>
+
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions style="margin:0 auto 10px auto">
+                <md-button class="md-raised md-primary" @click="showDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
+                <md-button class="md-raised md-primary" v-if="savemode" @click="adddirver" style="font-size:20px;width:100px;height:40px">保存</md-button>
+                <md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:20px;width:100px;height:40px">修改</md-button>
             </md-dialog-actions>
-        </div>
-    </md-dialog>
-    <!-- deleteDialog end-->
-    <!-- successd mesage start -->
-    <md-dialog-alert :md-active.sync="successdmsg" md-content="操作成功" md-confirm-text="关闭" />
-    <!-- successd mesage end -->
-    <!-- error start -->
-    <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" />
-    <!-- error end -->
-</div>
+        </md-dialog>
+        <!-- Dialog end-->
+
+        <!-- deleteDialog start-->
+        <md-dialog :md-active.sync="deleteDialog" class="editdialog">
+            <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+                <span style="color:#fff">删除司机</span>
+            </md-dialog-title>
+            <div style="padding:0 10px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow-x:hidden;overflow-y:auto;margin:0 20px 20px" class="deldialog">
+                <div class="deldialog-left">
+                    <div class="photoarea">
+                        <img src="../../public/img/ebuyLogo.png" alt="ebuylogo" style="object-fit:unset;padding:50px 0" v-if="!driverImage">
+                        <img :src="driverImage | imgurl" alt="newimg" v-else>
+                    </div>
+                </div>
+                <div class="deldialog-right">
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>司机姓名:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{dirvername}}</span>
+                        </div>
+                    </div>
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>车辆类型:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{dirverid}}</span>
+                        </div>
+                    </div>
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>车辆尺寸:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{dirverphone}}</span>
+                        </div>
+                    </div>
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>出车次数:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{dirvercard}}</span>
+                        </div>
+                    </div>
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>车辆备注:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{dirverusername}}</span>
+                        </div>
+                    </div>
+                    <div class="rmDialog-center">
+                        <div class="rmDialog-center-left">
+                            <span>司机备注:</span>
+                        </div>
+                        <div class="rmDialog-center-right">
+                            <span>{{dirvernote}}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
+                <md-dialog-actions style="margin:5px auto">
+                    <md-button class="md-raised md-primary" @click="deleteDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
+                    <md-button class="md-raised md-accent" @click="confirmdelete" style="font-size:20px;width:100px;height:40px">删除</md-button>
+                </md-dialog-actions>
+            </div>
+        </md-dialog>
+        <!-- deleteDialog end-->
+        <!-- successd mesage start -->
+        <md-dialog-alert :md-active.sync="successdmsg" md-content="操作成功" md-confirm-text="关闭" />
+        <!-- successd mesage end -->
+        <!-- error start -->
+        <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" />
+        <!-- error end -->
+    </div>
 </template>
 
 <script>
@@ -283,7 +286,7 @@ export default {
         this.getalldirver();
     },
     computed: {
-        pages: function () {
+        pages: function() {
             let pag = [];
             if (this.pageNow < this.showItem) {
                 //如果当前的激活的项 小于要显示的条数
@@ -350,7 +353,9 @@ export default {
                 return alert("浏览器不支持上传图片");
             }
             if (!el.target.files[0].size) return; //判断是否有文件数量
-            this.updateImagePreview = window.URL.createObjectURL(el.target.files[0]);
+            this.updateImagePreview = window.URL.createObjectURL(
+                el.target.files[0]
+            );
             this.updateImage = el.target.files[0];
             this.driverImage = "";
             el.target.value = "";
@@ -375,7 +380,9 @@ export default {
                     })
                     .then(res => {
                         this.alldirverinfo = res.data.doc;
-                        this.pageCount = Math.ceil(res.data.count / this.pageSize);
+                        this.pageCount = Math.ceil(
+                            res.data.count / this.pageSize
+                        );
                         if (res.data.code === 1) {
                             this.error = true;
                             this.errormsg = res.data.msg;
@@ -476,7 +483,9 @@ export default {
                     })
                     .then(res => {
                         this.alldirverinfo = res.data.doc;
-                        this.pageCount = Math.ceil(res.data.count / this.pageSize);
+                        this.pageCount = Math.ceil(
+                            res.data.count / this.pageSize
+                        );
                     })
                     .catch(err => {
                         console.log(err);
@@ -490,7 +499,9 @@ export default {
                     })
                     .then(res => {
                         this.alldirverinfo = res.data.doc;
-                        this.pageCount = Math.ceil(res.data.count / this.pageSize);
+                        this.pageCount = Math.ceil(
+                            res.data.count / this.pageSize
+                        );
                     })
                     .catch(err => {
                         console.log(err);
@@ -499,7 +510,8 @@ export default {
         },
 
         confirmedit() {
-            if (!this.dirvername ||
+            if (
+                !this.dirvername ||
                 !this.dirverid ||
                 !this.dirverusername ||
                 !this.dirverphone ||
@@ -548,13 +560,13 @@ export default {
                         payloadImg.append("_id", this._id);
                         payloadImg.append("image", this.updateImage);
                         axios({
-                                method: "post",
-                                url: config.server + "/dirver/edit/img",
-                                data: payloadImg,
-                                headers: {
-                                    "Content-Type": "multipart/form-data"
-                                }
-                            })
+                            method: "post",
+                            url: config.server + "/dirver/edit/img",
+                            data: payloadImg,
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        })
                             .then(response => {
                                 // console.log(response)
                             })
@@ -572,13 +584,13 @@ export default {
                 payload.append("dirvernote", this.dirvernote);
 
                 axios({
-                        method: "post",
-                        url: config.server + "/dirver/edit",
-                        data: payload,
-                        headers: {
-                            "Content-Type": "multipart/form-data"
-                        }
-                    })
+                    method: "post",
+                    url: config.server + "/dirver/edit",
+                    data: payload,
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                })
                     .then(response => {
                         if (response.data.code == 1) {
                             this.error = true;
@@ -620,7 +632,8 @@ export default {
                 });
         },
         adddirver() {
-            if (!this.dirvername ||
+            if (
+                !this.dirvername ||
                 !this.dirverid ||
                 !this.dirverusername ||
                 !this.dirverpsw ||
@@ -683,13 +696,13 @@ export default {
                         payload.append("dirverpsw", this.dirverpsw);
                         payload.append("dirvernote", this.dirvernote);
                         axios({
-                                method: "post",
-                                url: config.server + "/dirver",
-                                data: payload,
-                                headers: {
-                                    "Content-Type": "multipart/form-data"
-                                }
-                            })
+                            method: "post",
+                            url: config.server + "/dirver",
+                            data: payload,
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        })
                             .then(response => {
                                 if (response.data.code == 1) {
                                     this.error = true;
@@ -724,13 +737,13 @@ export default {
                     payload.append("dirverpsw", this.dirverpsw);
                     payload.append("dirvernote", this.dirvernote);
                     axios({
-                            method: "post",
-                            url: config.server + "/dirver",
-                            data: payload,
-                            headers: {
-                                "Content-Type": "multipart/form-data"
-                            }
-                        })
+                        method: "post",
+                        url: config.server + "/dirver",
+                        data: payload,
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+                    })
                         .then(response => {
                             if (response.data.code == 1) {
                                 this.error = true;

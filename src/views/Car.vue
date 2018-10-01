@@ -1,308 +1,312 @@
 <template>
-<div id="car">
-    <div class="topbutton">
-        <div class="topbutton-left">
-            <input type="text" v-model="selectedCar" @keyup.enter="search" placeholder="搜索车牌信息">
-        </div>
-        <div class="topbutton-right">
-            <md-button class="md-raised md-primary" @click="newCar" style="font-size:20px;width:100px;height:40px;">+ 添加</md-button>
-        </div>
-    </div>
-    <div class="centertable">
-        <md-card style="background-color: #eff3f5">
-            <md-card-content>
-                <div class="tabletitle">
-                    <div class="tabletitle-item">
-                        <span>车牌</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>车型</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>包含尾门</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>包含冷藏</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>备注</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>操作</span>
-                    </div>
-                </div>
-            </md-card-content>
-        </md-card>
-
-        <md-card md-with-hover v-for="(item,index) in allcarinfo" :key="index" style="background-color: #eff3f5;">
-            <md-card-content>
-                <div class="tablebody">
-                    <div class="tabletitle-item">
-                        <span>{{item.carid}}</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>{{item.cartype}}</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>{{item.tailgate}}</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>{{item.coolstore}}</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <span>{{item.carnote}}</span>
-                    </div>
-                    <div class="tabletitle-item">
-                        <img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)" style="width:20px;margin:0 10px">
-                        <img src="../..//public/img/icons/dele.png" alt="delete" @click="removebutton(item)" style="width:30px;margin:0 10px">
-                    </div>
-                </div>
-            </md-card-content>
-        </md-card>
-        <!-- 客户页码 -->
-        <div class="page-bar">
-            <div class="page-bar-body" v-if="pageCount!=1">
-                <ul style="width:410px">
-                    <li @click="pageButton('A')">
-                        <span>上一页</span>
-                    </li>
-                    <li v-for="(item,index) in pages" :key="index" @click="pageButton(item)" :class="{'active':pageNow == item}">
-                        <span>{{item}}</span>
-                    </li>
-                    <li @click="pageButton('B')">
-                        <span>下一页</span>
-                    </li>
-                    <li>
-                        <span>共<i>{{pageCount}}</i>页</span>
-                    </li>
-                </ul>
+    <div id="car">
+        <div class="topbutton">
+            <div class="topbutton-left">
+                <input type="text" v-model="selectedCar" @keyup.enter="search" placeholder="搜索车牌信息">
+            </div>
+            <div class="topbutton-right">
+                <md-button class="md-raised md-primary" @click="newCar" style="font-size:20px;width:100px;height:40px;">+ 添加</md-button>
             </div>
         </div>
-    </div>
-    <!-- New car dialog start -->
-    <md-dialog :md-active.sync="newCarDialog" class="editdialog">
-        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
-            <span style="color:#fff">车辆管理</span>
-        </md-dialog-title>
-
-        <div style="overflow-x: hidden;overflow-y:auto">
-            
-            <div class="dialog-body">
-                <div class="dialog-body-item" style="padding-top:24px">
-                    <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
-                    <div class="photoarea" @click="uploadFile" v-if="!carImage">
-                        <md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon>
-                        <img :src="updateImagePreview" alt="newimg" v-else>
+        <div class="centertable">
+            <md-card style="background-color: #eff3f5">
+                <md-card-content>
+                    <div class="tabletitle">
+                        <div class="tabletitle-item">
+                            <span>车牌</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>车型</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>包含尾门</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>包含冷藏</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>备注</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>操作</span>
+                        </div>
                     </div>
-                    <div class="photoarea" @click="uploadFile" v-else>
-                        <img :src="carImage | imgurl" alt="newimg">
-                    </div>
+                </md-card-content>
+            </md-card>
 
+            <md-card md-with-hover v-for="(item,index) in allcarinfo" :key="index" style="background-color: #eff3f5;">
+                <md-card-content>
+                    <div class="tablebody">
+                        <div class="tabletitle-item">
+                            <span>{{item.carid}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.cartype}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.tailgate}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.coolstore}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <span>{{item.carnote}}</span>
+                        </div>
+                        <div class="tabletitle-item">
+                            <img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)" style="width:20px;margin:0 10px">
+                            <img src="../..//public/img/icons/dele.png" alt="delete" @click="removebutton(item)" style="width:30px;margin:0 10px">
+                        </div>
+                    </div>
+                </md-card-content>
+            </md-card>
+            <!-- 客户页码 -->
+            <div class="page-bar">
+                <div class="page-bar-body" v-if="pageCount!=1">
+                    <ul style="width:410px">
+                        <li @click="pageButton('A')">
+                            <span>上一页</span>
+                        </li>
+                        <li v-for="(item,index) in pages" :key="index" @click="pageButton(item)" :class="{'active':pageNow == item}">
+                            <span>{{item}}</span>
+                        </li>
+                        <li @click="pageButton('B')">
+                            <span>下一页</span>
+                        </li>
+                        <li>
+                            <span>共
+                                <i>{{pageCount}}</i>页</span>
+                        </li>
+                    </ul>
                 </div>
-                <div class="dialog-body-item">
-                    <md-field style="margin:0 auto" :class="idclass">
-                        <label style="font-size:20px">车牌号码</label>
-                        <md-input v-model="carid" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                        <span class="md-error" style="font-size:15px;margin: -2px auto">车辆标识信息，必填项目</span>
-                    </md-field>
+            </div>
+        </div>
+        <!-- New car dialog start -->
+        <md-dialog :md-active.sync="newCarDialog" class="editdialog">
+            <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:12px">
+                <span style="color:#fff">车辆管理</span>
+            </md-dialog-title>
+            <md-dialog-content>
+                <div style="border: 3px dashed #eee">
 
-                    <!-- 下拉框 -->
-                    <div class="container">
-                        <div class="custom-selector">
-                            <div class="selector-header" style="position:relative" @click="callCarType">
-                                <div style="text-align:left;font-size:20px;color:rgba(0,0,0,0.54);position:absolute;padding-top:24px" v-if="!cartype">车型</div>
-                                <div style="border-bottom: 1px solid;padding:37px 0;text-align:left;font-size:20px;color:rgba(0,0,0,0.54);">{{cartype}}</div>
-                                <div style="position:absolute;top:32px;right:0">
-                                    <img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow" id="selector-arrow-type">
+                    <div class="dialog-body">
+                        <div class="dialog-body-item" style="padding-top:24px">
+                            <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
+                            <div class="photoarea" @click="uploadFile" v-if="!carImage">
+                                <md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon>
+                                <img :src="updateImagePreview" alt="newimg" v-else>
+                            </div>
+                            <div class="photoarea" @click="uploadFile" v-else>
+                                <img :src="carImage | imgurl" alt="newimg">
+                            </div>
+
+                        </div>
+                        <div class="dialog-body-item">
+                            <md-field style="margin:0 auto" :class="idclass">
+                                <label style="font-size:20px">车牌号码</label>
+                                <md-input v-model="carid" style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+                                <span class="md-error" style="font-size:15px;margin: -2px auto">车辆标识信息，必填项目</span>
+                            </md-field>
+
+                            <!-- 下拉框 -->
+                            <div class="container">
+                                <div class="custom-selector">
+                                    <div class="selector-header" style="position:relative" @click="callCarType">
+                                        <div style="text-align:left;font-size:20px;color:rgba(0,0,0,0.54);position:absolute;padding-top:24px" v-if="!cartype">车型</div>
+                                        <div style="border-bottom: 1px solid;padding:37px 0;text-align:left;font-size:18px;color:rgba(0,0,0,0.54);">{{cartype}}</div>
+                                        <div style="position:absolute;top:32px;right:0">
+                                            <img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow" id="selector-arrow-type">
+                                        </div>
+                                    </div>
+                                    <div class="selector-body" id="selector-body-type">
+                                        <div class="box" id="selector-box-type" v-for="(item,index) in allCarType" :key="index" @click="choseTypeItem(item)">
+                                            <span style="font-size:20px">{{item}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="selector-body" id="selector-body-type">
-                                <div class="box" id="selector-box-type" v-for="(item,index) in allCarType" :key="index" @click="choseTypeItem(item)">
-                                    <span style="font-size:20px">{{item}}</span>
+                            <!-- 下拉框 -->
+                            <div class="dialog-body-item">
+                                <div style="margin:16px auto">
+                                    <span style="font-size:20px;color:rgba(0,0,0,0.54)">有无尾门</span>
+                                </div>
+                                <div class="dialog-body-radio">
+                                    <div class="dialog-body-radio-item">
+                                        <div>
+                                            <input type="radio" name="cartailgate" v-model="tailgate" value="yes">
+                                        </div>
+                                        <div style="font-size:15px;color:#000;padding-top:3px">
+                                            <span>有</span>
+                                        </div>
+
+                                    </div>
+                                    <div class="dialog-body-radio-item">
+                                        <div>
+                                            <input type="radio" name="cartailgate" v-model="tailgate" value="no">
+                                        </div>
+                                        <div style="font-size:15px;color:#000;padding-top:3px">
+                                            <span>无</span>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
-                    <!-- 下拉框 -->
-                    <md-field style="margin:20px auto">
-                        <label style="font-size:20px">备注</label>
-                        <md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:20px;height:55px"></md-input>
-                    </md-field>
+                    <div class="dialog-body">
+                        <div class="dialog-body-item">
+                            <md-field style="margin:20px auto">
+                                <label style="font-size:20px">备注</label>
+                                <md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:18px;height:55px;text-align:center"></md-input>
+                            </md-field>
+                        </div>
 
+                        <div class="dialog-body-item">
+                            <div style="margin:8px auto">
+                                <span style="font-size:20px;color:rgba(0,0,0,0.54)">有无冷藏</span>
+                            </div>
+                            <div class="dialog-body-radio">
+                                <div class="dialog-body-radio-item">
+                                    <div>
+                                        <input type="radio" name="carstore" v-model="coolstore" value="yes">
+                                    </div>
+                                    <div style="font-size:15px;color:#000;padding-top:3px">
+                                        <span>有</span>
+                                    </div>
+
+                                </div>
+                                <div class="dialog-body-radio-item">
+                                    <div>
+                                        <input type="radio" name="carstore" v-model="coolstore" value="no">
+                                    </div>
+                                    <div style="font-size:15px;color:#000;padding-top:3px">
+                                        <span>无</span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
                 </div>
+            </md-dialog-content>
+            <div style="margin:8px auto 10px auto">
+                <md-button class="md-raised md-primary" @click="closeDialog" style="font-size:20px;width:100px;height:40px">取消</md-button>
+                <md-button class="md-raised md-primary" v-if="addmode" @click="addcar" style="font-size:20px;width:100px;height:40px">保存</md-button>
+                <md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:20px;width:100px;height:40px">修改</md-button>
             </div>
-            <div class="dialog-body">
-                <div class="dialog-body-item">
-                    <div style="margin:16px auto">
-                        <span style="font-size:20px;color:rgba(0,0,0,0.54)">尾门(tailgate)</span>
-                    </div>
-                    <div class="dialog-body-radio">
-                        <div class="dialog-body-radio-item">
-                            <div>
-                                <input type="radio" name="cartailgate" v-model="tailgate" value="yes">
-                            </div>
-                            <div style="font-size:15px;color:#000;padding-top:3px">
-                                <span>YES</span>
-                            </div>
+        </md-dialog>
+        <!-- New car dialog start -->
 
+        <!-- remove dialog start-->
+        <md-dialog :md-active.sync="removeDialog" class="editdialog">
+            <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+                <span style="color:#fff">删除车辆</span>
+            </md-dialog-title>
+            <div style="margin:0 20px 20px 20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow-x:hidden;overflow-y:auto">
+                <div class="deldialog">
+                    <div class="deldialog-left">
+                        <div class="photoarea">
+                            <img src="../../public/img/ebuyLogo.png" alt="ebuylogo" style="object-fit:unset;padding:50px 0" v-if="!carImage">
+                            <img :src="carImage | imgurl" alt="newimg" v-else>
                         </div>
-                        <div class="dialog-body-radio-item">
-                            <div>
-                                <input type="radio" name="cartailgate" v-model="tailgate" value="no">
+                    </div>
+                    <div class="deldialog-right">
+                        <div class="rmDialog-center">
+                            <div class="rmDialog-center-left">
+                                <span>车牌号码:</span>
                             </div>
-                            <div style="font-size:15px;color:#000;padding-top:3px">
-                                <span>NO</span>
+                            <div class="rmDialog-center-right">
+                                <span>{{carid}}</span>
                             </div>
-
                         </div>
-                    </div>
-                </div>
-
-                <div class="dialog-body-item">
-                    <div style="margin:16px auto">
-                        <span style="font-size:20px;color:rgba(0,0,0,0.54)">冷藏</span>
-                    </div>
-                    <div class="dialog-body-radio">
-                        <div class="dialog-body-radio-item">
-                            <div>
-                                <input type="radio" name="carstore" v-model="coolstore" value="yes">
+                        <div class="rmDialog-center">
+                            <div class="rmDialog-center-left">
+                                <span>车辆类型:</span>
                             </div>
-                            <div style="font-size:15px;color:#000;padding-top:3px">
-                                <span>YES</span>
+                            <div class="rmDialog-center-right">
+                                <span>{{cartype}}</span>
                             </div>
-
                         </div>
-                        <div class="dialog-body-radio-item">
-                            <div>
-                                <input type="radio" name="carstore" v-model="coolstore" value="no">
+                        <div class="rmDialog-center">
+                            <div class="rmDialog-center-left">
+                                <span>有无尾门:</span>
                             </div>
-                            <div style="font-size:15px;color:#000;padding-top:3px">
-                                <span>NO</span>
+                            <div class="rmDialog-center-right">
+                                <span>{{tailgate}}</span>
                             </div>
-
                         </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-        <div style="margin:36px auto 10px auto">
-            <md-button class="md-raised md-primary" @click="closeDialog" style="font-size:20px;width:100px;height:40px">取消</md-button>
-            <md-button class="md-raised md-primary" v-if="addmode" @click="addcar" style="font-size:20px;width:100px;height:40px">保存</md-button>
-            <md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:20px;width:100px;height:40px">修改</md-button>
-        </div>
-    </md-dialog>
-    <!-- New car dialog start -->
-
-    <!-- remove dialog start-->
-    <md-dialog :md-active.sync="removeDialog" class="editdialog">
-        <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
-            <span style="color:#fff">删除车辆</span>
-        </md-dialog-title>
-        <div style="margin:0 20px 20px 20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow-x:hidden;overflow-y:auto">
-            <div class="deldialog">
-                <div class="deldialog-left">
-                    <div class="photoarea">
-                        <img src="../../public/img/ebuyLogo.png" alt="ebuylogo" style="object-fit:unset;padding:50px 0" v-if="!carImage">
-                        <img :src="carImage | imgurl" alt="newimg" v-else>
-                    </div>
-                </div>
-                <div class="deldialog-right">
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>车牌号码:</span>
+                        <div class="rmDialog-center">
+                            <div class="rmDialog-center-left">
+                                <span>出车次数:</span>
+                            </div>
+                            <div class="rmDialog-center-right">
+                                <span>{{cartimes}}</span>
+                            </div>
                         </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{carid}}</span>
+                        <div class="rmDialog-center">
+                            <div class="rmDialog-center-left">
+                                <span>车辆备注:</span>
+                            </div>
+                            <div class="rmDialog-center-right">
+                                <span>{{carnote}}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>车辆类型:</span>
-                        </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{cartype}}</span>
-                        </div>
-                    </div>
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>有无尾门:</span>
-                        </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{tailgate}}</span>
-                        </div>
-                    </div>
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>出车次数:</span>
-                        </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{cartimes}}</span>
-                        </div>
-                    </div>
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>车辆备注:</span>
-                        </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{carnote}}</span>
-                        </div>
-                    </div>
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>加入时间:</span>
-                        </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{cardate | datefilter}}</span>
+                        <div class="rmDialog-center">
+                            <div class="rmDialog-center-left">
+                                <span>加入时间:</span>
+                            </div>
+                            <div class="rmDialog-center-right">
+                                <span>{{cardate | datefilter}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
-            <md-dialog-actions style="margin:5px auto">
-                <md-button class="md-raised md-primary" @click="removeDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
-                <md-button class="md-raised md-accent" @click="confirmremove" style="font-size:20px;width:100px;height:40px">删除</md-button>
-            </md-dialog-actions>
-        </div>
+            <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
+                <md-dialog-actions style="margin:5px auto">
+                    <md-button class="md-raised md-primary" @click="removeDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
+                    <md-button class="md-raised md-accent" @click="confirmremove" style="font-size:20px;width:100px;height:40px">删除</md-button>
+                </md-dialog-actions>
+            </div>
 
-    </md-dialog>
-    <!-- remove dialog end-->
+        </md-dialog>
+        <!-- remove dialog end-->
 
-    <!-- error start -->
-    <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" style="font-size:25px;z-index:999" />
-    <!-- error end -->
+        <!-- error start -->
+        <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" style="font-size:25px;z-index:999" />
+        <!-- error end -->
 
-</div>
+    </div>
 </template>
 
 <script>
-import axios from 'axios'
-import config from "../../public/js/config.js"
-import lrz from 'lrz'
+import axios from "axios";
+import config from "../../public/js/config.js";
+import lrz from "lrz";
 
 export default {
-    name: 'Car',
+    name: "Car",
     data() {
         return {
             addmode: true,
             successdmsg: false,
             error: false,
-            errormsg: '发生未知错误请联系更牛逼的人',
+            errormsg: "发生未知错误请联系更牛逼的人",
             error2: false,
             error3: false,
-            carid: '',
-            cartype: '',
-            cartimes: '',
-            carnote: '',
-            cardate: '',
-            _id: '',
+            carid: "",
+            cartype: "",
+            cartimes: "",
+            carnote: "",
+            cardate: "",
+            _id: "",
             removeDialog: false,
             newCarDialog: false,
-            selectedCar: '',
-            tailgate: 'no',
-            coolstore: 'no',
+            selectedCar: "",
+            tailgate: "no",
+            coolstore: "no",
             searchCar: [],
             allcarinfo: [],
             searching: false,
@@ -313,439 +317,454 @@ export default {
             pageSize: 10, //每页显示条数
             showItem: 5, // 最少显示5个页码
             findMode: false,
-            updateImagePreview: '',
-            updateImage: '',
-            carImage: '',
+            updateImagePreview: "",
+            updateImage: "",
+            carImage: "",
             callFlag: false,
-            allCarType: ['Van', '10ft Lorry', '14ft Lorry', '24ft Lorry'],
-            selectorCarType: '车型'
-        }
+            allCarType: ["Van", "10ft Lorry", "14ft Lorry", "24ft Lorry"],
+            selectorCarType: "车型"
+        };
     },
 
     mounted() {
-
-        this.getallcar()
-
+        this.getallcar();
     },
 
     computed: {
-
-        pages: function () {
-            let pag = []
-            if (this.pageNow < this.showItem) { //如果当前的激活的项 小于要显示的条数
+        pages: function() {
+            let pag = [];
+            if (this.pageNow < this.showItem) {
+                //如果当前的激活的项 小于要显示的条数
                 //总页数和要显示的条数那个大就显示多少条
                 let i = Math.min(this.showItem, this.pageCount);
                 while (i) {
                     pag.unshift(i--);
                 }
-            } else { //当前页数大于显示页数了
+            } else {
+                //当前页数大于显示页数了
                 let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
                     i = this.showItem;
-                if (middle > (this.pageCount - this.showItem)) {
-                    middle = (this.pageCount - this.showItem) + 1
+                if (middle > this.pageCount - this.showItem) {
+                    middle = this.pageCount - this.showItem + 1;
                 }
                 while (i--) {
                     pag.push(middle++);
                 }
             }
-            return pag
+            return pag;
         },
 
         idclass() {
             return {
-                'md-invalid': this.idErr
-            }
+                "md-invalid": this.idErr
+            };
         },
 
         typeclass() {
             return {
-                'md-invalid': this.typeErr
-            }
-        },
-
+                "md-invalid": this.typeErr
+            };
+        }
     },
     methods: {
         // 下拉框部分 start
         callCarType() {
             if (this.callFlag) {
-                this.bodyHideCarType()
+                this.bodyHideCarType();
             } else {
-                this.bodyShowCarType()
+                this.bodyShowCarType();
             }
         },
 
         bodyHideCarType() {
-            let body = document.querySelector('#selector-body-type')
-            body.style.height = '0px'
-            body.style.transition = '0.25s'
-            let arrow = document.querySelector('#selector-arrow-type')
-            arrow.style.transform = 'rotate(-90deg)'
-            arrow.style.transition = '0.25s'
-            this.callFlag = false
+            let body = document.querySelector("#selector-body-type");
+            body.style.height = "0px";
+            body.style.transition = "0.25s";
+            let arrow = document.querySelector("#selector-arrow-type");
+            arrow.style.transform = "rotate(-90deg)";
+            arrow.style.transition = "0.25s";
+            this.callFlag = false;
         },
 
         bodyShowCarType() {
-            let body = document.querySelector('#selector-body-type')
-            let boxes = document.querySelectorAll('#selector-box-type')
-            let arrow = document.querySelector('#selector-arrow-type')
-            arrow.style.transform = 'rotate(0deg)'
-            body.style.height = '180px'
-            arrow.style.transition = '0.25s'
-            let height = 4
+            let body = document.querySelector("#selector-body-type");
+            let boxes = document.querySelectorAll("#selector-box-type");
+            let arrow = document.querySelector("#selector-arrow-type");
+            arrow.style.transform = "rotate(0deg)";
+            body.style.height = "180px";
+            arrow.style.transition = "0.25s";
+            let height = 4;
             boxes.forEach(box => {
-                height += box.clientHeight
+                height += box.clientHeight;
             });
-            body.style.transition = '0.25s'
-            body.style.display = 'block'
-            this.callFlag = true
+            body.style.transition = "0.25s";
+            body.style.display = "block";
+            this.callFlag = true;
         },
 
         choseTypeItem(item) {
-            this.selectorCarType = item
-            this.cartype = item
-            this.bodyHideCarType()
+            this.selectorCarType = item;
+            this.cartype = item;
+            this.bodyHideCarType();
         },
         // 下拉框部分 end
         uploadFile() {
-            document.getElementById('upload_file').click()
+            document.getElementById("upload_file").click();
         },
 
         fileChange(el) {
-            if (typeof FileReader === 'undefined') {
-                return alert('浏览器不支持上传图片')
+            if (typeof FileReader === "undefined") {
+                return alert("浏览器不支持上传图片");
             }
-            console.log('###')
+            console.log("###");
             if (!el.target.files[0].size) return; //判断是否有文件数量
-            this.updateImagePreview = window.URL.createObjectURL(el.target.files[0])
-            this.updateImage = el.target.files[0]
-            this.carImage = ''
-            el.target.value = ''
+            this.updateImagePreview = window.URL.createObjectURL(
+                el.target.files[0]
+            );
+            this.updateImage = el.target.files[0];
+            this.carImage = "";
+            el.target.value = "";
         },
 
         closeDialog() {
-            this.callFlag = false
-            this.newCarDialog = false
-            this.updateImagePreview = null
+            this.callFlag = false;
+            this.newCarDialog = false;
+            this.updateImagePreview = null;
         },
 
         newCar() {
-            this.addmode = true
-            this.carid = ''
-            this.cartype = ''
-            this.carnote = ''
-            this.carImage = ''
-            this.newCarDialog = true
-            this.tailgate= 'no'
-            this.coolstore= 'no'
+            this.addmode = true;
+            this.carid = "";
+            this.cartype = "";
+            this.carnote = "";
+            this.carImage = "";
+            this.newCarDialog = true;
+            this.tailgate = "no";
+            this.coolstore = "no";
         },
         search(item) {
-            if (this.selectedCar == '') {
-                this.findMode = false
-                this.getallcar()
+            if (this.selectedCar == "") {
+                this.findMode = false;
+                this.getallcar();
             } else {
-                this.findMode = true
-                axios.post(config.server + '/car/find', {
+                this.findMode = true;
+                axios
+                    .post(config.server + "/car/find", {
                         word: this.selectedCar,
                         pageSize: this.pageSize,
                         pageNow: this.pageNow
                     })
                     .then(res => {
-                        this.allcarinfo = res.data.doc
-                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                        this.allcarinfo = res.data.doc;
+                        this.pageCount = Math.ceil(
+                            res.data.count / this.pageSize
+                        );
                         if (res.data.code === 1) {
-                            this.error = true
-                            this.errormsg = res.data.msg
-                            this.selectedCar = ''
-                            this.getallcar()
+                            this.error = true;
+                            this.errormsg = res.data.msg;
+                            this.selectedCar = "";
+                            this.getallcar();
                             setTimeout(() => {
-                                this.error = false
-                            }, 3000)
+                                this.error = false;
+                            }, 3000);
                         }
                     })
                     .catch(err => {
-                        console.log(err)
-                    })
+                        console.log(err);
+                    });
             }
         },
         editbutton(item) {
-            this.addmode = false
-            this._id = item._id
-            this.carid = item.carid
-            this.cartype = item.cartype
-            this.tailgate = item.tailgate
-            this.coolstore = item.coolstore
-            this.carnote = item.carnote
-            this.carImage = item.image
-            this.newCarDialog = true
+            this.addmode = false;
+            this._id = item._id;
+            this.carid = item.carid;
+            this.cartype = item.cartype;
+            this.tailgate = item.tailgate;
+            this.coolstore = item.coolstore;
+            this.carnote = item.carnote;
+            this.carImage = item.image;
+            this.newCarDialog = true;
         },
         removebutton(item) {
-            this._id = item._id
-            this.carid = item.carid
-            this.cartype = item.cartype
-            this.tailgate = item.tailgate
-            this.cartimes = item.cartimes
-            this.carnote = item.carnote
-            this.carImage = item.image
-            this.cardate = item.cardate
-            this.removeDialog = true
-
+            this._id = item._id;
+            this.carid = item.carid;
+            this.cartype = item.cartype;
+            this.tailgate = item.tailgate;
+            this.cartimes = item.cartimes;
+            this.carnote = item.carnote;
+            this.carImage = item.image;
+            this.cardate = item.cardate;
+            this.removeDialog = true;
         },
 
         pageButton(item) {
-            if (item === 'A') {
+            if (item === "A") {
                 if (this.pageNow > 1) {
-                    this.pageNow = this.pageNow - 1
+                    this.pageNow = this.pageNow - 1;
                 }
-            } else if (item === 'B') {
+            } else if (item === "B") {
                 if (this.pageNow < this.pageCount) {
-                    this.pageNow = this.pageNow + 1
+                    this.pageNow = this.pageNow + 1;
                 }
             } else {
-                this.pageNow = item
+                this.pageNow = item;
             }
             if (this.findmode === false) {
-                axios.post(config.server + '/car/get', {
+                axios
+                    .post(config.server + "/car/get", {
                         pageSize: this.pageSize,
                         pageNow: this.pageNow
                     })
-                    .then((res) => {
-                        this.allcarinfo = res.data.doc
-                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
-                    }).catch((err) => {
-                        console.log(err)
+                    .then(res => {
+                        this.allcarinfo = res.data.doc;
+                        this.pageCount = Math.ceil(
+                            res.data.count / this.pageSize
+                        );
                     })
+                    .catch(err => {
+                        console.log(err);
+                    });
             } else {
-                axios.post(config.server + '/car/find', {
+                axios
+                    .post(config.server + "/car/find", {
                         word: this.selectedCar,
                         pageSize: this.pageSize,
                         pageNow: this.pageNow
                     })
                     .then(res => {
-                        this.allcarinfo = res.data.doc
-                        this.pageCount = Math.ceil(res.data.count / this.pageSize)
+                        this.allcarinfo = res.data.doc;
+                        this.pageCount = Math.ceil(
+                            res.data.count / this.pageSize
+                        );
                     })
                     .catch(err => {
-                        console.log(err)
-                    })
+                        console.log(err);
+                    });
             }
         },
 
         confirmedit() {
             if (this.updateImagePreview) {
-                let payload = new FormData()
-                let maxSize = 200 * 1024 //200KB
+                let payload = new FormData();
+                let maxSize = 200 * 1024; //200KB
                 lrz(this.updateImage, {
-                        quality: 0.5
-                    })
-                    .then(res => {
-                        if (this.updateImage.size > maxSize) {
-                            this.updateImage = res.file
+                    quality: 0.5
+                }).then(res => {
+                    if (this.updateImage.size > maxSize) {
+                        this.updateImage = res.file;
+                    }
+                    payload.append("image", this.updateImage);
+                    payload.append("_id", this._id);
+                    axios({
+                        method: "post",
+                        url: config.server + "/car/update/img",
+                        data: payload,
+                        headers: {
+                            "Content-Type": "multipart/form-data"
                         }
-                        payload.append("image", this.updateImage)
-                        payload.append("_id", this._id)
-                        axios({
-                                method: 'post',
-                                url: config.server + '/car/update/img',
-                                data: payload,
-                                headers: {
-                                    'Content-Type': 'multipart/form-data'
-                                }
-                            })
-                            .then(doc => {
-                                // console.log(doc)
-                            })
-                            .catch(err => {
-                                console.log(err)
-                            })
                     })
+                        .then(doc => {
+                            // console.log(doc)
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                });
             }
-            axios.post(config.server + '/car/update', {
+            axios
+                .post(config.server + "/car/update", {
                     _id: this._id,
                     carid: this.carid,
                     cartype: this.cartype,
                     tailgate: this.tailgate,
                     carnote: this.carnote
                 })
-                .then((res) => {
+                .then(res => {
                     if (res.data.code == 0) {
-                        this.error = true
-                        this.errormsg = res.data.msg
-                        this.getallcar()
-                        this.closeDialog()
+                        this.error = true;
+                        this.errormsg = res.data.msg;
+                        this.getallcar();
+                        this.closeDialog();
                         setTimeout(() => {
-                            this.error = false
-                        }, 3000)
+                            this.error = false;
+                        }, 3000);
                     } else {
-                        this.error = true
-                        this.errormsg = res.data.msg
+                        this.error = true;
+                        this.errormsg = res.data.msg;
                         setTimeout(() => {
-                            this.error = false
-                        }, 3000)
+                            this.error = false;
+                        }, 3000);
                     }
                 })
-                .catch((err) => {
-                    console.log(err)
-                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
         confirmremove() {
-            axios.post(config.server + '/car/remove', {
+            axios
+                .post(config.server + "/car/remove", {
                     _id: this._id
                 })
-                .then((res) => {
+                .then(res => {
                     if (res.data.code == 0) {
-                        this.error = true
-                        this.errormsg = res.data.msg
-                        this.removeDialog = false
-                        this.getallcar()
+                        this.error = true;
+                        this.errormsg = res.data.msg;
+                        this.removeDialog = false;
+                        this.getallcar();
                         setTimeout(() => {
-                            this.error = false
-                        }, 3000)
+                            this.error = false;
+                        }, 3000);
                     } else {
-                        this.error = true
-                        this.errormsg = res.data.msg
+                        this.error = true;
+                        this.errormsg = res.data.msg;
                         setTimeout(() => {
-                            this.error = false
-                        }, 3000)
+                            this.error = false;
+                        }, 3000);
                     }
                 })
-                .catch((err) => {
-                    console.log(err)
-                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
 
         getallcar() {
-            axios.post(config.server + '/car/get', {
+            axios
+                .post(config.server + "/car/get", {
                     pageSize: this.pageSize,
                     pageNow: this.pageNow
                 })
-                .then((res) => {
-                    this.allcarinfo = res.data.doc
-                    this.pageCount = Math.ceil(res.data.count / this.pageSize)
-                }).catch((err) => {
-                    console.log(err)
+                .then(res => {
+                    this.allcarinfo = res.data.doc;
+                    this.pageCount = Math.ceil(res.data.count / this.pageSize);
                 })
+                .catch(err => {
+                    console.log(err);
+                });
         },
 
         addcar() {
             if (!this.carid || !this.cartype) {
                 if (!this.carid) {
-                    this.idErr = true
+                    this.idErr = true;
                 } else {
-                    this.idErr = false
+                    this.idErr = false;
                 }
                 if (!this.cartype) {
-                    this.typeErr = true
+                    this.typeErr = true;
                 } else {
-                    this.typeErr = false
+                    this.typeErr = false;
                 }
             } else {
-                let payload = new FormData()
-                let maxSize = 200 * 1024 //200KB
+                let payload = new FormData();
+                let maxSize = 200 * 1024; //200KB
 
-                if(this.updateImage){
+                if (this.updateImage) {
                     lrz(this.updateImage, {
                         quality: 0.5
-                    })
-                    .then(res => {
+                    }).then(res => {
                         if (this.updateImage.size > maxSize) {
-                            this.updateImage = res.file
+                            this.updateImage = res.file;
                         }
-                        payload.append("image", this.updateImage)
-                        payload.append("carid", this.carid)
-                        payload.append("cartype", this.cartype)
-                        payload.append("tailgate", this.tailgate)
-                        payload.append("coolstore", this.coolstore)
-                        payload.append("carnote", this.carnote)
+                        payload.append("image", this.updateImage);
+                        payload.append("carid", this.carid);
+                        payload.append("cartype", this.cartype);
+                        payload.append("tailgate", this.tailgate);
+                        payload.append("coolstore", this.coolstore);
+                        payload.append("carnote", this.carnote);
                         axios({
-                                method: 'post',
-                                url: config.server + '/car',
-                                data: payload,
-                                headers: {
-                                    'Content-Type': 'multipart/form-data'
-                                }
-                            })
+                            method: "post",
+                            url: config.server + "/car",
+                            data: payload,
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        })
                             .then(response => {
-                                if (response.data.code == 1 || response.data.code == 2) {
-                                    this.error = true
-                                    this.errormsg = response.data.msg
+                                if (
+                                    response.data.code == 1 ||
+                                    response.data.code == 2
+                                ) {
+                                    this.error = true;
+                                    this.errormsg = response.data.msg;
                                     setTimeout(() => {
-                                        this.error = false
-                                    }, 3000)
+                                        this.error = false;
+                                    }, 3000);
                                 } else {
-                                    this.getallcar()
-                                    this.error = true
-                                    this.errormsg = response.data.msg
-                                    this.closeDialog()
-                                    this.carid = ''
-                                    this.cartype = ''
-                                    this.tailgate = ''
-                                    this.carnote = ''
-                                    this.selectorCarType = '车型'
+                                    this.getallcar();
+                                    this.error = true;
+                                    this.errormsg = response.data.msg;
+                                    this.closeDialog();
+                                    this.carid = "";
+                                    this.cartype = "";
+                                    this.tailgate = "";
+                                    this.carnote = "";
+                                    this.selectorCarType = "车型";
                                     setTimeout(() => {
-                                        this.error = false
-                                    }, 3000)
+                                        this.error = false;
+                                    }, 3000);
                                 }
                             })
-                            .catch((error) => {
+                            .catch(error => {
                                 console.log(error);
-                                error = true
-                                errormsg = error
+                                error = true;
+                                errormsg = error;
                                 setTimeout(() => {
-                                    this.error = false
-                                }, 3000)
+                                    this.error = false;
+                                }, 3000);
                             });
+                    });
+                } else {
+                    payload.append("carid", this.carid);
+                    payload.append("cartype", this.cartype);
+                    payload.append("tailgate", this.tailgate);
+                    payload.append("coolstore", this.coolstore);
+                    payload.append("carnote", this.carnote);
+                    axios({
+                        method: "post",
+                        url: config.server + "/car",
+                        data: payload,
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
                     })
-                }else{
-                        payload.append("carid", this.carid)
-                        payload.append("cartype", this.cartype)
-                        payload.append("tailgate", this.tailgate)
-                        payload.append("coolstore", this.coolstore)
-                        payload.append("carnote", this.carnote)
-                        axios({
-                                method: 'post',
-                                url: config.server + '/car',
-                                data: payload,
-                                headers: {
-                                    'Content-Type': 'multipart/form-data'
-                                }
-                            })
-                            .then(response => {
-                                if (response.data.code == 1 || response.data.code == 2) {
-                                    this.error = true
-                                    this.errormsg = response.data.msg
-                                    setTimeout(() => {
-                                        this.error = false
-                                    }, 3000)
-                                } else {
-                                    this.getallcar()
-                                    this.error = true
-                                    this.errormsg = response.data.msg
-                                    this.closeDialog()
-                                    this.carid = ''
-                                    this.cartype = ''
-                                    this.tailgate = ''
-                                    this.carnote = ''
-                                    this.selectorCarType = '车型'
-                                    setTimeout(() => {
-                                        this.error = false
-                                    }, 3000)
-                                }
-                            })
-                            .catch((error) => {
-                                console.log(error);
-                                error = true
-                                errormsg = error
+                        .then(response => {
+                            if (
+                                response.data.code == 1 ||
+                                response.data.code == 2
+                            ) {
+                                this.error = true;
+                                this.errormsg = response.data.msg;
                                 setTimeout(() => {
-                                    this.error = false
-                                }, 3000)
-                            });
-                    
+                                    this.error = false;
+                                }, 3000);
+                            } else {
+                                this.getallcar();
+                                this.error = true;
+                                this.errormsg = response.data.msg;
+                                this.closeDialog();
+                                this.carid = "";
+                                this.cartype = "";
+                                this.tailgate = "";
+                                this.carnote = "";
+                                this.selectorCarType = "车型";
+                                setTimeout(() => {
+                                    this.error = false;
+                                }, 3000);
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            error = true;
+                            errormsg = error;
+                            setTimeout(() => {
+                                this.error = false;
+                            }, 3000);
+                        });
                 }
-                
             }
         }
     }
-}
+};
 </script>
 
 <style scoped>
@@ -760,7 +779,7 @@ export default {
 }
 
 .dialog-title span {
-    font-size: 30px
+    font-size: 30px;
 }
 
 .dialog-body {
@@ -856,7 +875,7 @@ export default {
     flex-flow: row;
     margin: 20px;
     font-size: 20px;
-    width: 100%
+    width: 100%;
 }
 
 .rmDialog-center-left {
@@ -942,7 +961,7 @@ export default {
     overflow: auto;
     position: absolute;
     z-index: 100;
-    background-color: #eee
+    background-color: #eee;
 }
 
 .box {
@@ -950,7 +969,7 @@ export default {
     padding: 7px;
     border-bottom: 1px solid #eee;
     transition: 0.5s;
-    width: 243px
+    width: 243px;
 }
 
 .box:hover {

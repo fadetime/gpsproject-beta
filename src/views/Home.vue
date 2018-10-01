@@ -776,9 +776,9 @@ export default {
         },
         getallclientb() {
             axios
-                .get(config.server + "/clientb")
+                .get(config.server + "/clientb/active")
                 .then(res => {
-                    this.allclientbinfo = res.data;
+                    this.allclientbinfo = res.data.doc;
                     this.allclientbinfo.forEach(element => {
                         if (element.clientbserve == null) {
                             element.clientbserve = {

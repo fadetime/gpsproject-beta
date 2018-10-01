@@ -21,26 +21,26 @@
         </div>
 
         <div class="centertable">
-            <div v-if="!clientpage">
-                <md-card style="background-color: #eff3f5">
-                    <md-card-content>
-                        <div class="tabletitle">
-                            <div class="tabletitle-item">
+            <div v-if="!clientpage" style="width: 1536px;margin:0 auto">
+                <md-card style="background-color: #eff3f5;" >
+                    <md-card-content >
+                        <div class="tabletitle" >
+                            <div class="tabletitle-item" style="width:300px">
                                 <span>名称</span>
                             </div>
-                            <div class="tabletitle-item">
+                            <div class="tabletitle-item" style="width:600px">
                                 <span>送货地址</span>
                             </div>
-                            <div class="tabletitle-item">
+                            <div class="tabletitle-item" style="width:150px">
                                 <span>联系电话</span>
                             </div>
-                            <div class="tabletitle-item">
+                            <div class="tabletitle-item" style="width:150px">
                                 <span>邮编</span>
                             </div>
-                            <div class="tabletitle-item">
+                            <div class="tabletitle-item" style="width:150px">
                                 <span>状态</span>
                             </div>
-                            <div class="tabletitle-item">
+                            <div class="tabletitle-item" style="width:150px">
                                 <span>操作</span>
                             </div>
                         </div>
@@ -50,22 +50,22 @@
                 <md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index" style="background-color: #eff3f5;">
                     <md-card-content>
                         <div class="tablebody">
-                            <div class="tabletitle-item">
+                            <div class="tabletitle-item" style="width:300px">
                                 <span>{{item.clientbname}}</span>
                             </div>
-                            <div class="tabletitle-item">
+                            <div class="tabletitle-item" style="width:600px">
                                 <span>{{item.clientbaddress}}</span>
                             </div>
-                            <div class="tabletitle-item">
+                            <div class="tabletitle-item" style="width:150px">
                                 <span>{{item.clientbphone}}</span>
                             </div>
-                            <div class="tabletitle-item">
+                            <div class="tabletitle-item" style="width:150px">
                                 <span>{{item.clientbpostcode}}</span>
                             </div>
-                            <div class="tabletitle-item">
+                            <div class="tabletitle-item" style="width:150px">
                                 <span>{{item.clientbstatus}}</span>
                             </div>
-                            <div class="tabletitle-item">
+                            <div class="tabletitle-item" style="width:150px">
                                 <img src="../../public/img/icons/edit.png" alt="edit" @click="editClientB(item)" style="width:20px;margin:0 10px">
                                 <img src="../..//public/img/icons/dele.png" alt="delete" @click="removeClientB(item)" style="width:30px;margin:0 10px">
                             </div>
@@ -136,9 +136,12 @@
 
         <!-- page bar start-->
         <!-- 合作商页码 -->
+        <div style="height:80px">
+            <!-- 占位符 -->
+        </div>
         <div class="page-bar" v-if="clientpage">
-            <div class="page-bar-body" v-if="pageCountA!=1">
-                <ul style="width:410px">
+            <div class="page-bar-body"  v-if="pageCountA!=1">
+                <ul  style="width:510px">
                     <li @click="pageButtonA('A')">
                         <span>上一页</span>
                     </li>
@@ -158,7 +161,7 @@
         <!-- 客户页码 -->
         <div class="page-bar" v-else>
             <div class="page-bar-body" v-if="pageCount!=1">
-                <ul style="width:410px">
+                <ul style="width:510px">
                     <li @click="pageButtonB('A')">
                         <span>上一页</span>
                     </li>
@@ -169,8 +172,7 @@
                         <span>下一页</span>
                     </li>
                     <li>
-                        <span>共
-                            <i>{{pageCount}}</i>页</span>
+                        <span>共<i>{{pageCount}}</i>页</span>
                     </li>
                 </ul>
             </div>
@@ -200,19 +202,20 @@
                             <span class="md-error">客户标识信息，必填项目</span>
                         </md-field>
 
+                        <md-field style="margin:20px auto" :class="classser">
+                            <label for="choseArea" style="font-size:18px">所属地区</label>
+                            <md-select v-model="choseArea" name="choseArea" id="choseArea" style="border-bottom: 1px solid #000;font-size:20px;height:40px;padding-top:6px">
+                                <md-option :value="item._id" v-for="(item,index) in allAreaArray" :key="index">{{item.areaName}}</md-option>
+                            </md-select>
+                            <span class="md-error">所属地区</span>
+                        </md-field>
+
                         <md-field style="margin:30px auto" :class="classadd">
                             <label style="font-size:18px">客户地址</label>
                             <md-input v-model="clientbaddress" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
                             <span class="md-error">客户地址标识信息</span>
                         </md-field>
 
-                        <md-field style="margin:20px auto" :class="classser">
-                            <label for="choseArea" style="font-size:18px">所属地区</label>
-                            <md-select v-model="choseArea" name="choseArea" id="choseArea" style="border-bottom: 1px solid #000;font-size:20px;height:40px;padding-top:6px">
-                                <md-option :value="item._id" v-for="(item,index) in allAreaArray" :key="index">{{item.areaName}}</md-option>
-                            </md-select>
-                            <span class="md-error">所属服务商</span>
-                        </md-field>
                     </div>
                 </div>
                 <div class="dialogb-body-item">
@@ -1861,7 +1864,7 @@ export default {
 
 .tabletitle-item {
     margin: 0 auto;
-    width: 300px;
+    width: 200px;
 }
 
 .tablebody {
@@ -1948,9 +1951,10 @@ export default {
 }
 
 .page-bar {
-    position: fixed;
-    bottom: 100px;
+    position: fixed; 
+    bottom: 90px;
     width: 50%;
+    
 }
 
 .page-bar-body {
