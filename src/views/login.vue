@@ -12,7 +12,9 @@
     <md-card md-with-hover style="width:500px;margin:220px auto">
         <md-ripple>
             <md-card-header style="padding:10px">
-                <div class="card-title">Easybuy车辆管理系统</div>
+                <div class="card-title">DELIVERY TO
+                    <br>
+                    物流管理系统</div>
             </md-card-header>
 
             <md-card-content>
@@ -99,6 +101,7 @@ export default {
     font-family: sans-serif;
     font-size: 35px;
     font-weight: 700;
-    margin: 40px auto;
+    margin: 10px auto;
+    line-height: 40px;
 }
 </style>
