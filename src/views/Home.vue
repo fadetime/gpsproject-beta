@@ -52,290 +52,312 @@
         <div v-else>
             <img src="../../public/img/ebuyLogo.png" alt="easylogo" style="margin:100px auto;width:500px">
         </div>
-        <!-- add dialog start -->
-        <md-dialog :md-active.sync="addDialog" style="width:900px">
-            <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:4px">
-                <span style="color:#fff">添加今日任务</span>
-            </md-dialog-title>
-            <md-steppers md-linear :md-active-step.sync="active">
-                <md-step id="first" md-label="选择车次" :md-done.sync="first" :md-error="firstStepError">
-                    <div class="dialog-first-body">
-                        <div class="dialog-first-body-left">
-                            <div class="container">
-                                <div class="custom-selector">
-                                    <div class="selector-header" style="position:relative" @click="callBody">
-                                        <div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorText}}</div>
-                                        <div style="position:absolute;top:0;right:0">
-                                            <img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow">
-                                        </div>
-                                    </div>
-                                    <div class="selector-body">
-                                        <div class="box" v-for="(item,index) in alltimesinfo" :key="index" @click="choseitem(item)">
-                                            <span style="font-size:20px">{{item.timesname}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="dialog-first-body-right">
-                            <md-card md-with-hover style="width:90%;background-color: #eee">
-                                <md-card-header>
-                                    <div class="md-title" style="font-size:20px;text-align:left">
-                                        <span>线路信息</span>
-                                    </div>
-                                    <div class="md-subhead" style="font-size:15px;text-align:left">
-                                        <span>请确认详细信息</span>
-                                    </div>
-                                </md-card-header>
-
-                                <md-card-content v-if="aLineInfo">
-                                    <div style="margin:0 20px">
-                                        <div style="text-align:left;margin:10px 0">
-                                            <span style="font-size:20px">线路名称：{{aLineInfo.timesname}}</span>
-                                        </div>
-                                        <div style="text-align:left;margin:10px 0">
-                                            <span style="font-size:20px">线路备注：{{aLineInfo.timesnote}}</span>
-                                        </div>
-                                    </div>
-                                </md-card-content>
-
-                            </md-card>
-                        </div>
-                    </div>
-
-                    <div style="text-align:center">
-                        <md-button class="md-raised md-primary " @click="setDone('first', 'second')">Continue</md-button>
-                    </div>
-
-                </md-step>
-
-                <md-step id="second" md-label="司机车辆" :md-done.sync="second" :md-error="secondStepError">
-                    <div>
-                        <div class="step-second" id="addmissionsecond">
-                            <div class="step-second-item">
-
+            <!-- add dialog start -->
+            <md-dialog :md-active.sync="addDialog" style="width:900px">
+                <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:4px">
+                    <span style="color:#fff">添加今日任务</span>
+                </md-dialog-title>
+                <md-steppers md-linear :md-active-step.sync="active">
+                    <md-step id="first" md-label="选择车次" :md-done.sync="first" :md-error="firstStepError">
+                        <div class="dialog-first-body">
+                            <div class="dialog-first-body-left">
                                 <div class="container">
                                     <div class="custom-selector">
-                                        <div class="selector-header" style="position:relative" @click="callDriver">
-                                            <div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorDriver.dirvername}}</div>
+                                        <div class="selector-header" style="position:relative" @click="callBody">
+                                            <div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorText}}</div>
                                             <div style="position:absolute;top:0;right:0">
-                                                <img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow" id="selector-arrow-driver">
-                                            </div>
+                                                <img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow">
                                         </div>
-                                        <div class="selector-body" id="selector-body-driver">
-                                            <div class="box" id="selector-box-driver" v-for="(item,index) in alldirverinfo" :key="index" @click="choseDriverItem(item)">
-                                                <span style="font-size:20px">{{item.dirvername}}</span>
+                                            </div>
+                                            <div class="selector-body">
+                                                <div class="box" v-for="(item,index) in alltimesinfo" :key="index" @click="choseitem(item)">
+                                                    <span style="font-size:20px">{{item.timesname}}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <md-card md-with-hover style="background-color: #eee">
-                                    <md-card-header>
-                                        <div class="md-title" style="font-size:20px;text-align:left">司机信息</div>
-                                        <div class="md-subhead" style="font-size:15px;text-align:left">请确认详细信息</div>
-                                    </md-card-header>
+                                <div class="dialog-first-body-right">
+                                    <md-card md-with-hover style="width:90%;background-color: #eee">
+                                        <md-card-header>
+                                            <div class="md-title" style="font-size:20px;text-align:left">
+                                                <span>线路信息</span>
+                                            </div>
+                                            <div class="md-subhead" style="font-size:15px;text-align:left">
+                                                <span>请确认详细信息</span>
+                                            </div>
+                                        </md-card-header>
 
-                                    <md-card-content v-if="aLineInfo">
-                                        <div style="margin:0 20px">
-                                            <p style="font-size:20px">司机姓名：{{selectorDriver.dirvername}}</p>
-                                            <p style="font-size:20px">司机电话：{{selectorDriver.dirverphone}}</p>
-                                            <p style="font-size:20px">司机驾照：{{selectorDriver.dirvercard}}</p>
-                                            <p style="font-size:20px">司机备注：{{selectorDriver.dirvernote}}</p>
-                                        </div>
-                                    </md-card-content>
+                                        <md-card-content v-if="aLineInfo">
+                                            <div style="margin:0 20px">
+                                                <div style="text-align:left;margin:10px 0">
+                                                    <span style="font-size:20px">线路名称：{{aLineInfo.timesname}}</span>
+                                                </div>
+                                                <div style="text-align:left;margin:10px 0">
+                                                    <span style="font-size:20px">线路备注：{{aLineInfo.timesnote}}</span>
+                                                </div>
+                                            </div>
+                                        </md-card-content>
 
-                                </md-card>
+                                    </md-card>
+                                </div>
                             </div>
 
-                            <div class="step-second-item">
+                            <div style="text-align:center">
+                                <md-button class="md-raised md-primary " @click="setDone('first', 'second')">下一步</md-button>
+                            </div>
 
-                                <div class="container">
-                                    <div class="custom-selector">
-                                        <div class="selector-header" style="position:relative" @click="callCar">
-                                            <div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorCar.carid}}</div>
-                                            <div style="position:absolute;top:0;right:0">
-                                                <img src="../../public/img/icons/arrowDown.png" alt="arrowDown" style="width:40px" class="arrow" id="selector-arrow-car">
+                    </md-step>
+
+                    <md-step id="second" md-label="司机车辆" :md-done.sync="second" :md-error="secondStepError">
+                        <div>
+                            <div class="step-second" id="addmissionsecond">
+                                <div class="step-second-item">
+
+                                    <div class="container">
+                                        <div class="custom-selector">
+                                            <div class="selector-header" style="position:relative" @click="callDriver">
+                                                <div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorDriver.dirvername}}</div>
+                                                <div style="position:absolute;top:0;right:0">
+                                                    <img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow" id="selector-arrow-driver">
+                                            </div>
+                                                </div>
+                                                <div class="selector-body" id="selector-body-driver">
+                                                    <div class="box" id="selector-box-driver" v-for="(item,index) in alldirverinfo" :key="index" @click="choseDriverItem(item)">
+                                                        <span style="font-size:20px">{{item.dirvername}}</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="selector-body" id="selector-body-car">
-                                            <div class="box" id="selector-box-car" v-for="(item,index) in allcarinfo" :key="index" @click="choseCarItem(item)">
-                                                <span style="font-size:20px">{{item.carid}}</span>
+
+                                        <md-card md-with-hover style="background-color: #eee">
+                                            <md-card-header>
+                                                <div class="md-title" style="font-size:20px;text-align:left">司机信息</div>
+                                                <div class="md-subhead" style="font-size:15px;text-align:left">请确认详细信息</div>
+                                            </md-card-header>
+
+                                            <md-card-content v-if="aLineInfo">
+                                                <div style="margin:0 20px">
+                                                    <p style="font-size:20px">司机姓名：{{selectorDriver.dirvername}}</p>
+                                                    <p style="font-size:20px">司机电话：{{selectorDriver.dirverphone}}</p>
+                                                    <p style="font-size:20px">司机驾照：{{selectorDriver.dirvercard}}</p>
+                                                    <p style="font-size:20px">司机备注：{{selectorDriver.dirvernote}}</p>
+                                                </div>
+                                            </md-card-content>
+
+                                        </md-card>
+                                    </div>
+
+                                    <div class="step-second-item">
+
+                                        <div class="container">
+                                            <div class="custom-selector">
+                                                <div class="selector-header" style="position:relative" @click="callCar">
+                                                    <div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorCar.carid}}</div>
+                                                    <div style="position:absolute;top:0;right:0">
+                                                        <img src="../../public/img/icons/arrowDown.png" alt="arrowDown" style="width:40px" class="arrow" id="selector-arrow-car">
                                             </div>
+                                                    </div>
+                                                    <div class="selector-body" id="selector-body-car">
+                                                        <div class="box" id="selector-box-car" v-for="(item,index) in allcarinfo" :key="index" @click="choseCarItem(item)">
+                                                            <span style="font-size:20px">{{item.carid}}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <md-card md-with-hover style="background-color: #eee">
+                                                <md-card-header>
+                                                    <div class="md-title" style="font-size:20px;text-align:left">车辆信息</div>
+                                                    <div class="md-subhead" style="font-size:15px;text-align:left">请确认详细信息</div>
+                                                </md-card-header>
+
+                                                <md-card-content v-if="aLineInfo">
+                                                    <div style="margin:0 20px">
+                                                        <p style="font-size:20px">车牌号码：{{selectorCar.carid}}</p>
+                                                        <p style="font-size:20px">车辆型号：{{selectorCar.cartype}}</p>
+                                                        <p style="font-size:20px">有无尾门：{{selectorCar.tailgate}}</p>
+                                                        <p style="font-size:20px">车辆备注：{{selectorCar.carnote}}</p>
+                                                    </div>
+                                                </md-card-content>
+
+                                            </md-card>
                                         </div>
+
+                                    </div>
+                                    <div style="text-align:center">
+                                        <md-button class="md-raised md-primary" @click="setDone('second', 'third')">下一步</md-button>
                                     </div>
                                 </div>
 
-                                <md-card md-with-hover style="background-color: #eee">
-                                    <md-card-header>
-                                        <div class="md-title" style="font-size:20px;text-align:left">车辆信息</div>
-                                        <div class="md-subhead" style="font-size:15px;text-align:left">请确认详细信息</div>
-                                    </md-card-header>
+                    </md-step>
 
-                                    <md-card-content v-if="aLineInfo">
-                                        <div style="margin:0 20px">
-                                            <p style="font-size:20px">车牌号码：{{selectorCar.carid}}</p>
-                                            <p style="font-size:20px">车辆型号：{{selectorCar.cartype}}</p>
-                                            <p style="font-size:20px">有无尾门：{{selectorCar.tailgate}}</p>
-                                            <p style="font-size:20px">车辆备注：{{selectorCar.carnote}}</p>
-                                        </div>
-                                    </md-card-content>
-
-                                </md-card>
+                    <md-step id="third" md-label="确认客户" style="padding:0 24px">
+                        <div style="display:flex;display: -webkit-flex;padding-bottom: 8px;justify-content: space-between;">
+                            <div>
+                                <input class="clientsearch" type="text" v-model="searchClient" @keyup.enter="searClientMethods" placeholder="搜索客户名称">
                             </div>
-
-                        </div>
-                        <div style="text-align:center">
-                            <md-button class="md-raised md-primary" @click="setDone('second', 'third')">Continue</md-button>
-                        </div>
-                    </div>
-
-                </md-step>
-
-                <md-step id="third" md-label="确认客户" style="padding:0 24px">
-                    <div style="display:flex;flex-direction: row-reverse;padding-bottom: 8px;">
-                        <div style="width:160px;padding-left: 10px;">
-                            <md-field style="padding-top:16px;margin: 0;">
-                                <md-select v-model="clientArea" name="clientArea" id="clientArea" placeholder="筛选客户地区">
-                                    <md-option :value="item._id" v-for="(item,index) in areaArray" :key="index">{{item.areaName}}</md-option>
-                                </md-select>
-                            </md-field>
-                        </div>
-
-                        <div style="width:160px;padding-left: 10px;">
-                            <md-field style="padding-top:16px;margin: 0;">
-                                <md-select v-model="clientServe" name="clientServe" id="clientServe" placeholder="筛选服务商">
-                                    <md-option :value="item._id" v-for="(item,index) in allclientainfo" :key="index">{{item.clientaname}}</md-option>
-                                </md-select>
-                            </md-field>
-                        </div>
-                    </div>
-
-                    <div class="step-third" style="border: 3px dashed #eee;padding: 5px;">
-
-                        <div class="step-third-title">
-                            <div class="step-third-title-item">
-                                客户名称
-                            </div>
-                            <div class="step-third-title-item">
-                                客户电话
-                            </div>
-                            <div class="step-third-title-item">
-                                客户邮编
-                            </div>
-                            <div class="step-third-title-item">
-                                客户地址
-                            </div>
-                            <div class="step-third-title-item">
-                                服务商
-                            </div>
-                            <div class="step-third-title-item">
-                                区域
-                            </div>
-                        </div>
-                        <div style="overflow:auto;height:300px">
-                            <md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index" style="background-color: #f4f4f4">
-                                <md-card-content>
-                                    <div class="step-third-title-body">
-                                        <label :for="index" class="step-third-title">
-                                            <input type="checkbox" :id="index" :value="item" v-model="aLineInfo.timesclientb" style="width:25px;height:25px">
-                                            <span class="step-third-title-item">{{item.clientbname}}</span>
-                                            <span class="step-third-title-item">{{item.clientbphone}}</span>
-                                            <span class="step-third-title-item">{{item.clientbpostcode}}</span>
-                                            <span class="step-third-title-item">{{item.clientbaddress}}</span>
-                                            <span class="step-third-title-item">{{item.clientbserve.clientaname}}</span>
-                                            <span class="step-third-title-item">{{item.clientbarea.areaName}}</span>
-                                        </label>
+                                <div style="display: -webkit-flex;display: flex;">
+                                    <div style="width:160px;padding-left: 10px;">
+                                        <md-field style="padding-top:16px;margin: 0;">
+                                            <md-select v-model="clientServe" name="clientServe" id="clientServe" placeholder="筛选服务商">
+                                                <md-option :value="item._id" v-for="(item,index) in allclientainfo" :key="index">{{item.clientaname}}</md-option>
+                                            </md-select>
+                                        </md-field>
                                     </div>
-                                </md-card-content>
-                            </md-card>
-                        </div>
-                        <div style="text-align:center">
-                            <md-button class="md-raised md-primary" @click="saveMission">SAVE</md-button>
-                        </div>
-                    </div>
-                </md-step>
-            </md-steppers>
-        </md-dialog>
-        <!-- add dialog end -->
 
-        <!-- detail dialog start -->
-        <md-dialog :md-active.sync="detaildialog" style="width: 800px;font-size:20px">
-            <div style="text-align:center;font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:20px">
-                <span style="color:#fff">出车报表</span>
-            </div>
-            <div style="overflow:hidden auto">
-                <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;padding:5px 0">
-                    <div style="flex-basis:30%;text-align:left;margin:0 auto" :title="missiondriver">
-                        <span>司机:{{missiondriver}}</span>
+                                    <div style="width:160px;padding-left: 10px;">
+                                        <md-field style="padding-top:16px;margin: 0;">
+                                            <md-select v-model="clientArea" name="clientArea" id="clientArea" placeholder="筛选客户地区">
+                                                <md-option :value="item._id" v-for="(item,index) in areaArray" :key="index">{{item.areaName}}</md-option>
+                                            </md-select>
+                                        </md-field>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="step-third" style="border: 3px dashed #eee;padding: 5px;">
+
+                                <div class="step-third-title">
+                                    <div class="step-third-title-item">
+                                        客户名称
+                                    </div>
+                                    <div class="step-third-title-item">
+                                        客户电话
+                                    </div>
+                                    <div class="step-third-title-item">
+                                        客户邮编
+                                    </div>
+                                    <div class="step-third-title-item">
+                                        服务商
+                                    </div>
+                                    <div class="step-third-title-item">
+                                        区域
+                                    </div>
+                                </div>
+                                <div style="overflow:auto;height:300px">
+                                    <md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index" style="background-color: #f4f4f4">
+                                        <md-card-content>
+                                            <div class="step-third-title-body">
+                                                <label :for="index" class="step-third-title">
+                                                    <input type="checkbox" :id="index" :value="item" v-model="aLineInfo.timesclientb" style="width:25px;height:25px">
+                                                    <span class="step-third-title-item">{{item.clientbname}}</span>
+                                                    <span class="step-third-title-item">{{item.clientbphone}}</span>
+                                                    <span class="step-third-title-item">{{item.clientbpostcode}}</span>
+                                                    <span class="step-third-title-item">{{item.clientbserve.clientaname}}</span>
+                                                    <span class="step-third-title-item">{{item.clientbarea.areaName}}</span>
+                                                </label>
+                                            </div>
+                                        </md-card-content>
+                                    </md-card>
+                                </div>
+                                <div style="display:flex;justify-content: center;">
+                                    <div class="client-page-bar" v-if=" clientTablePageCount != 1 && clientTablePageCount">
+                                        <ul style="width:435px">
+                                            <li @click="clientTablePageButton('A')">
+                                                <span>上一页</span>
+                                            </li>
+                                            <li v-for="(item,index) in clientPages" :key="index" @click="clientTablePageButton(item)" :class="{'active':clientTablePageNow == item}">
+                                                <span>{{item}}</span>
+                                            </li>
+                                            <li @click="clientTablePageButton('B')">
+                                                <span>下一页</span>
+                                            </li>
+                                            <li>
+                                                <span>共
+                                                    <i>{{clientTablePageCount}}</i>页</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div style="text-align:center">
+                                <md-button class="md-raised md-primary" @click="saveMission">保存</md-button>
+                            </div>
+                    </md-step>
+                </md-steppers>
+            </md-dialog>
+            <!-- add dialog end -->
+
+            <!-- detail dialog start -->
+            <md-dialog :md-active.sync="detaildialog" style="width: 800px;font-size:20px">
+                <div style="text-align:center;font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:20px">
+                    <span style="color:#fff">出车报表</span>
+                </div>
+                <div style="overflow:hidden auto">
+                    <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;padding:5px 0">
+                        <div style="flex-basis:30%;text-align:left;margin:0 auto" :title="missiondriver">
+                            <span>司机:{{missiondriver}}</span>
+                        </div>
+                        <div style="flex-basis:30%;text-align:left;margin:0 auto;">
+                            <span>车次:{{missionline}}</span>
+                        </div>
                     </div>
-                    <div style="flex-basis:30%;text-align:left;margin:0 auto;">
-                        <span>车次:{{missionline}}</span>
+
+                    <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;border-bottom:1px solid;padding:5px 0">
+                        <div style="flex-basis:30%;text-align:left;margin:0 auto">
+                            日期:{{missiondate}}
+                        </div>
+                        <div style="flex-basis:30%;text-align:left;margin:0 auto">
+                            总单数:{{missioncount}}
+                        </div>
+                    </div>
+
+                    <div style="padding:5px 0;border:1px solid #989898;width:90%;margin:10px auto">
+                        <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;font-weight:600;padding:5px 0">
+                            <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                                <span>序号</span>
+                            </div>
+                            <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                                <span>名字</span>
+                            </div>
+                            <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                                <span>时间</span>
+                            </div>
+                        </div>
+                        <div style="height:400px;overflow:auto;">
+                            <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;padding:5px 0" v-for="(item,index) in missionclient" :key="index">
+                                <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                                    <span>{{index+1}}</span>
+                                </div>
+                                <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                                    {{item.clientbname}}
+                                </div>
+                                <div style="flex-basis:30%;text-align:center;margin:0 auto">
+                                    <span v-if="item.finishdate">{{item.finishdate | timefilter}}</span>
+                                    <span v-else style="color:#f9cf97">未送达</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;border-bottom:1px solid;padding:5px 0">
-                    <div style="flex-basis:30%;text-align:left;margin:0 auto">
-                        日期:{{missiondate}}
-                    </div>
-                    <div style="flex-basis:30%;text-align:left;margin:0 auto">
-                        总单数:{{missioncount}}
-                    </div>
-                </div>
+                <md-dialog-actions style="margin:0 auto 10px auto">
+                    <md-button class="md-raised md-primary" @click="detaildialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
+                    <md-button class="md-raised md-accent" @click="removeMission" style="font-size:20px;width:100px;height:40px">删除</md-button>
+                </md-dialog-actions>
+            </md-dialog>
+            <!-- detail dialog start -->
 
-                <div style="padding:5px 0;border:1px solid #989898;width:90%;margin:10px auto">
-                    <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;font-weight:600;padding:5px 0">
-                        <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                            <span>序号</span>
-                        </div>
-                        <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                            <span>名字</span>
-                        </div>
-                        <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                            <span>时间</span>
-                        </div>
-                    </div>
-                    <div style="height:400px;overflow:auto;">
-                        <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;padding:5px 0" v-for="(item,index) in missionclient" :key="index">
-                            <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                                <span>{{index+1}}</span>
-                            </div>
-                            <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                                {{item.clientbname}}
-                            </div>
-                            <div style="flex-basis:30%;text-align:center;margin:0 auto">
-                                <span v-if="item.finishdate">{{item.finishdate | timefilter}}</span>
-                                <span v-else style="color:#f9cf97">未送达</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- error dialog start -->
+            <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" />
+            <!-- error dialog end -->
 
-            <md-dialog-actions style="margin:0 auto 10px auto">
-                <md-button class="md-raised md-primary" @click="detaildialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
-                <md-button class="md-raised md-accent" @click="removeMission" style="font-size:20px;width:100px;height:40px">删除</md-button>
-            </md-dialog-actions>
-        </md-dialog>
-        <!-- detail dialog start -->
+            <!-- confirm dialog start -->
+            <md-dialog :md-active.sync="confirmDialog">
+                <md-dialog-title>确认删除此任务</md-dialog-title>
 
-        <!-- error dialog start -->
-        <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" />
-        <!-- error dialog end -->
+                <md-dialog-actions>
+                    <md-button class="md-raised md-primary" @click="confirmDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
+                    <md-button class="md-raised md-accent" @click="confirmRemoveMission" style="font-size:20px;width:100px;height:40px">确认</md-button>
+                </md-dialog-actions>
+            </md-dialog>
 
-        <!-- confirm dialog start -->
-        <md-dialog :md-active.sync="confirmDialog">
-            <md-dialog-title>确认删除此任务</md-dialog-title>
-
-            <md-dialog-actions>
-                <md-button class="md-raised md-primary" @click="confirmDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
-                <md-button class="md-raised md-accent" @click="confirmRemoveMission" style="font-size:20px;width:100px;height:40px">确认</md-button>
-            </md-dialog-actions>
-        </md-dialog>
-
-        <!-- confirm dialog end -->
-    </div>
+            <!-- confirm dialog end -->
+        </div>
 </template>
 
 <script>
@@ -387,8 +409,39 @@ export default {
             driverShowFlag: false,
             clientArea: "",
             clientServe: "",
-            testValue:[2]
+            testValue: [2],
+            pageSize: 10,
+            showItem: 5,
+            searchClient: "",
+            clientTablePageNow: 1,
+            clientTablePageCount: 10,
+            clientTableMode: ""
         };
+    },
+    computed: {
+        clientPages: function() {
+            let pag = [];
+            if (this.clientTablePageNow < this.showItem) {
+                //如果当前的激活的项 小于要显示的条数
+                //总页数和要显示的条数那个大就显示多少条
+                let i = Math.min(this.showItem, this.clientTablePageCount);
+                while (i) {
+                    pag.unshift(i--);
+                }
+            } else {
+                //当前页数大于显示页数了
+                let middle =
+                        this.clientTablePageNow - Math.floor(this.showItem / 2), //从哪里开始
+                    i = this.showItem;
+                if (middle > this.clientTablePageCount - this.showItem) {
+                    middle = this.clientTablePageCount - this.showItem + 1;
+                }
+                while (i--) {
+                    pag.push(middle++);
+                }
+            }
+            return pag;
+        }
     },
     watch: {
         selectedDate: function() {
@@ -406,20 +459,28 @@ export default {
         },
         clientArea: function() {
             if (this.clientArea) {
-                let newArray = this.allclientbinfo.filter(item => {
-                    return item.clientbarea._id === this.clientArea;
-                });
-                let longArray = _.concat(newArray, this.allclientbinfo);
-                this.allclientbinfo = _.uniq(longArray);
+                this.clientServe = "";
+                this.searchClient = "";
+                this.clientTableMode = "area";
+                this.areaFilterMethod();
+                // let newArray = this.allclientbinfo.filter(item => {
+                //     return item.clientbarea._id === this.clientArea;
+                // });
+                // let longArray = _.concat(newArray, this.allclientbinfo);
+                // this.allclientbinfo = _.uniq(longArray);
             }
         },
         clientServe: function() {
             if (this.clientServe) {
-                let newArray = this.allclientbinfo.filter(item => {
-                    return item.clientbserve._id === this.clientServe;
-                });
-                let longArray = _.concat(newArray, this.allclientbinfo);
-                this.allclientbinfo = _.uniq(longArray);
+                this.clientArea = "";
+                this.searchClient = "";
+                this.clientTableMode = "serve";
+                this.serveFilterMethod();
+                // let newArray = this.allclientbinfo.filter(item => {
+                //     return item.clientbserve._id === this.clientServe;
+                // });
+                // let longArray = _.concat(newArray, this.allclientbinfo);
+                // this.allclientbinfo = _.uniq(longArray);
             }
         }
     },
@@ -430,6 +491,104 @@ export default {
         this.getAllArea();
     },
     methods: {
+        searClientMethods() {
+            this.clientArea = "";
+            this.clientServe = "";
+            if (!this.searchClient) {
+                this.clientTablePageNow = 1;
+                this.clientTableMode = "";
+                this.getallclientb();
+            } else {
+                this.clientTableMode = "search";
+                axios
+                    .post(config.server + "/clientb/page", {
+                        keyWord: this.searchClient,
+                        pageSize: this.pageSize,
+                        pageNow: this.clientTablePageNow
+                    })
+                    .then(res => {
+                        this.allclientbinfo = res.data.doc;
+                        this.clientTablePageCount = Math.ceil(
+                            res.data.countNum / this.pageSize
+                        );
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
+        },
+
+        areaFilterMethod() {
+            axios
+                .post(config.server + "/clientb/filterpage", {
+                    pageSize: this.pageSize,
+                    pageNow: this.clientTablePageNow,
+                    clientArea: this.clientArea
+                })
+                .then(res => {
+                    this.allclientbinfo = res.data.doc;
+                    this.ClientTablePageCount = Math.ceil(
+                        res.data.countNum / this.pageSize
+                    );
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
+        serveFilterMethod() {
+            axios
+                .post(config.server + "/clientb/filterpage", {
+                    pageSize: this.pageSize,
+                    pageNow: this.clientTablePageNow,
+                    clientServe: this.clientServe
+                })
+                .then(res => {
+                    this.allclientbinfo = res.data.doc;
+                    this.ClientTablePageCount = Math.ceil(
+                        res.data.countNum / this.pageSize
+                    );
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
+        clientTablePageButton(item) {
+            if (item === "A") {
+                if (this.clientTablePageNow > 1) {
+                    this.clientTablePageNow = this.clientTablePageNow - 1;
+                }
+            } else if (item === "B") {
+                if (this.clientTablePageNow < this.clientTablePageCount) {
+                    this.clientTablePageNow = this.clientTablePageNow + 1;
+                }
+            } else {
+                this.clientTablePageNow = item;
+            }
+            if (this.clientTableMode === "search") {
+                this.searClientMethods();
+            } else if (this.clientTableMode === "area") {
+                this.areaFilterMethod();
+            } else if (this.clientTableMode === "serve") {
+                this.serveFilterMethod();
+            } else {
+                axios
+                    .post(config.server + "/clientb/active", {
+                        pageSize: this.pageSize,
+                        pageNow: this.clientTablePageNow
+                    })
+                    .then(res => {
+                        this.allclientbinfo = res.data.doc;
+                        this.clientTablePageCount = Math.ceil(
+                            res.data.countNum / this.pageSize
+                        );
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
+        },
         //remove mission start
         removeMission() {
             this.confirmDialog = true;
@@ -776,9 +935,15 @@ export default {
         },
         getallclientb() {
             axios
-                .get(config.server + "/clientb/active")
+                .post(config.server + "/clientb/active", {
+                    pageSize: this.pageSize,
+                    pageNow: 1
+                })
                 .then(res => {
                     this.allclientbinfo = res.data.doc;
+                    this.clientTablePageCount = Math.ceil(
+                        res.data.countNum / this.pageSize
+                    );
                     this.allclientbinfo.forEach(element => {
                         if (element.clientbserve == null) {
                             element.clientbserve = {
@@ -1012,6 +1177,58 @@ export default {
     margin: 0 auto;
     flex-basis: 50%;
     text-align: center;
+}
+
+.clientsearch {
+    margin: 16px auto 0 auto;
+    border-radius: 10px;
+    width: 300px;
+    height: 32px;
+    text-align: center;
+    -web-kit-appearance: none;
+    -moz-appearance: none;
+    outline: 0;
+    font-size: 16px;
+}
+
+.client-page-bar ul li {
+    margin: 0;
+    padding: 0;
+}
+
+.client-page-bar li {
+    list-style: none;
+    font-size: 14px;
+}
+
+.client-page-bar span {
+    border: 1px solid #ddd;
+    text-decoration: none;
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    cursor: pointer;
+}
+
+.client-page-bar span:hover {
+    background-color: #eee;
+}
+
+.client-page-bar .active span {
+    color: #fff;
+    cursor: default;
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+
+.client-page-bar i {
+    font-style: normal;
+    color: #d44950;
+    margin: 0px 4px;
+    font-size: 12px;
 }
 
 /*.step-third-title-body {

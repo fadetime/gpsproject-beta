@@ -22,25 +22,26 @@
 
             <div class="centertable">
                 <div v-if="!clientpage" style="width: 1536px;margin:0 auto">
+                    <!-- 客户页面 -->
                     <md-card style="background-color: #eff3f5;">
                         <md-card-content>
                             <div class="tabletitle">
-                                <div class="tabletitle-item" style="width:300px">
+                                <div class="tabletitle-item">
                                     <span>名称</span>
                                 </div>
-                                <div class="tabletitle-item" style="width:600px">
+                                <div class="tabletitle-item">
                                     <span>送货地址</span>
                                 </div>
-                                <div class="tabletitle-item" style="width:150px">
+                                <div class="tabletitle-item">
                                     <span>联系电话</span>
                                 </div>
-                                <div class="tabletitle-item" style="width:150px">
+                                <div class="tabletitle-item">
                                     <span>邮编</span>
                                 </div>
-                                <div class="tabletitle-item" style="width:150px">
+                                <div class="tabletitle-item">
                                     <span>状态</span>
                                 </div>
-                                <div class="tabletitle-item" style="width:150px">
+                                <div class="tabletitle-item">
                                     <span>操作</span>
                                 </div>
                             </div>
@@ -50,22 +51,22 @@
                     <md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index" style="background-color: #eff3f5;">
                         <md-card-content>
                             <div class="tablebody">
-                                <div class="tabletitle-item" style="width:300px">
+                                <div class="tabletitle-item">
                                     <span>{{item.clientbname}}</span>
                                 </div>
-                                <div class="tabletitle-item" style="width:600px">
+                                <div class="tabletitle-item">
                                     <span>{{item.clientbaddress}}</span>
                                 </div>
-                                <div class="tabletitle-item" style="width:150px">
+                                <div class="tabletitle-item">
                                     <span>{{item.clientbphone}}</span>
                                 </div>
-                                <div class="tabletitle-item" style="width:150px">
+                                <div class="tabletitle-item">
                                     <span>{{item.clientbpostcode}}</span>
                                 </div>
-                                <div class="tabletitle-item" style="width:150px">
+                                <div class="tabletitle-item">
                                     <span>{{item.clientbstatus}}</span>
                                 </div>
-                                <div class="tabletitle-item" style="width:150px">
+                                <div class="tabletitle-item">
                                     <img src="../../public/img/icons/edit.png" alt="edit" @click="editClientB(item)" style="width:20px;margin:0 10px">
                                     <img src="../..//public/img/icons/dele.png" alt="delete" @click="removeClientB(item)" style="width:30px;margin:0 10px">
                             </div>
@@ -75,6 +76,7 @@
                 </div>
 
                 <div v-else>
+                    <!-- 服务商页面 -->
                     <md-card style="background-color: #eff3f5">
                         <md-card-content>
                             <div class="tabletitle">
