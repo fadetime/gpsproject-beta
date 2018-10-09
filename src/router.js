@@ -7,7 +7,6 @@ import Client from './views/Client.vue'
 import Car from './views/Car.vue'
 import login from './views/login.vue'
 import Admin from './views/Admin.vue'
-import Area from './views/Area.vue'
 import Log from './views/Log.vue'
 import AuthGuard from './auth-guard'
 
@@ -55,11 +54,6 @@ export default new Router({
 			name: 'admin',
 			component: Admin,
 			beforeEnter: AuthGuard
-		},
-		{
-			path: '/area',
-			name: 'area',
-			component: Area
 		},
 		{
 			path: '/log',
