@@ -5,7 +5,7 @@
                 <input type="text" v-model="selectedCar" @keyup.enter="search" placeholder="搜索车牌信息">
             </div>
             <div class="topbutton-right">
-                <md-button class="md-raised md-primary" @click="newCar" style="font-size:20px;width:100px;height:40px;">+ 添加</md-button>
+                <md-button class="md-raised md-primary" @click="newCar" style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
             </div>
         </div>
         <div class="centertable">
@@ -277,7 +277,15 @@
         <!-- error start -->
         <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" style="font-size:25px;z-index:999" />
         <!-- error end -->
-
+        <!-- tip box start -->
+		<transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutLeft">
+			<div class="tipDialog" v-if="showTipDialog">
+				<div>
+					<span> {{tipMsg}}</span>
+				</div>
+			</div>
+		</transition>
+		<!-- tip box end -->
     </div>
 </template>
 
@@ -322,7 +330,9 @@ export default {
             carImage: "",
             callFlag: false,
             allCarType: ["Van", "10ft Lorry", "14ft Lorry", "24ft Lorry"],
-            selectorCarType: "车型"
+            selectorCarType: "车型",
+            showTipDialog:false,
+            tipMsg:''
         };
     },
 
@@ -460,12 +470,12 @@ export default {
                             res.data.count / this.pageSize
                         );
                         if (res.data.code === 1) {
-                            this.error = true;
-                            this.errormsg = res.data.msg;
+                            this.showTipDialog = true;
+                            this.tipMsg = res.data.msg;
                             this.selectedCar = "";
                             this.getallcar();
                             setTimeout(() => {
-                                this.error = false;
+                                this.showTipDialog = false;
                             }, 3000);
                         }
                     })
@@ -770,7 +780,7 @@ export default {
 <style scoped>
 #car {
     width: 80%;
-    margin: 20px auto;
+    margin: 15px auto;
 }
 
 .dialog-title {
@@ -812,12 +822,12 @@ export default {
     margin: 5px auto;
     border-radius: 10px;
     width: 300px;
-    height: 40px;
+    height: 35px;
     text-align: center;
     -web-kit-appearance: none;
     -moz-appearance: none;
     outline: 0;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .topbutton-right {
@@ -827,7 +837,7 @@ export default {
 }
 
 .centertable {
-    margin: 20px auto;
+    margin: 15px auto;
 }
 
 .tabletitle {
@@ -838,7 +848,7 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     height: 50px;
     line-height: 50px;
@@ -847,7 +857,7 @@ export default {
 .tabletitle-item {
     margin: 0 auto;
     width: 250px;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 50px;
 }
 
@@ -856,7 +866,6 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
-    font-size: 25px;
     line-height: 50px;
 }
 

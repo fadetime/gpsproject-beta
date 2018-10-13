@@ -568,11 +568,6 @@ export default {
         this.searchClient = ''
         this.clientTableMode = 'area'
         this.areaFilterMethod()
-        // let newArray = this.allclientbinfo.filter(item => {
-        //     return item.clientbarea._id === this.clientArea;
-        // });
-        // let longArray = _.concat(newArray, this.allclientbinfo);
-        // this.allclientbinfo = _.uniq(longArray);
       }
     },
     clientServe: function() {
@@ -581,11 +576,6 @@ export default {
         this.searchClient = ''
         this.clientTableMode = 'serve'
         this.serveFilterMethod()
-        // let newArray = this.allclientbinfo.filter(item => {
-        //     return item.clientbserve._id === this.clientServe;
-        // });
-        // let longArray = _.concat(newArray, this.allclientbinfo);
-        // this.allclientbinfo = _.uniq(longArray);
       }
     }
   },
@@ -612,7 +602,6 @@ export default {
       clearTimeout(this.timeOutName)
       this.clientInfoWindow = true
       this.tempClientInfo = item
-      // console.log(item)
       this.timeOutName = setTimeout(() => {
         this.clientInfoWindow = false
       }, 10000)

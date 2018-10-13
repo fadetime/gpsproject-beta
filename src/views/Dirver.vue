@@ -5,7 +5,7 @@
                 <input type="text" v-model="searchDirver" @keyup.enter="search" placeholder="搜索司机信息">
             </div>
             <div class="topbutton-right">
-                <md-button class="md-raised md-primary" @click="adddirverbutton" style="font-size:20px;width:100px;height:40px;">+ 添加</md-button>
+                <md-button class="md-raised md-primary" @click="adddirverbutton" style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
             </div>
         </div>
 
@@ -236,6 +236,15 @@
         <!-- error start -->
         <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" />
         <!-- error end -->
+        <!-- tip box start -->
+		<transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutLeft">
+			<div class="tipDialog" v-if="showTipDialog">
+				<div>
+					<span> {{tipMsg}}</span>
+				</div>
+			</div>
+		</transition>
+		<!-- tip box end -->
     </div>
 </template>
 
@@ -279,7 +288,9 @@ export default {
             findMode: false,
             updateImagePreview: "",
             updateImage: "",
-            driverImage: ""
+            driverImage: "",
+            showTipDialog:false,
+            tipMsg:''
         };
     },
     mounted() {
@@ -384,12 +395,12 @@ export default {
                             res.data.count / this.pageSize
                         );
                         if (res.data.code === 1) {
-                            this.error = true;
-                            this.errormsg = res.data.msg;
+                            this.showTipDialog = true;
+                            this.tipMsg = res.data.msg;
                             this.searchDirver = "";
                             this.getalldirver();
                             setTimeout(() => {
-                                this.error = false;
+                                this.showTipDialog = false;
                             }, 3000);
                         }
                     })
@@ -778,7 +789,7 @@ export default {
 <style scoped>
 #dirver {
     width: 80%;
-    margin: 20px auto;
+    margin: 15px auto;
 }
 
 .dialog-title {
@@ -820,12 +831,12 @@ export default {
     margin: 5px auto;
     border-radius: 10px;
     width: 300px;
-    height: 40px;
+    height: 35px;
     text-align: center;
     -web-kit-appearance: none;
     -moz-appearance: none;
     outline: 0;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .topbutton-right {
@@ -835,7 +846,7 @@ export default {
 }
 
 .centertable {
-    margin: 20px auto;
+    margin: 15px auto;
 }
 
 .tabletitle {
@@ -846,10 +857,10 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
-    height: 50px;
-    line-height: 50px;
+    height: 40px;
+    line-height: 35px;
 }
 
 .tabletitle-item {
@@ -862,8 +873,8 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
-    font-size: 20px;
-    line-height: 50px;
+    font-size: 18px;
+    line-height: 29px;
 }
 
 .editdialog {

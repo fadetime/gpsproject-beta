@@ -7,39 +7,39 @@
 			</div>
 
 			<div class="topbutton-center">
-				<md-button :class="classA" @click="changepageA" style="font-size:20px;width:100px;height:40px;">合作商页</md-button>
-				<md-button :class="classB" @click="changepageB" style="font-size:20px;width:100px;height:40px;">客户页面</md-button>
+				<md-button :class="classA" @click="changepageA" style="font-size:16px;width:80px;height:35px;">合作商页</md-button>
+				<md-button :class="classB" @click="changepageB" style="font-size:16px;width:80px;height:35px;">客户页面</md-button>
 			</div>
 			<div class="topbutton-right">
 				<div class="addbutton">
-					<md-button class="md-raised md-primary" @click="showDialog" style="font-size:20px;width:100px;height:40px;">+ 添加</md-button>
+					<md-button class="md-raised md-primary" @click="showDialog" style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
 				</div>
 			</div>
 
 		</div>
 
 		<div class="centertable">
-			<div v-if="!clientpage" style="width: 1536px;margin:0 auto">
+			<div v-if="!clientpage">
 				<!-- 客户页面 -->
 				<md-card style="background-color: #eff3f5;">
 					<md-card-content>
 						<div class="tabletitle">
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:150px">
 								<span>名称</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:450px">
 								<span>送货地址</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>联系电话</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>邮编</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>状态</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>操作</span>
 							</div>
 						</div>
@@ -49,22 +49,22 @@
 				<md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index" style="background-color: #eff3f5;">
 					<md-card-content>
 						<div class="tablebody">
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:150px">
 								<span>{{item.clientbname}}</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:450px">
 								<span>{{item.clientbaddress}}</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>{{item.clientbphone}}</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>{{item.clientbpostcode}}</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>{{item.clientbstatus}}</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<img src="../../public/img/icons/edit.png" alt="edit" @click="editClientB(item)" style="width:20px;margin:0 10px">
 								<img src="../..//public/img/icons/dele.png" alt="delete" @click="removeClientB(item)" style="width:30px;margin:0 10px">
 							</div>
@@ -78,25 +78,25 @@
 				<md-card style="background-color: #eff3f5">
 					<md-card-content>
 						<div class="tabletitle">
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>名称</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:300px">
 								<span>送货地址</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>联系电话</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:200px">
 								<span>邮箱</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:150px">
 								<span>合同起始时间</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>合同期限</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>操作</span>
 							</div>
 						</div>
@@ -106,25 +106,25 @@
 				<md-card md-with-hover v-for="(item,index) in allclientainfo" :key="index" style="background-color: #eff3f5;">
 					<md-card-content>
 						<div class="tablebody">
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>{{item.clientaname}}</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:300px">
 								<span>{{item.clientaaddress}}</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<span>{{item.clientaphone}}</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:200px">
 								<span>{{item.clientamail}}</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:150px">
 								<span>{{item.clientatime|datefilter}}</span>
 							</div>
-							<div class="tabletitle-item">
-								<span>{{item.clientacontract}}</span>
+							<div class="tabletitle-item" style="flex-basis:100px">
+								<span>{{item.clientacontract}}个月</span>
 							</div>
-							<div class="tabletitle-item">
+							<div class="tabletitle-item" style="flex-basis:100px">
 								<img src="../../public/img/icons/edit.png" alt="edit" @click="editClientA(item)" style="width:20px;margin:0 10px">
 								<img src="../..//public/img/icons/dele.png" alt="delete" @click="removeClientA(item)" style="width:30px;margin:0 10px">
 							</div>
@@ -139,7 +139,7 @@
 		<div v-if="clientpage">
 			<div style="display:flex;justify-content: center;" v-if="pageCountA > 1">
 				<div class="page-bar">
-					<ul style="width:430px">
+					<ul style="width:455px">
 						<li @click="pageButtonA('A')">
 							<span>上一页</span>
 						</li>
@@ -161,7 +161,7 @@
 		<div v-else>
 			<div style="display:flex;justify-content: center;" v-if="pageCount > 1">
 				<div class="page-bar">
-					<ul style="width:430px">
+					<ul style="width:455px">
 						<li @click="pageButtonB('A')">
 							<span>上一页</span>
 						</li>
@@ -223,15 +223,15 @@
 
 						<div style="display:flex;width:180px">
 							<md-field style="margin:20px auto" :class="classser">
-							<label for="choseArea" style="font-size:18px">所属地区</label>
-							<md-select v-model="choseArea" name="choseArea" id="choseArea" style="border-bottom: 1px solid #000;font-size:20px;height:40px;padding-top:6px;width:150px">
-								<md-option :value="item._id" v-for="(item,index) in allAreaArray" :key="index">{{item.areaName}}</md-option>
-							</md-select>
-							<span class="md-error">所属地区</span>
-						</md-field>
-						<md-button :class="classA" @click="openAreaWindow" style="font-size:18px;min-width:60px;height:30px;margin-top: 44px;">区域</md-button>
+								<label for="choseArea" style="font-size:18px">所属地区</label>
+								<md-select v-model="choseArea" name="choseArea" id="choseArea" style="border-bottom: 1px solid #000;font-size:20px;height:40px;padding-top:6px;width:150px">
+									<md-option :value="item._id" v-for="(item,index) in allAreaArray" :key="index">{{item.areaName}}</md-option>
+								</md-select>
+								<span class="md-error">所属地区</span>
+							</md-field>
+							<md-button :class="classA" @click="openAreaWindow" style="font-size:18px;min-width:60px;height:30px;margin-top: 44px;">区域</md-button>
 						</div>
-						
+
 						<md-field style="margin:30px auto" :class="classadd">
 							<label style="font-size:18px">客户地址</label>
 							<md-input v-model="clientbaddress" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
@@ -686,54 +686,54 @@
 		</transition>
 		<!-- area window end -->
 		<!-- confirmRemove start -->
-        <md-dialog :md-active.sync="confirmRemove">
-            <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
-                <span style="color:#fff">确认删除</span>
-            </md-dialog-title>
-            <md-dialog-content style="padding: 0 15px 0px;">
-                <div style="border: 3px dashed #eee">
-                    <div class="removeDialog-body">
-                        <div class="removeDialog-body-left">
-                            <span>地区名称</span>
-                        </div>
-                        <div class="removeDialog-body-right">
-                            <span>{{areaName}}</span>
-                        </div>
-                    </div>
-                    <div class="removeDialog-body">
-                        <div class="removeDialog-body-left">
-                            <span>地区描述</span>
-                        </div>
-                        <div class="removeDialog-body-right">
-                            <span>{{areaDescription}}</span>
-                        </div>
-                    </div>
-                </div>
-            </md-dialog-content>
-            <md-dialog-actions>
-                <md-button class="md-raised" @click="confirmRemove = false">关闭</md-button>
-                <md-button class="md-raised md-accent" @click="confirmRemoveArea">删除</md-button>
-            </md-dialog-actions>
-        </md-dialog>
-        <!-- confirmRemove end -->
+		<md-dialog :md-active.sync="confirmRemove">
+			<md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+				<span style="color:#fff">确认删除</span>
+			</md-dialog-title>
+			<md-dialog-content style="padding: 0 15px 0px;">
+				<div style="border: 3px dashed #eee">
+					<div class="removeDialog-body">
+						<div class="removeDialog-body-left">
+							<span>地区名称</span>
+						</div>
+						<div class="removeDialog-body-right">
+							<span>{{areaName}}</span>
+						</div>
+					</div>
+					<div class="removeDialog-body">
+						<div class="removeDialog-body-left">
+							<span>地区描述</span>
+						</div>
+						<div class="removeDialog-body-right">
+							<span>{{areaDescription}}</span>
+						</div>
+					</div>
+				</div>
+			</md-dialog-content>
+			<md-dialog-actions>
+				<md-button class="md-raised" @click="confirmRemove = false">关闭</md-button>
+				<md-button class="md-raised md-accent" @click="confirmRemoveArea">删除</md-button>
+			</md-dialog-actions>
+		</md-dialog>
+		<!-- confirmRemove end -->
 		<!-- successd mesage start -->
 		<md-dialog-alert :md-active.sync="successdmsg" md-content="操作成功" md-confirm-text="关闭" />
 		<!-- successd mesage end -->
-		<!-- error start -->
+		<!-- error window start -->
 		<md-dialog-alert :md-active.sync="error" :md-content="erromsg" md-confirm-text="关闭" />
-		<!-- error end -->
-		<!-- error2 start -->
+		<!-- error window end -->
+		<!-- error2 window start -->
 		<md-dialog-confirm :md-active.sync="SMSErr" md-title="确认关闭?" md-content="所选供应商含有短信提醒，是否直接关闭？" md-confirm-text="确认" md-cancel-text="取消" @md-cancel="onCancel" @md-confirm="onConfirm" />
-		<!-- error2 end -->
+		<!-- error2 window end -->
 		<!-- tip box start -->
-        <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutLeft">
-            <div class="tipDialog" v-if="showTipDialog">
-                <div>
-                    <span> {{tipMsg}}</span>
-                </div>
-            </div>
-        </transition>
-        <!-- tip box end -->
+		<transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutLeft">
+			<div class="tipDialog" v-if="showTipDialog">
+				<div>
+					<span> {{tipMsg}}</span>
+				</div>
+			</div>
+		</transition>
+		<!-- tip box end -->
 	</div>
 </template>
 
@@ -801,11 +801,11 @@ export default {
       errpho: false,
       errpos: false,
       errser: false,
-      pageCount: 0, // 总页码
+      pageCount: 0, 
       pageCountA: 0,
-      pageNow: 1, // 当前页码
-      pageSize: 10, //每页显示条数
-      showItem: 5, // 最少显示5个页码
+      pageNow: 1, 
+      pageSize: 15, 
+      showItem: 5, 
       findAmode: false,
       findBmode: false,
       updateImagePreview: '',
@@ -818,11 +818,11 @@ export default {
       areaWindow: false,
       addNewAreaMode: false,
       areaEditMode: false,
-	  areaDescription: '',
-	  confirmRemove: false,
-	  areaName: '',
-	  showTipDialog:false,
-	  tipMsg:'info MSG'
+      areaDescription: '',
+      confirmRemove: false,
+      areaName: '',
+      showTipDialog: false,
+      tipMsg: 'info MSG'
     }
   },
   mounted() {
@@ -857,15 +857,12 @@ export default {
     pages: function() {
       let pag = []
       if (this.pageNow < this.showItem) {
-        //如果当前的激活的项 小于要显示的条数
-        //总页数和要显示的条数那个大就显示多少条
         let i = Math.min(this.showItem, this.pageCount)
         while (i) {
           pag.unshift(i--)
         }
       } else {
-        //当前页数大于显示页数了
-        let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
+        let middle = this.pageNow - Math.floor(this.showItem / 2), 
           i = this.showItem
         if (middle > this.pageCount - this.showItem) {
           middle = this.pageCount - this.showItem + 1
@@ -957,108 +954,107 @@ export default {
         this.areaName = ''
         this.areaDescription = ''
       } else {
-		this.areaEditMode = false
-		this.addNewAreaMode = true
-		
+        this.areaEditMode = false
+        this.addNewAreaMode = true
       }
     },
     openAreaWindow() {
       this.areaWindow = true
-	},
-	setupArea(){
-		if(!this.areaEditMode){
-			this.saveArea()
-		}else{
-			this.confirmEditArea()
-		}
-	},
-	saveArea() {
-            axios
-                .post(config.server + "/area/post", {
-                    areaName: this.areaName,
-                    areaDescription: this.areaDescription
-                })
-                .then(doc => {
-                    if (doc.data.code === 0) {
-                        this.getAllarea();
-                        this.tipMsg = "新增区域成功";
-                        this.showTipDialog = true;
-                        this.addNewAreaMode = false
-                        setTimeout(() => {
-                            this.showTipDialog = false;
-                        }, 2000);
-                    } else {
-                        console.log(doc);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-		},
-		        confirmEditArea() {
-            axios
-                .post(config.server + "/area/update", {
-                    areaName: this.areaName,
-					areaDescription: this.areaDescription,
-					_id:this._id
-                })
-                .then(doc => {
-                    if (doc.data.code === 0) {
-                        this.tipMsg = "区域修改成功";
-                        this.addNewAreaMode = false
-                    } else if (doc.data.code === 1) {
-                        this.tipMsg = doc.data.msg;
-                    } else {
-                        this.tipMsg = "出现错误";
-                        this.addNewAreaMode = false
-                        console.log(doc.data.error);
-                    }
-                    this.showTipDialog = true;
-                    this.getAllarea();
-                    setTimeout(() => {
-                        this.showTipDialog = false;
-                    }, 2000);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        },
-	confirmRemoveArea() {
-            axios
-                .post(config.server + "/area/remove", {
-                    _id: this._id
-                })
-                .then(doc => {
-                    if (doc.data.code === 0) {
-                        this.tipMsg = "区域删除成功";
-                        this.confirmRemove = false;
-                    } else {
-                        this.tipMsg = "出现错误";
-                        this.confirmRemove = false;
-                        console.log(doc.data.error);
-                    }
-                    this.showTipDialog = true;
-                    this.getAllarea();
-                    setTimeout(() => {
-                        this.showTipDialog = false;
-                    }, 2000);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        },
-	removeArea(item){
-		this.areaName = item.areaName;
-            this.areaDescription = item.areaDescription;
-            this._id = item._id;
-            this.confirmRemove = true;
-	},
+    },
+    setupArea() {
+      if (!this.areaEditMode) {
+        this.saveArea()
+      } else {
+        this.confirmEditArea()
+      }
+    },
+    saveArea() {
+      axios
+        .post(config.server + '/area/post', {
+          areaName: this.areaName,
+          areaDescription: this.areaDescription
+        })
+        .then(doc => {
+          if (doc.data.code === 0) {
+            this.getAllarea()
+            this.tipMsg = '新增区域成功'
+            this.showTipDialog = true
+            this.addNewAreaMode = false
+            setTimeout(() => {
+              this.showTipDialog = false
+            }, 2000)
+          } else {
+            console.log(doc)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    confirmEditArea() {
+      axios
+        .post(config.server + '/area/update', {
+          areaName: this.areaName,
+          areaDescription: this.areaDescription,
+          _id: this._id
+        })
+        .then(doc => {
+          if (doc.data.code === 0) {
+            this.tipMsg = '区域修改成功'
+            this.addNewAreaMode = false
+          } else if (doc.data.code === 1) {
+            this.tipMsg = doc.data.msg
+          } else {
+            this.tipMsg = '出现错误'
+            this.addNewAreaMode = false
+            console.log(doc.data.error)
+          }
+          this.showTipDialog = true
+          this.getAllarea()
+          setTimeout(() => {
+            this.showTipDialog = false
+          }, 2000)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    confirmRemoveArea() {
+      axios
+        .post(config.server + '/area/remove', {
+          _id: this._id
+        })
+        .then(doc => {
+          if (doc.data.code === 0) {
+            this.tipMsg = '区域删除成功'
+            this.confirmRemove = false
+          } else {
+            this.tipMsg = '出现错误'
+            this.confirmRemove = false
+            console.log(doc.data.error)
+          }
+          this.showTipDialog = true
+          this.getAllarea()
+          setTimeout(() => {
+            this.showTipDialog = false
+          }, 2000)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    removeArea(item) {
+      this.areaName = item.areaName
+      this.areaDescription = item.areaDescription
+      this._id = item._id
+      this.confirmRemove = true
+    },
     editArea(item) {
-		console.log(item)
+      console.log(item)
       this.areaEditMode = true
       this.addNewAreaMode = true
-	  this.areaName = item.areaName
-	  this._id = item._id
+      this.areaName = item.areaName
+      this._id = item._id
       this.areaDescription = item.areaDescription
     },
     closeAreaWindowMethod() {
@@ -1240,12 +1236,12 @@ export default {
             this.allclientainfo = res.data.doc
             this.pageCount = Math.ceil(res.data.count / this.pageSize)
             if (res.data.code === 1) {
-              this.error = true
-              this.erromsg = res.data.msg
+              this.showTipDialog = true
+              this.tipMsg = res.data.msg
               this.searchclienta = ''
               this.getallclienta()
               setTimeout(() => {
-                this.error = false
+                this.showTipDialog = false
               }, 3000)
             }
           })
@@ -1271,12 +1267,12 @@ export default {
             this.allclientbinfo = res.data.doc
             this.pageCount = Math.ceil(res.data.count / this.pageSize)
             if (res.data.code === 1) {
-              this.error = true
-              this.erromsg = res.data.msg
+              this.showTipDialog = true
+              this.tipMsg = res.data.msg
               this.searchclientb = ''
               this.getallclientb()
               setTimeout(() => {
-                this.error = false
+                this.showTipDialog = false
               }, 3000)
             }
           })
@@ -2075,7 +2071,7 @@ export default {
 <style>
 #client {
   width: 80%;
-  margin: 20px auto;
+  margin: 15px auto;
 }
 
 .topbutton {
@@ -2095,12 +2091,12 @@ export default {
   margin: 5px auto;
   border-radius: 10px;
   width: 300px;
-  height: 40px;
+  height: 35px;
   text-align: center;
   -web-kit-appearance: none;
   -moz-appearance: none;
   outline: 0;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .topbutton-center {
@@ -2115,7 +2111,7 @@ export default {
 }
 
 .centertable {
-  margin: 20px auto;
+  margin: 15px auto;
 }
 
 .tabletitle {
@@ -2126,15 +2122,17 @@ export default {
   display: flex;
   -webkit-flex-flow: row;
   flex-flow: row;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
-  height: 60px;
-  line-height: 50px;
+  height: 40px;
+  line-height: 35px;
 }
 
 .tabletitle-item {
   margin: 0 auto;
-  width: 200px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .tablebody {
@@ -2142,8 +2140,8 @@ export default {
   display: flex;
   -webkit-flex-flow: row;
   flex-flow: row;
-  font-size: 20px;
-  line-height: 50px;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .rmDialog-center {
@@ -2275,29 +2273,29 @@ export default {
 }
 
 .removeDialog-body {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
-    margin: 5px 5px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+  margin: 5px 5px;
 }
 
 .removeDialog-body-left {
-    flex-basis: 35%;
+  flex-basis: 35%;
 }
 .removeDialog-body-right {
-    flex-basis: 60%;
+  flex-basis: 60%;
 }
 
 .tipDialog {
-    position: fixed;
-    left: 0;
-    bottom: 40px;
-    background-color: rgba(192, 230, 22, 0.6);
-    width: 200px;
-    height: 40px;
-    line-height: 40px;
-    box-shadow: 1px 1px 5px;
-    z-index: 20;
+  position: fixed;
+  left: 0;
+  bottom: 40px;
+  background-color: rgba(192, 230, 22, 0.6);
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  box-shadow: 1px 1px 5px;
+  z-index: 20;
 }
 </style>
