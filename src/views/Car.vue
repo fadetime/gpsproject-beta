@@ -60,7 +60,7 @@
                 </md-card-content>
             </md-card>
             <!-- 客户页码 -->
-            <div class="page-bar">
+            <div class="page-bar" style="display: flex;justify-content: center;">
                 <div class="page-bar-body" v-if="pageCount!=1">
                     <ul style="width:410px">
                         <li @click="pageButton('A')">

@@ -5,7 +5,14 @@
 				<input type="text" v-model="selectCar" @keyup.enter="search" placeholder="搜索车次信息">
 			</div>
 			<div class="topbutton-right">
-				<md-button class="md-raised md-primary" @click="addbutton" style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
+				<!-- <md-button class="md-raised md-primary" @click="sortLineMethod" style="font-size:16px;width:80px;height:35px;">
+					<md-icon style="margin-bottom: 1px;">swap_vert</md-icon>
+					<span>排序</span>
+				</md-button> -->
+				<md-button class="md-raised md-primary" @click="addbutton" style="font-size:16px;width:80px;height:35px;">
+					<md-icon style="margin-bottom: 1px;">add</md-icon>
+					<span>添加</span>
+				</md-button>
 			</div>
 		</div>
 
@@ -56,7 +63,7 @@
 			</md-card>
 		</div>
 
-		<div class="page-bar">
+		<div class="page-bar" style="display:flex;justify-content: center;">
 			<div class="page-bar-body" v-if="pageCount>1">
 				<ul style="width:410px">
 					<li @click="pageButton('A')">
@@ -248,38 +255,34 @@
 									</div>
 									<div class="tab4-title" style="height:32px;line-height:30px;margin-bottom: 2px;">
 
-										<div class="step-third-title-item" style="width:140px">
+										<div class="step-third-title-item" style="width:156px">
 											<span>客户名称</span>
 										</div>
-										<div class="step-third-title-item" style="width:40px">
+										<div class="step-third-title-item" style="width:50px">
 											<span>信息</span>
 										</div>
-										<div class="step-third-title-item" style="width:40px">
-											<span>调整</span>
-										</div>
-										<div class="step-third-title-item" style="width:40px">
+										<div class="step-third-title-item" style="width:50px">
 											<span>删除</span>
 										</div>
 									</div>
 									<div class="tab4-body" style="height:411px;overflow-y:auto">
-										<md-card md-with-hover v-for="(item,index) in choiceclientb" :key="index" style="background-color: #f4f4f4">
-											<md-card-content>
-												<div style="display:flex">
-													<div class="step-third-title-item" style="width:130px">
-														<span>{{item.clientbname}}</span>
+										<draggable v-model="choiceclientb" :options="{group:'choiceclientb'}" @start="drag=true" @end="drag=false">
+											<md-card md-with-hover v-for="(item,index) in choiceclientb" :key="index" style="background-color: #f4f4f4">
+												<md-card-content>
+													<div style="display:flex">
+														<div class="step-third-title-item" style="width:150px">
+															<span>{{item.clientbname}}</span>
+														</div>
+														<div @click="clientInfoMethod(item)">
+															<md-icon class="step-third-title-item" style="width:50px">info</md-icon>
+														</div>
+														<div @click="removeChoseClient(index)">
+															<md-icon class="step-third-title-item" style="width:50px">block</md-icon>
+														</div>
 													</div>
-													<div @click="clientInfoMethod(item)">
-														<md-icon class="step-third-title-item" style="width:40px">info</md-icon>
-													</div>
-													<div @click="changeClientDown(index)" class="step-third-title-item" style="width:40px">
-														<md-icon v-if="index != choiceclientb.length - 1">swap_vert</md-icon>
-													</div>
-													<div @click="removeChoseClient(index)">
-														<md-icon class="step-third-title-item" style="width:40px">block</md-icon>
-													</div>
-												</div>
-											</md-card-content>
-										</md-card>
+												</md-card-content>
+											</md-card>
+										</draggable>
 									</div>
 								</div>
 							</div>
@@ -313,7 +316,51 @@
 			</md-dialog-actions>
 		</md-dialog>
 		<!-- Dialog end-->
+		<!-- sort dialog start -->
+		<md-dialog :md-active.sync="sortDialog" style="width:500px" class="editdialog">
+			<md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:4px">
+				<span style="color:#fff">车次管理</span>
+			</md-dialog-title>
+			<md-dialog-content>
 
+				<div style="box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);margin-top: 10px;">
+					<div style="display:flex;display:-webkit-flex;font-size:18px;height:40px;line-height:40px;border-bottom: 1px solid rgba(0, 0, 0, 0.2);">
+						<div style="width:60px;text-align: center;">
+							<span>序号</span>
+						</div>
+						<div style="width:200px;text-align: center;">
+							<span>线路名称</span>
+						</div>
+						<div style="width:200px;text-align: center;">
+							<span>线路备注</span>
+						</div>
+					</div>
+					<div>
+						<draggable v-model="tempAllLineInfo" :options="{group:'alltimesinfo'}" @start="drag=true" @end="drag=false">
+							<md-card md-with-hover v-for="(item,index) in tempAllLineInfo" :key="index">
+								<div style="display:flex;display:-webkit-flex;height:40px;line-height:40px">
+									<div style="width:60px;text-align: center;">
+										<span>{{index+1}}</span>
+									</div>
+									<div style="width:200px;text-align: center;">
+										<span>{{item.timesname}}</span>
+									</div>
+									<div style="width:200px;text-align: center;">
+										<span>{{item.timesnote}}</span>
+									</div>
+								</div>
+							</md-card>
+						</draggable>
+					</div>
+				</div>
+
+			</md-dialog-content>
+			<md-dialog-actions style="margin:0 auto">
+				<md-button class="md-raised md-primary" @click="sortDialog = false" style="font-size:18px;width:80px;height:30px">关闭</md-button>
+				<md-button class="md-raised md-primary" @click="saveSortMethod" style="font-size:18px;width:80px;height:30px">存储</md-button>
+			</md-dialog-actions>
+		</md-dialog>
+		<!-- sort dialog end -->
 		<!-- remove dialog start-->
 		<md-dialog :md-active.sync="removeDialog" style="width:500px" class="editdialog">
 			<md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
@@ -514,8 +561,12 @@
 import axios from 'axios'
 import config from '../../public/js/config.js'
 import _ from 'lodash'
+import draggable from 'vuedraggable'
 
 export default {
+  components: {
+    draggable
+  },
   data() {
     return {
       selectedTimes: '',
@@ -563,7 +614,9 @@ export default {
       tempClientInfo: '',
       timeOutName: '',
       showTipDialog: false,
-      tipMsg: ''
+      tipMsg: '',
+	  sortDialog: false,
+	  tempAllLineInfo:[]
     }
   },
   mounted() {
@@ -627,37 +680,36 @@ export default {
       this.searchClient = ''
       this.clientTableMode = 'area'
       this.areaFilterMethod()
-      // if (this.clientArea) {
-      //     let newArray = this.allclientbinfo.filter(item => {
-      //         return item.clientbarea._id === this.clientArea;
-      //     });
-      //     let longArray = _.concat(newArray, this.allclientbinfo);
-      //     this.clientBInfoTable = _.uniq(longArray);
-      // }
     },
     clientServe: function() {
       this.clientArea = ''
       this.searchClient = ''
       this.clientTableMode = 'serve'
       this.serveFilterMethod()
-      // if (this.clientServe) {
-      //     let newArray = this.allclientbinfo.filter(item => {
-      //         return item.clientbserve._id === this.clientServe;
-      //     });
-      //     let longArray = _.concat(newArray, this.allclientbinfo);
-      //     this.clientBInfoTable = _.uniq(longArray);
-      // }
     }
   },
 
   methods: {
-    changeClientDown(i) {
-      if (i == this.choiceclientb.length - 1) return
-      let listClone = this.choiceclientb.slice()
-      let one = listClone[i]
-      listClone[i] = listClone[i + 1]
-      listClone[i + 1] = one
-      this.choiceclientb = listClone
+	  saveSortMethod(){
+		  let tempSortArrty = []
+		  console.log(this.tempAllLineInfo)
+		  this.tempAllLineInfo.forEach(element => {
+			  tempSortArrty.push(element._id)
+		  });
+		console.log(tempSortArrty)
+		axios.post(config.server +'/times/sort',{
+			array:tempSortArrty
+		})
+		.then(doc => {
+			console.log(doc)
+		})
+		.catch(err => {
+			console.log(err)
+		})
+	  },
+    sortLineMethod() {
+	  this.sortDialog = true
+	  this.tempAllLineInfo =this.alltimesinfo
     },
     removeChoseClient(item) {
       console.log(item)
@@ -667,7 +719,6 @@ export default {
       clearTimeout(this.timeOutName)
       this.clientInfoWindow = true
       this.tempClientInfo = item
-      // console.log(item)
       this.timeOutName = setTimeout(() => {
         this.clientInfoWindow = false
       }, 10000)
@@ -1013,7 +1064,6 @@ export default {
         })
     },
     editbutton(item) {
-      console.log(item)
       this.savemode = false
       this.showDialog = true
       this._id = item._id
@@ -1141,8 +1191,8 @@ export default {
               res.data.countNum / this.pageSize
             )
             if (res.data.code === 1) {
-				this.searchClient = ''
-				this.getallclientb()
+              this.searchClient = ''
+              this.getallclientb()
               this.showTipDialog = true
               this.tipMsg = '未找到该客户'
             }

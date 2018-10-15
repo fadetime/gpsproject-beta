@@ -219,9 +219,9 @@
 						<div style="width:420px">
 							<div class="step-third" style="border: 3px dashed #eee;padding:10px;position: relative;">
 								<div style="background-color: #eee;border-radius: 20px;width: 200px;position: absolute;margin-left: 90px;top:-24px">
-									<span style="line-height:32px;margin:0 auto;margin: 10px 64px;">所有客户</span>
+									<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 10px;">所有客户</span>
 								</div>
-								<div class="step-third-title">
+								<div class="step-third-title" style="background-color: #f4f4f4">
 									<div class="step-third-title-item" style="width:40px;"></div>
 									<div class="step-third-title-item" style="width:160px">
 										客户名称
@@ -237,7 +237,7 @@
 									</div>
 								</div>
 								<div style="overflow:auto;">
-									<md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index" style="background-color: #f4f4f4">
+									<md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index">
 										<md-card-content>
 											<div class="step-third-title-body">
 												<input type="checkbox" :id="index" :value="item" v-model="aLineInfo.timesclientb" style="width:25px;height:25px">
@@ -261,42 +261,38 @@
 						<div>
 							<div style="padding-left:10px">
 								<div style="border: 3px dashed #eee;padding:10px;position: relative;">
-									<div style="background-color: #eee;border-radius: 20px;width: 200px;position: absolute;margin-left: 20px;top:-24px">
-										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;">已选客户</span>
+									<div style="background-color: #eee;border-radius: 20px;width: 200px;position: absolute;margin-left: 36px;top:-24px">
+										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 10px;">已选客户</span>
 									</div>
-									<div class="tab4-title" style="height:32px;line-height:30px;margin-bottom: 2px;">
-										<div class="step-third-title-item" style="width:170px">
+									<div class="tab4-title" style="height:32px;line-height:30px;margin-bottom: 2px;background-color: #f4f4f4">
+										<div class="step-third-title-item" style="width:176px">
 											<span>客户名称</span>
 										</div>
 										<div class="step-third-title-item" style="width:50px">
 											<span>信息</span>
 										</div>
 										<div class="step-third-title-item" style="width:40px">
-											<span>调整</span>
-										</div>
-										<div class="step-third-title-item" style="width:40px">
 											<span>删除</span>
 										</div>
 									</div>
 									<div class="tab4-body" style="height:404px;overflow-y:auto">
-										<md-card md-with-hover v-for="(item,index) in aLineInfo.timesclientb" :key="index" style="background-color: #f4f4f4">
-											<md-card-content>
-												<div style="display:flex">
-													<div class="step-third-title-item" style="width:170px" @click="clientInfoMethod(item)">
-														<span>{{item.clientbname}}</span>
+										<draggable v-model="aLineInfo.timesclientb" :options="{group:'timesclientb'}" @start="drag=true" @end="drag=false">
+											<md-card md-with-hover v-for="(item,index) in aLineInfo.timesclientb" :key="index">
+												<md-card-content>
+													<div style="display:flex">
+														<div class="step-third-title-item" style="width:170px" @click="clientInfoMethod(item)">
+															<span>{{item.clientbname}}</span>
+														</div>
+														<div @click="clientInfoMethod(item)">
+															<md-icon class="step-third-title-item" style="width:50px">info</md-icon>
+														</div>
+														<div @click="removeChoseClient(index)">
+															<md-icon class="step-third-title-item" style="width:40px">block</md-icon>
+														</div>
 													</div>
-													<div @click="clientInfoMethod(item)">
-														<md-icon class="step-third-title-item" style="width:50px">info</md-icon>
-													</div>
-													<div @click="changeClientDown(index)" class="step-third-title-item" style="width:40px">
-														<md-icon v-if="index != aLineInfo.timesclientb.length - 1">swap_vert</md-icon>
-													</div>
-													<div @click="removeChoseClient(index)">
-														<md-icon class="step-third-title-item" style="width:40px">block</md-icon>
-													</div>
-												</div>
-											</md-card-content>
-										</md-card>
+												</md-card-content>
+											</md-card>
+										</draggable>
 									</div>
 								</div>
 							</div>
@@ -468,9 +464,13 @@
 import axios from 'axios'
 import config from '../../public/js/config.js'
 import _ from 'lodash'
+import draggable from 'vuedraggable'
 
 export default {
   name: 'home',
+  components: {
+    draggable
+  },
   data() {
     return {
       selectedDate: new Date(),
@@ -586,14 +586,6 @@ export default {
     this.getAllArea()
   },
   methods: {
-    changeClientDown(i) {
-      if (i == this.aLineInfo.timesclientb.length - 1) return
-      let listClone = this.aLineInfo.timesclientb.slice()
-      let one = listClone[i]
-      listClone[i] = listClone[i + 1]
-      listClone[i + 1] = one
-      this.aLineInfo.timesclientb = listClone
-    },
     removeChoseClient(item) {
       console.log(item)
       this.aLineInfo.timesclientb.splice(item, 1)

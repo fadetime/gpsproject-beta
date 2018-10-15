@@ -56,7 +56,7 @@
                 </md-card-content>
             </md-card>
             <!-- 司机页码 -->
-            <div class="page-bar">
+            <div class="page-bar" style="display: flex;justify-content: center;">
                 <div class="page-bar-body" v-if="pageCount!=1">
                     <ul style="width:410px">
                         <li @click="pageButton('A')">
@@ -283,7 +283,7 @@ export default {
             pswdErr: false,
             pageCount: 0, // 总页码
             pageNow: 1, // 当前页码
-            pageSize: 10, //每页显示条数
+            pageSize: 15, //每页显示条数
             showItem: 5, // 最少显示5个页码
             findMode: false,
             updateImagePreview: "",
@@ -873,7 +873,7 @@ export default {
     display: flex;
     -webkit-flex-flow: row;
     flex-flow: row;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 29px;
 }
 

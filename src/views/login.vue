@@ -19,9 +19,9 @@
 
             <md-card-content>
                 
-                <input type="text" v-model="email" class="inputbox">
+                <input type="text" v-model="email" class="inputbox" @keyup.enter="login">
                 <br>
-                <input type="password" class="inputbox" v-model="password">
+                <input type="password" class="inputbox" v-model="password" @keyup.enter="login">
                 <div v-if="errmsg" style="color:#d74342">
                     <span>{{errmsg}}</span>
                 </div>
