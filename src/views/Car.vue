@@ -11,23 +11,23 @@
         <div class="centertable">
             <md-card style="background-color: #eff3f5">
                 <md-card-content>
-                    <div class="tabletitle">
-                        <div class="tabletitle-item">
+                    <div class="tabletitle" >
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
                             <span>车牌</span>
                         </div>
-                        <div class="tabletitle-item">
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
                             <span>车型</span>
                         </div>
-                        <div class="tabletitle-item">
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
                             <span>包含尾门</span>
                         </div>
-                        <div class="tabletitle-item">
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
                             <span>包含冷藏</span>
                         </div>
-                        <div class="tabletitle-item">
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
                             <span>备注</span>
                         </div>
-                        <div class="tabletitle-item">
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
                             <span>操作</span>
                         </div>
                     </div>
@@ -322,7 +322,7 @@ export default {
             typeErr: false,
             pageCount: 0, // 总页码
             pageNow: 1, // 当前页码
-            pageSize: 10, //每页显示条数
+            pageSize: 15, //每页显示条数
             showItem: 5, // 最少显示5个页码
             findMode: false,
             updateImagePreview: "",
@@ -850,15 +850,15 @@ export default {
     flex-flow: row;
     font-size: 18px;
     font-weight: 600;
-    height: 50px;
-    line-height: 50px;
+    height: 40px;
+    line-height: 35px;
 }
 
 .tabletitle-item {
     margin: 0 auto;
     width: 250px;
-    font-size: 18px;
-    line-height: 50px;
+    font-size: 16px;
+    line-height: 29px;
 }
 
 .tablebody {

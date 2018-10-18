@@ -5,10 +5,10 @@
 				<input type="text" v-model="selectCar" @keyup.enter="search" placeholder="搜索车次信息">
 			</div>
 			<div class="topbutton-right">
-				<!-- <md-button class="md-raised md-primary" @click="sortLineMethod" style="font-size:16px;width:80px;height:35px;">
+				<md-button class="md-raised md-primary" @click="sortLineMethod" style="font-size:16px;width:80px;height:35px;">
 					<md-icon style="margin-bottom: 1px;">swap_vert</md-icon>
 					<span>排序</span>
-				</md-button> -->
+				</md-button>
 				<md-button class="md-raised md-primary" @click="addbutton" style="font-size:16px;width:80px;height:35px;">
 					<md-icon style="margin-bottom: 1px;">add</md-icon>
 					<span>添加</span>
@@ -89,7 +89,7 @@
 			<md-dialog-content style="padding: 0 24px 0px 24px;">
 				<md-tabs md-dynamic-height>
 					<md-tab md-label="添加车次" style="font-size:18px;color:#000">
-						<div style="border: 3px dashed #eee">
+						<div style="border: 3px dashed #448aff">
 							<md-field style="margin:45px auto;width:60%">
 								<label style="font-size:20px;color:#000">路线名称</label>
 								<md-input v-model="timesname" style="border-bottom: 1px solid #000;font-size:20px;height:55px;text-align:center"></md-input>
@@ -103,7 +103,7 @@
 						</div>
 					</md-tab>
 					<md-tab md-label="配置车辆" style="font-size:18px;color:#000">
-						<div class="dialog-3" style="border: 3px dashed #eee;padding: 5px;">
+						<div class="dialog-3" style="border: 3px dashed #448aff;padding: 5px;">
 							<div @click="openChoiceList('car')" style="margin:0 auto">
 								<div style="width:500px;height:282px;position: relative;box-shadow:0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);overflow: hidden;">
 									<div>
@@ -138,7 +138,7 @@
 
 					</md-tab>
 					<md-tab md-label="配置司机" style="font-size:18px;color:#000">
-						<div class="dialog-3" style="border: 3px dashed #eee;padding: 5px;">
+						<div class="dialog-3" style="border: 3px dashed #448aff;padding: 5px;">
 
 							<div @click="openChoiceList('driver')" style="margin:0 auto">
 								<div style="width:500px;height:282px;position: relative;box-shadow:0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);overflow: hidden;">
@@ -204,9 +204,9 @@
 							<!-- left window start-->
 							<div style="width:400px">
 
-								<div style="border: 3px dashed #eee;padding:10px;position: relative;">
-									<div style="background-color: #eee;border-radius: 20px;width: 200px;position: absolute;margin-left: 90px;top:-24px">
-										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;">所有客户</span>
+								<div style="border: 3px dashed #448aff;padding:10px;position: relative;">
+									<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 90px;top:-24px">
+										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff;font-size:16px">所有客户</span>
 									</div>
 									<div class="tab4-title" style="height:32px;line-height:30px;margin-bottom: 2px;">
 										<div class="tab4-title-item" style="width:40px;">
@@ -249,9 +249,9 @@
 							<!-- left window end-->
 							<!-- right window end-->
 							<div style="padding-left:10px">
-								<div style="border: 3px dashed #eee;padding:10px;position: relative;">
-									<div style="background-color: #eee;border-radius: 20px;width: 200px;position: absolute;margin-left: 20px;top:-24px">
-										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;">已选客户</span>
+								<div style="border: 3px dashed #448aff;padding:10px;position: relative;">
+									<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 20px;top:-24px">
+										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">已选客户</span>
 									</div>
 									<div class="tab4-title" style="height:32px;line-height:30px;margin-bottom: 2px;">
 
@@ -439,17 +439,19 @@
 					</div>
 					<div class="choseListDialog-body" v-for="(item,index) in allcarinfo" :key="index">
 						<div style="width:30px" class="choseListDialog-item">
-							<md-radio v-model="choicecar" :value="item._id" style="margin:0"></md-radio>
+							<md-radio :id="item._id" v-model="choicecar" :value="item._id" style="margin:0"></md-radio>
 						</div>
-						<div style="width:100px" class="choseListDialog-item">
+						<label :for="item._id" style="width:100px" class="choseListDialog-item">
 							<span>{{item.carid}}</span>
-						</div>
-						<div style="width:50px" class="choseListDialog-item">
+						</label>
+
+						<label :for="item._id" style="width:50px" class="choseListDialog-item">
 							<span>{{item.tailgate}}</span>
-						</div>
-						<div style="width:50px" class="choseListDialog-item">
+						</label>
+						<label :for="item._id" style="width:50px" class="choseListDialog-item">
 							<span>{{item.coolstore}}</span>
-						</div>
+						</label>
+
 					</div>
 				</div>
 
@@ -615,8 +617,9 @@ export default {
       timeOutName: '',
       showTipDialog: false,
       tipMsg: '',
-	  sortDialog: false,
-	  tempAllLineInfo:[]
+      sortDialog: false,
+      tempAllLineInfo: [],
+      findBmode: false
     }
   },
   mounted() {
@@ -690,29 +693,35 @@ export default {
   },
 
   methods: {
-	  saveSortMethod(){
-		  let tempSortArrty = []
-		  console.log(this.tempAllLineInfo)
-		  this.tempAllLineInfo.forEach(element => {
-			  tempSortArrty.push(element._id)
-		  });
-		console.log(tempSortArrty)
-		axios.post(config.server +'/times/sort',{
-			array:tempSortArrty
-		})
-		.then(doc => {
-			console.log(doc)
-		})
-		.catch(err => {
-			console.log(err)
-		})
-	  },
+    saveSortMethod() {
+      let tempSortArrty = []
+      this.tempAllLineInfo.forEach(element => {
+        tempSortArrty.push(element._id)
+      })
+      axios
+        .post(config.server + '/times/sort', {
+          array: tempSortArrty
+        })
+        .then(doc => {
+          this.sortDialog = false
+          this.getalltimes()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     sortLineMethod() {
-	  this.sortDialog = true
-	  this.tempAllLineInfo =this.alltimesinfo
+      this.sortDialog = true
+      axios
+        .get(config.server + '/times')
+        .then(doc => {
+          this.tempAllLineInfo = doc.data.doc
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     removeChoseClient(item) {
-      console.log(item)
       this.choiceclientb.splice(item, 1)
     },
     clientInfoMethod(item) {
@@ -1353,7 +1362,7 @@ export default {
   display: flex;
   -webkit-flex-flow: row;
   flex-flow: row;
-  font-size: 18px;
+  font-size: 16px;
   color: #616161;
   text-align: center;
   height: 36px;

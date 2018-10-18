@@ -113,76 +113,119 @@
 				<md-step id="second" md-label="司机车辆" :md-done.sync="second" :md-error="secondStepError">
 					<div>
 						<div class="step-second" id="addmissionsecond">
-							<div class="step-second-item">
 
-								<div class="container">
-									<div class="custom-selector">
-										<div class="selector-header" style="position:relative" @click="callDriver">
-											<div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorDriver.dirvername}}</div>
-											<div style="position:absolute;top:0;right:0">
-												<img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow" id="selector-arrow-driver">
-											</div>
+							<div class="dialog-3" style="padding: 5px;">
+								<div @click="openChoiceList('driver')" style="margin:0 auto">
+									<div style="width:370px;height:282px;position: relative;box-shadow:0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);overflow: hidden;">
+										<div>
+											<img v-if="!selectorDriver.image" src="../../public/img/ebuyLogo.png" alt="logo" style="width:100%;height:100%;object-fit: contain;">
+											<img v-else :src="selectorDriver.image | imgurl" alt="carphoto" style="width:100%;height:100%;object-fit: contain;">
 										</div>
-										<div class="selector-body" id="selector-body-driver">
-											<div class="box" id="selector-box-driver" v-for="(item,index) in alldirverinfo" :key="index" @click="choseDriverItem(item)">
-												<span style="font-size:20px">{{item.dirvername}}</span>
+										<div style="position: absolute;bottom: 0;background: rgba(0,0,0,0.7);width: 100%;height: 75px;color:#fff">
+											<div v-if="!selectorDriver" style="text-align: center;">
+												<span style="font-size:20px;line-height:100px;">{{setDriverText}}</span>
+											</div>
+											<div v-else>
+												<div style="font-size:16px;display:-webkit-flex;display: flex;padding-top:10px">
+													<div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+														<div style="flex-basis:30%;text-align: right;">
+															<span>姓名:</span>
+														</div>
+														<div style="flex-basis:70%;text-align: center;">
+															<span>{{selectorDriver.dirvername}}</span>
+														</div>
+													</div>
+													<div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+														<div style="flex-basis:30%;text-align: right;">
+															<span>电话:</span>
+														</div>
+														<div style="flex-basis:70%;text-align: center;">
+															<span>{{selectorDriver.dirverphone}}</span>
+														</div>
+													</div>
+												</div>
+												<div style="font-size:16px;display:-webkit-flex;display: flex;padding-top:10px">
+													<div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+														<div style="flex-basis:30%;text-align: right;">
+															<span>驾照:</span>
+														</div>
+														<div style="flex-basis:70%;text-align: center;">
+															<span>{{selectorDriver.dirvercard}}</span>
+														</div>
+													</div>
+													<div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+														<div style="flex-basis:30%;text-align: right;">
+															<span>备注:</span>
+														</div>
+														<div style="flex-basis:70%;text-align: center;">
+															<span>{{selectorDriver.dirvernote}}</span>
+														</div>
+														
+													</div>
+												</div>
+
 											</div>
 										</div>
 									</div>
 								</div>
-
-								<md-card md-with-hover style="background-color: #eee">
-									<md-card-header>
-										<div class="md-title" style="font-size:20px;text-align:left">司机信息</div>
-										<div class="md-subhead" style="font-size:15px;text-align:left">请确认详细信息</div>
-									</md-card-header>
-
-									<md-card-content v-if="aLineInfo">
-										<div style="margin:0 20px">
-											<p style="font-size:20px">司机姓名：{{selectorDriver.dirvername}}</p>
-											<p style="font-size:20px">司机电话：{{selectorDriver.dirverphone}}</p>
-											<p style="font-size:20px">司机驾照：{{selectorDriver.dirvercard}}</p>
-											<p style="font-size:20px">司机备注：{{selectorDriver.dirvernote}}</p>
-										</div>
-									</md-card-content>
-
-								</md-card>
 							</div>
 
-							<div class="step-second-item">
-
-								<div class="container">
-									<div class="custom-selector">
-										<div class="selector-header" style="position:relative" @click="callCar">
-											<div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorCar.carid}}</div>
-											<div style="position:absolute;top:0;right:0">
-												<img src="../../public/img/icons/arrowDown.png" alt="arrowDown" style="width:40px" class="arrow" id="selector-arrow-car">
-											</div>
+							<div class="dialog-3" style="padding: 5px;">
+								<div @click="openChoiceList('car')" style="margin:0 auto">
+									<div style="width:370px;height:282px;position: relative;box-shadow:0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);overflow: hidden;">
+										<div>
+											<img v-if="!selectorCar.image" src="../../public/img/ebuyLogo.png" alt="logo" style="width:100%;height:100%;object-fit: contain;">
+											<img v-else :src="selectorCar.image | imgurl" alt="carphoto" style="width:100%;height:100%;object-fit: contain;">
 										</div>
-										<div class="selector-body" id="selector-body-car">
-											<div class="box" id="selector-box-car" v-for="(item,index) in allcarinfo" :key="index" @click="choseCarItem(item)">
-												<span style="font-size:20px">{{item.carid}}</span>
+										<div style="position: absolute;bottom: 0;background: rgba(0,0,0,0.7);width: 100%;height: 75px;color:#fff">
+											<div v-if="!selectorCar" style="text-align: center;">
+												<span style="font-size:20px;line-height:100px;">{{setCarText}}</span>
+											</div>
+											<div v-else>
+												<div style="font-size:16px;display:-webkit-flex;display: flex;padding-top:10px">
+													<div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+														<div style="flex-basis:30%;text-align: right;">
+															<span>车牌:</span>
+														</div>
+														<div style="flex-basis:70%;text-align: center;">
+															<span>{{selectorCar.carid}}</span>
+														</div>
+													</div>
+													<div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+														<div style="flex-basis:30%;text-align: right;">
+															<span>型号:</span>
+														</div>
+														<div style="flex-basis:70%;text-align: center;">
+															<span>{{selectorCar.cartype}}</span>
+														</div>
+													</div>
+												</div>
+												<div style="font-size:16px;display:-webkit-flex;display: flex;padding-top:10px">
+													<div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+														<div style="flex-basis:30%;text-align: right;">
+															<span>尾门:</span>
+														</div>
+														<div style="flex-basis:70%;text-align: center;">
+															<span>{{selectorCar.tailgate}}</span>
+														</div>
+													</div>
+													<div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+														<div style="flex-basis:30%;text-align: right;">
+															<span>备注:</span>
+														</div>
+														<div style="flex-basis:70%;text-align: center;">
+															<span>{{selectorCar.carnote}}</span>
+														</div>
+													</div>
+
+												</div>
+
 											</div>
 										</div>
 									</div>
 								</div>
-
-								<md-card md-with-hover style="background-color: #eee">
-									<md-card-header>
-										<div class="md-title" style="font-size:20px;text-align:left">车辆信息</div>
-										<div class="md-subhead" style="font-size:15px;text-align:left">请确认详细信息</div>
-									</md-card-header>
-
-									<md-card-content v-if="aLineInfo">
-										<div style="margin:0 20px">
-											<p style="font-size:20px">车牌号码：{{selectorCar.carid}}</p>
-											<p style="font-size:20px">车辆型号：{{selectorCar.cartype}}</p>
-											<p style="font-size:20px">有无尾门：{{selectorCar.tailgate}}</p>
-											<p style="font-size:20px">车辆备注：{{selectorCar.carnote}}</p>
-										</div>
-									</md-card-content>
-								</md-card>
 							</div>
+
 						</div>
 						<div style="text-align:center">
 							<md-button class="md-raised md-primary" @click="setDone('second', 'third')">下一步</md-button>
@@ -217,9 +260,9 @@
 					<div style="display:flex;display:-webkit-flex;padding-top:20px">
 						<!-- left window start -->
 						<div style="width:420px">
-							<div class="step-third" style="border: 3px dashed #eee;padding:10px;position: relative;">
-								<div style="background-color: #eee;border-radius: 20px;width: 200px;position: absolute;margin-left: 90px;top:-24px">
-									<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 10px;">所有客户</span>
+							<div class="step-third" style="border: 3px dashed #448aff;padding:10px;position: relative;">
+								<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 90px;top:-24px">
+									<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 4px;color:#fff;font-size:16px">所有客户</span>
 								</div>
 								<div class="step-third-title" style="background-color: #f4f4f4">
 									<div class="step-third-title-item" style="width:40px;"></div>
@@ -260,9 +303,9 @@
 						<!-- right window start -->
 						<div>
 							<div style="padding-left:10px">
-								<div style="border: 3px dashed #eee;padding:10px;position: relative;">
-									<div style="background-color: #eee;border-radius: 20px;width: 200px;position: absolute;margin-left: 36px;top:-24px">
-										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 10px;">已选客户</span>
+								<div style="border: 3px dashed #448aff;padding:10px;position: relative;">
+									<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 36px;top:-24px">
+										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 4px;color:#fff;font-size:16px">已选客户</span>
 									</div>
 									<div class="tab4-title" style="height:32px;line-height:30px;margin-bottom: 2px;background-color: #f4f4f4">
 										<div class="step-third-title-item" style="width:176px">
@@ -457,6 +500,91 @@
 			</div>
 		</transition>
 		<!-- client info window end -->
+
+		<!-- chose list dialog start -->
+		<transition name="custom-classes-transition1" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+			<div v-if="choseListDialog" style="background: rgba(0,0,0,.6);z-index:20;position: fixed;top:0;bottom:0;left:0;right:0"></div>
+		</transition>
+		<transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+			<div v-if="choseListDialog" style="z-index:21;position: fixed;top:0;bottom:0;left:0;right:0;display: flex;justify-content: center;align-items: center;" @click.self.prevent="closeListDialog">
+				<div style="width:320px;background:#fff;" >
+					<div style="background:#ff5252;box-shadow: rgb(0, 0, 0) 0px 1px 5px;height:30px;line-height: 30px;">
+						<span style="font-size:18px;color:#fff">选择列表</span>
+					</div>
+					<div style="padding:10px 20px;overflow:auto;height: 300px;">
+						<div v-if="isCarList">
+							<div class="choseListDialog-body" style="background-color:#eeeeee;font-weight: bold;">
+								<div style="width:30px" class="choseListDialog-item">
+									<span></span>
+								</div>
+								<div style="width:100px" class="choseListDialog-item">
+									<span>车牌</span>
+								</div>
+								<div style="width:80px" class="choseListDialog-item">
+									<span>尾门</span>
+								</div>
+								<div style="width:80px" class="choseListDialog-item">
+									<span>冷藏</span>
+								</div>
+							</div>
+							<div class="choseListDialog-body"  v-for="(item,index) in allcarinfo" :key="index">
+								<div style="width:30px" class="choseListDialog-item">
+									<md-radio :id="item._id" v-model="radioCar" :value="item._id" style="margin:0" @change="shippingTempData(item)"></md-radio>
+								</div>
+								<label :for="item._id" style="width:100px" class="choseListDialog-item">
+									<span>{{item.carid}}</span>
+								</label>
+
+								<label :for="item._id" style="width:80px" class="choseListDialog-item">
+									<span>{{item.tailgate}}</span>
+								</label>
+								<label :for="item._id" style="width:80px" class="choseListDialog-item">
+									<span>{{item.coolstore}}</span>
+								</label>
+							</div>
+						</div>
+						<div v-else>
+							<div class="choseListDialog-body" style="background-color:#eeeeee;font-weight: bold;">
+								<div style="width:30px" class="choseListDialog-item">
+									<span></span>
+								</div>
+								<div style="width:90px" class="choseListDialog-item">
+									<span>姓名</span>
+								</div>
+								<div style="width:90px" class="choseListDialog-item">
+									<span>驾照</span>
+								</div>
+								<div style="width:100px" class="choseListDialog-item">
+									<span>电话</span>
+								</div>
+							</div>
+							<div class="choseListDialog-body"  v-for="(item,index) in alldirverinfo" :key="index">
+								<div style="width:30px" class="choseListDialog-item">
+									<md-radio :id="item._id" v-model="radioDriver" :value="item._id" style="margin:0" @change="shippingTempData(item)"></md-radio>
+								</div>
+								<label :for="item._id" style="width:90px" class="choseListDialog-item">
+									<span>{{item.dirvername}}</span>
+								</label>
+
+								<label :for="item._id" style="width:90px" class="choseListDialog-item">
+									<span>{{item.dirvercard}}</span>
+								</label>
+								<label :for="item._id" style="width:100px" class="choseListDialog-item">
+									<span>{{item.dirverphone}}</span>
+								</label>
+							</div>
+						</div>
+						
+					</div>
+					<div>
+						<md-button class="md-raised md-primary" @click="choseListDialog = false" style="font-size:18px;width:80px;height:30px">取消</md-button>
+						<md-button class="md-raised md-primary" style="font-size:18px;width:80px;height:30px" @click="confirmeChangeCarOrDriver">选择</md-button>
+					</div>
+				</div>
+			</div>
+		</transition>
+		<!-- chose list dialog end -->
+
 	</div>
 </template>
 
@@ -521,7 +649,14 @@ export default {
       clientTablePageCount: 10,
       clientTableMode: '',
       clientInfoWindow: false,
-      tempClientInfo: ''
+      tempClientInfo: '',
+      setDriverText: '请选择司机',
+	  setCarText: '请选择车辆',
+	  isCarList:false,
+	  choseListDialog:false,
+	  radioCar:'',
+	  radioDriver:'',
+	  tempData:''
     }
   },
   computed: {
@@ -586,8 +721,38 @@ export default {
     this.getAllArea()
   },
   methods: {
+	  confirmeChangeCarOrDriver(){
+		  if(this.isCarList){
+			  if(this.tempData){
+				  this.selectorCar = this.tempData
+				  this.tempData=''
+			  }
+		  }else{
+			  if(this.tempData){
+				  this.selectorDriver = this.tempData
+				  this.tempData=''
+			  }
+		  }
+			this.choseListDialog = false
+	  },
+	  shippingTempData(item){
+		  this.tempData = item
+	  },
+	  closeListDialog(){
+		  this.choseListDialog= false
+	  },
+    openChoiceList(item) {
+      if (item === 'car') {
+		this.radioCar= this.selectorCar._id
+        this.isCarList = true
+      } else {
+		  this.radioDriver = this.selectorDriver._id
+        this.isCarList = false
+      }
+      this.choseListDialog = true
+      this.radioCar= this.selectorCar._id
+    },
     removeChoseClient(item) {
-      console.log(item)
       this.aLineInfo.timesclientb.splice(item, 1)
     },
     clientInfoMethod(item) {
@@ -934,13 +1099,17 @@ export default {
             dirvername: this.aLineInfo.timesdirver.dirvername,
             dirverphone: this.aLineInfo.timesdirver.dirverphone,
             dirvercard: this.aLineInfo.timesdirver.dirvercard,
-            dirvernote: this.aLineInfo.timesdirver.dirvernote
+            dirvernote: this.aLineInfo.timesdirver.dirvernote,
+			_id: this.aLineInfo.timesdirver._id,
+			image:this.aLineInfo.timesdirver.image
           }
           this.selectorCar = {
             carid: this.aLineInfo.timescar.carid,
             cartype: this.aLineInfo.timescar.cartype,
             tailgate: this.aLineInfo.timescar.tailgate,
-            carnote: this.aLineInfo.timescar.carnote
+            carnote: this.aLineInfo.timescar.carnote,
+			_id:this.aLineInfo.timescar._id,
+			image:this.aLineInfo.timescar.image
           }
           this.firstStepError = null
           if (index) {
@@ -1011,7 +1180,7 @@ export default {
       axios
         .get(config.server + '/car')
         .then(res => {
-          this.allcarinfo = res.data
+		  this.allcarinfo = res.data
         })
         .catch(err => {
           console.log(err)
@@ -1363,5 +1532,21 @@ export default {
   display: flex;
   -webkit-flex-flow: row;
   flex-flow: row;
+}
+
+.choseListDialog-body {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row;
+  flex-flow: row;
+  font-size: 16px;
+  color: #616161;
+  text-align: center;
+  height: 36px;
+  line-height: 36px;
+}
+
+.choseListDialog-item {
+  border: 1px solid #e0e0e0;
 }
 </style>

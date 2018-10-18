@@ -178,24 +178,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="page-bar" v-else>
-            <div class="page-bar-body" v-if="pageCount!=1">
-                <ul style="width:510px">
-                    <li @click="pageButtonB('A')">
-                        <span>上一页</span>
-                    </li>
-                    <li v-for="(item,index) in pages" :key="index" @click="pageButtonB(item)" :class="{'active':pageNow == item}">
-                        <span>{{item}}</span>
-                    </li>
-                    <li @click="pageButtonB('B')">
-                        <span>下一页</span>
-                    </li>
-                    <li>
-                        <span>共<i>{{pageCount}}</i>页</span>
-                    </li>
-                </ul>
-            </div>
-        </div> -->
 		<!-- page bar end-->
 		<!-- Dialog b start-->
 		<md-dialog :md-active.sync="showDialogb" style="width:600px">
@@ -365,37 +347,37 @@
 				<span style="color:#fff">合作商管理</span>
 			</md-dialog-title>
 			<div style="overflow: auto;position: relative;">
-				<div style="background-color: #eee;border-radius: 20px;width: 200px;position: absolute;margin-left: 40px;">
-					<span style="line-height:32px;margin:0 auto;margin: 10px 64px;">基本信息</span>
+				<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 40px;">
+					<span style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff;font-size:16px">基本信息</span>
 				</div>
-				<div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row;flex-flow: row;border: 3px dashed #eee;margin: 20px 10px;">
+				<div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row;flex-flow: row;border: 3px dashed #448aff;margin: 20px 10px;">
 					<div style="flex-basis:45%;margin:0 auto;padding-top:16px">
 						<md-field style="margin:0 auto" :class="nameclass">
-							<label style="font-size:18px">合作商名称</label>
+							<label style="font-size:16px">合作商名称</label>
 							<md-input v-model="clientaname" style="border-bottom: 1px solid #000;font-size:16px;height:40px;text-align:center"></md-input>
 							<span class="md-error">合作商标识信息，必填项目</span>
 						</md-field>
 
 						<md-field style="margin:20px auto" :class="addclass">
-							<label style="font-size:18px">合作商地址</label>
+							<label style="font-size:16px">合作商地址</label>
 							<md-input v-model="clientaaddress" style="border-bottom: 1px solid #000;font-size:16px;height:41px;text-align:center"></md-input>
 							<span class="md-error">合作商地址标识信息，必填项目</span>
 						</md-field>
 
 						<md-field style="margin:20px auto" :class="posclass">
-							<label style="font-size:18px">合作商邮编</label>
+							<label style="font-size:16px">合作商邮编</label>
 							<md-input v-model="clientapostcode" type="number" style="border-bottom: 1px solid #000;font-size:16px;height:40px;text-align:center"></md-input>
 							<span class="md-error">合作商邮编标识信息，必填项目</span>
 						</md-field>
 
 						<md-field style="margin:20px auto" :class="phoclass">
-							<label style="font-size:18px">合作商电话</label>
+							<label style="font-size:16px">合作商电话</label>
 							<md-input v-model="clientaphone" style="border-bottom: 1px solid #000;font-size:16px;height:40px;text-align:center" @change="check_phone($event)"></md-input>
 							<span class="md-error">请输入8位纯数字</span>
 						</md-field>
 
 						<md-field style="margin:20px auto" :class="timclass">
-							<label style="font-size:18px">合同时间</label>
+							<label style="font-size:16px">合同时间</label>
 							<md-input v-model="clientatime" type="date" style="border-bottom: 1px solid #000;font-size:16px;height:40px;padding-top:21px;text-align:center"></md-input>
 							<span class="md-error">合作商合同起始时间，必填项目</span>
 						</md-field>
@@ -403,33 +385,33 @@
 					</div>
 					<div style="flex-basis:45%;margin:0 auto;padding-top: 16px">
 						<md-field style="margin:0 auto" :class="usrclass">
-							<label style="font-size:18px">合作商账户</label>
+							<label style="font-size:16px">合作商账户</label>
 							<md-input v-model="clientausername" style="border-bottom: 1px solid #000;font-size:16px;height:40px;text-align:center"></md-input>
 							<span class="md-error">合作商登陆账户，必填项目</span>
 						</md-field>
 
 						<md-field style="margin:20px auto" :class="pswclass">
-							<label style="font-size:18px">合作商密码</label>
+							<label style="font-size:16px">合作商密码</label>
 							<md-input v-model="clientapsw" type="password" style="border-bottom: 1px solid #000;font-size:16px;height:41px;text-align:center"></md-input>
 							<span class="md-error">合作商登陆密码，必填项目</span>
 						</md-field>
 
 						<md-field style="margin:20px auto" :class="conclass">
-							<label style="font-size:18px">合作期限</label>
+							<label style="font-size:16px">合作期限</label>
 							<md-input v-model="clientacontract" style="border-bottom: 1px solid #000;font-size:16px;height:40px;text-align:center" @change="check_phone($event,'date')"></md-input>
 							<span class="md-error">填写有效数字</span>
-							<span style="font-size:18px;line-height:40px">个月</span>
+							<span style="font-size:16px;line-height:40px">个月</span>
 						</md-field>
 
 						<md-field style="margin:20px auto" :class="maiclass">
-							<label style="font-size:18px">合作商邮箱</label>
+							<label style="font-size:16px">合作商邮箱</label>
 							<md-input v-model="clientamail" type="email" style="border-bottom: 1px solid #000;font-size:16px;height:40px;text-align:center"></md-input>
 							<span class="md-error" v-if="!clientamail">合作商邮箱标识信息，必填项目</span>
 						</md-field>
 
 						<div>
 							<div>
-								<span style="font-size:18px;color: rgba(0,0,0,0.54);">合作商状态</span>
+								<span style="font-size:16px;color: rgba(0,0,0,0.54);">合作商状态</span>
 							</div>
 							<div class="dialogb-body-status">
 								<div class="dialogb-body-status-left">
@@ -455,16 +437,18 @@
 
 				</div>
 				<div style="height: 18px;position: relative;">
-					<div style="background-color: #eee;border-radius: 20px;width: 200px;position: absolute;margin-left: 40px;">
-						<md-switch v-model="openSMS" style="margin:6px 25px" @change="openSendSMS">短信提醒</md-switch>
+					<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 40px;">
+						<md-switch v-model="openSMS" style="margin:6px 25px" @change="openSendSMS">
+							<span style="font-size:16px;color:#fff">短信提醒</span>
+						</md-switch>
 					</div>
 				</div>
 				<div>
 					<transition name="custom-classes-transition" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-						<div style="border: 3px dashed #eee;margin: 0 10px;" v-if="openSMS">
+						<div style="border: 3px dashed #448aff;margin: 0 10px;" v-if="openSMS">
 							<div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row wrap;flex-flow: row wrap;padding-top:30px">
 								<div style="flex-basis:40%;padding:0 40px">
-									<span style="font-size:18px">开始时间</span>
+									<span style="font-size:16px">开始时间</span>
 								</div>
 								<div style="flex-basis:40%;padding:0 78px">
 									<span style="font-size:16px">{{nowDate | datefilter}}</span>
@@ -472,7 +456,7 @@
 							</div>
 							<div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row wrap;flex-flow: row wrap;">
 								<div style="flex-basis:40%;padding:0 40px;line-height:72px">
-									<span style="font-size:18px">结束时间</span>
+									<span style="font-size:16px">结束时间</span>
 								</div>
 								<div style="flex-basis:40%;padding:0 40px">
 									<md-datepicker v-model="selectedSMSDate" md-immediately>
@@ -481,7 +465,7 @@
 								</div>
 							</div>
 						</div>
-						<div v-else style="margin: 0px 10px;border-top: 3px dashed #eee;">
+						<div v-else style="margin: 0px 10px;border-top: 3px dashed #448aff;">
 							<div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row wrap;flex-flow: row wrap;padding-top:30px">
 								<div style="flex-basis:40%;padding:0 40px"></div>
 								<div style="flex-basis:40%;padding:0 40px"></div>

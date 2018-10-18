@@ -52,6 +52,22 @@ body {
     margin: 0;
 }
 
+h1{
+    font-size: 20px;
+}
+
+h2{
+    font-size: 18px;
+}
+
+h3{
+    font-size: 16px;
+}
+
+p {
+    font-size: 16px
+}
+
 /* 日期选择框左半颜色 */
 
 .md-datepicker-header {
