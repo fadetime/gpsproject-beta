@@ -58,13 +58,13 @@
 				<span style="color:#fff">添加今日任务</span>
 			</md-dialog-title>
 			<md-steppers md-linear :md-active-step.sync="active">
-				<md-step id="first" md-label="选择车次" :md-done.sync="first" :md-error="firstStepError">
+				<md-step id="first" md-label="选择车次" :md-done.sync="first" :md-error="firstStepError" style="padding:0 24px">
 					<div class="dialog-first-body">
 						<div class="dialog-first-body-left">
-							<div class="container">
+							<div class="container" style="box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;">
 								<div class="custom-selector">
 									<div class="selector-header" style="position:relative" @click="callBody">
-										<div style="background:#eee;padding:10px;text-align:center;font-size:20px">{{selectorText}}</div>
+										<div style="padding:10px;text-align:center;font-size:18px">{{selectorText}}</div>
 										<div style="position:absolute;top:0;right:0">
 											<img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow">
 										</div>
@@ -76,31 +76,74 @@
 									</div>
 								</div>
 							</div>
-						</div>
 
-						<div class="dialog-first-body-right">
-							<md-card md-with-hover style="width:90%;background-color: #eee">
-								<md-card-header>
-									<div class="md-title" style="font-size:20px;text-align:left">
-										<span>线路信息</span>
-									</div>
-									<div class="md-subhead" style="font-size:15px;text-align:left">
-										<span>请确认详细信息</span>
-									</div>
-								</md-card-header>
-
+							<md-card md-with-hover style="width:100%;margin-top:8px">
+								<div style="border-bottom: 1px solid rgba(0, 0, 0, 0.2);height: 40px;line-height: 41px;text-align:center">
+									<h3>线路信息</h3>
+								</div>
 								<md-card-content v-if="aLineInfo">
-									<div style="margin:0 20px">
+									<div style="margin:0 20px;padding-top: 14px;">
 										<div style="text-align:left;margin:10px 0">
-											<span style="font-size:20px">线路名称：{{aLineInfo.timesname}}</span>
+											<span style="font-size:16px">线路名称：{{aLineInfo.timesname}}</span>
 										</div>
 										<div style="text-align:left;margin:10px 0">
-											<span style="font-size:20px">线路备注：{{aLineInfo.timesnote}}</span>
+											<span style="font-size:16px">线路备注：{{aLineInfo.timesnote}}</span>
 										</div>
 									</div>
 								</md-card-content>
-
 							</md-card>
+
+						</div>
+
+						<div class="dialog-first-body-right">
+							<div>
+								<md-button class="md-raised" :style="missionDateModeButtonCSS1" @click="missionDateModeButton('today')">
+									<p>今日任务</p>
+								</md-button>
+								<md-button class="md-raised" :style="missionDateModeButtonCSS2" @click="missionDateModeButton('tomorrow')">
+									<p>明日任务</p>
+								</md-button>
+								<md-button class="md-raised" :style="missionDateModeButtonCSS3" @click="missionDateModeButton('other')">
+									<p>选择日期</p>
+								</md-button>
+							</div>
+							<div style="box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;">
+								<div style="border-bottom: 1px solid rgba(0,0,0,.2);height:40px;line-height:41px">
+									<h3>任务日期</h3>
+								</div>
+								<div style="color:#448aff;padding:10px 0 10px 20px;text-align:left">
+									<p v-if="missionDateModeButtonCSS1">今日任务</p>
+									<p v-else-if="missionDateModeButtonCSS2">明日任务</p>
+									<p v-else>选择日期</p>
+								</div>
+								<div style="display:flex;display:-webkit-flex;padding:0px 0 10px 20px" v-if="missionDateModeButtonCSS3">
+									<div id="testref" ref="testref">
+										<p>任务日期：</p>
+									</div>
+									<div>
+										<md-datepicker v-model="missionDateModePacker" md-immediately style="margin-top: -24px;margin-bottom:0" />
+									</div>
+									<div>
+
+									</div>
+								</div>
+								<div style="display:flex;display:-webkit-flex;padding:0px 0 10px 20px" v-else>
+									<div>
+										<p>任务日期：</p>
+									</div>
+									<div>
+										<p>{{missionDateModePacker}}</p>
+									</div>
+								</div>
+								<div style="display:flex;display:-webkit-flex;padding:0px 0 10px 20px">
+									<div>
+										<p>有效时间：</p>
+									</div>
+									<div>
+										<p>00:00-23:59</p>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -160,7 +203,7 @@
 														<div style="flex-basis:70%;text-align: center;">
 															<span>{{selectorDriver.dirvernote}}</span>
 														</div>
-														
+
 													</div>
 												</div>
 
@@ -435,7 +478,6 @@
 		<!-- confirm dialog start -->
 		<md-dialog :md-active.sync="confirmDialog">
 			<md-dialog-title>确认删除此任务</md-dialog-title>
-
 			<md-dialog-actions>
 				<md-button class="md-raised md-primary" @click="confirmDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
 				<md-button class="md-raised md-accent" @click="confirmRemoveMission" style="font-size:20px;width:100px;height:40px">确认</md-button>
@@ -495,7 +537,6 @@
 							<span>{{tempClientInfo.clientbaddress}}</span>
 						</div>
 					</div>
-
 				</div>
 			</div>
 		</transition>
@@ -507,7 +548,7 @@
 		</transition>
 		<transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
 			<div v-if="choseListDialog" style="z-index:21;position: fixed;top:0;bottom:0;left:0;right:0;display: flex;justify-content: center;align-items: center;" @click.self.prevent="closeListDialog">
-				<div style="width:320px;background:#fff;" >
+				<div style="width:320px;background:#fff;">
 					<div style="background:#ff5252;box-shadow: rgb(0, 0, 0) 0px 1px 5px;height:30px;line-height: 30px;">
 						<span style="font-size:18px;color:#fff">选择列表</span>
 					</div>
@@ -527,7 +568,7 @@
 									<span>冷藏</span>
 								</div>
 							</div>
-							<div class="choseListDialog-body"  v-for="(item,index) in allcarinfo" :key="index">
+							<div class="choseListDialog-body" v-for="(item,index) in allcarinfo" :key="index">
 								<div style="width:30px" class="choseListDialog-item">
 									<md-radio :id="item._id" v-model="radioCar" :value="item._id" style="margin:0" @change="shippingTempData(item)"></md-radio>
 								</div>
@@ -558,7 +599,7 @@
 									<span>电话</span>
 								</div>
 							</div>
-							<div class="choseListDialog-body"  v-for="(item,index) in alldirverinfo" :key="index">
+							<div class="choseListDialog-body" v-for="(item,index) in alldirverinfo" :key="index">
 								<div style="width:30px" class="choseListDialog-item">
 									<md-radio :id="item._id" v-model="radioDriver" :value="item._id" style="margin:0" @change="shippingTempData(item)"></md-radio>
 								</div>
@@ -574,7 +615,7 @@
 								</label>
 							</div>
 						</div>
-						
+
 					</div>
 					<div>
 						<md-button class="md-raised md-primary" @click="choseListDialog = false" style="font-size:18px;width:80px;height:30px">取消</md-button>
@@ -584,6 +625,16 @@
 			</div>
 		</transition>
 		<!-- chose list dialog end -->
+
+		<!-- tip box start -->
+		<transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutLeft">
+			<div class="tipDialog" v-if="showTipDialog">
+				<div>
+					<span> {{errormsg}}</span>
+				</div>
+			</div>
+		</transition>
+		<!-- tip box end -->
 
 	</div>
 </template>
@@ -651,12 +702,17 @@ export default {
       clientInfoWindow: false,
       tempClientInfo: '',
       setDriverText: '请选择司机',
-	  setCarText: '请选择车辆',
-	  isCarList:false,
-	  choseListDialog:false,
-	  radioCar:'',
-	  radioDriver:'',
-	  tempData:''
+      setCarText: '请选择车辆',
+      isCarList: false,
+      choseListDialog: false,
+      radioCar: '',
+      radioDriver: '',
+      tempData: '',
+      missionDateModeButtonCSS1: 'background:#448aff;color:#fff',
+      missionDateModeButtonCSS2: '',
+      missionDateModeButtonCSS3: '',
+	  missionDateModePacker: new Date().toLocaleDateString(),
+	  showTipDialog:false
     }
   },
   computed: {
@@ -721,36 +777,61 @@ export default {
     this.getAllArea()
   },
   methods: {
-	  confirmeChangeCarOrDriver(){
-		  if(this.isCarList){
-			  if(this.tempData){
-				  this.selectorCar = this.tempData
-				  this.tempData=''
-			  }
-		  }else{
-			  if(this.tempData){
-				  this.selectorDriver = this.tempData
-				  this.tempData=''
-			  }
-		  }
-			this.choseListDialog = false
-	  },
-	  shippingTempData(item){
-		  this.tempData = item
-	  },
-	  closeListDialog(){
-		  this.choseListDialog= false
-	  },
+    missionDateModeButton(item) {
+      if (item === 'today') {
+        this.missionDateModeButtonCSS1 = 'background:#448aff;color:#fff'
+        this.missionDateModeButtonCSS2 = ''
+        this.missionDateModeButtonCSS3 = ''
+        this.missionDateModePacker = new Date().toLocaleDateString()
+      } else if (item === 'tomorrow') {
+        this.missionDateModeButtonCSS2 = 'background:#448aff;color:#fff'
+        this.missionDateModeButtonCSS1 = ''
+        this.missionDateModeButtonCSS3 = ''
+        this.missionDateModePacker = new Date().toLocaleDateString()
+        this.missionDateModePacker = new Date(
+          this.missionDateModePacker
+        ).getTime()
+        this.missionDateModePacker += 86400000
+        this.missionDateModePacker = new Date(
+          this.missionDateModePacker
+        ).toLocaleDateString()
+      } else {
+        this.missionDateModePacker = ''
+        this.missionDateModeButtonCSS3 = 'background:#448aff;color:#fff'
+        this.missionDateModeButtonCSS2 = ''
+        this.missionDateModeButtonCSS1 = ''
+      }
+    },
+    confirmeChangeCarOrDriver() {
+      if (this.isCarList) {
+        if (this.tempData) {
+          this.selectorCar = this.tempData
+          this.tempData = ''
+        }
+      } else {
+        if (this.tempData) {
+          this.selectorDriver = this.tempData
+          this.tempData = ''
+        }
+      }
+      this.choseListDialog = false
+    },
+    shippingTempData(item) {
+      this.tempData = item
+    },
+    closeListDialog() {
+      this.choseListDialog = false
+    },
     openChoiceList(item) {
       if (item === 'car') {
-		this.radioCar= this.selectorCar._id
+        this.radioCar = this.selectorCar._id
         this.isCarList = true
       } else {
-		  this.radioDriver = this.selectorDriver._id
+        this.radioDriver = this.selectorDriver._id
         this.isCarList = false
       }
       this.choseListDialog = true
-      this.radioCar= this.selectorCar._id
+      this.radioCar = this.selectorCar._id
     },
     removeChoseClient(item) {
       this.aLineInfo.timesclientb.splice(item, 1)
@@ -880,10 +961,10 @@ export default {
             this.getMission()
             this.detaildialog = false
           }
-          this.error = true
+          this.showTipDialog = true
           this.errormsg = doc.data.msg
           setTimeout(() => {
-            this.error = false
+            this.showTipDialog = false
           }, 3000)
         })
         .catch(err => {
@@ -1092,7 +1173,12 @@ export default {
     setDone(id, index) {
       if (id == 'first') {
         if (this.choseLine == '') {
-          this.firstStepError = ' '
+          this.firstStepError = '未选择线路'
+        } else if (
+          this.missionDateModeButtonCSS3 &&
+          !this.missionDateModePacker
+        ) {
+          this.firstStepError = '未选日期'
         } else {
           this[id] = true
           this.selectorDriver = {
@@ -1100,16 +1186,16 @@ export default {
             dirverphone: this.aLineInfo.timesdirver.dirverphone,
             dirvercard: this.aLineInfo.timesdirver.dirvercard,
             dirvernote: this.aLineInfo.timesdirver.dirvernote,
-			_id: this.aLineInfo.timesdirver._id,
-			image:this.aLineInfo.timesdirver.image
+            _id: this.aLineInfo.timesdirver._id,
+            image: this.aLineInfo.timesdirver.image
           }
           this.selectorCar = {
             carid: this.aLineInfo.timescar.carid,
             cartype: this.aLineInfo.timescar.cartype,
             tailgate: this.aLineInfo.timescar.tailgate,
             carnote: this.aLineInfo.timescar.carnote,
-			_id:this.aLineInfo.timescar._id,
-			image:this.aLineInfo.timescar.image
+            _id: this.aLineInfo.timescar._id,
+            image: this.aLineInfo.timescar.image
           }
           this.firstStepError = null
           if (index) {
@@ -1180,7 +1266,7 @@ export default {
       axios
         .get(config.server + '/car')
         .then(res => {
-		  this.allcarinfo = res.data
+          this.allcarinfo = res.data
         })
         .catch(err => {
           console.log(err)
@@ -1244,6 +1330,7 @@ export default {
     },
 
     saveMission() {
+      let query = {}
       this.aLineInfo.timesclientb.forEach(element => {
         if (element.clientbserve == null) {
           element.clientbserve = {
@@ -1251,31 +1338,82 @@ export default {
           }
         }
       })
-      let query = {
-        missionline: this.aLineInfo.timesname,
-        missionnote: this.aLineInfo.timesnote,
-        missiondirver: this.selectorDriver.dirvername,
-        missionphone: this.aLineInfo.timesdirver.dirverphone,
-        missioncar: this.selectorCar.carid,
-        missionclient: this.aLineInfo.timesclientb.map(item => {
-          let obj = {
-            clientbname: item.clientbname,
-            clientbaddress: item.clientbaddress,
-            clientbphone: item.clientbphone,
-            clientbpostcode: item.clientbpostcode,
-            clientbserve: item.clientbserve.clientaname,
-            image: item.image
-          }
-          return obj
-        })
+      if (this.missionDateModeButtonCSS1) {
+        query = {
+          missionline: this.aLineInfo.timesname,
+          missionnote: this.aLineInfo.timesnote,
+          missiondirver: this.selectorDriver.dirvername,
+          missionphone: this.aLineInfo.timesdirver.dirverphone,
+          missioncar: this.selectorCar.carid,
+          missionclient: this.aLineInfo.timesclientb.map(item => {
+            let obj = {
+              clientbname: item.clientbname,
+              clientbaddress: item.clientbaddress,
+              clientbphone: item.clientbphone,
+              clientbpostcode: item.clientbpostcode,
+              clientbserve: item.clientbserve.clientaname,
+              image: item.image
+            }
+            return obj
+          })
+        }
+      } else if (this.missionDateModeButtonCSS2) {
+        let nextDay = new Date().getTime() + 86400000
+        query = {
+          missiondate: new Date(nextDay).toISOString(),
+          missionline: this.aLineInfo.timesname,
+          missionnote: this.aLineInfo.timesnote,
+          missiondirver: this.selectorDriver.dirvername,
+          missionphone: this.aLineInfo.timesdirver.dirverphone,
+          missioncar: this.selectorCar.carid,
+          missionclient: this.aLineInfo.timesclientb.map(item => {
+            let obj = {
+              clientbname: item.clientbname,
+              clientbaddress: item.clientbaddress,
+              clientbphone: item.clientbphone,
+              clientbpostcode: item.clientbpostcode,
+              clientbserve: item.clientbserve.clientaname,
+              image: item.image
+            }
+            return obj
+          })
+        }
+      } else {
+        let otherDay = new Date(this.missionDateModePacker).toISOString()
+        query = {
+          missiondate: otherDay,
+          missionline: this.aLineInfo.timesname,
+          missionnote: this.aLineInfo.timesnote,
+          missiondirver: this.selectorDriver.dirvername,
+          missionphone: this.aLineInfo.timesdirver.dirverphone,
+          missioncar: this.selectorCar.carid,
+          missionclient: this.aLineInfo.timesclientb.map(item => {
+            let obj = {
+              clientbname: item.clientbname,
+              clientbaddress: item.clientbaddress,
+              clientbphone: item.clientbphone,
+              clientbpostcode: item.clientbpostcode,
+              clientbserve: item.clientbserve.clientaname,
+              image: item.image
+            }
+            return obj
+          })
+        }
       }
       axios
         .post(config.server + '/mission/create', query)
         .then(res => {
-          this.error = true
-          this.errormsg = res.data.msg
+          this.missionDateModePacker = ''
+          if (this.missionDateModeButtonCSS2) {
+            this.errormsg = '明日任务已建立完成'
+          } else if (this.missionDateModeButtonCSS1) {
+            this.errormsg = res.data.msg
+          } else {
+            this.errormsg = '指定任务已建立完成'
+		  }
+		  this.showTipDialog = true
           setTimeout(() => {
-            this.error = false
+            this.showTipDialog = false
           }, 3000)
           if (res.data.code == 0) {
             this.addDialog = false
@@ -1425,7 +1563,8 @@ export default {
   overflow: auto;
   position: absolute;
   z-index: 100;
-  background-color: #eee;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
 .box {
@@ -1548,5 +1687,17 @@ export default {
 
 .choseListDialog-item {
   border: 1px solid #e0e0e0;
+}
+
+.tipDialog {
+  position: fixed;
+  left: 0;
+  bottom: 40px;
+  background-color: rgba(192, 230, 22, 0.6);
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  box-shadow: 1px 1px 5px;
+  z-index: 20;
 }
 </style>

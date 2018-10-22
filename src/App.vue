@@ -1,7 +1,9 @@
 <template>
 <div id="app">
     <top-bar v-if="$store.state.token"></top-bar>
-    <router-view/>
+    <keep-alive>
+        <router-view/>
+    </keep-alive>
     <div id="logout" style="text-align:right" @click="changePage" v-if="$store.state.token" v-show="!showLogo">
         <h1><a href="#" class="home" style="color:#d74342"><b><img src="../public/img/mLogo.png" style="width:60px" alt="logo"></b><span>easy buy</span></a></h1>
     </div>
@@ -62,10 +64,12 @@ h2{
 
 h3{
     font-size: 16px;
+    margin: 0;
 }
 
 p {
-    font-size: 16px
+    font-size: 16px;
+    margin: 0;
 }
 
 /* 日期选择框左半颜色 */
