@@ -237,698 +237,693 @@
         <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" />
         <!-- error end -->
         <!-- tip box start -->
-		<transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutLeft">
-			<div class="tipDialog" v-if="showTipDialog">
-				<div>
-					<span> {{tipMsg}}</span>
-				</div>
-			</div>
-		</transition>
-		<!-- tip box end -->
+        <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutLeft">
+            <div class="tipDialog" v-if="showTipDialog">
+                <div>
+                    <span> {{tipMsg}}</span>
+                </div>
+            </div>
+        </transition>
+        <!-- tip box end -->
     </div>
 </template>
 
 <script>
-import axios from "axios";
-import config from "../../public/js/config.js";
-import lrz from "lrz";
+import axios from 'axios'
+import config from '../../public/js/config.js'
+import lrz from 'lrz'
 
 export default {
-    data() {
-        return {
-            selecteddirver: "",
-            searchDirver: "",
-            searchedDriver: [],
-            dirvers: [],
-            showDialog: false,
-            deleteDialog: false,
-            _id: "",
-            dirvername: "",
-            dirverid: "",
-            dirverphone: "",
-            dirvercard: "",
-            dirverusername: "",
-            dirverpsw: "",
-            dirvernote: "",
-            alldirverinfo: [],
-            successdmsg: false,
-            error: false,
-            errormsg: "发生未知错误",
-            savemode: true,
-            nameErr: false,
-            passErr: false,
-            phonErr: false,
-            cardErr: false,
-            userdErr: false,
-            pswdErr: false,
-            pageCount: 0, // 总页码
-            pageNow: 1, // 当前页码
-            pageSize: 15, //每页显示条数
-            showItem: 5, // 最少显示5个页码
-            findMode: false,
-            updateImagePreview: "",
-            updateImage: "",
-            driverImage: "",
-            showTipDialog:false,
-            tipMsg:''
-        };
-    },
-    mounted() {
-        this.getalldirver();
-    },
-    computed: {
-        pages: function() {
-            let pag = [];
-            if (this.pageNow < this.showItem) {
-                //如果当前的激活的项 小于要显示的条数
-                //总页数和要显示的条数那个大就显示多少条
-                let i = Math.min(this.showItem, this.pageCount);
-                while (i) {
-                    pag.unshift(i--);
-                }
-            } else {
-                //当前页数大于显示页数了
-                let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
-                    i = this.showItem;
-                if (middle > this.pageCount - this.showItem) {
-                    middle = this.pageCount - this.showItem + 1;
-                }
-                while (i--) {
-                    pag.push(middle++);
-                }
-            }
-            return pag;
-        },
-        nameclass() {
-            return {
-                "md-invalid": this.nameErr
-            };
-        },
-        passclass() {
-            return {
-                "md-invalid": this.passErr
-            };
-        },
-        phonclass() {
-            return {
-                "md-invalid": this.phonErr
-            };
-        },
-        cardclass() {
-            return {
-                "md-invalid": this.cardErr
-            };
-        },
-        userclass() {
-            return {
-                "md-invalid": this.userdErr
-            };
-        },
-        pswclass() {
-            return {
-                "md-invalid": this.pswdErr
-            };
-        }
-    },
-    methods: {
-        check_phone(event) {
-            let value = event.target.value;
-            if (!/^[0-9]{8}$/.test(value)) {
-                this.phonErr = true;
-            } else {
-                this.phonErr = false;
-            }
-        },
-        fileChange(el) {
-            if (typeof FileReader === "undefined") {
-                return alert("浏览器不支持上传图片");
-            }
-            if (!el.target.files[0].size) return; //判断是否有文件数量
-            this.updateImagePreview = window.URL.createObjectURL(
-                el.target.files[0]
-            );
-            this.updateImage = el.target.files[0];
-            this.driverImage = "";
-            el.target.value = "";
-        },
-
-        uploadFile() {
-            document.getElementById("upload_file").click();
-        },
-
-        search(item) {
-            this.pageNow = 1;
-            if (this.searchDirver == "") {
-                this.findMode = false;
-                this.getalldirver();
-            } else {
-                this.findMode = true;
-                axios
-                    .post(config.server + "/dirver/find", {
-                        word: this.searchDirver,
-                        pageSize: this.pageSize,
-                        pageNow: this.pageNow
-                    })
-                    .then(res => {
-                        this.alldirverinfo = res.data.doc;
-                        this.pageCount = Math.ceil(
-                            res.data.count / this.pageSize
-                        );
-                        if (res.data.code === 1) {
-                            this.showTipDialog = true;
-                            this.tipMsg = res.data.msg;
-                            this.searchDirver = "";
-                            this.getalldirver();
-                            setTimeout(() => {
-                                this.showTipDialog = false;
-                            }, 3000);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            }
-        },
-        adddirverbutton() {
-            this.updateImagePreview = "";
-            this.showDialog = true;
-            this.savemode = true;
-            this._id = "";
-            this.dirvername = "";
-            this.dirverid = "";
-            this.dirverphone = "";
-            this.dirvercard = "";
-            this.dirverusername = "";
-            this.dirverpsw = "";
-            this.dirvernote = "";
-        },
-        deletebutton(item) {
-            this.deleteDialog = true;
-            this._id = item._id;
-            this.dirvername = item.dirvername;
-            this.dirverid = item.dirverid;
-            this.dirverphone = item.dirverphone;
-            this.dirvercard = item.dirvercard;
-            this.dirverusername = item.dirverusername;
-            this.dirverpsw = item.dirverpsw;
-            this.dirvernote = item.dirvernote;
-            this.driverImage = item.image;
-        },
-        confirmdelete() {
-            axios
-                .post(config.server + "/dirver/remove", {
-                    _id: this._id
-                })
-                .then(res => {
-                    this.errormsg = res.data.msg;
-                    this.error = true;
-                    setTimeout(() => {
-                        this.error = false;
-                    }, 3000);
-                    if (res.data.code == 0) {
-                        this.getalldirver();
-                        this.deleteDialog = false;
-                    }
-                })
-                .catch(err => {
-                    this.error = true;
-                    this.errormsg = err;
-                    setTimeout(() => {
-                        this.error = false;
-                    }, 3000);
-                });
-        },
-
-        editbutton(item) {
-            this.updateImagePreview = "";
-            this.savemode = false;
-            this._id = item._id;
-            this.dirvername = item.dirvername;
-            this.dirverid = item.dirverid;
-            this.dirverphone = item.dirverphone;
-            this.dirvercard = item.dirvercard;
-            this.dirverusername = item.dirverusername;
-            this.dirverpsw = "";
-            this.dirvernote = item.dirvernote;
-            this.driverImage = item.image;
-            this.showDialog = true;
-        },
-
-        pageButton(item) {
-            if (item === "A") {
-                if (this.pageNow > 1) {
-                    this.pageNow = this.pageNow - 1;
-                }
-            } else if (item === "B") {
-                if (this.pageNow < this.pageCount) {
-                    this.pageNow = this.pageNow + 1;
-                }
-            } else {
-                this.pageNow = item;
-            }
-            if (this.findMode === false) {
-                axios
-                    .post(config.server + "/dirver/get", {
-                        pageSize: this.pageSize,
-                        pageNow: this.pageNow
-                    })
-                    .then(res => {
-                        this.alldirverinfo = res.data.doc;
-                        this.pageCount = Math.ceil(
-                            res.data.count / this.pageSize
-                        );
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            } else {
-                axios
-                    .post(config.server + "/dirver/find", {
-                        word: this.searchDirver,
-                        pageSize: this.pageSize,
-                        pageNow: this.pageNow
-                    })
-                    .then(res => {
-                        this.alldirverinfo = res.data.doc;
-                        this.pageCount = Math.ceil(
-                            res.data.count / this.pageSize
-                        );
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-            }
-        },
-
-        confirmedit() {
-            if (
-                !this.dirvername ||
-                !this.dirverid ||
-                !this.dirverusername ||
-                !this.dirverphone ||
-                !this.dirvercard ||
-                this.phonErr ||
-                !this.dirverusername
-            ) {
-                if (!this.dirvername) {
-                    this.nameErr = true;
-                } else {
-                    this.nameErr = false;
-                }
-                if (!this.dirverid) {
-                    this.passErr = true;
-                } else {
-                    this.passErr = false;
-                }
-                if (!this.dirverphone) {
-                    this.phonErr = true;
-                }
-                if (!this.dirvercard) {
-                    this.cardErr = true;
-                } else {
-                    this.cardErr = false;
-                }
-                if (!this.dirverusername) {
-                    this.userdErr = true;
-                } else {
-                    this.userdErr = false;
-                }
-            } else {
-                let payload = new FormData();
-                let maxSize = 200 * 1024; //200KB
-
-                if (this.dirverpsw != "") {
-                    payload.append("dirverpsw", this.dirverpsw);
-                }
-                if (this.updateImagePreview != "") {
-                    lrz(this.updateImage, {
-                        quality: 0.5
-                    }).then(res => {
-                        if (this.updateImage.size > maxSize) {
-                            this.updateImage = res.file;
-                        }
-                        let payloadImg = new FormData();
-                        payloadImg.append("_id", this._id);
-                        payloadImg.append("image", this.updateImage);
-                        axios({
-                            method: "post",
-                            url: config.server + "/dirver/edit/img",
-                            data: payloadImg,
-                            headers: {
-                                "Content-Type": "multipart/form-data"
-                            }
-                        })
-                            .then(response => {
-                                // console.log(response)
-                            })
-                            .catch(error => {
-                                console.log(error);
-                            });
-                    });
-                }
-                payload.append("_id", this._id);
-                payload.append("dirvername", this.dirvername);
-                payload.append("dirverid", this.dirverid);
-                payload.append("dirverphone", this.dirverphone);
-                payload.append("dirvercard", this.dirvercard);
-                payload.append("dirverusername", this.dirverusername);
-                payload.append("dirvernote", this.dirvernote);
-
-                axios({
-                    method: "post",
-                    url: config.server + "/dirver/edit",
-                    data: payload,
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                })
-                    .then(response => {
-                        if (response.data.code == 1) {
-                            this.error = true;
-                            this.errormsg = response.data.msg;
-                            setTimeout(() => {
-                                this.error = false;
-                            }, 3000);
-                        } else {
-                            this.successdmsg = true;
-                            this.showDialog = false;
-                            this.getalldirver();
-                            setTimeout(() => {
-                                this.successdmsg = false;
-                            }, 3000);
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error);
-                        this.error = true;
-                        this.errormsg = response.data.msg;
-                        setTimeout(() => {
-                            this.error = false;
-                        }, 3000);
-                    });
-            }
-        },
-        getalldirver() {
-            axios
-                .post(config.server + "/dirver/get", {
-                    pageSize: this.pageSize,
-                    pageNow: this.pageNow
-                })
-                .then(res => {
-                    this.alldirverinfo = res.data.doc;
-                    this.pageCount = Math.ceil(res.data.count / this.pageSize);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        },
-        adddirver() {
-            if (
-                !this.dirvername ||
-                !this.dirverid ||
-                !this.dirverusername ||
-                !this.dirverpsw ||
-                !this.dirverphone ||
-                this.phonErr ||
-                !this.dirvercard ||
-                !this.dirverusername
-            ) {
-                if (!this.dirvername) {
-                    this.nameErr = true;
-                } else {
-                    this.nameErr = false;
-                }
-                if (!this.dirverid) {
-                    this.passErr = true;
-                } else {
-                    this.passErr = false;
-                }
-                if (!this.dirverphone) {
-                    this.phonErr = true;
-                }
-                if (!this.dirvercard) {
-                    this.cardErr = true;
-                } else {
-                    this.cardErr = false;
-                }
-                if (!this.dirverusername) {
-                    this.userdErr = true;
-                } else {
-                    this.userdErr = false;
-                }
-                if (!this.dirverpsw) {
-                    this.pswdErr = true;
-                } else {
-                    this.pswdErr = false;
-                }
-            } else {
-                this.nameErr = false;
-                this.passErr = false;
-                this.phonErr = false;
-                this.cardErr = false;
-                this.userdErr = false;
-                this.pswdErr = false;
-                let payload = new FormData();
-                let maxSize = 200 * 1024; //200KB
-
-                if (this.updateImage) {
-                    lrz(this.updateImage, {
-                        quality: 0.5
-                    }).then(res => {
-                        if (this.updateImage.size > maxSize) {
-                            this.updateImage = res.file;
-                        }
-                        payload.append("image", this.updateImage);
-                        payload.append("dirvername", this.dirvername);
-                        payload.append("dirverid", this.dirverid);
-                        payload.append("dirverphone", this.dirverphone);
-                        payload.append("dirvercard", this.dirvercard);
-                        payload.append("dirverusername", this.dirverusername);
-                        payload.append("dirverpsw", this.dirverpsw);
-                        payload.append("dirvernote", this.dirvernote);
-                        axios({
-                            method: "post",
-                            url: config.server + "/dirver",
-                            data: payload,
-                            headers: {
-                                "Content-Type": "multipart/form-data"
-                            }
-                        })
-                            .then(response => {
-                                if (response.data.code == 1) {
-                                    this.error = true;
-                                    this.errormsg = response.data.msg;
-                                    setTimeout(() => {
-                                        this.error = false;
-                                    }, 3000);
-                                } else {
-                                    this.successdmsg = true;
-                                    this.showDialog = false;
-                                    this.getalldirver();
-                                    setTimeout(() => {
-                                        this.successdmsg = false;
-                                    }, 3000);
-                                }
-                            })
-                            .catch(error => {
-                                console.log(error);
-                                this.error = true;
-                                this.errormsg = response.data.msg;
-                                setTimeout(() => {
-                                    this.error = false;
-                                }, 3000);
-                            });
-                    });
-                } else {
-                    payload.append("dirvername", this.dirvername);
-                    payload.append("dirverid", this.dirverid);
-                    payload.append("dirverphone", this.dirverphone);
-                    payload.append("dirvercard", this.dirvercard);
-                    payload.append("dirverusername", this.dirverusername);
-                    payload.append("dirverpsw", this.dirverpsw);
-                    payload.append("dirvernote", this.dirvernote);
-                    axios({
-                        method: "post",
-                        url: config.server + "/dirver",
-                        data: payload,
-                        headers: {
-                            "Content-Type": "multipart/form-data"
-                        }
-                    })
-                        .then(response => {
-                            if (response.data.code == 1) {
-                                this.error = true;
-                                this.errormsg = response.data.msg;
-                                setTimeout(() => {
-                                    this.error = false;
-                                }, 3000);
-                            } else {
-                                this.successdmsg = true;
-                                this.showDialog = false;
-                                this.getalldirver();
-                                setTimeout(() => {
-                                    this.successdmsg = false;
-                                }, 3000);
-                            }
-                        })
-                        .catch(error => {
-                            console.log(error);
-                            this.error = true;
-                            this.errormsg = response.data.msg;
-                            setTimeout(() => {
-                                this.error = false;
-                            }, 3000);
-                        });
-                }
-            }
-        }
+  data() {
+    return {
+      selecteddirver: '',
+      searchDirver: '',
+      searchedDriver: [],
+      dirvers: [],
+      showDialog: false,
+      deleteDialog: false,
+      _id: '',
+      dirvername: '',
+      dirverid: '',
+      dirverphone: '',
+      dirvercard: '',
+      dirverusername: '',
+      dirverpsw: '',
+      dirvernote: '',
+      alldirverinfo: [],
+      successdmsg: false,
+      error: false,
+      errormsg: '发生未知错误',
+      savemode: true,
+      nameErr: false,
+      passErr: false,
+      phonErr: false,
+      cardErr: false,
+      userdErr: false,
+      pswdErr: false,
+      pageCount: 0, // 总页码
+      pageNow: 1, // 当前页码
+      pageSize: 15, //每页显示条数
+      showItem: 5, // 最少显示5个页码
+      findMode: false,
+      updateImagePreview: '',
+      updateImage: '',
+      driverImage: '',
+      showTipDialog: false,
+      tipMsg: ''
     }
-};
+  },
+  mounted() {
+    this.getalldirver()
+  },
+  computed: {
+    pages: function() {
+      let pag = []
+      if (this.pageNow < this.showItem) {
+        //如果当前的激活的项 小于要显示的条数
+        //总页数和要显示的条数那个大就显示多少条
+        let i = Math.min(this.showItem, this.pageCount)
+        while (i) {
+          pag.unshift(i--)
+        }
+      } else {
+        //当前页数大于显示页数了
+        let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
+          i = this.showItem
+        if (middle > this.pageCount - this.showItem) {
+          middle = this.pageCount - this.showItem + 1
+        }
+        while (i--) {
+          pag.push(middle++)
+        }
+      }
+      return pag
+    },
+    nameclass() {
+      return {
+        'md-invalid': this.nameErr
+      }
+    },
+    passclass() {
+      return {
+        'md-invalid': this.passErr
+      }
+    },
+    phonclass() {
+      return {
+        'md-invalid': this.phonErr
+      }
+    },
+    cardclass() {
+      return {
+        'md-invalid': this.cardErr
+      }
+    },
+    userclass() {
+      return {
+        'md-invalid': this.userdErr
+      }
+    },
+    pswclass() {
+      return {
+        'md-invalid': this.pswdErr
+      }
+    }
+  },
+  methods: {
+    check_phone(event) {
+      let value = event.target.value
+      if (!/^[0-9]{8}$/.test(value)) {
+        this.phonErr = true
+      } else {
+        this.phonErr = false
+      }
+    },
+    fileChange(el) {
+      if (typeof FileReader === 'undefined') {
+        return alert('浏览器不支持上传图片')
+      }
+      if (!el.target.files[0].size) return //判断是否有文件数量
+      this.updateImagePreview = window.URL.createObjectURL(el.target.files[0])
+      this.updateImage = el.target.files[0]
+      this.driverImage = ''
+      el.target.value = ''
+    },
+
+    uploadFile() {
+      document.getElementById('upload_file').click()
+    },
+
+    search(item) {
+      this.pageNow = 1
+      if (this.searchDirver == '') {
+        this.findMode = false
+        this.getalldirver()
+      } else {
+        this.findMode = true
+        axios
+          .post(config.server + '/dirver/find', {
+            word: this.searchDirver,
+            pageSize: this.pageSize,
+            pageNow: this.pageNow
+          })
+          .then(res => {
+            this.alldirverinfo = res.data.doc
+            this.pageCount = Math.ceil(res.data.count / this.pageSize)
+            if (res.data.code === 1) {
+              this.showTipDialog = true
+              this.tipMsg = res.data.msg
+              this.searchDirver = ''
+              this.getalldirver()
+              setTimeout(() => {
+                this.showTipDialog = false
+              }, 3000)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+    adddirverbutton() {
+      this.updateImagePreview = ''
+      this.showDialog = true
+      this.savemode = true
+      this._id = ''
+      this.dirvername = ''
+      this.dirverid = ''
+      this.dirverphone = ''
+      this.dirvercard = ''
+      this.dirverusername = ''
+      this.dirverpsw = ''
+      this.dirvernote = ''
+    },
+    deletebutton(item) {
+      this.deleteDialog = true
+      this._id = item._id
+      this.dirvername = item.dirvername
+      this.dirverid = item.dirverid
+      this.dirverphone = item.dirverphone
+      this.dirvercard = item.dirvercard
+      this.dirverusername = item.dirverusername
+      this.dirverpsw = item.dirverpsw
+      this.dirvernote = item.dirvernote
+      this.driverImage = item.image
+    },
+    confirmdelete() {
+      axios
+        .post(config.server + '/dirver/remove', {
+          _id: this._id,
+          logOperator: localStorage.getItem('name')
+        })
+        .then(res => {
+          this.errormsg = res.data.msg
+          this.error = true
+          setTimeout(() => {
+            this.error = false
+          }, 3000)
+          if (res.data.code == 0) {
+            this.getalldirver()
+            this.deleteDialog = false
+          }
+        })
+        .catch(err => {
+          this.error = true
+          this.errormsg = err
+          setTimeout(() => {
+            this.error = false
+          }, 3000)
+        })
+    },
+
+    editbutton(item) {
+      this.updateImagePreview = ''
+      this.savemode = false
+      this._id = item._id
+      this.dirvername = item.dirvername
+      this.dirverid = item.dirverid
+      this.dirverphone = item.dirverphone
+      this.dirvercard = item.dirvercard
+      this.dirverusername = item.dirverusername
+      this.dirverpsw = ''
+      this.dirvernote = item.dirvernote
+      this.driverImage = item.image
+      this.showDialog = true
+    },
+
+    pageButton(item) {
+      if (item === 'A') {
+        if (this.pageNow > 1) {
+          this.pageNow = this.pageNow - 1
+        }
+      } else if (item === 'B') {
+        if (this.pageNow < this.pageCount) {
+          this.pageNow = this.pageNow + 1
+        }
+      } else {
+        this.pageNow = item
+      }
+      if (this.findMode === false) {
+        axios
+          .post(config.server + '/dirver/get', {
+            pageSize: this.pageSize,
+            pageNow: this.pageNow
+          })
+          .then(res => {
+            this.alldirverinfo = res.data.doc
+            this.pageCount = Math.ceil(res.data.count / this.pageSize)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        axios
+          .post(config.server + '/dirver/find', {
+            word: this.searchDirver,
+            pageSize: this.pageSize,
+            pageNow: this.pageNow
+          })
+          .then(res => {
+            this.alldirverinfo = res.data.doc
+            this.pageCount = Math.ceil(res.data.count / this.pageSize)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+
+    confirmedit() {
+      if (
+        !this.dirvername ||
+        !this.dirverid ||
+        !this.dirverusername ||
+        !this.dirverphone ||
+        !this.dirvercard ||
+        this.phonErr ||
+        !this.dirverusername
+      ) {
+        if (!this.dirvername) {
+          this.nameErr = true
+        } else {
+          this.nameErr = false
+        }
+        if (!this.dirverid) {
+          this.passErr = true
+        } else {
+          this.passErr = false
+        }
+        if (!this.dirverphone) {
+          this.phonErr = true
+        }
+        if (!this.dirvercard) {
+          this.cardErr = true
+        } else {
+          this.cardErr = false
+        }
+        if (!this.dirverusername) {
+          this.userdErr = true
+        } else {
+          this.userdErr = false
+        }
+      } else {
+        let payload = new FormData()
+        let maxSize = 200 * 1024 //200KB
+
+        if (this.dirverpsw != '') {
+          payload.append('dirverpsw', this.dirverpsw)
+        }
+        if (this.updateImagePreview != '') {
+          lrz(this.updateImage, {
+            quality: 0.5
+          }).then(res => {
+            if (this.updateImage.size > maxSize) {
+              this.updateImage = res.file
+            }
+            let payloadImg = new FormData()
+            payloadImg.append('_id', this._id)
+            payloadImg.append('image', this.updateImage)
+            axios({
+              method: 'post',
+              url: config.server + '/dirver/edit/img',
+              data: payloadImg,
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            })
+              .then(response => {
+                // console.log(response)
+              })
+              .catch(error => {
+                console.log(error)
+              })
+          })
+        }
+        payload.append('_id', this._id)
+        payload.append('dirvername', this.dirvername)
+        payload.append('dirverid', this.dirverid)
+        payload.append('dirverphone', this.dirverphone)
+        payload.append('dirvercard', this.dirvercard)
+        payload.append('dirverusername', this.dirverusername)
+        payload.append('dirvernote', this.dirvernote)
+        payload.append('logOperator', localStorage.getItem('name'))
+
+        axios({
+          method: 'post',
+          url: config.server + '/dirver/edit',
+          data: payload,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+          .then(response => {
+            if (response.data.code == 1) {
+              this.error = true
+              this.errormsg = response.data.msg
+              setTimeout(() => {
+                this.error = false
+              }, 3000)
+            } else {
+              this.successdmsg = true
+              this.showDialog = false
+              this.getalldirver()
+              setTimeout(() => {
+                this.successdmsg = false
+              }, 3000)
+            }
+          })
+          .catch(error => {
+            console.log(error)
+            this.error = true
+            this.errormsg = response.data.msg
+            setTimeout(() => {
+              this.error = false
+            }, 3000)
+          })
+      }
+    },
+    getalldirver() {
+      axios
+        .post(config.server + '/dirver/get', {
+          pageSize: this.pageSize,
+          pageNow: this.pageNow
+        })
+        .then(res => {
+          this.alldirverinfo = res.data.doc
+          this.pageCount = Math.ceil(res.data.count / this.pageSize)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    adddirver() {
+      if (
+        !this.dirvername ||
+        !this.dirverid ||
+        !this.dirverusername ||
+        !this.dirverpsw ||
+        !this.dirverphone ||
+        this.phonErr ||
+        !this.dirvercard ||
+        !this.dirverusername
+      ) {
+        if (!this.dirvername) {
+          this.nameErr = true
+        } else {
+          this.nameErr = false
+        }
+        if (!this.dirverid) {
+          this.passErr = true
+        } else {
+          this.passErr = false
+        }
+        if (!this.dirverphone) {
+          this.phonErr = true
+        }
+        if (!this.dirvercard) {
+          this.cardErr = true
+        } else {
+          this.cardErr = false
+        }
+        if (!this.dirverusername) {
+          this.userdErr = true
+        } else {
+          this.userdErr = false
+        }
+        if (!this.dirverpsw) {
+          this.pswdErr = true
+        } else {
+          this.pswdErr = false
+        }
+      } else {
+        this.nameErr = false
+        this.passErr = false
+        this.phonErr = false
+        this.cardErr = false
+        this.userdErr = false
+        this.pswdErr = false
+        let payload = new FormData()
+        let maxSize = 200 * 1024 //200KB
+        payload.append('logOperator', localStorage.getItem('name'))
+
+        if (this.updateImage) {
+          lrz(this.updateImage, {
+            quality: 0.5
+          }).then(res => {
+            if (this.updateImage.size > maxSize) {
+              this.updateImage = res.file
+            }
+            payload.append('image', this.updateImage)
+            payload.append('dirvername', this.dirvername)
+            payload.append('dirverid', this.dirverid)
+            payload.append('dirverphone', this.dirverphone)
+            payload.append('dirvercard', this.dirvercard)
+            payload.append('dirverusername', this.dirverusername)
+            payload.append('dirverpsw', this.dirverpsw)
+            payload.append('dirvernote', this.dirvernote)
+            axios({
+              method: 'post',
+              url: config.server + '/dirver',
+              data: payload,
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            })
+              .then(response => {
+                if (response.data.code == 1) {
+                  this.error = true
+                  this.errormsg = response.data.msg
+                  setTimeout(() => {
+                    this.error = false
+                  }, 3000)
+                } else {
+                  this.successdmsg = true
+                  this.showDialog = false
+                  this.getalldirver()
+                  setTimeout(() => {
+                    this.successdmsg = false
+                  }, 3000)
+                }
+              })
+              .catch(error => {
+                console.log(error)
+                this.error = true
+                this.errormsg = response.data.msg
+                setTimeout(() => {
+                  this.error = false
+                }, 3000)
+              })
+          })
+        } else {
+          payload.append('dirvername', this.dirvername)
+          payload.append('dirverid', this.dirverid)
+          payload.append('dirverphone', this.dirverphone)
+          payload.append('dirvercard', this.dirvercard)
+          payload.append('dirverusername', this.dirverusername)
+          payload.append('dirverpsw', this.dirverpsw)
+          payload.append('dirvernote', this.dirvernote)
+          axios({
+            method: 'post',
+            url: config.server + '/dirver',
+            data: payload,
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+            .then(response => {
+              if (response.data.code == 1) {
+                this.error = true
+                this.errormsg = response.data.msg
+                setTimeout(() => {
+                  this.error = false
+                }, 3000)
+              } else {
+                this.successdmsg = true
+                this.showDialog = false
+                this.getalldirver()
+                setTimeout(() => {
+                  this.successdmsg = false
+                }, 3000)
+              }
+            })
+            .catch(error => {
+              console.log(error)
+              this.error = true
+              this.errormsg = response.data.msg
+              setTimeout(() => {
+                this.error = false
+              }, 3000)
+            })
+        }
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
 #dirver {
-    width: 80%;
-    margin: 15px auto;
+  width: 80%;
+  margin: 15px auto;
 }
 
 .dialog-title {
-    text-align: left;
-    padding: 20px 0 0 15px;
+  text-align: left;
+  padding: 20px 0 0 15px;
 }
 
 .dialog-title span {
-    font-size: 30px;
+  font-size: 30px;
 }
 
 .dialog-body {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
 }
 
 .dialog-body-item {
-    flex-basis: 40%;
-    text-align: left;
-    margin: 0 auto;
+  flex-basis: 40%;
+  text-align: left;
+  margin: 0 auto;
 }
 
 .topbutton {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
 }
 
 .topbutton-left {
-    flex-basis: 30%;
-    text-align: left;
-    margin: 0 auto;
+  flex-basis: 30%;
+  text-align: left;
+  margin: 0 auto;
 }
 
 .topbutton-left input {
-    margin: 5px auto;
-    border-radius: 10px;
-    width: 300px;
-    height: 35px;
-    text-align: center;
-    -web-kit-appearance: none;
-    -moz-appearance: none;
-    outline: 0;
-    font-size: 16px;
+  margin: 5px auto;
+  border-radius: 10px;
+  width: 300px;
+  height: 35px;
+  text-align: center;
+  -web-kit-appearance: none;
+  -moz-appearance: none;
+  outline: 0;
+  font-size: 16px;
 }
 
 .topbutton-right {
-    margin: 0 auto;
-    flex-basis: 50%;
-    text-align: right;
+  margin: 0 auto;
+  flex-basis: 50%;
+  text-align: right;
 }
 
 .centertable {
-    margin: 15px auto;
+  margin: 15px auto;
 }
 
 .tabletitle {
-    border: 1px solid;
-    border-left: none;
-    border-right: none;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row;
-    flex-flow: row;
-    font-size: 18px;
-    font-weight: 600;
-    height: 40px;
-    line-height: 35px;
+  border: 1px solid;
+  border-left: none;
+  border-right: none;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row;
+  flex-flow: row;
+  font-size: 18px;
+  font-weight: 600;
+  height: 40px;
+  line-height: 35px;
 }
 
 .tabletitle-item {
-    margin: 0 auto;
-    width: 300px;
+  margin: 0 auto;
+  width: 300px;
 }
 
 .tablebody {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row;
-    flex-flow: row;
-    font-size: 16px;
-    line-height: 29px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row;
+  flex-flow: row;
+  font-size: 16px;
+  line-height: 29px;
 }
 
 .editdialog {
-    width: 600px;
+  width: 600px;
 }
 
 .rmDialog-center {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row;
-    flex-flow: row;
-    margin: 20px;
-    font-size: 20px;
-    width: 100%;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row;
+  flex-flow: row;
+  margin: 20px;
+  font-size: 20px;
+  width: 100%;
 }
 
 .rmDialog-center-left {
-    flex-basis: 35%;
-    text-align: left;
+  flex-basis: 35%;
+  text-align: left;
 }
 
 .rmDialog-center-right {
-    flex-basis: 60%;
-    text-align: left;
+  flex-basis: 60%;
+  text-align: left;
 }
 
 .photoarea {
-    margin: 0 auto;
-    text-align: center;
-    border: 3px dashed #696969;
-    width: 250px;
-    height: 250px;
-    background-color: #eee;
+  margin: 0 auto;
+  text-align: center;
+  border: 3px dashed #696969;
+  width: 250px;
+  height: 250px;
+  background-color: #eee;
 }
 
 .photoarea img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .deldialog {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
 }
 
 .deldialog-left {
-    flex-basis: 50%;
-    padding: 12px 0;
+  flex-basis: 50%;
+  padding: 12px 0;
 }
 
 .deldialog-right {
-    flex-basis: 50%;
+  flex-basis: 50%;
 }
 </style>

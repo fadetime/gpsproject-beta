@@ -13,6 +13,9 @@
                 <div style="width:106px">
                     <span>日期</span>
                 </div>
+                <div style="width:106px">
+                    <span>操作人</span>
+                </div>
                 <div style="width:100px">
                     <span>模块</span>
                 </div>
@@ -33,6 +36,9 @@
                             <div>
                                 <span class="tabletitle-item">{{item.logDate | timefilter}}</span>
                             </div>
+                        </div>
+                        <div class="infobody-item" style="width:100px;line-height:40px">
+                            <span>{{item.logOperator}}</span>
                         </div>
                         <div class="infobody-item" style="width:100px;line-height:40px">
                             <span>{{item.logPlace}}</span>

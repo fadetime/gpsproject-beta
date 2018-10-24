@@ -57,6 +57,7 @@ export default {
                     this.errmsg = doc.data.msg
                     if (doc.data.status == 0) {
                         localStorage.token = this.email
+                        localStorage.name = doc.data.userName
                         let item = this.email
                         this.$store.dispatch('setToken', item)
                         console.log(this.$store.state.token)

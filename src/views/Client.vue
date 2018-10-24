@@ -785,11 +785,11 @@ export default {
       errpho: false,
       errpos: false,
       errser: false,
-      pageCount: 0, 
+      pageCount: 0,
       pageCountA: 0,
-      pageNow: 1, 
-      pageSize: 15, 
-      showItem: 5, 
+      pageNow: 1,
+      pageSize: 15,
+      showItem: 5,
       findAmode: false,
       findBmode: false,
       updateImagePreview: '',
@@ -846,7 +846,7 @@ export default {
           pag.unshift(i--)
         }
       } else {
-        let middle = this.pageNow - Math.floor(this.showItem / 2), 
+        let middle = this.pageNow - Math.floor(this.showItem / 2),
           i = this.showItem
         if (middle > this.pageCount - this.showItem) {
           middle = this.pageCount - this.showItem + 1
@@ -1433,10 +1433,10 @@ export default {
               clientapsw: this.clientapsw,
               clientacontract: this.clientacontract,
               clientatime: this.clientatime,
-              clientamail: this.clientamail
+              clientamail: this.clientamail,
+              logOperator: localStorage.getItem('name')
             })
             .then(response => {
-              console.log(response)
               if (response.data.code == 1) {
                 this.error = true
                 this.erromsg = response.data.msg
@@ -1554,10 +1554,10 @@ export default {
               clientapsw: this.clientapsw,
               clientacontract: this.clientacontract,
               clientatime: this.clientatime,
-              clientamail: this.clientamail
+              clientamail: this.clientamail,
+              logOperator: localStorage.getItem('name')
             })
             .then(response => {
-              console.log(response)
               if (response.data.code == 1) {
                 this.error = true
                 this.erromsg = response.data.msg
@@ -1653,6 +1653,7 @@ export default {
         payload.append('clientbpostcode', this.clientbpostcode)
         payload.append('clientbserve', this.choseaname)
         payload.append('clientbarea', this.choseArea)
+        payload.append('logOperator', localStorage.getItem('name'))
         axios({
           method: 'post',
           url: config.server + '/clientb',
@@ -1699,7 +1700,6 @@ export default {
       }
     },
     editClientB(item) {
-      console.log(item)
       this.clientImage = ''
       this.updateImagePreview = ''
       this.savemodeb = false
@@ -1801,7 +1801,8 @@ export default {
             clientbstatus: this.clientbstatus,
             clientbpostcode: this.clientbpostcode,
             clientbserve: this.choseaname,
-            clientbarea: this.choseArea
+            clientbarea: this.choseArea,
+            logOperator: localStorage.getItem('name')
           })
           .then(doc => {
             this.error = true
@@ -1837,7 +1838,8 @@ export default {
     confirmdeleteB() {
       axios
         .post(config.server + '/clientb/remove', {
-          _id: this._id
+          _id: this._id,
+          logOperator: localStorage.getItem('name')
         })
         .then(doc => {
           this.error = true
@@ -1892,6 +1894,7 @@ export default {
           _id: item._id
         })
         .then(doc => {
+          console.log(doc)
           if (doc.data.document.endDate) {
             this.openSMS = true
             this.nowDate = doc.data.document.startDate
@@ -1982,7 +1985,8 @@ export default {
             clientatime: this.clientatime,
             clientamail: this.clientamail,
             startDate: this.nowDate,
-            endDate: this.selectedSMSDate
+            endDate: this.selectedSMSDate,
+            logOperator: localStorage.getItem('name')
           }
         } else {
           editInfo = {
@@ -1997,7 +2001,8 @@ export default {
             clientatime: this.clientatime,
             clientamail: this.clientamail,
             startDate: this.nowDate,
-            endDate: this.selectedSMSDate
+            endDate: this.selectedSMSDate,
+            logOperator: localStorage.getItem('name')
           }
         }
         axios
@@ -2026,7 +2031,8 @@ export default {
     confirmRemoveClientA() {
       axios
         .post(config.server + '/clienta/remove', {
-          _id: this._id
+          _id: this._id,
+          logOperator: localStorage.getItem('name')
         })
         .then(doc => {
           this.error = true
