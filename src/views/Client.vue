@@ -49,19 +49,19 @@
 				<md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index" style="background-color: #eff3f5;">
 					<md-card-content>
 						<div class="tablebody">
-							<div class="tabletitle-item" style="flex-basis:150px">
+							<div class="tabletitle-item" style="flex-basis:150px" @click="editClientB(item)">
 								<span>{{item.clientbname}}</span>
 							</div>
-							<div class="tabletitle-item" style="flex-basis:450px">
+							<div class="tabletitle-item" style="flex-basis:450px" @click="editClientB(item)">
 								<span>{{item.clientbaddress}}</span>
 							</div>
-							<div class="tabletitle-item" style="flex-basis:100px">
+							<div class="tabletitle-item" style="flex-basis:100px" @click="editClientB(item)">
 								<span>{{item.clientbphone}}</span>
 							</div>
-							<div class="tabletitle-item" style="flex-basis:100px">
+							<div class="tabletitle-item" style="flex-basis:100px" @click="editClientB(item)">
 								<span>{{item.clientbpostcode}}</span>
 							</div>
-							<div class="tabletitle-item" style="flex-basis:100px">
+							<div class="tabletitle-item" style="flex-basis:100px" @click="editClientB(item)">
 								<span>{{item.clientbstatus}}</span>
 							</div>
 							<div class="tabletitle-item" style="flex-basis:100px">
@@ -197,28 +197,52 @@
 						</div>
 					</div>
 					<div class="dialogb-body-right">
-						<md-field style="margin:4px auto" :class="classname">
+						<md-field style="margin:0px auto" :class="classname">
 							<label style="font-size:18px">客户名称</label>
 							<md-input v-model="clientbname" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
 							<span class="md-error">客户标识信息，必填项目</span>
 						</md-field>
 
 						<div style="display:flex;width:180px">
-							<md-field style="margin:20px auto" :class="classser">
+							<md-field style="margin:12px auto" :class="classser">
 								<label for="choseArea" style="font-size:18px">所属地区</label>
 								<md-select v-model="choseArea" name="choseArea" id="choseArea" style="border-bottom: 1px solid #000;font-size:20px;height:40px;padding-top:6px;width:150px">
 									<md-option :value="item._id" v-for="(item,index) in allAreaArray" :key="index">{{item.areaName}}</md-option>
 								</md-select>
 								<span class="md-error">所属地区</span>
 							</md-field>
-							<md-button :class="classA" @click="openAreaWindow" style="font-size:18px;min-width:60px;height:30px;margin-top: 44px;">区域</md-button>
+							<md-button :class="classA" @click="openAreaWindow" style="font-size:18px;min-width:60px;height:30px;margin-top: 36px;">区域</md-button>
 						</div>
 
-						<md-field style="margin:30px auto" :class="classadd">
+						<md-field style="margin:0 auto" :class="classadd">
 							<label style="font-size:18px">客户地址</label>
 							<md-input v-model="clientbaddress" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
 							<span class="md-error">客户地址标识信息</span>
 						</md-field>
+
+						<div style="padding-top:10px">
+							<div>
+								<span style="font-size:18px;color:rgba(0,0,0,0.54)">必要拍照</span>
+							</div>
+							<div class="dialogb-body-status" style="padding-top:7px">
+								<div class="dialogb-body-status-left">
+									<div>
+										<input type="radio" name="needpicradio" v-model="isNeedPic" value="true">
+									</div>
+									<div style="padding-top: 3px;">
+										<span style="font-size:16px">是</span>
+									</div>
+								</div>
+								<div class="dialogb-body-status-right">
+									<div>
+										<input type="radio" name="needpicradio" v-model="isNeedPic" value="false">
+									</div>
+									<div style="padding-top: 3px;">
+										<span style="font-size:16px">否</span>
+									</div>
+								</div>
+							</div>
+						</div>
 
 					</div>
 				</div>
@@ -233,7 +257,7 @@
 
 						<md-field style="margin:20px auto" :class="classser">
 							<label for="choseaname" style="font-size:18px">服务商</label>
-							<md-select v-model="choseaname" name="choseaname" id="choseaname" style="border-bottom: 1px solid #000;font-size:20px;height:55px;padding-top:21px">
+							<md-select v-model="choseaname" name="choseaname" id="choseaname" style="border-bottom: 1px solid #000;font-size:18px;height:44px;padding-top:6px">
 								<md-option :value="item._id" v-for="(item,index) in allclientainfo" :key="index">{{item.clientaname}}</md-option>
 							</md-select>
 							<span class="md-error">所属服务商</span>
@@ -251,13 +275,13 @@
 							<div>
 								<span style="font-size:18px;color:rgba(0,0,0,0.54)">客户状态</span>
 							</div>
-							<div class="dialogb-body-status" style="padding-top:18px">
+							<div class="dialogb-body-status" style="padding-top:8px">
 								<div class="dialogb-body-status-left">
 									<div>
 										<input type="radio" name="status" v-model="clientbstatus" value="active">
 									</div>
 									<div style="padding-top: 3px;">
-										<span style="font-size:20px">active</span>
+										<span style="font-size:18px">active</span>
 									</div>
 								</div>
 								<div class="dialogb-body-status-right">
@@ -265,21 +289,19 @@
 										<input type="radio" name="status" v-model="clientbstatus" value="inactive">
 									</div>
 									<div style="padding-top: 3px;">
-										<span style="font-size:20px">inactive</span>
+										<span style="font-size:18px">inactive</span>
 									</div>
-
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-
 			</div>
 
-			<md-dialog-actions style="margin:0 auto 10px auto">
-				<md-button class="md-raised md-primary" @click="showDialogb = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
-				<md-button class="md-raised md-primary" v-if="savemodeb" @click="addclientb" style="font-size:20px;width:100px;height:40px">保存</md-button>
-				<md-button class="md-raised md-primary" v-else @click="confirmEditClientB" style="font-size:20px;width:100px;height:40px">修改</md-button>
+			<md-dialog-actions style="margin:10px auto;padding:0">
+				<md-button class="md-raised md-primary" @click="showDialogb = false" style="font-size:18px;width:80px;height:35px">取消</md-button>
+				<md-button class="md-raised md-primary" v-if="savemodeb" @click="addclientb" style="font-size:18px;width:80px;height:35px">保存</md-button>
+				<md-button class="md-raised md-primary" v-else @click="confirmEditClientB" style="font-size:18px;width:80px;height:35px">修改</md-button>
 			</md-dialog-actions>
 
 		</md-dialog>
@@ -707,7 +729,7 @@
 		<md-dialog-alert :md-active.sync="error" :md-content="erromsg" md-confirm-text="关闭" />
 		<!-- error window end -->
 		<!-- error2 window start -->
-		<md-dialog-confirm :md-active.sync="SMSErr" md-title="确认关闭?" md-content="所选供应商含有短信提醒，是否直接关闭？" md-confirm-text="确认" md-cancel-text="取消" @md-cancel="onCancel" @md-confirm="onConfirm" />
+		<md-dialog-confirm :md-active.sync="SMSErr" md-title="确认关闭?" md-content="所选供应商含有短信提醒，是否直接关闭？" md-confirm-text="确认" md-cancel-text="取消" @md-confirm="onConfirm" />
 		<!-- error2 window end -->
 		<!-- tip box start -->
 		<transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutLeft">
@@ -806,7 +828,8 @@ export default {
       confirmRemove: false,
       areaName: '',
       showTipDialog: false,
-      tipMsg: 'info MSG'
+      tipMsg: 'info MSG',
+      isNeedPic: false
     }
   },
   mounted() {
@@ -1054,9 +1077,6 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    },
-    onCancel() {
-      console.log('cancle')
     },
     onConfirm() {
       this.SMSErr = false
@@ -1653,6 +1673,7 @@ export default {
         payload.append('clientbpostcode', this.clientbpostcode)
         payload.append('clientbserve', this.choseaname)
         payload.append('clientbarea', this.choseArea)
+        payload.append('isNeedPic', this.isNeedPic)
         payload.append('logOperator', localStorage.getItem('name'))
         axios({
           method: 'post',
@@ -1678,6 +1699,7 @@ export default {
             } else {
               this.successdmsg = true
               this.showDialogb = false
+              this.isNeedPic = false
               this.clientbname = ''
               this.clientbaddress = ''
               this.clientbphone = ''
@@ -1711,6 +1733,7 @@ export default {
       this.clientbstatus = item.clientbstatus
       this.clientbpostcode = item.clientbpostcode
       this.clientImage = item.image
+      this.isNeedPic = item.isNeedPic
       if (item.clientbserve == null) {
         this.choseaname = ''
         this.error = true
@@ -1802,6 +1825,7 @@ export default {
             clientbpostcode: this.clientbpostcode,
             clientbserve: this.choseaname,
             clientbarea: this.choseArea,
+            isNeedPic: this.isNeedPic,
             logOperator: localStorage.getItem('name')
           })
           .then(doc => {
@@ -1812,6 +1836,7 @@ export default {
             }, 3000)
             if (doc.data.code == 0) {
               this.showDialogb = false
+              this.isNeedPic = false
               this.getallclientb()
             }
           })

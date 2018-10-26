@@ -326,8 +326,8 @@
 									<md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index">
 										<md-card-content>
 											<div class="step-third-title-body">
-												<input type="checkbox" :id="index" :value="item" v-model="aLineInfo.timesclientb" style="width:25px;height:25px">
-												<label :for="index" class="step-third-title">
+												<label :for="index" class="step-third-title" @click="changeClientMethod(item)">
+													<input type="checkbox" :id="index" :value="item._id" v-model="choiceclient_id" style="width:25px;height:25px">
 													<span class="step-third-title-item" style="width:150px">{{item.clientbname}}</span>
 													<span class="step-third-title-item" style="width:80px">{{item.clientbserve.clientaname}}</span>
 													<span class="step-third-title-item" style="width:50px">{{item.clientbarea.areaName}}</span>
@@ -354,6 +354,9 @@
 										<div class="step-third-title-item" style="width:176px">
 											<span>客户名称</span>
 										</div>
+										<div>
+											<span>拍照</span>
+										</div>
 										<div class="step-third-title-item" style="width:50px">
 											<span>信息</span>
 										</div>
@@ -368,6 +371,9 @@
 													<div style="display:flex">
 														<div class="step-third-title-item" style="width:170px" @click="clientInfoMethod(item)">
 															<span>{{item.clientbname}}</span>
+														</div>
+														<div>
+															<md-switch v-model="item.isNeedPic" style="margin:0" @change="changeNeedPicMethod(item)"></md-switch>
 														</div>
 														<div @click="clientInfoMethod(item)">
 															<md-icon class="step-third-title-item" style="width:50px">info</md-icon>
@@ -646,1063 +652,1103 @@ import _ from 'lodash'
 import draggable from 'vuedraggable'
 
 export default {
-	name: 'home',
-	components: {
-		draggable
-	},
-	data() {
-		return {
-			selectedDate: new Date(),
-			active: 'first',
-			addDialog: false,
-			confirmDialog: false,
-			first: false,
-			second: false,
-			third: false,
-			choseLine: '',
-			allmission: [],
-			allclientbinfo: [],
-			alldirverinfo: [],
-			allcarinfo: [],
-			choseClientB: [],
-			alltimesinfo: [],
-			areaArray: [],
-			aLineInfo: '',
-			dirvername: '',
-			selected: [],
-			allclientainfo: [],
-			detaildialog: false,
-			error: false,
-			errormsg: '发生未知错误',
-			firstStepError: null,
-			secondStepError: null,
-			missionline: '',
-			missiondriver: '',
-			missioncar: '',
-			missioncount: '',
-			missionfinish: '',
-			missionphone: '',
-			missiondate: '',
-			missionclient: [],
-			missionid: '',
-			selectorText: '请选择',
-			selectorDriver: '',
-			selectorCar: '',
-			bodyShowFlag: false,
-			driverShowFlag: false,
-			clientArea: '',
-			clientServe: '',
-			testValue: [2],
-			pageSize: 10,
-			showItem: 5,
-			searchClient: '',
-			clientTablePageNow: 1,
-			clientTablePageCount: 10,
-			clientTableMode: '',
-			clientInfoWindow: false,
-			tempClientInfo: '',
-			setDriverText: '请选择司机',
-			setCarText: '请选择车辆',
-			isCarList: false,
-			choseListDialog: false,
-			radioCar: '',
-			radioDriver: '',
-			tempData: '',
-			missionDateModeButtonCSS1: 'background:#448aff;color:#fff',
-			missionDateModeButtonCSS2: '',
-			missionDateModeButtonCSS3: '',
-		missionDateModePacker: new Date().toLocaleDateString(),
-		showTipDialog:false
-		}
-	},
-	computed: {
-		clientPages: function() {
-			let pag = []
-			if (this.clientTablePageNow < this.showItem) {
-				//如果当前的激活的项 小于要显示的条数
-				//总页数和要显示的条数那个大就显示多少条
-				let i = Math.min(this.showItem, this.clientTablePageCount)
-				while (i) {
-					pag.unshift(i--)
-				}
-			} else {
-				//当前页数大于显示页数了
-				let middle = this.clientTablePageNow - Math.floor(this.showItem / 2), //从哪里开始
-					i = this.showItem
-				if (middle > this.clientTablePageCount - this.showItem) {
-					middle = this.clientTablePageCount - this.showItem + 1
-				}
-				while (i--) {
-					pag.push(middle++)
-				}
-			}
-			return pag
-		}
-	},
-	watch: {
-		selectedDate: function() {
-			axios
-				.post(config.server + '/mission', {
-					startdate: this.selectedDate
-				})
-				.then(res => {
-					this.allmission = res.data
-				})
-				.catch(err => {
-					console.log('获取数据失败')
-					console.log(err)
-				})
-		},
-		clientArea: function() {
-			if (this.clientArea) {
-				this.clientServe = ''
-				this.searchClient = ''
-				this.clientTableMode = 'area'
-				this.areaFilterMethod()
-			}
-		},
-		clientServe: function() {
-			if (this.clientServe) {
-				this.clientArea = ''
-				this.searchClient = ''
-				this.clientTableMode = 'serve'
-				this.serveFilterMethod()
-			}
-		}
-	},
-	mounted() {
-		this.getLineInfo()
-		this.getallclienta()
-		this.getMission()
-		this.getAllArea()
-	},
-	methods: {
-		missionDateModeButton(item) {
-			if (item === 'today') {
-				this.missionDateModeButtonCSS1 = 'background:#448aff;color:#fff'
-				this.missionDateModeButtonCSS2 = ''
-				this.missionDateModeButtonCSS3 = ''
-				this.missionDateModePacker = new Date().toLocaleDateString()
-			} else if (item === 'tomorrow') {
-				this.missionDateModeButtonCSS2 = 'background:#448aff;color:#fff'
-				this.missionDateModeButtonCSS1 = ''
-				this.missionDateModeButtonCSS3 = ''
-				this.missionDateModePacker = new Date().toLocaleDateString()
-				this.missionDateModePacker = new Date(
-					this.missionDateModePacker
-				).getTime()
-				this.missionDateModePacker += 86400000
-				this.missionDateModePacker = new Date(
-					this.missionDateModePacker
-				).toLocaleDateString()
-			} else {
-				this.missionDateModePacker = ''
-				this.missionDateModeButtonCSS3 = 'background:#448aff;color:#fff'
-				this.missionDateModeButtonCSS2 = ''
-				this.missionDateModeButtonCSS1 = ''
-			}
-		},
-		confirmeChangeCarOrDriver() {
-			if (this.isCarList) {
-				if (this.tempData) {
-					this.selectorCar = this.tempData
-					this.tempData = ''
-				}
-			} else {
-				if (this.tempData) {
-					this.selectorDriver = this.tempData
-					this.tempData = ''
-				}
-			}
-			this.choseListDialog = false
-		},
-		shippingTempData(item) {
-			this.tempData = item
-		},
-		closeListDialog() {
-			this.choseListDialog = false
-		},
-		openChoiceList(item) {
-			if (item === 'car') {
-				this.radioCar = this.selectorCar._id
-				this.isCarList = true
-			} else {
-				this.radioDriver = this.selectorDriver._id
-				this.isCarList = false
-			}
-			this.choseListDialog = true
-			this.radioCar = this.selectorCar._id
-		},
-		removeChoseClient(item) {
-			this.aLineInfo.timesclientb.splice(item, 1)
-		},
-		clientInfoMethod(item) {
-			clearTimeout(this.timeOutName)
-			this.clientInfoWindow = true
-			this.tempClientInfo = item
-			this.timeOutName = setTimeout(() => {
-				this.clientInfoWindow = false
-			}, 10000)
-		},
-
-		searClientMethods() {
-			this.clientArea = ''
-			this.clientServe = ''
-			if (!this.searchClient) {
-				this.clientTablePageNow = 1
-				this.clientTableMode = ''
-				this.getallclientb()
-			} else {
-				this.clientTableMode = 'search'
-				axios
-					.post(config.server + '/clientb/page', {
-						keyWord: this.searchClient,
-						pageSize: this.pageSize,
-						pageNow: this.clientTablePageNow
-					})
-					.then(res => {
-						this.allclientbinfo = res.data.doc
-						this.clientTablePageCount = Math.ceil(
-							res.data.countNum / this.pageSize
-						)
-					})
-					.catch(err => {
-						console.log(err)
-					})
-			}
-		},
-
-		areaFilterMethod() {
-			axios
-				.post(config.server + '/clientb/filterpage', {
-					pageSize: this.pageSize,
-					pageNow: this.clientTablePageNow,
-					clientArea: this.clientArea
-				})
-				.then(res => {
-					this.allclientbinfo = res.data.doc
-					this.ClientTablePageCount = Math.ceil(
-						res.data.countNum / this.pageSize
-					)
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		},
-
-		serveFilterMethod() {
-			axios
-				.post(config.server + '/clientb/filterpage', {
-					pageSize: this.pageSize,
-					pageNow: this.clientTablePageNow,
-					clientServe: this.clientServe
-				})
-				.then(res => {
-					this.allclientbinfo = res.data.doc
-					this.ClientTablePageCount = Math.ceil(
-						res.data.countNum / this.pageSize
-					)
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		},
-
-		clientTablePageButton(item) {
-			if (item === 'A') {
-				if (this.clientTablePageNow > 1) {
-					this.clientTablePageNow = this.clientTablePageNow - 1
-				}
-			} else if (item === 'B') {
-				if (this.clientTablePageNow < this.clientTablePageCount) {
-					this.clientTablePageNow = this.clientTablePageNow + 1
-				}
-			} else {
-				this.clientTablePageNow = item
-			}
-			if (this.clientTableMode === 'search') {
-				this.searClientMethods()
-			} else if (this.clientTableMode === 'area') {
-				this.areaFilterMethod()
-			} else if (this.clientTableMode === 'serve') {
-				this.serveFilterMethod()
-			} else {
-				axios
-					.post(config.server + '/clientb/active', {
-						pageSize: this.pageSize,
-						pageNow: this.clientTablePageNow
-					})
-					.then(res => {
-						this.allclientbinfo = res.data.doc
-						this.clientTablePageCount = Math.ceil(
-							res.data.countNum / this.pageSize
-						)
-					})
-					.catch(err => {
-						console.log(err)
-					})
-			}
-		},
-		//remove mission start
-		removeMission() {
-			this.confirmDialog = true
-		},
-		//remove mission end
-
-		//confirm remove mission start
-		confirmRemoveMission() {
-			axios
-				.post(config.server + '/mission/remove', {
-					missionid: this.missionid,
-					logOperator: localStorage.getItem('name')
-				})
-				.then(doc => {
-					this.confirmDialog = false
-					if (doc.data.code == 0) {
-						this.getMission()
-						this.detaildialog = false
-					}
-					this.showTipDialog = true
-					this.errormsg = doc.data.msg
-					setTimeout(() => {
-						this.showTipDialog = false
-					}, 3000)
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		},
-		//confirm remove mission start
-
-		// 下拉选择框部分 start
-
-		callCar() {
-			if (this.driverShowFlag) {
-				this.bodyHideCar()
-			} else {
-				this.bodyShowCar()
-			}
-		},
-
-		callDriver() {
-			if (this.driverShowFlag) {
-				this.bodyHideDriver()
-			} else {
-				this.bodyShowDriver()
-			}
-		},
-
-		callBody() {
-			if (this.bodyShowFlag) {
-				this.bodyHide()
-			} else {
-				this.bodyShow()
-			}
-		},
-
-		bodyShowCar() {
-			let body = document.querySelector('#selector-body-car')
-			let boxes = document.querySelectorAll('#selector-box-car')
-			let arrow = document.querySelector('#selector-arrow-car')
-			arrow.style.transform = 'rotate(0deg)'
-			body.style.height = '180px'
-			arrow.style.transition = '0.25s'
-			let height = 4
-			boxes.forEach(box => {
-				height += box.clientHeight
-			})
-			body.style.transition = '0.25s'
-			body.style.display = 'block'
-			this.driverShowFlag = true
-		},
-
-		bodyHideCar() {
-			let body = document.querySelector('#selector-body-car')
-			body.style.height = '0px'
-			body.style.transition = '0.25s'
-			let arrow = document.querySelector('#selector-arrow-car')
-			arrow.style.transform = 'rotate(-90deg)'
-			arrow.style.transition = '0.25s'
-			this.driverShowFlag = false
-		},
-
-		bodyShowDriver() {
-			let body = document.querySelector('#selector-body-driver')
-			let boxes = document.querySelectorAll('#selector-box-driver')
-			let arrow = document.querySelector('#selector-arrow-driver')
-			arrow.style.transform = 'rotate(0deg)'
-			body.style.height = '180px'
-			arrow.style.transition = '0.25s'
-			let height = 4
-			boxes.forEach(box => {
-				height += box.clientHeight
-			})
-			body.style.transition = '0.25s'
-			body.style.display = 'block'
-			this.driverShowFlag = true
-		},
-
-		bodyHideDriver() {
-			let body = document.querySelector('#selector-body-driver')
-			body.style.height = '0px'
-			body.style.transition = '0.25s'
-			let arrow = document.querySelector('#selector-arrow-driver')
-			arrow.style.transform = 'rotate(-90deg)'
-			arrow.style.transition = '0.25s'
-			this.driverShowFlag = false
-		},
-
-		bodyShow() {
-			let body = document.querySelector('.selector-body')
-			let boxes = document.querySelectorAll('.box')
-			let arrow = document.querySelector('.arrow')
-			arrow.style.transform = 'rotate(0deg)'
-			body.style.height = '180px'
-			arrow.style.transition = '0.25s'
-			let height = 4
-			boxes.forEach(box => {
-				height += box.clientHeight
-			})
-			body.style.transition = '0.25s'
-			body.style.display = 'block'
-			this.bodyShowFlag = true
-		},
-		bodyHide() {
-			let body = document.querySelector('.selector-body')
-			body.style.height = '0px'
-			body.style.transition = '0.25s'
-			let arrow = document.querySelector('.arrow')
-			arrow.style.transform = 'rotate(-90deg)'
-			arrow.style.transition = '0.25s'
-			this.bodyShowFlag = false
-		},
-
-		choseCarItem(item) {
-			this.bodyHideCar()
-			this.selectorCar = item
-		},
-
-		choseDriverItem(item) {
-			this.bodyHideDriver()
-			this.selectorDriver = item
-		},
-
-		choseitem(item) {
-			this.choseLine = item
-			this.bodyHide()
-			this.aLineInfo = item
-			this.selectorText = item.timesname
-
-			if (this.choseLine.timescar == null) {
-				this.choseLine.timescar = {
-					carid: '信息错误请更新',
-					tailgate: '信息错误请更新',
-					cartype: '信息错误请更新'
-				}
-			}
-
-			if (this.choseLine.timesdirver == null) {
-				this.choseLine.timesdirver = {
-					dirvername: '信息错误请更新',
-					dirverphone: '信息错误请更新',
-					dirvercard: '信息错误请更新'
-				}
-			}
-
-			this.aLineInfo.timesclientb.forEach(element => {
-				if (element.clientbserve == null) {
-					element.clientbserve = {
-						clientaname: '客户未包含服务商'
-					}
-				}
-			})
-		},
-		// 下拉选择框部分 end
-
-		//获取所有司机数据 start
-		getalldirver() {
-			axios
-				.get(config.server + '/dirver')
-				.then(res => {
-					this.alldirverinfo = res.data
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		},
-		//获取所有司机数据 end
-		openMissionInfo(item) {
-			let time = new Date(item.missiondate).toLocaleDateString()
-			this.detaildialog = true
-			this.missionline = item.missionline
-			this.missiondriver = item.missiondirver
-			this.missioncar = item.missioncar
-			this.missioncount = item.missionclient.length
-			this.missionclient = item.missionclient
-			this.missionfinish = 'finish'
-			this.missionphone = item.missionphone
-			this.missiondate = time
-			this.missionid = item._id
-		},
-		getMission() {
+  name: 'home',
+  components: {
+    draggable
+  },
+  data() {
+    return {
+      selectedDate: new Date(),
+      active: 'first',
+      addDialog: false,
+      confirmDialog: false,
+      first: false,
+      second: false,
+      third: false,
+      choseLine: '',
+      allmission: [],
+      allclientbinfo: [],
+      alldirverinfo: [],
+      allcarinfo: [],
+      choseClientB: [],
+      alltimesinfo: [],
+      areaArray: [],
+      aLineInfo: '',
+      dirvername: '',
+      selected: [],
+      allclientainfo: [],
+      detaildialog: false,
+      error: false,
+      errormsg: '发生未知错误',
+      firstStepError: null,
+      secondStepError: null,
+      missionline: '',
+      missiondriver: '',
+      missioncar: '',
+      missioncount: '',
+      missionfinish: '',
+      missionphone: '',
+      missiondate: '',
+      missionclient: [],
+      missionid: '',
+      selectorText: '请选择',
+      selectorDriver: '',
+      selectorCar: '',
+      bodyShowFlag: false,
+      driverShowFlag: false,
+      clientArea: '',
+      clientServe: '',
+      testValue: [2],
+      pageSize: 10,
+      showItem: 5,
+      searchClient: '',
+      clientTablePageNow: 1,
+      clientTablePageCount: 10,
+      clientTableMode: '',
+      clientInfoWindow: false,
+      tempClientInfo: '',
+      setDriverText: '请选择司机',
+      setCarText: '请选择车辆',
+      isCarList: false,
+      choseListDialog: false,
+      radioCar: '',
+      radioDriver: '',
+      tempData: '',
+      missionDateModeButtonCSS1: 'background:#448aff;color:#fff',
+      missionDateModeButtonCSS2: '',
+      missionDateModeButtonCSS3: '',
+      missionDateModePacker: new Date().toLocaleDateString(),
+      showTipDialog: false,
+      choiceclient_id: []
+    }
+  },
+  computed: {
+    clientPages: function() {
+      let pag = []
+      if (this.clientTablePageNow < this.showItem) {
+        //如果当前的激活的项 小于要显示的条数
+        //总页数和要显示的条数那个大就显示多少条
+        let i = Math.min(this.showItem, this.clientTablePageCount)
+        while (i) {
+          pag.unshift(i--)
+        }
+      } else {
+        //当前页数大于显示页数了
+        let middle = this.clientTablePageNow - Math.floor(this.showItem / 2), //从哪里开始
+          i = this.showItem
+        if (middle > this.clientTablePageCount - this.showItem) {
+          middle = this.clientTablePageCount - this.showItem + 1
+        }
+        while (i--) {
+          pag.push(middle++)
+        }
+      }
+      return pag
+    }
+  },
+  watch: {
+    selectedDate: function() {
+      axios
+        .post(config.server + '/mission', {
+          startdate: this.selectedDate
+        })
+        .then(res => {
+          this.allmission = res.data
+        })
+        .catch(err => {
+          console.log('获取数据失败')
+          console.log(err)
+        })
+    },
+    clientArea: function() {
+      if (this.clientArea) {
+        this.clientServe = ''
+        this.searchClient = ''
+        this.clientTableMode = 'area'
+        this.areaFilterMethod()
+      }
+    },
+    clientServe: function() {
+      if (this.clientServe) {
+        this.clientArea = ''
+        this.searchClient = ''
+        this.clientTableMode = 'serve'
+        this.serveFilterMethod()
+      }
+    }
+  },
+  mounted() {
+    this.getLineInfo()
+    this.getallclienta()
+    this.getMission()
+    this.getAllArea()
+  },
+  methods: {
+	  changeClientMethod(item) {
+			this.aLineInfo.timesclientb = []
 			setTimeout(() => {
-				axios
-					.post(config.server + '/mission', {
-						startdate: this.selectedDate
-					})
-					.then(res => {
-						this.allmission = res.data
-						this.countfinish()
-					})
-					.catch(err => {
-						console.log('获取数据失败')
-						console.log(err)
-					})
-			}, 100)
-		},
-
-		countfinish() {
-			this.allmission.forEach(x => {
-				x.count = 0
-				x.missionclient.forEach(y => {
-					if (y.finishdate) {
-						x.count += 1
-					}
-				})
-			})
-		},
-		setDone(id, index) {
-			if (id == 'first') {
-				if (this.choseLine == '') {
-					this.firstStepError = '未选择线路'
-				} else if (
-					this.missionDateModeButtonCSS3 &&
-					!this.missionDateModePacker
-				) {
-					this.firstStepError = '未选日期'
-				} else {
-					this[id] = true
-					this.selectorDriver = {
-						dirvername: this.aLineInfo.timesdirver.dirvername,
-						dirverphone: this.aLineInfo.timesdirver.dirverphone,
-						dirvercard: this.aLineInfo.timesdirver.dirvercard,
-						dirvernote: this.aLineInfo.timesdirver.dirvernote,
-						_id: this.aLineInfo.timesdirver._id,
-						image: this.aLineInfo.timesdirver.image
-					}
-					this.selectorCar = {
-						carid: this.aLineInfo.timescar.carid,
-						cartype: this.aLineInfo.timescar.cartype,
-						tailgate: this.aLineInfo.timescar.tailgate,
-						carnote: this.aLineInfo.timescar.carnote,
-						_id: this.aLineInfo.timescar._id,
-						image: this.aLineInfo.timescar.image
-					}
-					this.firstStepError = null
-					if (index) {
-						this.active = index
-					}
-				}
-			}
-			if (id == 'second') {
-				if (this.choseLine.timesdirver.dirvername == '信息错误请更新') {
-					this.secondStepError = ' '
-					this.error = true
-					this.errormsg = '请更新司机信息'
-					setTimeout(() => {
-						this.error = false
-					}, 3000)
-				}
-
-				if (this.choseLine.timescar.carid == '信息错误请更新') {
-					this.secondStepError = ' '
-					this.error = true
-					this.errormsg = '请更新车辆信息'
-					setTimeout(() => {
-						this.error = false
-					}, 3000)
-				} else {
-					this[id] = true
-					this.secondStepError = null
-					if (index) {
-						this.active = index
-					}
-				}
-			}
-		},
-
-		addMission() {
-			this.selectorText = '请选择'
-			this.active = 'first'
-			this.aLineInfo = ''
-			this['second'] = false
-			this.getallclientb()
-			this.getalltimes()
-			this.getalldirver()
-			this.getallcar()
-			this.addDialog = true
-		},
-		getAllArea() {
-			axios
-				.get(config.server + '/area')
-				.then(doc => {
-					this.areaArray = doc.data.doc
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		},
-		getalltimes() {
-			axios
-				.get(config.server + '/times')
-				.then(res => {
-					this.alltimesinfo = res.data.doc
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		},
-
-		getallcar() {
-			axios
-				.get(config.server + '/car')
-				.then(res => {
-					this.allcarinfo = res.data
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		},
-		getLineInfo(item) {
-			this.aLineInfo = {
-				timesname: '请选择线路',
-				timesnote: '请选择线路',
-				timesdirver: {
-					dirvername: '请选择线路',
-					dirverphone: '请选择线路',
-					dirvercard: '请选择线路',
-					dirvernote: '请选择线路'
-				},
-				timescar: {
-					carid: '请选择线路',
-					carnote: '请选择线路',
-					tailgate: '请选择线路',
-					cartype: '请选择线路'
-				}
-			}
-		},
-		getallclienta() {
-			axios
-				.get(config.server + '/clienta')
-				.then(res => {
-					this.allclientainfo = res.data
-				})
-				.catch(err => {
-					console.log(err)
-				})
-		},
-		getallclientb() {
-			axios
-				.post(config.server + '/clientb/active', {
-					pageSize: this.pageSize,
-					pageNow: 1
-				})
-				.then(res => {
-					this.allclientbinfo = res.data.doc
-					this.clientTablePageCount = Math.ceil(
-						res.data.countNum / this.pageSize
-					)
-					this.allclientbinfo.forEach(element => {
-						if (element.clientbserve == null) {
-							element.clientbserve = {
-								clientaname: '客户未包含服务商'
-							}
-						}
-						if (element.clientbarea == null) {
-							element.clientbarea = {
-								areaName: '客户未包含地区'
-							}
+				this.choiceclient_id.forEach(element => {
+					this.allclientbinfo.forEach(element2 => {
+						if (element2._id === element) {
+							this.aLineInfo.timesclientb.push(element2)
 						}
 					})
 				})
-				.catch(err => {
-					console.log(err)
-				})
+			}, 50)
 		},
+    changeNeedPicMethod(item) {
+	  axios.post(config.server + '/clientb/needpic',{
+			_id:item._id,
+			isNeedPic:item.isNeedPic
+		})
+		.then(doc => {
+			if(doc.data.code === 0){
+				this.errormsg = '客户状态更新成功'
+				this.showTipDialog = true
+				setTimeout(() => {
+				this.showTipDialog =false
+				}, 2000);
+			}
+		})
+		.catch(err => {
+			console.log(err)
+		})
+    },
+    missionDateModeButton(item) {
+      if (item === 'today') {
+        this.missionDateModeButtonCSS1 = 'background:#448aff;color:#fff'
+        this.missionDateModeButtonCSS2 = ''
+        this.missionDateModeButtonCSS3 = ''
+        this.missionDateModePacker = new Date().toLocaleDateString()
+      } else if (item === 'tomorrow') {
+        this.missionDateModeButtonCSS2 = 'background:#448aff;color:#fff'
+        this.missionDateModeButtonCSS1 = ''
+        this.missionDateModeButtonCSS3 = ''
+        this.missionDateModePacker = new Date().toLocaleDateString()
+        this.missionDateModePacker = new Date(
+          this.missionDateModePacker
+        ).getTime()
+        this.missionDateModePacker += 86400000
+        this.missionDateModePacker = new Date(
+          this.missionDateModePacker
+        ).toLocaleDateString()
+      } else {
+        this.missionDateModePacker = ''
+        this.missionDateModeButtonCSS3 = 'background:#448aff;color:#fff'
+        this.missionDateModeButtonCSS2 = ''
+        this.missionDateModeButtonCSS1 = ''
+      }
+    },
+    confirmeChangeCarOrDriver() {
+      if (this.isCarList) {
+        if (this.tempData) {
+          this.selectorCar = this.tempData
+          this.tempData = ''
+        }
+      } else {
+        if (this.tempData) {
+          this.selectorDriver = this.tempData
+          this.tempData = ''
+        }
+      }
+      this.choseListDialog = false
+    },
+    shippingTempData(item) {
+      this.tempData = item
+    },
+    closeListDialog() {
+      this.choseListDialog = false
+    },
+    openChoiceList(item) {
+      if (item === 'car') {
+        this.radioCar = this.selectorCar._id
+        this.isCarList = true
+      } else {
+        this.radioDriver = this.selectorDriver._id
+        this.isCarList = false
+      }
+      this.choseListDialog = true
+      this.radioCar = this.selectorCar._id
+    },
+    removeChoseClient(item) {
+      this.aLineInfo.timesclientb.splice(item, 1)
+    },
+    clientInfoMethod(item) {
+      clearTimeout(this.timeOutName)
+      this.clientInfoWindow = true
+      this.tempClientInfo = item
+      this.timeOutName = setTimeout(() => {
+        this.clientInfoWindow = false
+      }, 10000)
+    },
 
-		saveMission() {
-			let query = {}
-			this.aLineInfo.timesclientb.forEach(element => {
-				if (element.clientbserve == null) {
-					element.clientbserve = {
-						clientaname: '客户未包含服务商'
-					}
-				}
-			})
-			if (this.missionDateModeButtonCSS1) {
-				query = {
-					missionline: this.aLineInfo.timesname,
-					missionnote: this.aLineInfo.timesnote,
-					missiondirver: this.selectorDriver.dirvername,
-					missionphone: this.aLineInfo.timesdirver.dirverphone,
-					missioncar: this.selectorCar.carid,
-					logOperator: localStorage.getItem('name'),
-					missionclient: this.aLineInfo.timesclientb.map(item => {
-						let obj = {
-							clientbname: item.clientbname,
-							clientbaddress: item.clientbaddress,
-							clientbphone: item.clientbphone,
-							clientbpostcode: item.clientbpostcode,
-							clientbserve: item.clientbserve.clientaname,
-							image: item.image
-						}
-						return obj
-					})
-				}
-			} else if (this.missionDateModeButtonCSS2) {
-				let nextDay = new Date().getTime() + 86400000
-				query = {
-					missiondate: new Date(nextDay).toISOString(),
-					missionline: this.aLineInfo.timesname,
-					missionnote: this.aLineInfo.timesnote,
-					missiondirver: this.selectorDriver.dirvername,
-					missionphone: this.aLineInfo.timesdirver.dirverphone,
-					missioncar: this.selectorCar.carid,
-					logOperator: localStorage.getItem('name'),
-					missionclient: this.aLineInfo.timesclientb.map(item => {
-						let obj = {
-							clientbname: item.clientbname,
-							clientbaddress: item.clientbaddress,
-							clientbphone: item.clientbphone,
-							clientbpostcode: item.clientbpostcode,
-							clientbserve: item.clientbserve.clientaname,
-							image: item.image
-						}
-						return obj
-					})
-				}
-			} else {
-				let otherDay = new Date(this.missionDateModePacker).toISOString()
-				query = {
-					missiondate: otherDay,
-					missionline: this.aLineInfo.timesname,
-					missionnote: this.aLineInfo.timesnote,
-					missiondirver: this.selectorDriver.dirvername,
-					missionphone: this.aLineInfo.timesdirver.dirverphone,
-					missioncar: this.selectorCar.carid,
-					logOperator: localStorage.getItem('name'),
-					missionclient: this.aLineInfo.timesclientb.map(item => {
-						let obj = {
-							clientbname: item.clientbname,
-							clientbaddress: item.clientbaddress,
-							clientbphone: item.clientbphone,
-							clientbpostcode: item.clientbpostcode,
-							clientbserve: item.clientbserve.clientaname,
-							image: item.image
-						}
-						return obj
-					})
-				}
-			}
-			axios
-				.post(config.server + '/mission/create', query)
-				.then(res => {
-					this.missionDateModePacker = ''
-					if (this.missionDateModeButtonCSS2) {
-						this.errormsg = '明日任务已建立完成'
-					} else if (this.missionDateModeButtonCSS1) {
-						this.errormsg = res.data.msg
-					} else {
-						this.errormsg = '指定任务已建立完成'
-			}
-			this.showTipDialog = true
-					setTimeout(() => {
-						this.showTipDialog = false
-					}, 3000)
-					if (res.data.code == 0) {
-						this.addDialog = false
-						this.getMission()
-					}
-				})
-				.catch(err => {
-					this.error = true
-					this.errormsg = err
-					setTimeout(() => {
-						this.error = false
-					}, 3000)
-				})
-		}
-	}
+    searClientMethods() {
+      this.clientArea = ''
+      this.clientServe = ''
+      if (!this.searchClient) {
+        this.clientTablePageNow = 1
+        this.clientTableMode = ''
+        this.getallclientb()
+      } else {
+        this.clientTableMode = 'search'
+        axios
+          .post(config.server + '/clientb/page', {
+            keyWord: this.searchClient,
+            pageSize: this.pageSize,
+            pageNow: this.clientTablePageNow
+          })
+          .then(res => {
+            this.allclientbinfo = res.data.doc
+            this.clientTablePageCount = Math.ceil(
+              res.data.countNum / this.pageSize
+            )
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+
+    areaFilterMethod() {
+      axios
+        .post(config.server + '/clientb/filterpage', {
+          pageSize: this.pageSize,
+          pageNow: this.clientTablePageNow,
+          clientArea: this.clientArea
+        })
+        .then(res => {
+          this.allclientbinfo = res.data.doc
+          this.ClientTablePageCount = Math.ceil(
+            res.data.countNum / this.pageSize
+          )
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
+    serveFilterMethod() {
+      axios
+        .post(config.server + '/clientb/filterpage', {
+          pageSize: this.pageSize,
+          pageNow: this.clientTablePageNow,
+          clientServe: this.clientServe
+        })
+        .then(res => {
+          this.allclientbinfo = res.data.doc
+          this.ClientTablePageCount = Math.ceil(
+            res.data.countNum / this.pageSize
+          )
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
+    clientTablePageButton(item) {
+      if (item === 'A') {
+        if (this.clientTablePageNow > 1) {
+          this.clientTablePageNow = this.clientTablePageNow - 1
+        }
+      } else if (item === 'B') {
+        if (this.clientTablePageNow < this.clientTablePageCount) {
+          this.clientTablePageNow = this.clientTablePageNow + 1
+        }
+      } else {
+        this.clientTablePageNow = item
+      }
+      if (this.clientTableMode === 'search') {
+        this.searClientMethods()
+      } else if (this.clientTableMode === 'area') {
+        this.areaFilterMethod()
+      } else if (this.clientTableMode === 'serve') {
+        this.serveFilterMethod()
+      } else {
+        axios
+          .post(config.server + '/clientb/active', {
+            pageSize: this.pageSize,
+            pageNow: this.clientTablePageNow
+          })
+          .then(res => {
+            this.allclientbinfo = res.data.doc
+            this.clientTablePageCount = Math.ceil(
+              res.data.countNum / this.pageSize
+            )
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+    //remove mission start
+    removeMission() {
+      this.confirmDialog = true
+    },
+    //remove mission end
+
+    //confirm remove mission start
+    confirmRemoveMission() {
+      axios
+        .post(config.server + '/mission/remove', {
+          missionid: this.missionid,
+          logOperator: localStorage.getItem('name')
+        })
+        .then(doc => {
+          this.confirmDialog = false
+          if (doc.data.code == 0) {
+            this.getMission()
+            this.detaildialog = false
+          }
+          this.showTipDialog = true
+          this.errormsg = doc.data.msg
+          setTimeout(() => {
+            this.showTipDialog = false
+          }, 3000)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    //confirm remove mission start
+
+    // 下拉选择框部分 start
+
+    callCar() {
+      if (this.driverShowFlag) {
+        this.bodyHideCar()
+      } else {
+        this.bodyShowCar()
+      }
+    },
+
+    callDriver() {
+      if (this.driverShowFlag) {
+        this.bodyHideDriver()
+      } else {
+        this.bodyShowDriver()
+      }
+    },
+
+    callBody() {
+      if (this.bodyShowFlag) {
+        this.bodyHide()
+      } else {
+        this.bodyShow()
+      }
+    },
+
+    bodyShowCar() {
+      let body = document.querySelector('#selector-body-car')
+      let boxes = document.querySelectorAll('#selector-box-car')
+      let arrow = document.querySelector('#selector-arrow-car')
+      arrow.style.transform = 'rotate(0deg)'
+      body.style.height = '180px'
+      arrow.style.transition = '0.25s'
+      let height = 4
+      boxes.forEach(box => {
+        height += box.clientHeight
+      })
+      body.style.transition = '0.25s'
+      body.style.display = 'block'
+      this.driverShowFlag = true
+    },
+
+    bodyHideCar() {
+      let body = document.querySelector('#selector-body-car')
+      body.style.height = '0px'
+      body.style.transition = '0.25s'
+      let arrow = document.querySelector('#selector-arrow-car')
+      arrow.style.transform = 'rotate(-90deg)'
+      arrow.style.transition = '0.25s'
+      this.driverShowFlag = false
+    },
+
+    bodyShowDriver() {
+      let body = document.querySelector('#selector-body-driver')
+      let boxes = document.querySelectorAll('#selector-box-driver')
+      let arrow = document.querySelector('#selector-arrow-driver')
+      arrow.style.transform = 'rotate(0deg)'
+      body.style.height = '180px'
+      arrow.style.transition = '0.25s'
+      let height = 4
+      boxes.forEach(box => {
+        height += box.clientHeight
+      })
+      body.style.transition = '0.25s'
+      body.style.display = 'block'
+      this.driverShowFlag = true
+    },
+
+    bodyHideDriver() {
+      let body = document.querySelector('#selector-body-driver')
+      body.style.height = '0px'
+      body.style.transition = '0.25s'
+      let arrow = document.querySelector('#selector-arrow-driver')
+      arrow.style.transform = 'rotate(-90deg)'
+      arrow.style.transition = '0.25s'
+      this.driverShowFlag = false
+    },
+
+    bodyShow() {
+      let body = document.querySelector('.selector-body')
+      let boxes = document.querySelectorAll('.box')
+      let arrow = document.querySelector('.arrow')
+      arrow.style.transform = 'rotate(0deg)'
+      body.style.height = '180px'
+      arrow.style.transition = '0.25s'
+      let height = 4
+      boxes.forEach(box => {
+        height += box.clientHeight
+      })
+      body.style.transition = '0.25s'
+      body.style.display = 'block'
+      this.bodyShowFlag = true
+    },
+    bodyHide() {
+      let body = document.querySelector('.selector-body')
+      body.style.height = '0px'
+      body.style.transition = '0.25s'
+      let arrow = document.querySelector('.arrow')
+      arrow.style.transform = 'rotate(-90deg)'
+      arrow.style.transition = '0.25s'
+      this.bodyShowFlag = false
+    },
+
+    choseCarItem(item) {
+      this.bodyHideCar()
+      this.selectorCar = item
+    },
+
+    choseDriverItem(item) {
+      this.bodyHideDriver()
+      this.selectorDriver = item
+    },
+
+    choseitem(item) {
+      this.choiceclient_id = []
+      this.choseLine = item
+      this.bodyHide()
+      this.aLineInfo = item
+      this.selectorText = item.timesname
+
+      item.timesclientb.forEach(tempClient => {
+        this.choiceclient_id.push(tempClient._id)
+      })
+
+      if (this.choseLine.timescar == null) {
+        this.choseLine.timescar = {
+          carid: '信息错误请更新',
+          tailgate: '信息错误请更新',
+          cartype: '信息错误请更新'
+        }
+      }
+
+      if (this.choseLine.timesdirver == null) {
+        this.choseLine.timesdirver = {
+          dirvername: '信息错误请更新',
+          dirverphone: '信息错误请更新',
+          dirvercard: '信息错误请更新'
+        }
+      }
+
+      this.aLineInfo.timesclientb.forEach(element => {
+        if (element.clientbserve == null) {
+          element.clientbserve = {
+            clientaname: '客户未包含服务商'
+          }
+        }
+      })
+    },
+    // 下拉选择框部分 end
+
+    //获取所有司机数据 start
+    getalldirver() {
+      axios
+        .get(config.server + '/dirver')
+        .then(res => {
+          this.alldirverinfo = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    //获取所有司机数据 end
+    openMissionInfo(item) {
+      let time = new Date(item.missiondate).toLocaleDateString()
+      this.detaildialog = true
+      this.missionline = item.missionline
+      this.missiondriver = item.missiondirver
+      this.missioncar = item.missioncar
+      this.missioncount = item.missionclient.length
+      this.missionclient = item.missionclient
+      this.missionfinish = 'finish'
+      this.missionphone = item.missionphone
+      this.missiondate = time
+      this.missionid = item._id
+    },
+    getMission() {
+      setTimeout(() => {
+        axios
+          .post(config.server + '/mission', {
+            startdate: this.selectedDate
+          })
+          .then(res => {
+            this.allmission = res.data
+            this.countfinish()
+          })
+          .catch(err => {
+            console.log('获取数据失败')
+            console.log(err)
+          })
+      }, 100)
+    },
+
+    countfinish() {
+      this.allmission.forEach(x => {
+        x.count = 0
+        x.missionclient.forEach(y => {
+          if (y.finishdate) {
+            x.count += 1
+          }
+        })
+      })
+    },
+    setDone(id, index) {
+      if (id == 'first') {
+        if (this.choseLine == '') {
+          this.firstStepError = '未选择线路'
+        } else if (
+          this.missionDateModeButtonCSS3 &&
+          !this.missionDateModePacker
+        ) {
+          this.firstStepError = '未选日期'
+        } else {
+          this[id] = true
+          this.selectorDriver = {
+            dirvername: this.aLineInfo.timesdirver.dirvername,
+            dirverphone: this.aLineInfo.timesdirver.dirverphone,
+            dirvercard: this.aLineInfo.timesdirver.dirvercard,
+            dirvernote: this.aLineInfo.timesdirver.dirvernote,
+            _id: this.aLineInfo.timesdirver._id,
+            image: this.aLineInfo.timesdirver.image
+          }
+          this.selectorCar = {
+            carid: this.aLineInfo.timescar.carid,
+            cartype: this.aLineInfo.timescar.cartype,
+            tailgate: this.aLineInfo.timescar.tailgate,
+            carnote: this.aLineInfo.timescar.carnote,
+            _id: this.aLineInfo.timescar._id,
+            image: this.aLineInfo.timescar.image
+          }
+          this.firstStepError = null
+          if (index) {
+            this.active = index
+          }
+        }
+      }
+      if (id == 'second') {
+        if (this.choseLine.timesdirver.dirvername == '信息错误请更新') {
+          this.secondStepError = ' '
+          this.error = true
+          this.errormsg = '请更新司机信息'
+          setTimeout(() => {
+            this.error = false
+          }, 3000)
+        }
+
+        if (this.choseLine.timescar.carid == '信息错误请更新') {
+          this.secondStepError = ' '
+          this.error = true
+          this.errormsg = '请更新车辆信息'
+          setTimeout(() => {
+            this.error = false
+          }, 3000)
+        } else {
+          this[id] = true
+          this.secondStepError = null
+          if (index) {
+            this.active = index
+          }
+        }
+      }
+    },
+
+    addMission() {
+      this.selectorText = '请选择'
+      this.active = 'first'
+      this.aLineInfo = ''
+      this['second'] = false
+      this.getallclientb()
+      this.getalltimes()
+      this.getalldirver()
+      this.getallcar()
+      this.addDialog = true
+    },
+    getAllArea() {
+      axios
+        .get(config.server + '/area')
+        .then(doc => {
+          this.areaArray = doc.data.doc
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getalltimes() {
+      axios
+        .get(config.server + '/times')
+        .then(res => {
+          this.alltimesinfo = res.data.doc
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
+    getallcar() {
+      axios
+        .get(config.server + '/car')
+        .then(res => {
+          this.allcarinfo = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getLineInfo(item) {
+      this.aLineInfo = {
+        timesname: '请选择线路',
+        timesnote: '请选择线路',
+        timesdirver: {
+          dirvername: '请选择线路',
+          dirverphone: '请选择线路',
+          dirvercard: '请选择线路',
+          dirvernote: '请选择线路'
+        },
+        timescar: {
+          carid: '请选择线路',
+          carnote: '请选择线路',
+          tailgate: '请选择线路',
+          cartype: '请选择线路'
+        }
+      }
+    },
+    getallclienta() {
+      axios
+        .get(config.server + '/clienta')
+        .then(res => {
+          this.allclientainfo = res.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getallclientb() {
+      axios
+        .post(config.server + '/clientb/active', {
+          pageSize: this.pageSize,
+          pageNow: 1
+        })
+        .then(res => {
+          this.allclientbinfo = res.data.doc
+          this.clientTablePageCount = Math.ceil(
+            res.data.countNum / this.pageSize
+          )
+          this.allclientbinfo.forEach(element => {
+            if (element.clientbserve == null) {
+              element.clientbserve = {
+                clientaname: '客户未包含服务商'
+              }
+            }
+            if (element.clientbarea == null) {
+              element.clientbarea = {
+                areaName: '客户未包含地区'
+              }
+            }
+          })
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
+    saveMission() {
+      let query = {}
+      this.aLineInfo.timesclientb.forEach(element => {
+        if (element.clientbserve == null) {
+          element.clientbserve = {
+            clientaname: '客户未包含服务商'
+          }
+        }
+      })
+      if (this.missionDateModeButtonCSS1) {
+        query = {
+          missionline: this.aLineInfo.timesname,
+          missionnote: this.aLineInfo.timesnote,
+          missiondirver: this.selectorDriver.dirvername,
+          missionphone: this.aLineInfo.timesdirver.dirverphone,
+          missioncar: this.selectorCar.carid,
+          logOperator: localStorage.getItem('name'),
+          missionclient: this.aLineInfo.timesclientb.map(item => {
+            let obj = {
+              clientbname: item.clientbname,
+              clientbaddress: item.clientbaddress,
+              clientbphone: item.clientbphone,
+              clientbpostcode: item.clientbpostcode,
+              clientbserve: item.clientbserve.clientaname,
+              image: item.image,
+              isNeedPic: item.isNeedPic
+            }
+            return obj
+          })
+        }
+      } else if (this.missionDateModeButtonCSS2) {
+        let nextDay = new Date().getTime() + 86400000
+        query = {
+          missiondate: new Date(nextDay).toISOString(),
+          missionline: this.aLineInfo.timesname,
+          missionnote: this.aLineInfo.timesnote,
+          missiondirver: this.selectorDriver.dirvername,
+          missionphone: this.aLineInfo.timesdirver.dirverphone,
+          missioncar: this.selectorCar.carid,
+          logOperator: localStorage.getItem('name'),
+          missionclient: this.aLineInfo.timesclientb.map(item => {
+            let obj = {
+              clientbname: item.clientbname,
+              clientbaddress: item.clientbaddress,
+              clientbphone: item.clientbphone,
+              clientbpostcode: item.clientbpostcode,
+              clientbserve: item.clientbserve.clientaname,
+              image: item.image,
+              isNeedPic: item.isNeedPic
+            }
+            return obj
+          })
+        }
+      } else {
+        let otherDay = new Date(this.missionDateModePacker).toISOString()
+        query = {
+          missiondate: otherDay,
+          missionline: this.aLineInfo.timesname,
+          missionnote: this.aLineInfo.timesnote,
+          missiondirver: this.selectorDriver.dirvername,
+          missionphone: this.aLineInfo.timesdirver.dirverphone,
+          missioncar: this.selectorCar.carid,
+          logOperator: localStorage.getItem('name'),
+          missionclient: this.aLineInfo.timesclientb.map(item => {
+            let obj = {
+              clientbname: item.clientbname,
+              clientbaddress: item.clientbaddress,
+              clientbphone: item.clientbphone,
+              clientbpostcode: item.clientbpostcode,
+              clientbserve: item.clientbserve.clientaname,
+              image: item.image,
+              isNeedPic: item.isNeedPic
+            }
+            return obj
+          })
+        }
+      }
+      axios
+        .post(config.server + '/mission/create', query)
+        .then(res => {
+          this.missionDateModePacker = ''
+          if (this.missionDateModeButtonCSS2) {
+            this.errormsg = '明日任务已建立完成'
+          } else if (this.missionDateModeButtonCSS1) {
+            this.errormsg = res.data.msg
+          } else {
+            this.errormsg = '指定任务已建立完成'
+          }
+          this.showTipDialog = true
+          setTimeout(() => {
+            this.showTipDialog = false
+          }, 3000)
+          if (res.data.code == 0) {
+            this.addDialog = false
+            this.getMission()
+          }
+        })
+        .catch(err => {
+          this.error = true
+          this.errormsg = err
+          setTimeout(() => {
+            this.error = false
+          }, 3000)
+        })
+    }
+  }
 }
 </script>
 
 <style scoped>
 #home {
-	width: 80%;
-	margin: 15px auto;
+  width: 80%;
+  margin: 15px auto;
 }
 
 .topbutton {
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex-flow: row;
-	flex-flow: row;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row;
+  flex-flow: row;
 }
 
 .topbutton-left {
-	flex-basis: 20%;
-	text-align: left;
-	margin: 0 auto;
+  flex-basis: 20%;
+  text-align: left;
+  margin: 0 auto;
 }
 
 .topbutton-right {
-	margin: 0 auto;
-	flex-basis: 70%;
-	text-align: right;
+  margin: 0 auto;
+  flex-basis: 70%;
+  text-align: right;
 }
 
 .centertable {
-	margin: 5px auto;
+  margin: 5px auto;
 }
 
 .tabletitle {
-	border: 1px solid;
-	border-left: none;
-	border-right: none;
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex-flow: row wrap;
-	flex-flow: row wrap;
+  border: 1px solid;
+  border-left: none;
+  border-right: none;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
 }
 
 .tabletitle2 {
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex-flow: row wrap;
-	flex-flow: row wrap;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
 }
 
 .tabletitle-item {
-	margin: 0 auto;
-	width: 250px;
-	font-size: 20px;
-	line-height: 39px;
+  margin: 0 auto;
+  width: 250px;
+  font-size: 20px;
+  line-height: 39px;
 }
 
 .tablebody {
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex-flow: column;
-	flex-flow: column;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: column;
+  flex-flow: column;
 }
 
 .step-second {
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex-flow: row wrap;
-	flex-flow: row wrap;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
 }
 
 .step-second-item {
-	margin: 10px auto;
-	flex-basis: 45%;
-	/* text-align: right; */
+  margin: 10px auto;
+  flex-basis: 45%;
+  /* text-align: right; */
 }
 
 .step-third-title {
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex-flow: row;
-	flex-flow: row;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row;
+  flex-flow: row;
 }
 
 .step-third-title-item {
-	text-align: center;
-	font-size: 16px;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	line-height: 28px;
+  text-align: center;
+  font-size: 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 28px;
 }
 
 .detailDialog-center {
-	margin: 20px;
-	font-size: 20px;
-	width: 100%;
+  margin: 20px;
+  font-size: 20px;
+  width: 100%;
 }
 
 .detail-text-left {
-	margin: 0 20px 0 0;
+  margin: 0 20px 0 0;
 }
 
 .detail-text-right {
-	background-color: #f4f4f4;
+  background-color: #f4f4f4;
 }
 
 .container {
-	/* width: 30%; */
-	margin: auto;
+  /* width: 30%; */
+  margin: auto;
 }
 
 #addmissionsecond .container {
-	margin: 0 auto 10px auto;
+  margin: 0 auto 10px auto;
 }
 
 .arrow {
-	transform: rotate(-90deg);
-	transition: 0.25s;
+  transform: rotate(-90deg);
+  transition: 0.25s;
 }
 
 .selector-header {
-	cursor: pointer;
-	width: 300px;
+  cursor: pointer;
+  width: 300px;
 }
 
 .selector-body {
-	height: 0;
-	transition: 0.25s;
-	overflow: hidden;
-	border-left: 1px solid #eee;
-	border-right: 1px solid #eee;
-	overflow: auto;
-	position: absolute;
-	z-index: 100;
-	background-color: #fff;
-	box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+  height: 0;
+  transition: 0.25s;
+  overflow: hidden;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+  overflow: auto;
+  position: absolute;
+  z-index: 100;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+    rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
 .box {
-	cursor: pointer;
-	padding: 7px;
-	border-bottom: 1px solid #eee;
-	transition: 0.5s;
-	width: 300px;
-	font-size: 16px;
+  cursor: pointer;
+  padding: 7px;
+  border-bottom: 1px solid #eee;
+  transition: 0.5s;
+  width: 300px;
+  font-size: 16px;
 }
 
 .box:hover {
-	background-color: dodgerblue;
-	color: white;
-	transition: 0.5s;
+  background-color: dodgerblue;
+  color: white;
+  transition: 0.5s;
 }
 
 .dialog-first-body {
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex-flow: row;
-	flex-flow: row;
-	margin: 20px 0;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row;
+  flex-flow: row;
+  margin: 20px 0;
 }
 
 .dialog-first-body-left {
-	margin: 0 auto;
-	flex-basis: 30%;
-	text-align: left;
+  margin: 0 auto;
+  flex-basis: 30%;
+  text-align: left;
 }
 
 .dialog-first-body-right {
-	margin: 0 auto;
-	flex-basis: 50%;
-	text-align: center;
+  margin: 0 auto;
+  flex-basis: 50%;
+  text-align: center;
 }
 
 .clientsearch {
-	margin: 16px auto 0 auto;
-	border-radius: 10px;
-	width: 300px;
-	height: 32px;
-	text-align: center;
-	-web-kit-appearance: none;
-	-moz-appearance: none;
-	outline: 0;
-	font-size: 16px;
+  margin: 16px auto 0 auto;
+  border-radius: 10px;
+  width: 300px;
+  height: 32px;
+  text-align: center;
+  -web-kit-appearance: none;
+  -moz-appearance: none;
+  outline: 0;
+  font-size: 16px;
 }
 
 .client-page-bar ul li {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .client-page-bar li {
-	list-style: none;
-	font-size: 14px;
+  list-style: none;
+  font-size: 14px;
 }
 
 .client-page-bar span {
-	border: 1px solid #ddd;
-	text-decoration: none;
-	position: relative;
-	float: left;
-	padding: 6px 12px;
-	margin-left: -1px;
-	line-height: 1.42857143;
-	color: #337ab7;
-	cursor: pointer;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  position: relative;
+  float: left;
+  padding: 6px 12px;
+  margin-left: -1px;
+  line-height: 1.42857143;
+  color: #337ab7;
+  cursor: pointer;
 }
 
 .client-page-bar span:hover {
-	background-color: #eee;
+  background-color: #eee;
 }
 
 .client-page-bar .active span {
-	color: #fff;
-	cursor: default;
-	background-color: #337ab7;
-	border-color: #337ab7;
+  color: #fff;
+  cursor: default;
+  background-color: #337ab7;
+  border-color: #337ab7;
 }
 
 .client-page-bar i {
-	font-style: normal;
-	color: #d44950;
-	margin: 0px 4px;
-	font-size: 12px;
+  font-style: normal;
+  color: #d44950;
+  margin: 0px 4px;
+  font-size: 12px;
 }
 
 .step-third-title-body {
-	display: -webkit-flex;
-	display: flex;
+  display: -webkit-flex;
+  display: flex;
 }
 
 .clientInfoWindowclass {
-	z-index: 30;
-	position: fixed;
-	background-color: #fff;
-	right: 0;
-	bottom: 10px;
+  z-index: 30;
+  position: fixed;
+  background-color: #fff;
+  right: 0;
+  bottom: 10px;
 }
 
 .tab4-title {
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex-flow: row;
-	flex-flow: row;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row;
+  flex-flow: row;
 }
 
 .choseListDialog-body {
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex-flow: row;
-	flex-flow: row;
-	font-size: 16px;
-	color: #616161;
-	text-align: center;
-	height: 36px;
-	line-height: 36px;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row;
+  flex-flow: row;
+  font-size: 16px;
+  color: #616161;
+  text-align: center;
+  height: 36px;
+  line-height: 36px;
 }
 
 .choseListDialog-item {
-	border: 1px solid #e0e0e0;
+  border: 1px solid #e0e0e0;
 }
 
 .tipDialog {
-	position: fixed;
-	left: 0;
-	bottom: 40px;
-	background-color: rgba(192, 230, 22, 0.6);
-	width: 200px;
-	height: 40px;
-	line-height: 40px;
-	box-shadow: 1px 1px 5px;
-	z-index: 20;
+  position: fixed;
+  left: 0;
+  bottom: 40px;
+  background-color: rgba(192, 230, 22, 0.6);
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  box-shadow: 1px 1px 5px;
+  z-index: 20;
 }
 </style>
