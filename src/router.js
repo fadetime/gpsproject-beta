@@ -9,6 +9,7 @@ import login from './views/login.vue'
 import Admin from './views/Admin.vue'
 import Log from './views/Log.vue'
 import AuthGuard from './auth-guard'
+import Staff from './views/Staff.vue'
 
 Vue.use(Router)
 
@@ -59,6 +60,11 @@ export default new Router({
 			path: '/log',
 			name: 'log',
 			component: Log
+		},
+		{
+			path: '/staff',
+			name: 'staff',
+			component: Staff
 		}
 
 	]

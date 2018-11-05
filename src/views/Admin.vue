@@ -89,12 +89,33 @@
                             <span style="font-size:16px;">日志查看</span>
                         </div>
                         <div style="display:flex;justify-content:right;">
-                            <md-button class="md-raised" @click="goLogPage">开启</md-button>
+                            <md-button class="md-raised" @click="goLogPage('journal')">开启</md-button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- <div class="itemflex" style="margin:10px 0 0 0">
+            <div :class="boxborder2">
+                <div :class="titleclass2" style="text-align: left;">
+                    <span>
+                        人员设置
+                    </span>
+                </div>
+                <div class="itemflex" style="color:#696969;line-height:52px">
+                    <div style="width:400px;display:flex;justify-content:space-between">
+                        <div style="text-align:left">
+                            <span style="font-size:16px;">人员管理</span>
+                        </div>
+                        <div style="display:flex;justify-content:right;">
+                            <md-button class="md-raised" @click="goLogPage('staff')">开启</md-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
         <div style="margin:10px 0 0 0">
             <md-button class="md-raised md-accent" @click="logout">
                 <span style="font-size:20px">退出登陆</span>
@@ -166,8 +187,13 @@ export default {
         }
     },
     methods: {
-        goLogPage(){
-            this.$router.push('/log')
+        goLogPage(item){
+            if(item === 'journal'){
+                this.$router.push('/log')
+            }else{
+                this.$router.push('/staff')
+            }
+            
         },
         getfocus(floor) {
             if (floor === "l1") {

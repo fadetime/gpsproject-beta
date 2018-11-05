@@ -1,292 +1,378 @@
 <template>
-    <div id="car">
-        <div class="topbutton">
-            <div class="topbutton-left">
-                <input type="text" v-model="selectedCar" @keyup.enter="search" placeholder="搜索车牌信息">
-            </div>
-            <div class="topbutton-right">
-                <md-button class="md-raised md-primary" @click="newCar" style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
-            </div>
-        </div>
-        <div class="centertable">
-            <md-card style="background-color: #eff3f5">
-                <md-card-content>
-                    <div class="tabletitle">
-                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
-                            <span>车牌</span>
-                        </div>
-                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
-                            <span>车型</span>
-                        </div>
-                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
-                            <span>包含尾门</span>
-                        </div>
-                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
-                            <span>包含冷藏</span>
-                        </div>
-                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
-                            <span>备注</span>
-                        </div>
-                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
-                            <span>操作</span>
-                        </div>
-                    </div>
-                </md-card-content>
-            </md-card>
+	<div id="car">
+		<div class="topbutton">
+			<div class="topbutton-left">
+				<input type="text" v-model="selectedCar" @keyup.enter="search" placeholder="搜索车牌信息">
+			</div>
+			<div class="topbutton-right">
+				<md-button class="md-raised md-primary" @click="newCar" style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
+			</div>
+		</div>
+		<div class="centertable">
+			<md-card style="background-color: #eff3f5">
+				<md-card-content>
+					<div class="tabletitle">
+						<div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+							<span>车牌</span>
+						</div>
+						<div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+							<span>车型</span>
+						</div>
+						<div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+							<span>包含尾门</span>
+						</div>
+						<div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+							<span>包含冷藏</span>
+						</div>
+						<div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+							<span>备注</span>
+						</div>
+						<div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+							<span>检查记录</span>
+						</div>
+						<div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+							<span>操作</span>
+						</div>
+					</div>
+				</md-card-content>
+			</md-card>
 
-            <md-card md-with-hover v-for="(item,index) in allcarinfo" :key="index" style="background-color: #eff3f5;">
-                <md-card-content>
-                    <div class="tablebody">
-                        <div class="tabletitle-item">
-                            <span>{{item.carid}}</span>
-                        </div>
-                        <div class="tabletitle-item">
-                            <span>{{item.cartype}}</span>
-                        </div>
-                        <div class="tabletitle-item">
-                            <span>{{item.tailgate}}</span>
-                        </div>
-                        <div class="tabletitle-item">
-                            <span>{{item.coolstore}}</span>
-                        </div>
-                        <div class="tabletitle-item">
-                            <span>{{item.carnote}}</span>
-                        </div>
-                        <div class="tabletitle-item">
-                            <img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)" style="width:20px;margin:0 10px">
-                            <img src="../..//public/img/icons/dele.png" alt="delete" @click="removebutton(item)" style="width:30px;margin:0 10px">
-                        </div>
-                    </div>
-                </md-card-content>
-            </md-card>
-            <!-- 客户页码 -->
-            <div class="page-bar" style="display: flex;justify-content: center;">
-                <div class="page-bar-body" v-if="pageCount!=1">
-                    <ul style="width:410px">
-                        <li @click="pageButton('A')">
-                            <span>上一页</span>
-                        </li>
-                        <li v-for="(item,index) in pages" :key="index" @click="pageButton(item)" :class="{'active':pageNow == item}">
-                            <span>{{item}}</span>
-                        </li>
-                        <li @click="pageButton('B')">
-                            <span>下一页</span>
-                        </li>
-                        <li>
-                            <span>共
-                                <i>{{pageCount}}</i>页</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- New car dialog start -->
-        <md-dialog :md-active.sync="newCarDialog" class="editdialog">
-            <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:12px">
-                <span style="color:#fff">车辆管理</span>
-            </md-dialog-title>
-            <md-dialog-content>
-                <div style="border: 3px dashed #eee">
+			<md-card md-with-hover v-for="(item,index) in allcarinfo" :key="index" style="background-color: #eff3f5;">
+				<md-card-content>
+					<div class="tablebody">
+						<div class="tabletitle-item">
+							<span>{{item.carid}}</span>
+						</div>
+						<div class="tabletitle-item">
+							<span>{{item.cartype}}</span>
+						</div>
+						<div class="tabletitle-item">
+							<span>{{item.tailgate}}</span>
+						</div>
+						<div class="tabletitle-item">
+							<span>{{item.coolstore}}</span>
+						</div>
+						<div class="tabletitle-item">
+							<span>{{item.carnote}}</span>
+						</div>
+						<div class="tabletitle-item" @click="openClickCarLog(item)">
+							<md-icon style="font-size: 34px!important;">list_alt</md-icon>
+						</div>
+						<div class="tabletitle-item">
+							<img src="../../public/img/icons/edit.png" alt="edit" @click="editbutton(item)" style="width:20px;margin:0 10px">
+							<img src="../..//public/img/icons/dele.png" alt="delete" @click="removebutton(item)" style="width:30px;margin:0 10px">
+						</div>
+					</div>
+				</md-card-content>
+			</md-card>
+			<!-- 客户页码 -->
+			<div class="page-bar" style="display: flex;justify-content: center;">
+				<div class="page-bar-body" v-if="pageCount!=1">
+					<ul style="width:410px">
+						<li @click="pageButton('A')">
+							<span>上一页</span>
+						</li>
+						<li v-for="(item,index) in pages" :key="index" @click="pageButton(item)" :class="{'active':pageNow == item}">
+							<span>{{item}}</span>
+						</li>
+						<li @click="pageButton('B')">
+							<span>下一页</span>
+						</li>
+						<li>
+							<span>共
+								<i>{{pageCount}}</i>页</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- New car dialog start -->
+		<md-dialog :md-active.sync="newCarDialog" class="editdialog">
+			<md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:12px">
+				<span style="color:#fff">车辆管理</span>
+			</md-dialog-title>
+			<md-dialog-content>
+				<div style="border: 3px dashed #eee">
 
-                    <div class="dialog-body">
-                        <div class="dialog-body-item" style="padding-top:24px">
-                            <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
-                            <div class="photoarea" @click="uploadFile" v-if="!carImage">
-                                <md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon>
-                                <img :src="updateImagePreview" alt="newimg" v-else>
-                            </div>
-                            <div class="photoarea" @click="uploadFile" v-else>
-                                <img :src="carImage | imgurl" alt="newimg">
-                            </div>
+					<div class="dialog-body">
+						<div class="dialog-body-item" style="padding-top:24px">
+							<input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
+							<div class="photoarea" @click="uploadFile" v-if="!carImage">
+								<md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon>
+								<img :src="updateImagePreview" alt="newimg" v-else>
+							</div>
+							<div class="photoarea" @click="uploadFile" v-else>
+								<img :src="carImage | imgurl" alt="newimg">
+							</div>
 
-                        </div>
-                        <div class="dialog-body-item">
-                            <md-field style="margin:0 auto" :class="idclass">
-                                <label style="font-size:20px">车牌号码</label>
-                                <md-input v-model="carid" style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
-                                <span class="md-error" style="font-size:15px;margin: -2px auto">车辆标识信息，必填项目</span>
-                            </md-field>
+						</div>
+						<div class="dialog-body-item">
+							<md-field style="margin:0 auto" :class="idclass">
+								<label style="font-size:20px">车牌号码</label>
+								<md-input v-model="carid" style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+								<span class="md-error" style="font-size:15px;margin: -2px auto">车辆标识信息，必填项目</span>
+							</md-field>
 
-                            <!-- 下拉框 -->
-                            <div class="container">
-                                <div class="custom-selector">
-                                    <div class="selector-header" style="position:relative" @click="callCarType">
-                                        <div style="text-align:left;font-size:20px;color:rgba(0,0,0,0.54);position:absolute;padding-top:24px" v-if="!cartype">车型</div>
-                                        <div style="border-bottom: 1px solid;padding:37px 0;text-align:left;font-size:18px;color:rgba(0,0,0,0.54);">{{cartype}}</div>
-                                        <div style="position:absolute;top:32px;right:0">
-                                            <img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow" id="selector-arrow-type">
-                                        </div>
-                                    </div>
-                                    <div class="selector-body" id="selector-body-type">
-                                        <div class="box" id="selector-box-type" v-for="(item,index) in allCarType" :key="index" @click="choseTypeItem(item)">
-                                            <span style="font-size:20px">{{item}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- 下拉框 -->
-                            <div class="dialog-body-item">
-                                <div style="margin:16px auto">
-                                    <span style="font-size:20px;color:rgba(0,0,0,0.54)">有无尾门</span>
-                                </div>
-                                <div class="dialog-body-radio">
-                                    <div class="dialog-body-radio-item">
-                                        <div>
-                                            <input type="radio" name="cartailgate" v-model="tailgate" value="yes">
-                                        </div>
-                                        <div style="font-size:15px;color:#000;padding-top:3px">
-                                            <span>有</span>
-                                        </div>
+							<!-- 下拉框 -->
+							<div class="container">
+								<div class="custom-selector">
+									<div class="selector-header" style="position:relative" @click="callCarType">
+										<div style="text-align:left;font-size:20px;color:rgba(0,0,0,0.54);position:absolute;padding-top:24px" v-if="!cartype">车型</div>
+										<div style="border-bottom: 1px solid;padding:37px 0;text-align:left;font-size:18px;color:rgba(0,0,0,0.54);">{{cartype}}</div>
+										<div style="position:absolute;top:32px;right:0">
+											<img src="../../public/img/icons/arrowDown.png" alt="" style="width:40px" class="arrow" id="selector-arrow-type">
+										</div>
+									</div>
+									<div class="selector-body" id="selector-body-type">
+										<div class="box" id="selector-box-type" v-for="(item,index) in allCarType" :key="index" @click="choseTypeItem(item)">
+											<span style="font-size:20px">{{item}}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- 下拉框 -->
+							<div class="dialog-body-item">
+								<div style="margin:16px auto">
+									<span style="font-size:20px;color:rgba(0,0,0,0.54)">有无尾门</span>
+								</div>
+								<div class="dialog-body-radio">
+									<div class="dialog-body-radio-item">
+										<div>
+											<input type="radio" name="cartailgate" v-model="tailgate" value="yes">
+										</div>
+										<div style="font-size:15px;color:#000;padding-top:3px">
+											<span>有</span>
+										</div>
 
-                                    </div>
-                                    <div class="dialog-body-radio-item">
-                                        <div>
-                                            <input type="radio" name="cartailgate" v-model="tailgate" value="no">
-                                        </div>
-                                        <div style="font-size:15px;color:#000;padding-top:3px">
-                                            <span>无</span>
-                                        </div>
+									</div>
+									<div class="dialog-body-radio-item">
+										<div>
+											<input type="radio" name="cartailgate" v-model="tailgate" value="no">
+										</div>
+										<div style="font-size:15px;color:#000;padding-top:3px">
+											<span>无</span>
+										</div>
 
-                                    </div>
-                                </div>
-                            </div>
+									</div>
+								</div>
+							</div>
 
-                        </div>
-                    </div>
-                    <div class="dialog-body">
-                        <div class="dialog-body-item">
-                            <md-field style="margin:20px auto">
-                                <label style="font-size:20px">备注</label>
-                                <md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:18px;height:55px;text-align:center"></md-input>
-                            </md-field>
-                        </div>
+						</div>
+					</div>
+					<div class="dialog-body">
+						<div class="dialog-body-item">
+							<md-field style="margin:20px auto">
+								<label style="font-size:20px">备注</label>
+								<md-input v-model="carnote" style="border-bottom: 1px solid #000;font-size:18px;height:55px;text-align:center"></md-input>
+							</md-field>
+						</div>
 
-                        <div class="dialog-body-item">
-                            <div style="margin:8px auto">
-                                <span style="font-size:20px;color:rgba(0,0,0,0.54)">有无冷藏</span>
-                            </div>
-                            <div class="dialog-body-radio">
-                                <div class="dialog-body-radio-item">
-                                    <div>
-                                        <input type="radio" name="carstore" v-model="coolstore" value="yes">
-                                    </div>
-                                    <div style="font-size:15px;color:#000;padding-top:3px">
-                                        <span>有</span>
-                                    </div>
+						<div class="dialog-body-item">
+							<div style="margin:8px auto">
+								<span style="font-size:20px;color:rgba(0,0,0,0.54)">有无冷藏</span>
+							</div>
+							<div class="dialog-body-radio">
+								<div class="dialog-body-radio-item">
+									<div>
+										<input type="radio" name="carstore" v-model="coolstore" value="yes">
+									</div>
+									<div style="font-size:15px;color:#000;padding-top:3px">
+										<span>有</span>
+									</div>
 
-                                </div>
-                                <div class="dialog-body-radio-item">
-                                    <div>
-                                        <input type="radio" name="carstore" v-model="coolstore" value="no">
-                                    </div>
-                                    <div style="font-size:15px;color:#000;padding-top:3px">
-                                        <span>无</span>
-                                    </div>
+								</div>
+								<div class="dialog-body-radio-item">
+									<div>
+										<input type="radio" name="carstore" v-model="coolstore" value="no">
+									</div>
+									<div style="font-size:15px;color:#000;padding-top:3px">
+										<span>无</span>
+									</div>
 
-                                </div>
-                            </div>
+								</div>
+							</div>
 
-                        </div>
+						</div>
 
-                    </div>
-                </div>
-            </md-dialog-content>
-            <div style="margin:8px auto 10px auto">
-                <md-button class="md-raised md-primary" @click="closeDialog" style="font-size:20px;width:100px;height:40px">取消</md-button>
-                <md-button class="md-raised md-primary" v-if="addmode" @click="addcar" style="font-size:20px;width:100px;height:40px">保存</md-button>
-                <md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:20px;width:100px;height:40px">修改</md-button>
-            </div>
-        </md-dialog>
-        <!-- New car dialog start -->
+					</div>
+				</div>
+			</md-dialog-content>
+			<div style="margin:8px auto 10px auto">
+				<md-button class="md-raised md-primary" @click="closeDialog" style="font-size:20px;width:100px;height:40px">取消</md-button>
+				<md-button class="md-raised md-primary" v-if="addmode" @click="addcar" style="font-size:20px;width:100px;height:40px">保存</md-button>
+				<md-button class="md-raised md-primary" v-else @click="confirmedit" style="font-size:20px;width:100px;height:40px">修改</md-button>
+			</div>
+		</md-dialog>
+		<!-- New car dialog start -->
 
-        <!-- remove dialog start-->
-        <md-dialog :md-active.sync="removeDialog" class="editdialog">
-            <md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
-                <span style="color:#fff">删除车辆</span>
-            </md-dialog-title>
-            <div style="margin:0 20px 20px 20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow-x:hidden;overflow-y:auto">
-                <div class="deldialog">
-                    <div class="deldialog-left">
-                        <div class="photoarea">
-                            <img src="../../public/img/ebuyLogo.png" alt="ebuylogo" style="object-fit:unset;padding:50px 0" v-if="!carImage">
-                            <img :src="carImage | imgurl" alt="newimg" v-else>
-                        </div>
-                    </div>
-                    <div class="deldialog-right">
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>车牌号码:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{carid}}</span>
-                            </div>
-                        </div>
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>车辆类型:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{cartype}}</span>
-                            </div>
-                        </div>
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>有无尾门:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{tailgate}}</span>
-                            </div>
-                        </div>
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>出车次数:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{cartimes}}</span>
-                            </div>
-                        </div>
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>车辆备注:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{carnote}}</span>
-                            </div>
-                        </div>
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>加入时间:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{cardate | datefilter}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
-                <md-dialog-actions style="margin:5px auto">
-                    <md-button class="md-raised md-primary" @click="removeDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
-                    <md-button class="md-raised md-accent" @click="confirmremove" style="font-size:20px;width:100px;height:40px">删除</md-button>
-                </md-dialog-actions>
-            </div>
+		<!-- remove dialog start-->
+		<md-dialog :md-active.sync="removeDialog" class="editdialog">
+			<md-dialog-title style="font-size:24px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
+				<span style="color:#fff">删除车辆</span>
+			</md-dialog-title>
+			<div style="margin:0 20px 20px 20px;background-color: #e6e6e6;box-shadow: 2px 2px 5px #636363;overflow-x:hidden;overflow-y:auto">
+				<div class="deldialog">
+					<div class="deldialog-left">
+						<div class="photoarea">
+							<img src="../../public/img/ebuyLogo.png" alt="ebuylogo" style="object-fit:unset;padding:50px 0" v-if="!carImage">
+							<img :src="carImage | imgurl" alt="newimg" v-else>
+						</div>
+					</div>
+					<div class="deldialog-right">
+						<div class="rmDialog-center">
+							<div class="rmDialog-center-left">
+								<span>车牌号码:</span>
+							</div>
+							<div class="rmDialog-center-right">
+								<span>{{carid}}</span>
+							</div>
+						</div>
+						<div class="rmDialog-center">
+							<div class="rmDialog-center-left">
+								<span>车辆类型:</span>
+							</div>
+							<div class="rmDialog-center-right">
+								<span>{{cartype}}</span>
+							</div>
+						</div>
+						<div class="rmDialog-center">
+							<div class="rmDialog-center-left">
+								<span>有无尾门:</span>
+							</div>
+							<div class="rmDialog-center-right">
+								<span>{{tailgate}}</span>
+							</div>
+						</div>
+						<div class="rmDialog-center">
+							<div class="rmDialog-center-left">
+								<span>出车次数:</span>
+							</div>
+							<div class="rmDialog-center-right">
+								<span>{{cartimes}}</span>
+							</div>
+						</div>
+						<div class="rmDialog-center">
+							<div class="rmDialog-center-left">
+								<span>车辆备注:</span>
+							</div>
+							<div class="rmDialog-center-right">
+								<span>{{carnote}}</span>
+							</div>
+						</div>
+						<div class="rmDialog-center">
+							<div class="rmDialog-center-left">
+								<span>加入时间:</span>
+							</div>
+							<div class="rmDialog-center-right">
+								<span>{{cardate | datefilter}}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
+				<md-dialog-actions style="margin:5px auto">
+					<md-button class="md-raised md-primary" @click="removeDialog = false" style="font-size:20px;width:100px;height:40px">取消</md-button>
+					<md-button class="md-raised md-accent" @click="confirmremove" style="font-size:20px;width:100px;height:40px">删除</md-button>
+				</md-dialog-actions>
+			</div>
 
-        </md-dialog>
-        <!-- remove dialog end-->
+		</md-dialog>
+		<!-- remove dialog end-->
 
-        <!-- error start -->
-        <md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" style="font-size:25px;z-index:999" />
-        <!-- error end -->
-        <!-- tip box start -->
-        <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutLeft">
-            <div class="tipDialog" v-if="showTipDialog">
-                <div>
-                    <span> {{tipMsg}}</span>
-                </div>
-            </div>
-        </transition>
-        <!-- tip box end -->
-    </div>
+		<!-- error start -->
+		<md-dialog-alert :md-active.sync="error" :md-content="errormsg" md-confirm-text="关闭" style="font-size:25px;z-index:999" />
+		<!-- error end -->
+		<!-- tip box start -->
+		<transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutLeft">
+			<div class="tipDialog" v-if="showTipDialog">
+				<div>
+					<span> {{tipMsg}}</span>
+				</div>
+			</div>
+		</transition>
+		<!-- tip box end -->
+		<!-- check car log box start -->
+		<transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+			<div class="checkcar-back" v-if="showCheckCarBox" @click="showCheckCarBox=false"></div>
+		</transition>
+		<transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+			<div class="checkcar-front" v-if="showCheckCarBox" @click="showCheckCarBox=false">
+				<div class="checkcar-front-box">
+					<div class="checkcar-front-box-top">
+						<span>检查记录</span>
+					</div>
+					<div v-if="carLog.length===0" style="padding: 24px 100px;font-size: 16px;">
+						<span>~暂无记录~</span>
+					</div>
+					<div v-else class="checkcar-front-box-body">
+						<div class="checkcar-front-box-body-title" >
+							<div class="checkcar-front-box-body-title-item" style="width:160px">
+								<span>时间</span>
+							</div>
+							<div class="checkcar-front-box-body-title-item">
+								<span>司机</span>
+							</div>
+							<div class="checkcar-front-box-body-title-item">
+								<span>雨刷</span>
+							</div>
+							<div class="checkcar-front-box-body-title-item">
+								<span>大灯</span>
+							</div>
+							<div class="checkcar-front-box-body-title-item" style="width:80px">
+								<span>后视镜</span>
+							</div>
+							<div class="checkcar-front-box-body-title-item">
+								<span>车胎</span>
+							</div>
+							<div class="checkcar-front-box-body-title-item" style="width:90px">
+								<span>备用车胎</span>
+							</div>
+							<div class="checkcar-front-box-body-title-item">
+								<span>刹车</span>
+							</div>
+						</div>
+						<div class="checkcar-front-box-body-item" v-for="(item , index) in carLog" :key="index">
+							<div style="width:160px;text-align:left">
+								<span>{{item.date | datefilter}}{{item.date | timefilter}}</span>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:32px">
+								<span>{{item.driver}}</span>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:63px">
+								<md-icon v-if="item.wiper" style="color:green">check_circle</md-icon>
+								<md-icon v-else style="color:red">cancel</md-icon>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:59px">
+								<md-icon v-if="item.headlight" style="color:green">check_circle</md-icon>
+								<md-icon v-else style="color:red">cancel</md-icon>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:77px">
+								<md-icon v-if="item.mirror" style="color:green">check_circle</md-icon>
+								<md-icon v-else style="color:red">cancel</md-icon>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:65px">
+								<md-icon v-if="item.tyre" style="color:green">check_circle</md-icon>
+								<md-icon v-else style="color:red">cancel</md-icon>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:92px">
+								<md-icon v-if="item.backup" style="color:green">check_circle</md-icon>
+								<md-icon v-else style="color:red">cancel</md-icon>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:58px">
+								<md-icon v-if="item.brake" style="color:green">check_circle</md-icon>
+								<md-icon v-else style="color:red">cancel</md-icon>
+							</div>
+						</div>
+					</div>
+					<div class="checkcar-front-box-bottom">
+						<md-button class="md-raised md-primary" @click="showCheckCarBox=false" style="font-size:16px;width:80px;height:35px;">关闭</md-button>
+					</div>
+				</div>
+			</div>
+		</transition>
+		<!-- check car log box end -->
+	</div>
 </template>
 
 <script>
@@ -332,7 +418,9 @@ export default {
       allCarType: ['Van', '10ft Lorry', '14ft Lorry', '24ft Lorry'],
       selectorCarType: '车型',
       showTipDialog: false,
-      tipMsg: ''
+      tipMsg: '',
+      showCheckCarBox: false,
+      carLog: []
     }
   },
 
@@ -377,6 +465,29 @@ export default {
     }
   },
   methods: {
+    openClickCarLog(item) {
+      axios
+        .post(config.server + '/checkcar/get', {
+          car_id: item._id
+        })
+        .then(doc => {
+          if (doc.data.code === 0) {
+            this.carLog = doc.data.item
+            this.showCheckCarBox = true
+            console.log(this.carLog)
+          } else {
+            console.log(doc)
+            this.tipMsg = '出现未知错误'
+            this.showTipDialog = true
+            setTimeout(() => {
+              this.showTipDialog = false
+            }, 3000)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     // 下拉框部分 start
     callCarType() {
       if (this.callFlag) {
@@ -977,5 +1088,73 @@ export default {
   background-color: dodgerblue;
   color: white;
   transition: 0.5s;
+}
+
+.checkcar-back {
+  background: rgba(0, 0, 0, 0.12);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 23;
+}
+
+.checkcar-front {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 24;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkcar-front-box {
+  background: #fff;
+}
+
+.checkcar-front-box-top {
+  font-size: 18px;
+  height: 30px;
+  line-height: 30px;
+  background: #ff5252;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  color: #fff;
+  text-align: left;
+  padding-left: 24px;
+}
+
+.checkcar-front-box-body {
+  padding: 20px 24px;
+}
+
+.checkcar-front-box-body-title {
+  display: flex;
+  display: -webkit-flex;
+  font-size: 16px;
+  color: #6a6a6a;
+  border-bottom: 1px solid #696969;
+  height: 30px;
+}
+
+.checkcar-front-box-body-title-item {
+  width: 60px;
+  text-align: left;
+}
+
+.checkcar-front-box-body-item {
+  display: flex;
+  display: -webkit-flex;
+  height: 30px;
+  line-height: 30px;
+}
+
+.checkcar-front-box-body-center-item {
+	width:50px;
+	text-align: right;
 }
 </style>

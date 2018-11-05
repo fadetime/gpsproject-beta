@@ -203,7 +203,7 @@
 							<span class="md-error">客户标识信息，必填项目</span>
 						</md-field>
 
-						<div style="display:flex;width:180px">
+						<div style="display:flex;width:180px;padding-top:15px">
 							<md-field style="margin:12px auto" :class="classser">
 								<label for="choseArea" style="font-size:18px">所属地区</label>
 								<md-select v-model="choseArea" name="choseArea" id="choseArea" style="border-bottom: 1px solid #000;font-size:20px;height:40px;padding-top:6px;width:150px">
@@ -213,12 +213,19 @@
 							</md-field>
 							<md-button :class="classA" @click="openAreaWindow" style="font-size:18px;min-width:60px;height:30px;margin-top: 36px;">区域</md-button>
 						</div>
-
-						<md-field style="margin:0 auto" :class="classadd">
+						<div style="padding-top:15px">
+							<md-field style="margin:0 auto" :class="classadd">
 							<label style="font-size:18px">客户地址</label>
 							<md-input v-model="clientbaddress" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
 							<span class="md-error">客户地址标识信息</span>
 						</md-field>
+						</div>
+						
+
+					</div>
+				</div>
+				<div class="dialogb-body-item">
+					<div class="dialogb-body-left">
 
 						<div style="padding-top:10px">
 							<div>
@@ -244,11 +251,6 @@
 							</div>
 						</div>
 
-					</div>
-				</div>
-				<div class="dialogb-body-item">
-					<div class="dialogb-body-left">
-
 						<md-field style="margin:10px auto" :class="classpho">
 							<label style="font-size:18px">客户电话</label>
 							<md-input v-model="clientbphone" style="border-bottom: 1px solid #000;font-size:16px;height:40px" @change="check_phone($event)"></md-input>
@@ -264,6 +266,12 @@
 						</md-field>
 					</div>
 					<div class="dialogb-body-right">
+
+						<md-field style="margin:10px auto" :class="classpos">
+							<label style="font-size:18px">要求时间</label>
+							<md-input v-model="timeLimit" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
+							<span class="md-error">客户要求的到货时间</span>
+						</md-field>
 
 						<md-field style="margin:10px auto" :class="classpos">
 							<label style="font-size:18px">客户邮编</label>
@@ -749,1568 +757,1575 @@ import config from '../../public/js/config.js'
 import lrz from 'lrz'
 
 export default {
-  data() {
-    return {
-      selectedclient: '',
-      clients: [],
-      clientpage: false,
-      pagestylea: '',
-      pagestyleb: 'font-weight:bold;',
-      allclientainfo: [],
-      allclientbinfo: [],
-      allAreaArray: [],
-      showDialoga: false,
-      showDialogb: false,
-      classA: 'md-raised',
-      classB: 'md-raised md-primary',
-      clientbname: '',
-      clientbaddress: '',
-      clientbphone: '',
-      clientbstatus: 'active',
-      clientbpostcode: '',
-      successdmsg: false,
-      error1: false,
-      error2: false,
-      error: false,
-      erromsg: '发生未知错误',
-      clientaname: '',
-      clientaaddress: '',
-      clientaphone: '',
-      clientastatus: 'active',
-      clientapostcode: '',
-      clientausername: '',
-      clientapsw: '',
-      clientacontract: '',
-      clientatime: '',
-      clientamail: '',
-      choseaname: '',
-      choseArea: '',
-      _id: '',
-      savemodeb: true,
-      deleteDialoga: false,
-      deleteDialogb: false,
-      searchclienta: '',
-      searchclientb: '',
-      searchedclienta: '',
-      searchedclientb: '',
-      nameErr: false,
-      addErr: false,
-      phoErr: false,
-      conErr: false,
-      posErr: false,
-      usrErr: false,
-      pswErr: false,
-      timErr: false,
-      maiErr: false,
-      errname: false,
-      erradd: false,
-      errpho: false,
-      errpos: false,
-      errser: false,
-      pageCount: 0,
-      pageCountA: 0,
-      pageNow: 1,
-      pageSize: 15,
-      showItem: 5,
-      findAmode: false,
-      findBmode: false,
-      updateImagePreview: '',
-      updateImage: '',
-      clientImage: '',
-      openSMS: false,
-      nowDate: '',
-      selectedSMSDate: '',
-      SMSErr: false,
-      areaWindow: false,
-      addNewAreaMode: false,
-      areaEditMode: false,
-      areaDescription: '',
-      confirmRemove: false,
-      areaName: '',
-      showTipDialog: false,
-      tipMsg: 'info MSG',
-      isNeedPic: false
-    }
-  },
-  mounted() {
-    this.getallclienta()
-    this.getallclientb()
-    this.getAllarea()
-  },
-  computed: {
-    pagesA: function() {
-      let pag = []
-      if (this.pageNow < this.showItem) {
-        //如果当前的激活的项 小于要显示的条数
-        //总页数和要显示的条数那个大就显示多少条
-        let i = Math.min(this.showItem, this.pageCountA)
-        while (i) {
-          pag.unshift(i--)
-        }
-      } else {
-        //当前页数大于显示页数了
-        let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
-          i = this.showItem
-        if (middle > this.pageCountA - this.showItem) {
-          middle = this.pageCountA - this.showItem + 1
-        }
-        while (i--) {
-          pag.push(middle++)
-        }
-      }
-      return pag
-    },
+	data() {
+		return {
+			selectedclient: '',
+			clients: [],
+			clientpage: false,
+			pagestylea: '',
+			pagestyleb: 'font-weight:bold;',
+			allclientainfo: [],
+			allclientbinfo: [],
+			allAreaArray: [],
+			showDialoga: false,
+			showDialogb: false,
+			classA: 'md-raised',
+			classB: 'md-raised md-primary',
+			clientbname: '',
+			clientbaddress: '',
+			clientbphone: '',
+			clientbstatus: 'active',
+			clientbpostcode: '',
+			timeLimit:'',
+			successdmsg: false,
+			error1: false,
+			error2: false,
+			error: false,
+			erromsg: '发生未知错误',
+			clientaname: '',
+			clientaaddress: '',
+			clientaphone: '',
+			clientastatus: 'active',
+			clientapostcode: '',
+			clientausername: '',
+			clientapsw: '',
+			clientacontract: '',
+			clientatime: '',
+			clientamail: '',
+			choseaname: '',
+			choseArea: '',
+			_id: '',
+			savemodeb: true,
+			deleteDialoga: false,
+			deleteDialogb: false,
+			searchclienta: '',
+			searchclientb: '',
+			searchedclienta: '',
+			searchedclientb: '',
+			nameErr: false,
+			addErr: false,
+			phoErr: false,
+			conErr: false,
+			posErr: false,
+			usrErr: false,
+			pswErr: false,
+			timErr: false,
+			maiErr: false,
+			errname: false,
+			erradd: false,
+			errpho: false,
+			errpos: false,
+			errser: false,
+			pageCount: 0,
+			pageCountA: 0,
+			pageNow: 1,
+			pageSize: 15,
+			showItem: 5,
+			findAmode: false,
+			findBmode: false,
+			updateImagePreview: '',
+			updateImage: '',
+			clientImage: '',
+			openSMS: false,
+			nowDate: '',
+			selectedSMSDate: '',
+			SMSErr: false,
+			areaWindow: false,
+			addNewAreaMode: false,
+			areaEditMode: false,
+			areaDescription: '',
+			confirmRemove: false,
+			areaName: '',
+			showTipDialog: false,
+			tipMsg: 'info MSG',
+			isNeedPic: false
+		}
+	},
+	mounted() {
+		this.getallclienta()
+		this.getallclientb()
+		this.getAllarea()
+	},
+	computed: {
+		pagesA: function() {
+			let pag = []
+			if (this.pageNow < this.showItem) {
+				//如果当前的激活的项 小于要显示的条数
+				//总页数和要显示的条数那个大就显示多少条
+				let i = Math.min(this.showItem, this.pageCountA)
+				while (i) {
+					pag.unshift(i--)
+				}
+			} else {
+				//当前页数大于显示页数了
+				let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
+					i = this.showItem
+				if (middle > this.pageCountA - this.showItem) {
+					middle = this.pageCountA - this.showItem + 1
+				}
+				while (i--) {
+					pag.push(middle++)
+				}
+			}
+			return pag
+		},
 
-    pages: function() {
-      let pag = []
-      if (this.pageNow < this.showItem) {
-        let i = Math.min(this.showItem, this.pageCount)
-        while (i) {
-          pag.unshift(i--)
-        }
-      } else {
-        let middle = this.pageNow - Math.floor(this.showItem / 2),
-          i = this.showItem
-        if (middle > this.pageCount - this.showItem) {
-          middle = this.pageCount - this.showItem + 1
-        }
-        while (i--) {
-          pag.push(middle++)
-        }
-      }
-      return pag
-    },
+		pages: function() {
+			let pag = []
+			if (this.pageNow < this.showItem) {
+				let i = Math.min(this.showItem, this.pageCount)
+				while (i) {
+					pag.unshift(i--)
+				}
+			} else {
+				let middle = this.pageNow - Math.floor(this.showItem / 2),
+					i = this.showItem
+				if (middle > this.pageCount - this.showItem) {
+					middle = this.pageCount - this.showItem + 1
+				}
+				while (i--) {
+					pag.push(middle++)
+				}
+			}
+			return pag
+		},
 
-    nameclass() {
-      return {
-        'md-invalid': this.nameErr
-      }
-    },
+		nameclass() {
+			return {
+				'md-invalid': this.nameErr
+			}
+		},
 
-    addclass() {
-      return {
-        'md-invalid': this.addErr
-      }
-    },
+		addclass() {
+			return {
+				'md-invalid': this.addErr
+			}
+		},
 
-    phoclass() {
-      return {
-        'md-invalid': this.phoErr
-      }
-    },
-    conclass() {
-      return {
-        'md-invalid': this.conErr
-      }
-    },
-    posclass() {
-      return {
-        'md-invalid': this.posErr
-      }
-    },
-    usrclass() {
-      return {
-        'md-invalid': this.usrErr
-      }
-    },
-    pswclass() {
-      return {
-        'md-invalid': this.pswErr
-      }
-    },
-    timclass() {
-      return {
-        'md-invalid': this.timErr
-      }
-    },
-    maiclass() {
-      return {
-        'md-invalid': this.maiErr
-      }
-    },
-    classname() {
-      return {
-        'md-invalid': this.errname
-      }
-    },
-    classadd() {
-      return {
-        'md-invalid': this.erradd
-      }
-    },
-    classpho() {
-      return {
-        'md-invalid': this.errpho
-      }
-    },
-    classpos() {
-      return {
-        'md-invalid': this.errpos
-      }
-    },
-    classser() {
-      return {
-        'md-invalid': this.errser
-      }
-    }
-  },
-  methods: {
-    openNewAreaBox() {
-      if (this.addNewAreaMode) {
-        this.addNewAreaMode = false
-        this.areaName = ''
-        this.areaDescription = ''
-      } else {
-        this.areaEditMode = false
-        this.addNewAreaMode = true
-      }
-    },
-    openAreaWindow() {
-      this.areaWindow = true
-    },
-    setupArea() {
-      if (!this.areaEditMode) {
-        this.saveArea()
-      } else {
-        this.confirmEditArea()
-      }
-    },
-    saveArea() {
-      axios
-        .post(config.server + '/area/post', {
-          areaName: this.areaName,
-          areaDescription: this.areaDescription
-        })
-        .then(doc => {
-          if (doc.data.code === 0) {
-            this.getAllarea()
-            this.tipMsg = '新增区域成功'
-            this.showTipDialog = true
-            this.addNewAreaMode = false
-            setTimeout(() => {
-              this.showTipDialog = false
-            }, 2000)
-          } else {
-            console.log(doc)
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    confirmEditArea() {
-      axios
-        .post(config.server + '/area/update', {
-          areaName: this.areaName,
-          areaDescription: this.areaDescription,
-          _id: this._id
-        })
-        .then(doc => {
-          if (doc.data.code === 0) {
-            this.tipMsg = '区域修改成功'
-            this.addNewAreaMode = false
-          } else if (doc.data.code === 1) {
-            this.tipMsg = doc.data.msg
-          } else {
-            this.tipMsg = '出现错误'
-            this.addNewAreaMode = false
-            console.log(doc.data.error)
-          }
-          this.showTipDialog = true
-          this.getAllarea()
-          setTimeout(() => {
-            this.showTipDialog = false
-          }, 2000)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    confirmRemoveArea() {
-      axios
-        .post(config.server + '/area/remove', {
-          _id: this._id
-        })
-        .then(doc => {
-          if (doc.data.code === 0) {
-            this.tipMsg = '区域删除成功'
-            this.confirmRemove = false
-          } else {
-            this.tipMsg = '出现错误'
-            this.confirmRemove = false
-            console.log(doc.data.error)
-          }
-          this.showTipDialog = true
-          this.getAllarea()
-          setTimeout(() => {
-            this.showTipDialog = false
-          }, 2000)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    removeArea(item) {
-      this.areaName = item.areaName
-      this.areaDescription = item.areaDescription
-      this._id = item._id
-      this.confirmRemove = true
-    },
-    editArea(item) {
-      console.log(item)
-      this.areaEditMode = true
-      this.addNewAreaMode = true
-      this.areaName = item.areaName
-      this._id = item._id
-      this.areaDescription = item.areaDescription
-    },
-    closeAreaWindowMethod() {
-      this.areaWindow = false
-      this.addNewAreaMode = false
-    },
-    getAllarea() {
-      axios
-        .get(config.server + '/area/')
-        .then(doc => {
-          this.allAreaArray = doc.data.doc
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    onConfirm() {
-      this.SMSErr = false
-      this.openSMS = false
-      this.selectedSMSDate = ''
-      axios
-        .post(config.server + '/clienta/sms/remove', {
-          _id: this._id
-        })
-        .then(doc => {
-          console.log(doc)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    openSendSMS() {
-      if (this.openSMS) {
-        this.nowDate = new Date()
-      } else {
-        if (this.selectedSMSDate) {
-          this.openSMS = true
-          this.SMSErr = true
-        }
-      }
-    },
-    uploadFile() {
-      document.getElementById('upload_file').click()
-    },
-    fileChange(el) {
-      if (typeof FileReader === 'undefined') {
-        return alert('浏览器不支持上传图片')
-      }
-      console.log('###')
-      if (!el.target.files[0].size) return //判断是否有文件数量
-      this.updateImagePreview = window.URL.createObjectURL(el.target.files[0])
-      this.updateImage = el.target.files[0]
-      this.clientImage = ''
-      el.target.value = ''
-    },
-    check_phone(event, type) {
-      if (type === 'date') {
-        let value = event.target.value
-        if (!/^[1-9]*$/.test(value)) {
-          this.conErr = true
-        } else {
-          this.conErr = false
-        }
-      } else {
-        let value = event.target.value
-        if (!/^[0-9]{8}$/.test(value)) {
-          this.phoErr = true
-          this.errpho = true
-        } else {
-          this.phoErr = false
-          this.errpho = false
-        }
-      }
-    },
+		phoclass() {
+			return {
+				'md-invalid': this.phoErr
+			}
+		},
+		conclass() {
+			return {
+				'md-invalid': this.conErr
+			}
+		},
+		posclass() {
+			return {
+				'md-invalid': this.posErr
+			}
+		},
+		usrclass() {
+			return {
+				'md-invalid': this.usrErr
+			}
+		},
+		pswclass() {
+			return {
+				'md-invalid': this.pswErr
+			}
+		},
+		timclass() {
+			return {
+				'md-invalid': this.timErr
+			}
+		},
+		maiclass() {
+			return {
+				'md-invalid': this.maiErr
+			}
+		},
+		classname() {
+			return {
+				'md-invalid': this.errname
+			}
+		},
+		classadd() {
+			return {
+				'md-invalid': this.erradd
+			}
+		},
+		classpho() {
+			return {
+				'md-invalid': this.errpho
+			}
+		},
+		classpos() {
+			return {
+				'md-invalid': this.errpos
+			}
+		},
+		classser() {
+			return {
+				'md-invalid': this.errser
+			}
+		}
+	},
+	methods: {
+		openNewAreaBox() {
+			if (this.addNewAreaMode) {
+				this.addNewAreaMode = false
+				this.areaName = ''
+				this.areaDescription = ''
+			} else {
+				this.areaEditMode = false
+				this.addNewAreaMode = true
+			}
+		},
+		openAreaWindow() {
+			this.areaWindow = true
+		},
+		setupArea() {
+			if (!this.areaEditMode) {
+				this.saveArea()
+			} else {
+				this.confirmEditArea()
+			}
+		},
+		saveArea() {
+			axios
+				.post(config.server + '/area/post', {
+					areaName: this.areaName,
+					areaDescription: this.areaDescription
+				})
+				.then(doc => {
+					if (doc.data.code === 0) {
+						this.getAllarea()
+						this.tipMsg = '新增区域成功'
+						this.showTipDialog = true
+						this.addNewAreaMode = false
+						setTimeout(() => {
+							this.showTipDialog = false
+						}, 2000)
+					} else {
+						console.log(doc)
+					}
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
+		confirmEditArea() {
+			axios
+				.post(config.server + '/area/update', {
+					areaName: this.areaName,
+					areaDescription: this.areaDescription,
+					_id: this._id
+				})
+				.then(doc => {
+					if (doc.data.code === 0) {
+						this.tipMsg = '区域修改成功'
+						this.addNewAreaMode = false
+					} else if (doc.data.code === 1) {
+						this.tipMsg = doc.data.msg
+					} else {
+						this.tipMsg = '出现错误'
+						this.addNewAreaMode = false
+						console.log(doc.data.error)
+					}
+					this.showTipDialog = true
+					this.getAllarea()
+					setTimeout(() => {
+						this.showTipDialog = false
+					}, 2000)
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
+		confirmRemoveArea() {
+			axios
+				.post(config.server + '/area/remove', {
+					_id: this._id
+				})
+				.then(doc => {
+					if (doc.data.code === 0) {
+						this.tipMsg = '区域删除成功'
+						this.confirmRemove = false
+					} else {
+						this.tipMsg = '出现错误'
+						this.confirmRemove = false
+						console.log(doc.data.error)
+					}
+					this.showTipDialog = true
+					this.getAllarea()
+					setTimeout(() => {
+						this.showTipDialog = false
+					}, 2000)
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
+		removeArea(item) {
+			this.areaName = item.areaName
+			this.areaDescription = item.areaDescription
+			this._id = item._id
+			this.confirmRemove = true
+		},
+		editArea(item) {
+			console.log(item)
+			this.areaEditMode = true
+			this.addNewAreaMode = true
+			this.areaName = item.areaName
+			this._id = item._id
+			this.areaDescription = item.areaDescription
+		},
+		closeAreaWindowMethod() {
+			this.areaWindow = false
+			this.addNewAreaMode = false
+		},
+		getAllarea() {
+			axios
+				.get(config.server + '/area/')
+				.then(doc => {
+					this.allAreaArray = doc.data.doc
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
+		onConfirm() {
+			this.SMSErr = false
+			this.openSMS = false
+			this.selectedSMSDate = ''
+			axios
+				.post(config.server + '/clienta/sms/remove', {
+					_id: this._id
+				})
+				.then(doc => {
+					console.log(doc)
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
+		openSendSMS() {
+			if (this.openSMS) {
+				this.nowDate = new Date()
+			} else {
+				if (this.selectedSMSDate) {
+					this.openSMS = true
+					this.SMSErr = true
+				}
+			}
+		},
+		uploadFile() {
+			document.getElementById('upload_file').click()
+		},
+		fileChange(el) {
+			if (typeof FileReader === 'undefined') {
+				return alert('浏览器不支持上传图片')
+			}
+			console.log('###')
+			if (!el.target.files[0].size) return //判断是否有文件数量
+			this.updateImagePreview = window.URL.createObjectURL(el.target.files[0])
+			this.updateImage = el.target.files[0]
+			this.clientImage = ''
+			el.target.value = ''
+		},
+		check_phone(event, type) {
+			if (type === 'date') {
+				let value = event.target.value
+				if (!/^[1-9]*$/.test(value)) {
+					this.conErr = true
+				} else {
+					this.conErr = false
+				}
+			} else {
+				let value = event.target.value
+				if (!/^[0-9]{8}$/.test(value)) {
+					this.phoErr = true
+					this.errpho = true
+				} else {
+					this.phoErr = false
+					this.errpho = false
+				}
+			}
+		},
 
-    pageButtonA(item) {
-      // console.log(this.pageNow)
-      if (item === 'A') {
-        if (this.pageNow > 1) {
-          this.pageNow = this.pageNow - 1
-        }
-      } else if (item === 'B') {
-        if (this.pageNow < this.pageCountA) {
-          this.pageNow = this.pageNow + 1
-        }
-      } else {
-        this.pageNow = item
-      }
-      if (this.findAmode === false) {
-        axios
-          .post(config.server + '/clienta/get', {
-            pageSize: this.pageSize,
-            pageNow: this.pageNow
-          })
-          .then(res => {
-            this.allclientainfo = res.data.doc
-            this.pageCountA = Math.ceil(res.data.count / this.pageSize)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      } else {
-        axios
-          .post(config.server + '/clienta/find', {
-            word: this.searchclienta,
-            pageSize: this.pageSize,
-            pageNow: this.pageNow
-          })
-          .then(res => {
-            this.allclientainfo = res.data.doc
-            this.pageCountA = Math.ceil(res.data.count / this.pageSize)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
-    },
+		pageButtonA(item) {
+			// console.log(this.pageNow)
+			if (item === 'A') {
+				if (this.pageNow > 1) {
+					this.pageNow = this.pageNow - 1
+				}
+			} else if (item === 'B') {
+				if (this.pageNow < this.pageCountA) {
+					this.pageNow = this.pageNow + 1
+				}
+			} else {
+				this.pageNow = item
+			}
+			if (this.findAmode === false) {
+				axios
+					.post(config.server + '/clienta/get', {
+						pageSize: this.pageSize,
+						pageNow: this.pageNow
+					})
+					.then(res => {
+						this.allclientainfo = res.data.doc
+						this.pageCountA = Math.ceil(res.data.count / this.pageSize)
+					})
+					.catch(err => {
+						console.log(err)
+					})
+			} else {
+				axios
+					.post(config.server + '/clienta/find', {
+						word: this.searchclienta,
+						pageSize: this.pageSize,
+						pageNow: this.pageNow
+					})
+					.then(res => {
+						this.allclientainfo = res.data.doc
+						this.pageCountA = Math.ceil(res.data.count / this.pageSize)
+					})
+					.catch(err => {
+						console.log(err)
+					})
+			}
+		},
 
-    pageButtonB(item) {
-      // console.log(this.pageNow)
-      if (item === 'A') {
-        if (this.pageNow > 1) {
-          this.pageNow = this.pageNow - 1
-        }
-      } else if (item === 'B') {
-        if (this.pageNow < this.pageCount) {
-          this.pageNow = this.pageNow + 1
-        }
-      } else {
-        this.pageNow = item
-      }
-      if (this.findBmode === false) {
-        axios
-          .post(config.server + '/clientb/get', {
-            pageSize: this.pageSize,
-            pageNow: this.pageNow
-          })
-          .then(res => {
-            this.allclientbinfo = res.data.doc
-            this.pageCount = Math.ceil(res.data.count / this.pageSize)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      } else {
-        axios
-          .post(config.server + '/clientb/find', {
-            word: this.searchclientb,
-            pageSize: this.pageSize,
-            pageNow: this.pageNow
-          })
-          .then(res => {
-            this.allclientbinfo = res.data.doc
-            this.pageCount = Math.ceil(res.data.count / this.pageSize)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
-    },
+		pageButtonB(item) {
+			// console.log(this.pageNow)
+			if (item === 'A') {
+				if (this.pageNow > 1) {
+					this.pageNow = this.pageNow - 1
+				}
+			} else if (item === 'B') {
+				if (this.pageNow < this.pageCount) {
+					this.pageNow = this.pageNow + 1
+				}
+			} else {
+				this.pageNow = item
+			}
+			if (this.findBmode === false) {
+				axios
+					.post(config.server + '/clientb/get', {
+						pageSize: this.pageSize,
+						pageNow: this.pageNow
+					})
+					.then(res => {
+						this.allclientbinfo = res.data.doc
+						this.pageCount = Math.ceil(res.data.count / this.pageSize)
+					})
+					.catch(err => {
+						console.log(err)
+					})
+			} else {
+				axios
+					.post(config.server + '/clientb/find', {
+						word: this.searchclientb,
+						pageSize: this.pageSize,
+						pageNow: this.pageNow
+					})
+					.then(res => {
+						this.allclientbinfo = res.data.doc
+						this.pageCount = Math.ceil(res.data.count / this.pageSize)
+					})
+					.catch(err => {
+						console.log(err)
+					})
+			}
+		},
 
-    searcha() {
-      this.pageNow = 1
-      if (this.searchclienta == '') {
-        this.findAmode = false
-        this.getallclienta()
-      } else {
-        this.findAmode = true
-        axios
-          .post(config.server + '/clienta/find', {
-            word: this.searchclienta,
-            pageSize: this.pageSize,
-            pageNow: this.pageNow
-          })
-          .then(res => {
-            this.allclientainfo = res.data.doc
-            this.pageCount = Math.ceil(res.data.count / this.pageSize)
-            if (res.data.code === 1) {
-              this.showTipDialog = true
-              this.tipMsg = res.data.msg
-              this.searchclienta = ''
-              this.getallclienta()
-              setTimeout(() => {
-                this.showTipDialog = false
-              }, 3000)
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
-    },
-    searchb() {
-      this.pageNow = 1
-      if (this.searchclientb == '') {
-        this.findBmode = false
-        this.getallclientb()
-      } else {
-        this.findBmode = true
-        axios
-          .post(config.server + '/clientb/find', {
-            word: this.searchclientb,
-            pageSize: this.pageSize,
-            pageNow: this.pageNow
-          })
-          .then(res => {
-            this.allclientbinfo = res.data.doc
-            this.pageCount = Math.ceil(res.data.count / this.pageSize)
-            if (res.data.code === 1) {
-              this.showTipDialog = true
-              this.tipMsg = res.data.msg
-              this.searchclientb = ''
-              this.getallclientb()
-              setTimeout(() => {
-                this.showTipDialog = false
-              }, 3000)
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
-    },
-    changepageA() {
-      this.clientpage = true
-      this.pagestylea = 'font-weight:bold;'
-      this.pagestyleb = ''
-      this.classA = 'md-raised md-primary'
-      this.classB = 'md-raised'
-      this.pageNow = 1
-      this.searchclienta = ''
-      this.getallclienta()
-    },
-    changepageB() {
-      this.clientpage = false
-      this.pagestyleb = 'font-weight:bold;'
-      this.pagestylea = ''
-      this.classA = 'md-raised'
-      this.classB = 'md-raised md-primary'
-      this.pageNow = 1
-      this.searchclientb = ''
-      this.getallclientb()
-    },
-    showDialog() {
-      if (!this.clientpage) {
-        this.savemodeb = true
-        this.showDialogb = true
-        this.clientbname = ''
-        this.clientbaddress = ''
-        this.clientbphone = ''
-        this.clientbpostcode = ''
-        this.clientbserve = ''
-        this.choseArea = ''
-        this.updateImagePreview = ''
-        this.updateImage = ''
-        this.clientImage = ''
-      } else {
-        this.phoErr = false
-        this.savemodeb = true
-        this.showDialoga = true
-        this.clientaname = ''
-        this.clientaaddress = ''
-        this.clientaphone = ''
-        this.clientapostcode = ''
-        this.clientausername = ''
-        this.clientapsw = ''
-        this.clientacontract = ''
-        this.clientatime = ''
-        this.clientamail = ''
-      }
-    },
-    getallclienta() {
-      axios
-        .post(config.server + '/clienta/get', {
-          pageSize: this.pageSize,
-          pageNow: this.pageNow
-        })
-        .then(res => {
-          this.allclientainfo = res.data.doc
-          this.pageCountA = Math.ceil(res.data.count / this.pageSize)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    getallclientb() {
-      axios
-        .post(config.server + '/clientb/get', {
-          pageSize: this.pageSize,
-          pageNow: this.pageNow
-        })
-        .then(res => {
-          this.allclientbinfo = res.data.doc
-          this.pageCount = Math.ceil(res.data.count / this.pageSize)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    addclienta() {
-      this.selectedSMSDate = ''
-      if (this.openSMS) {
-        let tempDate = new Date()
-        if (
-          !this.clientaname ||
-          !this.clientaaddress ||
-          !this.clientaphone ||
-          this.conErr ||
-          !this.clientapostcode ||
-          !this.clientausername ||
-          !this.clientapsw ||
-          this.phoErr ||
-          !this.clientacontract ||
-          !this.clientatime ||
-          !this.clientamail ||
-          !this.selectedSMSDate ||
-          this.selectedSMSDate < tempDate
-        ) {
-          if (!this.clientaname) {
-            this.nameErr = true
-          } else {
-            this.nameErr = false
-          }
-          if (!this.clientaaddress) {
-            this.addErr = true
-          } else {
-            this.addErr = false
-          }
-          if (!this.clientaphone) {
-            this.phoErr = true
-          }
-          if (!this.clientacontract) {
-            this.conErr = true
-          }
-          if (!this.clientapostcode) {
-            this.posErr = true
-          } else {
-            this.posErr = false
-          }
-          if (!this.clientausername) {
-            this.usrErr = true
-          } else {
-            this.usrErr = false
-          }
-          if (!this.clientapsw) {
-            this.pswErr = true
-          } else {
-            this.pswErr = false
-          }
-          if (!this.clientatime) {
-            this.timErr = true
-          } else {
-            this.timErr = false
-          }
-          if (!this.clientamail) {
-            this.maiErr = true
-          } else {
-            this.maiErr = false
-          }
-          if (!this.selectedSMSDate) {
-            this.error = true
-            this.erromsg = '结束时间不应为空'
-          } else if (this.selectedSMSDate < tempDate) {
-            this.error = true
-            this.erromsg = '所选日期应大于今天'
-          }
-          setTimeout(() => {
-            this.error = false
-          }, 2000)
-        } else {
-          this.nameErr = false
-          this.addErr = false
-          this.phoErr = false
-          this.conErr = false
-          this.posErr = false
-          this.usrErr = false
-          this.pswErr = false
-          this.timErr = false
-          this.maiErr = false
+		searcha() {
+			this.pageNow = 1
+			if (this.searchclienta == '') {
+				this.findAmode = false
+				this.getallclienta()
+			} else {
+				this.findAmode = true
+				axios
+					.post(config.server + '/clienta/find', {
+						word: this.searchclienta,
+						pageSize: this.pageSize,
+						pageNow: this.pageNow
+					})
+					.then(res => {
+						this.allclientainfo = res.data.doc
+						this.pageCount = Math.ceil(res.data.count / this.pageSize)
+						if (res.data.code === 1) {
+							this.showTipDialog = true
+							this.tipMsg = res.data.msg
+							this.searchclienta = ''
+							this.getallclienta()
+							setTimeout(() => {
+								this.showTipDialog = false
+							}, 3000)
+						}
+					})
+					.catch(err => {
+						console.log(err)
+					})
+			}
+		},
+		searchb() {
+			this.pageNow = 1
+			if (this.searchclientb == '') {
+				this.findBmode = false
+				this.getallclientb()
+			} else {
+				this.findBmode = true
+				axios
+					.post(config.server + '/clientb/find', {
+						word: this.searchclientb,
+						pageSize: this.pageSize,
+						pageNow: this.pageNow
+					})
+					.then(res => {
+						this.allclientbinfo = res.data.doc
+						this.pageCount = Math.ceil(res.data.count / this.pageSize)
+						if (res.data.code === 1) {
+							this.showTipDialog = true
+							this.tipMsg = res.data.msg
+							this.searchclientb = ''
+							this.getallclientb()
+							setTimeout(() => {
+								this.showTipDialog = false
+							}, 3000)
+						}
+					})
+					.catch(err => {
+						console.log(err)
+					})
+			}
+		},
+		changepageA() {
+			this.clientpage = true
+			this.pagestylea = 'font-weight:bold;'
+			this.pagestyleb = ''
+			this.classA = 'md-raised md-primary'
+			this.classB = 'md-raised'
+			this.pageNow = 1
+			this.searchclienta = ''
+			this.getallclienta()
+		},
+		changepageB() {
+			this.clientpage = false
+			this.pagestyleb = 'font-weight:bold;'
+			this.pagestylea = ''
+			this.classA = 'md-raised'
+			this.classB = 'md-raised md-primary'
+			this.pageNow = 1
+			this.searchclientb = ''
+			this.getallclientb()
+		},
+		showDialog() {
+			if (!this.clientpage) {
+				this.savemodeb = true
+				this.showDialogb = true
+				this.clientbname = ''
+				this.clientbaddress = ''
+				this.clientbphone = ''
+				this.clientbpostcode = ''
+				this.timeLimit = ''
+				this.clientbserve = ''
+				this.choseArea = ''
+				this.updateImagePreview = ''
+				this.updateImage = ''
+				this.clientImage = ''
+			} else {
+				this.phoErr = false
+				this.savemodeb = true
+				this.showDialoga = true
+				this.clientaname = ''
+				this.clientaaddress = ''
+				this.clientaphone = ''
+				this.clientapostcode = ''
+				this.clientausername = ''
+				this.clientapsw = ''
+				this.clientacontract = ''
+				this.clientatime = ''
+				this.clientamail = ''
+			}
+		},
+		getallclienta() {
+			axios
+				.post(config.server + '/clienta/get', {
+					pageSize: this.pageSize,
+					pageNow: this.pageNow
+				})
+				.then(res => {
+					this.allclientainfo = res.data.doc
+					this.pageCountA = Math.ceil(res.data.count / this.pageSize)
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
+		getallclientb() {
+			axios
+				.post(config.server + '/clientb/get', {
+					pageSize: this.pageSize,
+					pageNow: this.pageNow
+				})
+				.then(res => {
+					this.allclientbinfo = res.data.doc
+					this.pageCount = Math.ceil(res.data.count / this.pageSize)
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
+		addclienta() {
+			this.selectedSMSDate = ''
+			if (this.openSMS) {
+				let tempDate = new Date()
+				if (
+					!this.clientaname ||
+					!this.clientaaddress ||
+					!this.clientaphone ||
+					this.conErr ||
+					!this.clientapostcode ||
+					!this.clientausername ||
+					!this.clientapsw ||
+					this.phoErr ||
+					!this.clientacontract ||
+					!this.clientatime ||
+					!this.clientamail ||
+					!this.selectedSMSDate ||
+					this.selectedSMSDate < tempDate
+				) {
+					if (!this.clientaname) {
+						this.nameErr = true
+					} else {
+						this.nameErr = false
+					}
+					if (!this.clientaaddress) {
+						this.addErr = true
+					} else {
+						this.addErr = false
+					}
+					if (!this.clientaphone) {
+						this.phoErr = true
+					}
+					if (!this.clientacontract) {
+						this.conErr = true
+					}
+					if (!this.clientapostcode) {
+						this.posErr = true
+					} else {
+						this.posErr = false
+					}
+					if (!this.clientausername) {
+						this.usrErr = true
+					} else {
+						this.usrErr = false
+					}
+					if (!this.clientapsw) {
+						this.pswErr = true
+					} else {
+						this.pswErr = false
+					}
+					if (!this.clientatime) {
+						this.timErr = true
+					} else {
+						this.timErr = false
+					}
+					if (!this.clientamail) {
+						this.maiErr = true
+					} else {
+						this.maiErr = false
+					}
+					if (!this.selectedSMSDate) {
+						this.error = true
+						this.erromsg = '结束时间不应为空'
+					} else if (this.selectedSMSDate < tempDate) {
+						this.error = true
+						this.erromsg = '所选日期应大于今天'
+					}
+					setTimeout(() => {
+						this.error = false
+					}, 2000)
+				} else {
+					this.nameErr = false
+					this.addErr = false
+					this.phoErr = false
+					this.conErr = false
+					this.posErr = false
+					this.usrErr = false
+					this.pswErr = false
+					this.timErr = false
+					this.maiErr = false
 
-          axios
-            .post(config.server + '/clienta', {
-              clientaname: this.clientaname,
-              clientaaddress: this.clientaaddress,
-              clientaphone: this.clientaphone,
-              clientastatus: this.clientastatus,
-              clientapostcode: this.clientapostcode,
-              clientausername: this.clientausername,
-              clientapsw: this.clientapsw,
-              clientacontract: this.clientacontract,
-              clientatime: this.clientatime,
-              clientamail: this.clientamail,
-              logOperator: localStorage.getItem('name')
-            })
-            .then(response => {
-              if (response.data.code == 1) {
-                this.error = true
-                this.erromsg = response.data.msg
-                setTimeout(() => {
-                  this.error = false
-                }, 3000)
-              } else if (response.data.code == 2) {
-                this.error = true
-                this.erromsg = response.data.msg
-                setTimeout(() => {
-                  this.error = false
-                }, 3000)
-              } else {
-                this.successdmsg = true
-                this.showDialoga = false
-                this.clientaname = ''
-                this.clientaaddress = ''
-                this.clientaphone = ''
-                this.clientastatus = ''
-                this.clientapostcode = ''
-                this.clientausername = ''
-                this.clientapsw = ''
-                this.clientacontract = ''
-                this.clientatime = ''
-                this.clientamail = ''
-                this.getallclienta()
-                setTimeout(() => {
-                  this.successdmsg = false
-                }, 3000)
-              }
-            })
-            .catch(error => {
-              console.log(error)
-              error = true
-              this.erromsg = response.data.msg
-              setTimeout(() => {
-                this.error = false
-              }, 3000)
-            })
-        }
-      } else {
-        if (
-          !this.clientaname ||
-          !this.clientaaddress ||
-          !this.clientaphone ||
-          this.conErr ||
-          !this.clientapostcode ||
-          !this.clientausername ||
-          !this.clientapsw ||
-          this.phoErr ||
-          !this.clientacontract ||
-          !this.clientatime ||
-          !this.clientamail
-        ) {
-          if (!this.clientaname) {
-            this.nameErr = true
-          } else {
-            this.nameErr = false
-          }
-          if (!this.clientaaddress) {
-            this.addErr = true
-          } else {
-            this.addErr = false
-          }
-          if (!this.clientaphone) {
-            this.phoErr = true
-          }
-          if (!this.clientacontract) {
-            this.conErr = true
-          }
-          if (!this.clientapostcode) {
-            this.posErr = true
-          } else {
-            this.posErr = false
-          }
-          if (!this.clientausername) {
-            this.usrErr = true
-          } else {
-            this.usrErr = false
-          }
-          if (!this.clientapsw) {
-            this.pswErr = true
-          } else {
-            this.pswErr = false
-          }
-          if (!this.clientatime) {
-            this.timErr = true
-          } else {
-            this.timErr = false
-          }
-          if (!this.clientamail) {
-            this.maiErr = true
-          } else {
-            this.maiErr = false
-          }
-        } else {
-          this.nameErr = false
-          this.addErr = false
-          this.phoErr = false
-          this.conErr = false
-          this.posErr = false
-          this.usrErr = false
-          this.pswErr = false
-          this.timErr = false
-          this.maiErr = false
+					axios
+						.post(config.server + '/clienta', {
+							clientaname: this.clientaname,
+							clientaaddress: this.clientaaddress,
+							clientaphone: this.clientaphone,
+							clientastatus: this.clientastatus,
+							clientapostcode: this.clientapostcode,
+							clientausername: this.clientausername,
+							clientapsw: this.clientapsw,
+							clientacontract: this.clientacontract,
+							clientatime: this.clientatime,
+							clientamail: this.clientamail,
+							logOperator: localStorage.getItem('name')
+						})
+						.then(response => {
+							if (response.data.code == 1) {
+								this.error = true
+								this.erromsg = response.data.msg
+								setTimeout(() => {
+									this.error = false
+								}, 3000)
+							} else if (response.data.code == 2) {
+								this.error = true
+								this.erromsg = response.data.msg
+								setTimeout(() => {
+									this.error = false
+								}, 3000)
+							} else {
+								this.successdmsg = true
+								this.showDialoga = false
+								this.clientaname = ''
+								this.clientaaddress = ''
+								this.clientaphone = ''
+								this.clientastatus = ''
+								this.clientapostcode = ''
+								this.clientausername = ''
+								this.clientapsw = ''
+								this.clientacontract = ''
+								this.clientatime = ''
+								this.clientamail = ''
+								this.getallclienta()
+								setTimeout(() => {
+									this.successdmsg = false
+								}, 3000)
+							}
+						})
+						.catch(error => {
+							console.log(error)
+							error = true
+							this.erromsg = response.data.msg
+							setTimeout(() => {
+								this.error = false
+							}, 3000)
+						})
+				}
+			} else {
+				if (
+					!this.clientaname ||
+					!this.clientaaddress ||
+					!this.clientaphone ||
+					this.conErr ||
+					!this.clientapostcode ||
+					!this.clientausername ||
+					!this.clientapsw ||
+					this.phoErr ||
+					!this.clientacontract ||
+					!this.clientatime ||
+					!this.clientamail
+				) {
+					if (!this.clientaname) {
+						this.nameErr = true
+					} else {
+						this.nameErr = false
+					}
+					if (!this.clientaaddress) {
+						this.addErr = true
+					} else {
+						this.addErr = false
+					}
+					if (!this.clientaphone) {
+						this.phoErr = true
+					}
+					if (!this.clientacontract) {
+						this.conErr = true
+					}
+					if (!this.clientapostcode) {
+						this.posErr = true
+					} else {
+						this.posErr = false
+					}
+					if (!this.clientausername) {
+						this.usrErr = true
+					} else {
+						this.usrErr = false
+					}
+					if (!this.clientapsw) {
+						this.pswErr = true
+					} else {
+						this.pswErr = false
+					}
+					if (!this.clientatime) {
+						this.timErr = true
+					} else {
+						this.timErr = false
+					}
+					if (!this.clientamail) {
+						this.maiErr = true
+					} else {
+						this.maiErr = false
+					}
+				} else {
+					this.nameErr = false
+					this.addErr = false
+					this.phoErr = false
+					this.conErr = false
+					this.posErr = false
+					this.usrErr = false
+					this.pswErr = false
+					this.timErr = false
+					this.maiErr = false
 
-          axios
-            .post(config.server + '/clienta', {
-              clientaname: this.clientaname,
-              clientaaddress: this.clientaaddress,
-              clientaphone: this.clientaphone,
-              clientastatus: this.clientastatus,
-              clientapostcode: this.clientapostcode,
-              clientausername: this.clientausername,
-              clientapsw: this.clientapsw,
-              clientacontract: this.clientacontract,
-              clientatime: this.clientatime,
-              clientamail: this.clientamail,
-              logOperator: localStorage.getItem('name')
-            })
-            .then(response => {
-              if (response.data.code == 1) {
-                this.error = true
-                this.erromsg = response.data.msg
-                setTimeout(() => {
-                  this.error = false
-                }, 3000)
-              } else if (response.data.code == 2) {
-                this.error = true
-                this.erromsg = response.data.msg
-                setTimeout(() => {
-                  this.error = false
-                }, 3000)
-              } else {
-                this.successdmsg = true
-                this.showDialoga = false
-                this.clientaname = ''
-                this.clientaaddress = ''
-                this.clientaphone = ''
-                this.clientastatus = ''
-                this.clientapostcode = ''
-                this.clientausername = ''
-                this.clientapsw = ''
-                this.clientacontract = ''
-                this.clientatime = ''
-                this.clientamail = ''
-                this.getallclienta()
-                setTimeout(() => {
-                  this.successdmsg = false
-                }, 3000)
-              }
-            })
-            .catch(error => {
-              console.log(error)
-              error = true
-              this.erromsg = response.data.msg
-              setTimeout(() => {
-                this.error = false
-              }, 3000)
-            })
-        }
-      }
-    },
-    addclientb() {
-      if (
-        !this.clientbname ||
-        !this.clientbaddress ||
-        !this.clientbphone ||
-        !this.clientbpostcode ||
-        !this.choseaname ||
-        this.errpho
-      ) {
-        if (!this.clientbname) {
-          this.errname = true
-        } else {
-          this.errname = false
-        }
-        if (!this.clientbaddress) {
-          this.erradd = true
-        } else {
-          this.erradd = false
-        }
-        if (!this.clientbphone) {
-          this.errpho = true
-        }
-        if (!this.clientbpostcode) {
-          this.errpos = true
-        } else {
-          this.errpos = false
-        }
-        if (!this.choseaname) {
-          this.errser = true
-        } else {
-          this.errser = false
-        }
-      } else {
-        let payload = new FormData()
-        if (this.updateImagePreview) {
-          let maxSize = 200 * 1024 //200KB
+					axios
+						.post(config.server + '/clienta', {
+							clientaname: this.clientaname,
+							clientaaddress: this.clientaaddress,
+							clientaphone: this.clientaphone,
+							clientastatus: this.clientastatus,
+							clientapostcode: this.clientapostcode,
+							clientausername: this.clientausername,
+							clientapsw: this.clientapsw,
+							clientacontract: this.clientacontract,
+							clientatime: this.clientatime,
+							clientamail: this.clientamail,
+							logOperator: localStorage.getItem('name')
+						})
+						.then(response => {
+							if (response.data.code == 1) {
+								this.error = true
+								this.erromsg = response.data.msg
+								setTimeout(() => {
+									this.error = false
+								}, 3000)
+							} else if (response.data.code == 2) {
+								this.error = true
+								this.erromsg = response.data.msg
+								setTimeout(() => {
+									this.error = false
+								}, 3000)
+							} else {
+								this.successdmsg = true
+								this.showDialoga = false
+								this.clientaname = ''
+								this.clientaaddress = ''
+								this.clientaphone = ''
+								this.clientastatus = ''
+								this.clientapostcode = ''
+								this.clientausername = ''
+								this.clientapsw = ''
+								this.clientacontract = ''
+								this.clientatime = ''
+								this.clientamail = ''
+								this.getallclienta()
+								setTimeout(() => {
+									this.successdmsg = false
+								}, 3000)
+							}
+						})
+						.catch(error => {
+							console.log(error)
+							error = true
+							this.erromsg = response.data.msg
+							setTimeout(() => {
+								this.error = false
+							}, 3000)
+						})
+				}
+			}
+		},
+		addclientb() {
+			if (
+				!this.clientbname ||
+				!this.clientbaddress ||
+				!this.clientbphone ||
+				!this.clientbpostcode ||
+				!this.choseaname ||
+				this.errpho
+			) {
+				if (!this.clientbname) {
+					this.errname = true
+				} else {
+					this.errname = false
+				}
+				if (!this.clientbaddress) {
+					this.erradd = true
+				} else {
+					this.erradd = false
+				}
+				if (!this.clientbphone) {
+					this.errpho = true
+				}
+				if (!this.clientbpostcode) {
+					this.errpos = true
+				} else {
+					this.errpos = false
+				}
+				if (!this.choseaname) {
+					this.errser = true
+				} else {
+					this.errser = false
+				}
+			} else {
+				let payload = new FormData()
+				if (this.updateImagePreview) {
+					let maxSize = 200 * 1024 //200KB
 
-          lrz(this.updateImage, {
-            quality: 0.5
-          }).then(res => {
-            if (this.updateImage.size > maxSize) {
-              this.updateImage = res.file
-            }
-          })
-          payload.append('image', this.updateImage)
-        }
-        payload.append('clientbname', this.clientbname)
-        payload.append('clientbaddress', this.clientbaddress)
-        payload.append('clientbphone', this.clientbphone)
-        payload.append('clientbstatus', this.clientbstatus)
-        payload.append('clientbpostcode', this.clientbpostcode)
-        payload.append('clientbserve', this.choseaname)
-        payload.append('clientbarea', this.choseArea)
-        payload.append('isNeedPic', this.isNeedPic)
-        payload.append('logOperator', localStorage.getItem('name'))
-        axios({
-          method: 'post',
-          url: config.server + '/clientb',
-          data: payload,
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-          .then(response => {
-            if (response.data.code == 1) {
-              this.error = true
-              this.erromsg = response.data.msg
-              setTimeout(() => {
-                this.error = false
-              }, 3000)
-            } else if (response.data.code == 2) {
-              this.error = true
-              this.erromsg = response.data.msg
-              setTimeout(() => {
-                this.error = false
-              }, 3000)
-            } else {
-              this.successdmsg = true
-              this.showDialogb = false
-              this.isNeedPic = false
-              this.clientbname = ''
-              this.clientbaddress = ''
-              this.clientbphone = ''
-              this.clientbstatus = ''
-              this.clientbpostcode = ''
-              this.getallclientb()
-              setTimeout(() => {
-                this.successdmsg = false
-              }, 3000)
-            }
-          })
-          .catch(error => {
-            console.log(error)
-            error = true
-            this.erromsg = response.data.msg
-            setTimeout(() => {
-              this.error = false
-            }, 3000)
-          })
-      }
-    },
-    editClientB(item) {
-      this.clientImage = ''
-      this.updateImagePreview = ''
-      this.savemodeb = false
-      this.showDialogb = true
-      this._id = item._id
-      this.clientbname = item.clientbname
-      this.clientbaddress = item.clientbaddress
-      this.clientbphone = item.clientbphone
-      this.clientbstatus = item.clientbstatus
-      this.clientbpostcode = item.clientbpostcode
-      this.clientImage = item.image
-      this.isNeedPic = item.isNeedPic
-      if (item.clientbserve == null) {
-        this.choseaname = ''
-        this.error = true
-        this.erromsg = '找不到此供应商信息，请重新选择'
-        setTimeout(() => {
-          this.error = false
-        }, 4000)
-      } else {
-        this.choseaname = item.clientbserve._id
-      }
-      if (item.clientbarea == null) {
-        this.choseArea = ''
-        this.error = true
-        this.erromsg = '找不到此地区信息，请重新选择'
-        setTimeout(() => {
-          this.error = false
-        }, 4000)
-      } else {
-        this.choseArea = item.clientbarea._id
-      }
-    },
-    confirmEditClientB() {
-      if (
-        !this.clientbname ||
-        !this.clientbaddress ||
-        !this.clientbphone ||
-        !this.clientbpostcode ||
-        !this.choseaname ||
-        this.errpho
-      ) {
-        if (!this.clientbname) {
-          this.errname = true
-        } else {
-          this.errname = false
-        }
-        if (!this.clientbaddress) {
-          this.erradd = true
-        } else {
-          this.erradd = false
-        }
-        if (!this.clientbphone) {
-          this.errpho = true
-        }
-        if (!this.clientbpostcode) {
-          this.errpos = true
-        } else {
-          this.errpos = false
-        }
-        if (!this.choseaname) {
-          this.errser = true
-        } else {
-          this.errser = false
-        }
-      } else {
-        if (this.updateImagePreview) {
-          let payload = new FormData()
-          let maxSize = 200 * 1024 //200KB
-          lrz(this.updateImage, {
-            quality: 0.5
-          }).then(res => {
-            if (this.updateImage.size > maxSize) {
-              this.updateImage = res.file
-            }
-            payload.append('image', this.updateImage)
-            payload.append('_id', this._id)
-            axios({
-              method: 'post',
-              url: config.server + '/clientb/update/img',
-              data: payload,
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            })
-              .then(doc => {
-                // console.log(doc)
-              })
-              .catch(err => {
-                console.log(err)
-              })
-          })
-        }
-        axios
-          .post(config.server + '/clientb/edit', {
-            _id: this._id,
-            clientbname: this.clientbname,
-            clientbaddress: this.clientbaddress,
-            clientbphone: this.clientbphone,
-            clientbstatus: this.clientbstatus,
-            clientbpostcode: this.clientbpostcode,
-            clientbserve: this.choseaname,
-            clientbarea: this.choseArea,
-            isNeedPic: this.isNeedPic,
-            logOperator: localStorage.getItem('name')
-          })
-          .then(doc => {
-            this.error = true
-            this.erromsg = doc.data.msg
-            setTimeout(() => {
-              this.error = false
-            }, 3000)
-            if (doc.data.code == 0) {
-              this.showDialogb = false
-              this.isNeedPic = false
-              this.getallclientb()
-            }
-          })
-          .catch(err => {
-            console.log(err)
-            this.error = true
-            this.erromsg = err
-            setTimeout(() => {
-              this.error = false
-            }, 3000)
-          })
-      }
-    },
-    removeClientB(item) {
-      this.deleteDialogb = true
-      this._id = item._id
-      this.clientbname = item.clientbname
-      this.clientbaddress = item.clientbaddress
-      this.clientbphone = item.clientbphone
-      this.clientbstatus = item.clientbstatus
-      this.clientbpostcode = item.clientbpostcode
-      this.clientbserve = item.clientbserve
-    },
-    confirmdeleteB() {
-      axios
-        .post(config.server + '/clientb/remove', {
-          _id: this._id,
-          logOperator: localStorage.getItem('name')
-        })
-        .then(doc => {
-          this.error = true
-          this.erromsg = doc.data.msg
-          setTimeout(() => {
-            this.error = false
-          }, 3000)
-          if (doc.data.code == 0) {
-            this.deleteDialogb = false
-            this.getallclientb()
-          }
-        })
-        .catch(err => {
-          this.error = true
-          this.erromsg = err
-          setTimeout(() => {
-            this.error = false
-          }, 3000)
-        })
-    },
-    editClientA(item) {
-      this.openSMS = false
-      this.nowDate = ''
-      this.selectedSMSDate = ''
-      this.conErr = false
-      this.phoErr = false
-      this.savemodeb = false
+					lrz(this.updateImage, {
+						quality: 0.5
+					}).then(res => {
+						if (this.updateImage.size > maxSize) {
+							this.updateImage = res.file
+						}
+					})
+					payload.append('image', this.updateImage)
+				}
+				payload.append('clientbname', this.clientbname)
+				payload.append('clientbaddress', this.clientbaddress)
+				payload.append('clientbphone', this.clientbphone)
+				payload.append('clientbstatus', this.clientbstatus)
+				payload.append('clientbpostcode', this.clientbpostcode)
+				payload.append('timeLimit', this.timeLimit)
+				payload.append('clientbserve', this.choseaname)
+				payload.append('clientbarea', this.choseArea)
+				payload.append('isNeedPic', this.isNeedPic)
+				payload.append('logOperator', localStorage.getItem('name'))
+				axios({
+					method: 'post',
+					url: config.server + '/clientb',
+					data: payload,
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}
+				})
+					.then(response => {
+						if (response.data.code == 1) {
+							this.error = true
+							this.erromsg = response.data.msg
+							setTimeout(() => {
+								this.error = false
+							}, 3000)
+						} else if (response.data.code == 2) {
+							this.error = true
+							this.erromsg = response.data.msg
+							setTimeout(() => {
+								this.error = false
+							}, 3000)
+						} else {
+							this.successdmsg = true
+							this.showDialogb = false
+							this.isNeedPic = false
+							this.clientbname = ''
+							this.clientbaddress = ''
+							this.clientbphone = ''
+							this.clientbstatus = ''
+							this.clientbpostcode = ''
+							this.timeLimit = ''
+							this.getallclientb()
+							setTimeout(() => {
+								this.successdmsg = false
+							}, 3000)
+						}
+					})
+					.catch(error => {
+						console.log(error)
+						error = true
+						this.erromsg = response.data.msg
+						setTimeout(() => {
+							this.error = false
+						}, 3000)
+					})
+			}
+		},
+		editClientB(item) {
+			this.clientImage = ''
+			this.updateImagePreview = ''
+			this.savemodeb = false
+			this.showDialogb = true
+			this._id = item._id
+			this.clientbname = item.clientbname
+			this.clientbaddress = item.clientbaddress
+			this.clientbphone = item.clientbphone
+			this.clientbstatus = item.clientbstatus
+			this.clientbpostcode = item.clientbpostcode
+			this.timeLimit = item.timeLimit
+			this.clientImage = item.image
+			this.isNeedPic = item.isNeedPic
+			if (item.clientbserve == null) {
+				this.choseaname = ''
+				this.error = true
+				this.erromsg = '找不到此供应商信息，请重新选择'
+				setTimeout(() => {
+					this.error = false
+				}, 4000)
+			} else {
+				this.choseaname = item.clientbserve._id
+			}
+			if (item.clientbarea == null) {
+				this.choseArea = ''
+				this.error = true
+				this.erromsg = '找不到此地区信息，请重新选择'
+				setTimeout(() => {
+					this.error = false
+				}, 4000)
+			} else {
+				this.choseArea = item.clientbarea._id
+			}
+		},
+		confirmEditClientB() {
+			if (
+				!this.clientbname ||
+				!this.clientbaddress ||
+				!this.clientbphone ||
+				!this.clientbpostcode ||
+				!this.choseaname ||
+				this.errpho
+			) {
+				if (!this.clientbname) {
+					this.errname = true
+				} else {
+					this.errname = false
+				}
+				if (!this.clientbaddress) {
+					this.erradd = true
+				} else {
+					this.erradd = false
+				}
+				if (!this.clientbphone) {
+					this.errpho = true
+				}
+				if (!this.clientbpostcode) {
+					this.errpos = true
+				} else {
+					this.errpos = false
+				}
+				if (!this.choseaname) {
+					this.errser = true
+				} else {
+					this.errser = false
+				}
+			} else {
+				if (this.updateImagePreview) {
+					let payload = new FormData()
+					let maxSize = 200 * 1024 //200KB
+					lrz(this.updateImage, {
+						quality: 0.5
+					}).then(res => {
+						if (this.updateImage.size > maxSize) {
+							this.updateImage = res.file
+						}
+						payload.append('image', this.updateImage)
+						payload.append('_id', this._id)
+						axios({
+							method: 'post',
+							url: config.server + '/clientb/update/img',
+							data: payload,
+							headers: {
+								'Content-Type': 'multipart/form-data'
+							}
+						})
+							.then(doc => {
+								// console.log(doc)
+							})
+							.catch(err => {
+								console.log(err)
+							})
+					})
+				}
+				axios
+					.post(config.server + '/clientb/edit', {
+						_id: this._id,
+						clientbname: this.clientbname,
+						clientbaddress: this.clientbaddress,
+						clientbphone: this.clientbphone,
+						clientbstatus: this.clientbstatus,
+						clientbpostcode: this.clientbpostcode,
+						timeLimit:this.timeLimit,
+						clientbserve: this.choseaname,
+						clientbarea: this.choseArea,
+						isNeedPic: this.isNeedPic,
+						logOperator: localStorage.getItem('name')
+					})
+					.then(doc => {
+						this.error = true
+						this.erromsg = doc.data.msg
+						setTimeout(() => {
+							this.error = false
+						}, 3000)
+						if (doc.data.code == 0) {
+							this.showDialogb = false
+							this.isNeedPic = false
+							this.getallclientb()
+						}
+					})
+					.catch(err => {
+						console.log(err)
+						this.error = true
+						this.erromsg = err
+						setTimeout(() => {
+							this.error = false
+						}, 3000)
+					})
+			}
+		},
+		removeClientB(item) {
+			this.deleteDialogb = true
+			this._id = item._id
+			this.clientbname = item.clientbname
+			this.clientbaddress = item.clientbaddress
+			this.clientbphone = item.clientbphone
+			this.clientbstatus = item.clientbstatus
+			this.clientbpostcode = item.clientbpostcode
+			this.timeLimit = item.timeLimit
+			this.clientbserve = item.clientbserve
+		},
+		confirmdeleteB() {
+			axios
+				.post(config.server + '/clientb/remove', {
+					_id: this._id,
+					logOperator: localStorage.getItem('name')
+				})
+				.then(doc => {
+					this.error = true
+					this.erromsg = doc.data.msg
+					setTimeout(() => {
+						this.error = false
+					}, 3000)
+					if (doc.data.code == 0) {
+						this.deleteDialogb = false
+						this.getallclientb()
+					}
+				})
+				.catch(err => {
+					this.error = true
+					this.erromsg = err
+					setTimeout(() => {
+						this.error = false
+					}, 3000)
+				})
+		},
+		editClientA(item) {
+			this.openSMS = false
+			this.nowDate = ''
+			this.selectedSMSDate = ''
+			this.conErr = false
+			this.phoErr = false
+			this.savemodeb = false
 
-      this._id = item._id
-      this.clientaname = item.clientaname
-      this.clientaaddress = item.clientaaddress
-      this.clientaphone = item.clientaphone
-      this.clientastatus = item.clientastatus
-      this.clientapostcode = item.clientapostcode
-      this.clientausername = item.clientausername
-      this.clientapsw = ''
-      this.clientacontract = item.clientacontract
-      let year = new Date(item.clientatime).getFullYear()
-      let month = new Date(item.clientatime).getMonth() + 1
-      if (month < 10) {
-        month = '0' + month
-      }
-      let day = new Date(item.clientatime).getDate()
-      if (day < 10) {
-        day = '0' + day
-      }
-      this.clientatime = year + '-' + month + '-' + day
-      this.clientamail = item.clientamail
-      //get SMS information start
-      axios
-        .post(config.server + '/clienta/sms', {
-          _id: item._id
-        })
-        .then(doc => {
-          console.log(doc)
-          if (doc.data.document.endDate) {
-            this.openSMS = true
-            this.nowDate = doc.data.document.startDate
-            this.selectedSMSDate = doc.data.document.endDate
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-      //get SMS information start
-      this.showDialoga = true
-    },
-    removeClientA(item) {
-      this.deleteDialoga = true
-      this._id = item._id
-      this.clientaname = item.clientaname
-      this.clientaaddress = item.clientaaddress
-      this.clientaphone = item.clientaphone
-      this.clientastatus = item.clientastatus
-      this.clientapostcode = item.clientapostcode
-      this.clientausername = item.clientausername
-      this.clientacontract = item.clientacontract
-      this.clientatime = new Date(item.clientatime).toLocaleDateString()
-      this.clientamail = item.clientamail
-    },
-    confirmEditClientA() {
-      if (
-        !this.clientaname ||
-        !this.clientaaddress ||
-        !this.clientaphone ||
-        this.conErr ||
-        !this.clientapostcode ||
-        !this.clientausername ||
-        !this.clientacontract ||
-        !this.clientatime ||
-        !this.clientamail ||
-        this.phoErr
-      ) {
-        if (!this.clientaname) {
-          this.nameErr = true
-        } else {
-          this.nameErr = false
-        }
-        if (!this.clientaaddress) {
-          this.addErr = true
-        } else {
-          this.addErr = false
-        }
-        if (!this.clientaphone) {
-          this.phoErr = true
-        }
-        if (!this.clientacontract) {
-          this.conErr = true
-        }
-        if (!this.clientapostcode) {
-          this.posErr = true
-        } else {
-          this.posErr = false
-        }
-        if (!this.clientausername) {
-          this.usrErr = true
-        } else {
-          this.usrErr = false
-        }
-        if (!this.clientatime) {
-          this.timErr = true
-        } else {
-          this.timErr = false
-        }
-        if (!this.clientamail) {
-          this.maiErr = true
-        } else {
-          this.maiErr = false
-        }
-      } else {
-        let editInfo
-        if (this.clientapsw) {
-          editInfo = {
-            _id: this._id,
-            clientaname: this.clientaname,
-            clientaaddress: this.clientaaddress,
-            clientaphone: this.clientaphone,
-            clientastatus: this.clientastatus,
-            clientapostcode: this.clientapostcode,
-            clientausername: this.clientausername,
-            clientapsw: this.clientapsw,
-            clientacontract: this.clientacontract,
-            clientatime: this.clientatime,
-            clientamail: this.clientamail,
-            startDate: this.nowDate,
-            endDate: this.selectedSMSDate,
-            logOperator: localStorage.getItem('name')
-          }
-        } else {
-          editInfo = {
-            _id: this._id,
-            clientaname: this.clientaname,
-            clientaaddress: this.clientaaddress,
-            clientaphone: this.clientaphone,
-            clientastatus: this.clientastatus,
-            clientapostcode: this.clientapostcode,
-            clientausername: this.clientausername,
-            clientacontract: this.clientacontract,
-            clientatime: this.clientatime,
-            clientamail: this.clientamail,
-            startDate: this.nowDate,
-            endDate: this.selectedSMSDate,
-            logOperator: localStorage.getItem('name')
-          }
-        }
-        axios
-          .post(config.server + '/clienta/edit', editInfo)
-          .then(doc => {
-            this.error = true
-            this.erromsg = doc.data.msg
-            setTimeout(() => {
-              this.error = false
-            }, 3000)
-            if (doc.data.code == 0) {
-              this.showDialoga = false
-              this.getallclienta()
-            }
-          })
-          .catch(err => {
-            console.log(err)
-            this.error = true
-            this.erromsg = err
-            setTimeout(() => {
-              this.error = false
-            }, 3000)
-          })
-      }
-    },
-    confirmRemoveClientA() {
-      axios
-        .post(config.server + '/clienta/remove', {
-          _id: this._id,
-          logOperator: localStorage.getItem('name')
-        })
-        .then(doc => {
-          this.error = true
-          this.erromsg = doc.data.msg
-          setTimeout(() => {
-            this.error = false
-          }, 3000)
-          if (doc.data.code == 0) {
-            this.deleteDialoga = false
-            this.getallclienta()
-          }
-        })
-        .catch(err => {
-          console.log(err)
-          this.error = true
-          this.erromsg = err
-          setTimeout(() => {
-            this.error = false
-          }, 3000)
-        })
-    }
-  }
+			this._id = item._id
+			this.clientaname = item.clientaname
+			this.clientaaddress = item.clientaaddress
+			this.clientaphone = item.clientaphone
+			this.clientastatus = item.clientastatus
+			this.clientapostcode = item.clientapostcode
+			this.clientausername = item.clientausername
+			this.clientapsw = ''
+			this.clientacontract = item.clientacontract
+			let year = new Date(item.clientatime).getFullYear()
+			let month = new Date(item.clientatime).getMonth() + 1
+			if (month < 10) {
+				month = '0' + month
+			}
+			let day = new Date(item.clientatime).getDate()
+			if (day < 10) {
+				day = '0' + day
+			}
+			this.clientatime = year + '-' + month + '-' + day
+			this.clientamail = item.clientamail
+			//get SMS information start
+			axios
+				.post(config.server + '/clienta/sms', {
+					_id: item._id
+				})
+				.then(doc => {
+					console.log(doc)
+					if (doc.data.document.endDate) {
+						this.openSMS = true
+						this.nowDate = doc.data.document.startDate
+						this.selectedSMSDate = doc.data.document.endDate
+					}
+				})
+				.catch(err => {
+					console.log(err)
+				})
+			//get SMS information start
+			this.showDialoga = true
+		},
+		removeClientA(item) {
+			this.deleteDialoga = true
+			this._id = item._id
+			this.clientaname = item.clientaname
+			this.clientaaddress = item.clientaaddress
+			this.clientaphone = item.clientaphone
+			this.clientastatus = item.clientastatus
+			this.clientapostcode = item.clientapostcode
+			this.clientausername = item.clientausername
+			this.clientacontract = item.clientacontract
+			this.clientatime = new Date(item.clientatime).toLocaleDateString()
+			this.clientamail = item.clientamail
+		},
+		confirmEditClientA() {
+			if (
+				!this.clientaname ||
+				!this.clientaaddress ||
+				!this.clientaphone ||
+				this.conErr ||
+				!this.clientapostcode ||
+				!this.clientausername ||
+				!this.clientacontract ||
+				!this.clientatime ||
+				!this.clientamail ||
+				this.phoErr
+			) {
+				if (!this.clientaname) {
+					this.nameErr = true
+				} else {
+					this.nameErr = false
+				}
+				if (!this.clientaaddress) {
+					this.addErr = true
+				} else {
+					this.addErr = false
+				}
+				if (!this.clientaphone) {
+					this.phoErr = true
+				}
+				if (!this.clientacontract) {
+					this.conErr = true
+				}
+				if (!this.clientapostcode) {
+					this.posErr = true
+				} else {
+					this.posErr = false
+				}
+				if (!this.clientausername) {
+					this.usrErr = true
+				} else {
+					this.usrErr = false
+				}
+				if (!this.clientatime) {
+					this.timErr = true
+				} else {
+					this.timErr = false
+				}
+				if (!this.clientamail) {
+					this.maiErr = true
+				} else {
+					this.maiErr = false
+				}
+			} else {
+				let editInfo
+				if (this.clientapsw) {
+					editInfo = {
+						_id: this._id,
+						clientaname: this.clientaname,
+						clientaaddress: this.clientaaddress,
+						clientaphone: this.clientaphone,
+						clientastatus: this.clientastatus,
+						clientapostcode: this.clientapostcode,
+						clientausername: this.clientausername,
+						clientapsw: this.clientapsw,
+						clientacontract: this.clientacontract,
+						clientatime: this.clientatime,
+						clientamail: this.clientamail,
+						startDate: this.nowDate,
+						endDate: this.selectedSMSDate,
+						logOperator: localStorage.getItem('name')
+					}
+				} else {
+					editInfo = {
+						_id: this._id,
+						clientaname: this.clientaname,
+						clientaaddress: this.clientaaddress,
+						clientaphone: this.clientaphone,
+						clientastatus: this.clientastatus,
+						clientapostcode: this.clientapostcode,
+						clientausername: this.clientausername,
+						clientacontract: this.clientacontract,
+						clientatime: this.clientatime,
+						clientamail: this.clientamail,
+						startDate: this.nowDate,
+						endDate: this.selectedSMSDate,
+						logOperator: localStorage.getItem('name')
+					}
+				}
+				axios
+					.post(config.server + '/clienta/edit', editInfo)
+					.then(doc => {
+						this.error = true
+						this.erromsg = doc.data.msg
+						setTimeout(() => {
+							this.error = false
+						}, 3000)
+						if (doc.data.code == 0) {
+							this.showDialoga = false
+							this.getallclienta()
+						}
+					})
+					.catch(err => {
+						console.log(err)
+						this.error = true
+						this.erromsg = err
+						setTimeout(() => {
+							this.error = false
+						}, 3000)
+					})
+			}
+		},
+		confirmRemoveClientA() {
+			axios
+				.post(config.server + '/clienta/remove', {
+					_id: this._id,
+					logOperator: localStorage.getItem('name')
+				})
+				.then(doc => {
+					this.error = true
+					this.erromsg = doc.data.msg
+					setTimeout(() => {
+						this.error = false
+					}, 3000)
+					if (doc.data.code == 0) {
+						this.deleteDialoga = false
+						this.getallclienta()
+					}
+				})
+				.catch(err => {
+					console.log(err)
+					this.error = true
+					this.erromsg = err
+					setTimeout(() => {
+						this.error = false
+					}, 3000)
+				})
+		}
+	}
 }
 </script>
 
 <style>
 #client {
-  width: 80%;
-  margin: 15px auto;
+	width: 80%;
+	margin: 15px auto;
 }
 
 .topbutton {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
 }
 
 .topbutton-left {
-  flex-basis: 30%;
-  text-align: left;
-  margin: 0 auto;
+	flex-basis: 30%;
+	text-align: left;
+	margin: 0 auto;
 }
 
 .topbutton-left input {
-  margin: 5px auto;
-  border-radius: 10px;
-  width: 300px;
-  height: 35px;
-  text-align: center;
-  -web-kit-appearance: none;
-  -moz-appearance: none;
-  outline: 0;
-  font-size: 16px;
+	margin: 5px auto;
+	border-radius: 10px;
+	width: 300px;
+	height: 35px;
+	text-align: center;
+	-web-kit-appearance: none;
+	-moz-appearance: none;
+	outline: 0;
+	font-size: 16px;
 }
 
 .topbutton-center {
-  flex-basis: 40%;
-  text-align: center;
-  margin: 0 auto;
+	flex-basis: 40%;
+	text-align: center;
+	margin: 0 auto;
 }
 
 .topbutton-right {
-  flex-basis: 30%;
-  text-align: right;
+	flex-basis: 30%;
+	text-align: right;
 }
 
 .centertable {
-  margin: 15px auto;
+	margin: 15px auto;
 }
 
 .tabletitle {
-  border: 1px solid;
-  border-left: none;
-  border-right: none;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
-  font-size: 18px;
-  font-weight: 600;
-  height: 40px;
-  line-height: 35px;
+	border: 1px solid;
+	border-left: none;
+	border-right: none;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+	font-size: 18px;
+	font-weight: 600;
+	height: 40px;
+	line-height: 35px;
 }
 
 .tabletitle-item {
-  margin: 0 auto;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+	margin: 0 auto;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 .tablebody {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
-  font-size: 16px;
-  line-height: 24px;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+	font-size: 16px;
+	line-height: 24px;
 }
 
 .rmDialog-center {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
-  margin: 20px;
-  font-size: 20px;
-  width: 100%;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+	margin: 20px;
+	font-size: 20px;
+	width: 100%;
 }
 
 .rmDialog-center-left {
-  flex-basis: 28%;
-  text-align: left;
+	flex-basis: 28%;
+	text-align: left;
 }
 
 .rmDialog-center-right {
-  flex-basis: 60%;
-  text-align: left;
+	flex-basis: 60%;
+	text-align: left;
 }
 
 .dialogb-body-item {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
 }
 
 .dialogb-body-left {
-  flex-basis: 40%;
-  margin: 0 auto;
+	flex-basis: 40%;
+	margin: 0 auto;
 }
 
 .dialogb-body-right {
-  flex-basis: 40%;
-  margin: 0 auto;
+	flex-basis: 40%;
+	margin: 0 auto;
 }
 
 .dialogb-body-status {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  flex-flow: row wrap;
-  padding-top: 4px;
-  border-bottom: 1px solid #000;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row wrap;
+	flex-flow: row wrap;
+	padding-top: 4px;
+	border-bottom: 1px solid #000;
 }
 
 .dialogb-body-status-left {
-  flex-basis: 45%;
-  margin: 0 auto;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
+	flex-basis: 45%;
+	margin: 0 auto;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
 }
 
 .dialogb-body-status-left input {
-  width: 20px;
-  height: 20px;
+	width: 20px;
+	height: 20px;
 }
 
 .dialogb-body-status-right {
-  flex-basis: 45%;
-  margin: 0 auto;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
+	flex-basis: 45%;
+	margin: 0 auto;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
 }
 
 .dialogb-body-status-right input {
-  width: 20px;
-  height: 20px;
+	width: 20px;
+	height: 20px;
 }
 
 .page-bar ul li {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 .page-bar li {
-  list-style: none;
+	list-style: none;
 }
 
 .page-bar span {
-  border: 1px solid #ddd;
-  text-decoration: none;
-  position: relative;
-  float: left;
-  padding: 6px 12px;
-  margin-left: -1px;
-  line-height: 1.42857143;
-  color: #337ab7;
-  cursor: pointer;
+	border: 1px solid #ddd;
+	text-decoration: none;
+	position: relative;
+	float: left;
+	padding: 6px 12px;
+	margin-left: -1px;
+	line-height: 1.42857143;
+	color: #337ab7;
+	cursor: pointer;
 }
 
 .page-bar span:hover {
-  background-color: #eee;
+	background-color: #eee;
 }
 
 .page-bar .active span {
-  color: #fff;
-  cursor: default;
-  background-color: #337ab7;
-  border-color: #337ab7;
+	color: #fff;
+	cursor: default;
+	background-color: #337ab7;
+	border-color: #337ab7;
 }
 
 .page-bar i {
-  font-style: normal;
-  color: #d44950;
-  margin: 0px 4px;
-  font-size: 12px;
+	font-style: normal;
+	color: #d44950;
+	margin: 0px 4px;
+	font-size: 12px;
 }
 
 .photoarea {
-  margin: 0 auto;
-  text-align: center;
-  border: 3px dashed #696969;
-  width: 250px;
-  height: 250px;
-  background-color: #eee;
+	margin: 0 auto;
+	text-align: center;
+	border: 3px dashed #696969;
+	width: 250px;
+	height: 250px;
+	background-color: #eee;
 }
 
 .photoarea img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .removeDialog-body {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  flex-flow: row wrap;
-  margin: 5px 5px;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row wrap;
+	flex-flow: row wrap;
+	margin: 5px 5px;
 }
 
 .removeDialog-body-left {
-  flex-basis: 35%;
+	flex-basis: 35%;
 }
 .removeDialog-body-right {
-  flex-basis: 60%;
+	flex-basis: 60%;
 }
 
 .tipDialog {
-  position: fixed;
-  left: 0;
-  bottom: 40px;
-  background-color: rgba(192, 230, 22, 0.6);
-  width: 200px;
-  height: 40px;
-  line-height: 40px;
-  box-shadow: 1px 1px 5px;
-  z-index: 20;
+	position: fixed;
+	left: 0;
+	bottom: 40px;
+	background-color: rgba(192, 230, 22, 0.6);
+	width: 200px;
+	height: 40px;
+	line-height: 40px;
+	box-shadow: 1px 1px 5px;
+	z-index: 20;
 }
 </style>
