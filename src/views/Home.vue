@@ -327,8 +327,8 @@
 										<md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index">
 											<md-card-content>
 												<div class="step-third-title-body">
-													<label :for="index" class="step-third-title" @click="changeClientMethod(item)">
-														<input type="checkbox" :id="index" :value="item._id" v-model="choiceclient_id" style="width:25px;height:25px">
+													<label :for="index" class="step-third-title">
+														<input type="checkbox" :id="index" :value="item" v-model="aLineInfo.timesclientb" style="width:25px;height:25px">
 														<span class="step-third-title-item" style="width:150px">{{item.clientbname}}</span>
 														<span class="step-third-title-item" style="width:80px">{{item.clientbserve.clientaname}}</span>
 														<span class="step-third-title-item" style="width:50px">{{item.clientbarea.areaName}}</span>
@@ -727,8 +727,7 @@ export default {
 			missionDateModeButtonCSS2: '',
 			missionDateModeButtonCSS3: '',
 			missionDateModePacker: new Date().toLocaleDateString(),
-			showTipDialog: false,
-			choiceclient_id: []
+			showTipDialog: false
 		}
 	},
 	computed: {
@@ -793,18 +792,7 @@ export default {
 		this.getAllArea()
 	},
 	methods: {
-		changeClientMethod(item) {
-			this.aLineInfo.timesclientb = []
-			setTimeout(() => {
-				this.choiceclient_id.forEach(element => {
-					this.allclientbinfo.forEach(element2 => {
-						if (element2._id === element) {
-							this.aLineInfo.timesclientb.push(element2)
-						}
-					})
-				})
-			}, 50)
-		},
+
 		changeNeedPicMethod(item) {
 			axios
 				.post(config.server + '/clientb/needpic', {
@@ -815,6 +803,7 @@ export default {
 					if (doc.data.code === 0) {
 						this.errormsg = '客户状态更新成功'
 						this.showTipDialog = true
+						this.clientTablePageButton(this.clientTablePageNow)
 						setTimeout(() => {
 							this.showTipDialog = false
 						}, 2000)
@@ -1135,15 +1124,10 @@ export default {
 		},
 
 		choseitem(item) {
-			this.choiceclient_id = []
 			this.choseLine = item
 			this.bodyHide()
 			this.aLineInfo = item
 			this.selectorText = item.timesname
-
-			item.timesclientb.forEach(tempClient => {
-				this.choiceclient_id.push(tempClient._id)
-			})
 
 			if (this.choseLine.timescar == null) {
 				this.choseLine.timescar = {
@@ -1191,7 +1175,6 @@ export default {
 			this.missioncar = item.missioncar
 			this.missioncount = item.missionclient.length
 			this.missionclient = item.missionclient
-			console.log(this.missionclient)
 			this.missionfinish = 'finish'
 			this.missionphone = item.missionphone
 			this.missiondate = time

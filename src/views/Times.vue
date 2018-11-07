@@ -229,8 +229,8 @@
 										<md-card md-with-hover v-for="(item,index) in clientBInfoTable" :key="index" style="background-color: #f4f4f4">
 											<md-card-content>
 												<div style="display:flex">
-													<label :for="index" class="step-third-title" @click="changeClientMethod(item)">
-														<input type="checkbox" :id="index" :value="item._id" v-model="choiceclient_id" style="width:25px;height:25px">
+													<label :for="index" class="step-third-title">
+														<input type="checkbox" :id="index" :value="item" v-model="choiceclientb" style="width:25px;height:25px"> 
 														<span class="step-third-title-item" style="width:180px">{{item.clientbname}}</span>
 														<span class="step-third-title-item" style="width:50px">{{item.clientbserve.clientaname}}</span>
 														<span class="step-third-title-item" style="width:50px">{{item.clientbarea.areaName}}</span>
@@ -572,594 +572,578 @@ import _ from 'lodash'
 import draggable from 'vuedraggable'
 
 export default {
-  components: {
+	components: {
 	draggable
-  },
-  data() {
+	},
+	data() {
 	return {
-	  selectedTimes: '',
-	  times: [],
-	  showDialog: false,
-	  error: false,
-	  errorMessage: '未知错误请联系更牛逼的人',
-	  timesname: '',
-	  timesclientnumber: '',
-	  timesnote: '',
-	  choicecar: '',
-	  choicedirver: '',
-	  allcarinfo: [],
-	  alldirverinfo: [],
-	  allclientbinfo: [],
-	  alltimesinfo: [],
-	  acarinfo: '',
-	  adirverinfo: '',
-	  aclientainfo: '',
-	  _id: '',
-	  savemode: true,
-	  removeDialog: false,
-	  choseListDialog: false,
-	  selectCar: '',
-	  pageCount: 0,
-	  ClientTablePageCount: 0,
-	  pageNow: 1,
-	  ClientTablePageNow: 1,
-	  pageSize: 10,
-	  showItem: 5,
-	  findMode: false,
-	  areaArray: [],
-	  allclientainfo: [],
-	  clientServe: '',
-	  clientArea: '',
-	  choseListDialogRadio: '',
-	  setCarText: '点击选择车辆',
-	  setDriverText: '点击选择司机',
-	  isCarList: true,
-	  searchClient: '',
-	  clientBInfoTable: [],
-	  clientTableMode: '',
-	  choiceclientb: [],
-	  choiceclient_id: [],
-	  clientInfoWindow: false,
-	  tempClientInfo: '',
-	  timeOutName: '',
-	  showTipDialog: false,
-	  tipMsg: '',
-	  sortDialog: false,
-	  tempAllLineInfo: [],
-	  findBmode: false,
-	  temparray: []
+		selectedTimes: '',
+		times: [],
+		showDialog: false,
+		error: false,
+		errorMessage: '未知错误请联系更牛逼的人',
+		timesname: '',
+		timesclientnumber: '',
+		timesnote: '',
+		choicecar: '',
+		choicedirver: '',
+		allcarinfo: [],
+		alldirverinfo: [],
+		allclientbinfo: [],
+		alltimesinfo: [],
+		acarinfo: '',
+		adirverinfo: '',
+		aclientainfo: '',
+		_id: '',
+		savemode: true,
+		removeDialog: false,
+		choseListDialog: false,
+		selectCar: '',
+		pageCount: 0,
+		ClientTablePageCount: 0,
+		pageNow: 1,
+		ClientTablePageNow: 1,
+		pageSize: 10,
+		showItem: 5,
+		findMode: false,
+		areaArray: [],
+		allclientainfo: [],
+		clientServe: '',
+		clientArea: '',
+		choseListDialogRadio: '',
+		setCarText: '点击选择车辆',
+		setDriverText: '点击选择司机',
+		isCarList: true,
+		searchClient: '',
+		clientBInfoTable: [],
+		clientTableMode: '',
+		choiceclientb: [],
+		clientInfoWindow: false,
+		tempClientInfo: '',
+		timeOutName: '',
+		showTipDialog: false,
+		tipMsg: '',
+		sortDialog: false,
+		tempAllLineInfo: [],
+		findBmode: false,
+		temparray: []
 	}
-  },
-  mounted() {
+	},
+	mounted() {
 	this.getallcar()
 	this.getalldirver()
 	this.getallclientb()
 	this.getalltimes()
 	this.getAllArea()
 	this.getallclienta()
-  },
+	},
 
-  computed: {
+	computed: {
 	pages: function() {
-	  let pag = []
-	  if (this.pageNow < this.showItem) {
+		let pag = []
+		if (this.pageNow < this.showItem) {
 		//如果当前的激活的项 小于要显示的条数
 		//总页数和要显示的条数那个大就显示多少条
 		let i = Math.min(this.showItem, this.pageCount)
 		while (i) {
-		  pag.unshift(i--)
+			pag.unshift(i--)
 		}
-	  } else {
+		} else {
 		//当前页数大于显示页数了
 		let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
-		  i = this.showItem
+			i = this.showItem
 		if (middle > this.pageCount - this.showItem) {
-		  middle = this.pageCount - this.showItem + 1
+			middle = this.pageCount - this.showItem + 1
 		}
 		while (i--) {
-		  pag.push(middle++)
+			pag.push(middle++)
 		}
-	  }
-	  return pag
+		}
+		return pag
 	},
 	clientPages: function() {
-	  let pag = []
-	  if (this.ClientTablePageNow < this.showItem) {
+		let pag = []
+		if (this.ClientTablePageNow < this.showItem) {
 		//如果当前的激活的项 小于要显示的条数
 		//总页数和要显示的条数那个大就显示多少条
 		let i = Math.min(this.showItem, this.ClientTablePageCount)
 		while (i) {
-		  pag.unshift(i--)
+			pag.unshift(i--)
 		}
-	  } else {
+		} else {
 		//当前页数大于显示页数了
 		let middle = this.ClientTablePageNow - Math.floor(this.showItem / 2), //从哪里开始
-		  i = this.showItem
+			i = this.showItem
 		if (middle > this.ClientTablePageCount - this.showItem) {
-		  middle = this.ClientTablePageCount - this.showItem + 1
+			middle = this.ClientTablePageCount - this.showItem + 1
 		}
 		while (i--) {
-		  pag.push(middle++)
+			pag.push(middle++)
 		}
-	  }
-	  return pag
+		}
+		return pag
 	}
-  },
-  watch: {
+	},
+	watch: {
 	clientArea: function() {
-	  this.clientServe = ''
-	  this.searchClient = ''
-	  this.clientTableMode = 'area'
-	  this.areaFilterMethod()
+		this.clientServe = ''
+		this.searchClient = ''
+		this.clientTableMode = 'area'
+		this.areaFilterMethod()
 	},
 	clientServe: function() {
-	  this.clientArea = ''
-	  this.searchClient = ''
-	  this.clientTableMode = 'serve'
-	  this.serveFilterMethod()
+		this.clientArea = ''
+		this.searchClient = ''
+		this.clientTableMode = 'serve'
+		this.serveFilterMethod()
 	}
-  },
+	},
 
-  methods: {
+	methods: {
 	changeNeedPicMethod(item) {
-	  axios
+		axios
 		.post(config.server + '/clientb/needpic', {
-		  _id: item._id,
-		  isNeedPic: item.isNeedPic
+			_id: item._id,
+			isNeedPic: item.isNeedPic
 		})
 		.then(doc => {
-		  if (doc.data.code === 0) {
+			if (doc.data.code === 0) {
 			this.tipMsg = '客户状态更新成功'
 			this.showTipDialog = true
+			this.clientTablePageButton(this.ClientTablePageNow)
 			setTimeout(() => {
-			  this.showTipDialog = false
+				this.showTipDialog = false
 			}, 2000)
-		  }
+			}
 		})
 		.catch(err => {
-		  console.log(err)
+			console.log(err)
 		})
 	},
-	changeClientMethod(item) {
-	  this.choiceclientb = []
-	  setTimeout(() => {
-		this.choiceclient_id.forEach(element => {
-		  this.clientBInfoTable.forEach(element2 => {
-			if (element2._id === element) {
-			  this.choiceclientb.push(element2)
-			}
-		  })
-		})
-	  }, 60)
-	},
+
 	saveSortMethod() {
-	  let tempSortArrty = []
-	  this.tempAllLineInfo.forEach(element => {
+		let tempSortArrty = []
+		this.tempAllLineInfo.forEach(element => {
 		tempSortArrty.push(element._id)
-	  })
-	  axios
+		})
+		axios
 		.post(config.server + '/times/sort', {
-		  array: tempSortArrty
+			array: tempSortArrty
 		})
 		.then(doc => {
-		  this.sortDialog = false
-		  this.getalltimes()
+			this.sortDialog = false
+			this.getalltimes()
 		})
 		.catch(err => {
-		  console.log(err)
+			console.log(err)
 		})
 	},
 	sortLineMethod() {
-	  this.sortDialog = true
-	  axios
+		this.sortDialog = true
+		axios
 		.get(config.server + '/times')
 		.then(doc => {
-		  this.tempAllLineInfo = doc.data.doc
+			this.tempAllLineInfo = doc.data.doc
 		})
 		.catch(err => {
-		  console.log(err)
+			console.log(err)
 		})
 	},
 	removeChoseClient(item) {
-	  this.choiceclientb.splice(item, 1)
+		this.choiceclientb.splice(item, 1)
 	},
 	clientInfoMethod(item) {
-	  clearTimeout(this.timeOutName)
-	  this.clientInfoWindow = true
-	  this.tempClientInfo = item
-	  this.timeOutName = setTimeout(() => {
+		clearTimeout(this.timeOutName)
+		this.clientInfoWindow = true
+		this.tempClientInfo = item
+		this.timeOutName = setTimeout(() => {
 		this.clientInfoWindow = false
-	  }, 10000)
+		}, 10000)
 	},
 	areaFilterMethod() {
-	  axios
+		axios
 		.post(config.server + '/clientb/filterpage', {
-		  pageSize: this.pageSize,
-		  pageNow: this.ClientTablePageNow,
-		  clientArea: this.clientArea
+			pageSize: this.pageSize,
+			pageNow: this.ClientTablePageNow,
+			clientArea: this.clientArea
 		})
 		.then(res => {
-		  this.clientBInfoTable = res.data.doc
-		  this.ClientTablePageCount = Math.ceil(
+			this.clientBInfoTable = res.data.doc
+			this.ClientTablePageCount = Math.ceil(
 			res.data.countNum / this.pageSize
-		  )
+			)
 		})
 		.catch(err => {
-		  console.log(err)
+			console.log(err)
 		})
 	},
 	serveFilterMethod() {
-	  axios
+		axios
 		.post(config.server + '/clientb/filterpage', {
-		  pageSize: this.pageSize,
-		  pageNow: this.ClientTablePageNow,
-		  clientServe: this.clientServe
+			pageSize: this.pageSize,
+			pageNow: this.ClientTablePageNow,
+			clientServe: this.clientServe
 		})
 		.then(res => {
-		  this.clientBInfoTable = res.data.doc
-		  this.ClientTablePageCount = Math.ceil(
+			this.clientBInfoTable = res.data.doc
+			this.ClientTablePageCount = Math.ceil(
 			res.data.countNum / this.pageSize
-		  )
+			)
 		})
 		.catch(err => {
-		  console.log(err)
+			console.log(err)
 		})
 	},
 	openChoiceList(item) {
-	  if (item === 'car') {
+		if (item === 'car') {
 		this.isCarList = true
-	  } else {
+		} else {
 		this.isCarList = false
-	  }
-	  this.choseListDialog = true
+		}
+		this.choseListDialog = true
 	},
 	choseACar() {
-	  if (this.isCarList) {
+		if (this.isCarList) {
 		if (this.choicecar == '') {
-		  //不做操作
+			//不做操作
 		} else {
-		  this.acarinfo = this.allcarinfo.find(
+			this.acarinfo = this.allcarinfo.find(
 			element => element._id == this.choicecar
-		  )
+			)
 		}
-	  } else {
-		if (this.choicedirver == '') {
-		  //不做操作
 		} else {
-		  this.adirverinfo = this.alldirverinfo.find(
+		if (this.choicedirver == '') {
+			//不做操作
+		} else {
+			this.adirverinfo = this.alldirverinfo.find(
 			element => element._id == this.choicedirver
-		  )
+			)
 		}
-	  }
-	  this.choseListDialog = false
+		}
+		this.choseListDialog = false
 	},
 	getallclienta() {
-	  axios
+		axios
 		.get(config.server + '/clienta')
 		.then(res => {
-		  this.allclientainfo = res.data
+			this.allclientainfo = res.data
 		})
 		.catch(err => {
-		  console.log(err)
+			console.log(err)
 		})
 	},
 	getAllArea() {
-	  axios
+		axios
 		.get(config.server + '/area')
 		.then(doc => {
-		  this.areaArray = doc.data.doc
+			this.areaArray = doc.data.doc
 		})
 		.catch(err => {
-		  console.log(err)
+			console.log(err)
 		})
 	},
 	search() {
-	  this.pageNow = 1
-	  if (this.selectCar == '') {
+		this.pageNow = 1
+		if (this.selectCar == '') {
 		this.findMode = false
 		this.getalltimes()
-	  } else {
+		} else {
 		this.findMode = true
 		axios
-		  .post(config.server + '/times/find', {
+			.post(config.server + '/times/find', {
 			word: this.selectCar,
 			pageSize: this.pageSize,
 			pageNow: this.pageNow
-		  })
-		  .then(res => {
+			})
+			.then(res => {
 			this.alltimesinfo = res.data.doc
 			this.pageCount = Math.ceil(res.data.count / this.pageSize)
 			if (res.data.code === 1) {
-			  this.showTipDialog = true
-			  this.tipMsg = res.data.msg
-			  this.selectCar = ''
-			  this.getalltimes()
-			  setTimeout(() => {
+				this.showTipDialog = true
+				this.tipMsg = res.data.msg
+				this.selectCar = ''
+				this.getalltimes()
+				setTimeout(() => {
 				this.showTipDialog = false
-			  }, 3000)
+				}, 3000)
 			}
-		  })
-		  .catch(err => {
+			})
+			.catch(err => {
 			console.log(err)
-		  })
-	  }
+			})
+		}
 	},
 	addbutton() {
-	  this.acarinfo = ''
-	  this._id = ''
-	  this.timesname = ''
-	  this.timesnote = ''
-	  this.choicecar = ''
-	  this.choicedirver = ''
-	  this.adirverinfo = ''
-	  this.choiceclientb = []
-	  this.choiceclient_id = []
-	  this.savemode = true
-	  this.showDialog = true
+		this.acarinfo = ''
+		this._id = ''
+		this.timesname = ''
+		this.timesnote = ''
+		this.choicecar = ''
+		this.choicedirver = ''
+		this.adirverinfo = ''
+		this.choiceclientb = []
+		this.savemode = true
+		this.showDialog = true
 	},
 
 	pageButton(item) {
-	  if (item === 'A') {
+		if (item === 'A') {
 		if (this.pageNow > 1) {
-		  this.pageNow = this.pageNow - 1
+			this.pageNow = this.pageNow - 1
 		}
-	  } else if (item === 'B') {
+		} else if (item === 'B') {
 		if (this.pageNow < this.pageCount) {
-		  this.pageNow = this.pageNow + 1
+			this.pageNow = this.pageNow + 1
 		}
-	  } else {
+		} else {
 		this.pageNow = item
-	  }
-	  if (this.findBmode === false) {
+		}
+		if (this.findBmode === false) {
 		axios
-		  .post(config.server + '/times/get', {
+			.post(config.server + '/times/get', {
 			pageSize: this.pageSize,
 			pageNow: this.pageNow
-		  })
-		  .then(res => {
+			})
+			.then(res => {
 			this.alltimesinfo = res.data.doc
 			this.pageCount = Math.ceil(res.data.count / this.pageSize)
-		  })
-		  .catch(err => {
+			})
+			.catch(err => {
 			console.log(err)
-		  })
-	  } else {
+			})
+		} else {
 		axios
-		  .post(config.server + '/times/find', {
+			.post(config.server + '/times/find', {
 			word: this.selectCar,
 			pageSize: this.pageSize,
 			pageNow: this.pageNow
-		  })
-		  .then(res => {
+			})
+			.then(res => {
 			this.alltimesinfo = res.data.doc
 			this.pageCount = Math.ceil(res.data.count / this.pageSize)
-		  })
-		  .catch(err => {
+			})
+			.catch(err => {
 			console.log(err)
-		  })
-	  }
+			})
+		}
 	},
 
 	clientTablePageButton(item) {
-	  if (item === 'A') {
+		if (item === 'A') {
 		if (this.ClientTablePageNow > 1) {
-		  this.ClientTablePageNow = this.ClientTablePageNow - 1
+			this.ClientTablePageNow = this.ClientTablePageNow - 1
 		}
-	  } else if (item === 'B') {
+		} else if (item === 'B') {
 		if (this.ClientTablePageNow < this.ClientTablePageCount) {
-		  this.ClientTablePageNow = this.ClientTablePageNow + 1
+			this.ClientTablePageNow = this.ClientTablePageNow + 1
 		}
-	  } else {
+		} else {
 		this.ClientTablePageNow = item
-	  }
-	  if (this.clientTableMode === 'search') {
+		}
+		if (this.clientTableMode === 'search') {
 		this.searClientMethods()
-	  } else if (this.clientTableMode === 'area') {
+		} else if (this.clientTableMode === 'area') {
 		this.areaFilterMethod()
-	  } else if (this.clientTableMode === 'serve') {
+		} else if (this.clientTableMode === 'serve') {
 		this.serveFilterMethod()
-	  } else {
+		} else {
 		axios
-		  .post(config.server + '/clientb/active', {
+			.post(config.server + '/clientb/active', {
 			pageSize: this.pageSize,
 			pageNow: this.ClientTablePageNow
-		  })
-		  .then(res => {
+			})
+			.then(res => {
 			this.clientBInfoTable = res.data.doc
 			this.ClientTablePageCount = Math.ceil(
-			  res.data.countNum / this.pageSize
+				res.data.countNum / this.pageSize
 			)
-		  })
-		  .catch(err => {
+			})
+			.catch(err => {
 			console.log(err)
-		  })
-	  }
+			})
+		}
 	},
 
 	getalldirver() {
-	  axios
+		axios
 		.get(config.server + '/dirver')
 		.then(res => {
-		  this.alldirverinfo = res.data
+			this.alldirverinfo = res.data
 		})
 		.catch(err => {
-		  console.log(err)
+			console.log(err)
 		})
 	},
 
 	getallcar() {
-	  axios
+		axios
 		.get(config.server + '/car')
 		.then(res => {
-		  this.allcarinfo = res.data
+			this.allcarinfo = res.data
 		})
 		.catch(err => {
-		  console.log(err)
+			console.log(err)
 		})
 	},
 
 	getallclientb() {
-	  axios
+		axios
 		.post(config.server + '/clientb/active', {
-		  pageSize: this.pageSize,
-		  pageNow: 1
+			pageSize: this.pageSize,
+			pageNow: 1
 		})
 		.then(res => {
-		  this.allclientbinfo = res.data.doc
-		  this.clientBInfoTable = res.data.doc
-		  this.ClientTablePageCount = Math.ceil(
+			this.allclientbinfo = res.data.doc
+			this.clientBInfoTable = res.data.doc
+			this.ClientTablePageCount = Math.ceil(
 			res.data.countNum / this.pageSize
-		  )
+			)
 		})
 		.catch(err => {
-		  console.log(err)
+			console.log(err)
 		})
 	},
 
 	getalltimes() {
-	  axios
+		axios
 		.post(config.server + '/times/get', {
-		  pageSize: this.pageSize,
-		  pageNow: this.pageNow
+			pageSize: this.pageSize,
+			pageNow: this.pageNow
 		})
 		.then(res => {
-		  this.alltimesinfo = res.data.doc
-		  this.pageCount = Math.ceil(res.data.count / this.pageSize)
+			this.alltimesinfo = res.data.doc
+			this.pageCount = Math.ceil(res.data.count / this.pageSize)
 		})
 		.catch(err => {
-		  console.log(err)
+			console.log(err)
 		})
 	},
 	getadirver() {
-	  if (this.choicedirver == '') {
+		if (this.choicedirver == '') {
 		//不做操作
-	  } else {
+		} else {
 		this.adirverinfo = this.alldirverinfo.find(
-		  element => element._id == this.choicedirver
+			element => element._id == this.choicedirver
 		)
-	  }
+		}
 	},
 	addtimes() {
-	  if (!this.timesname) {
+		if (!this.timesname) {
 		this.errorMessage = '请填写必要信息'
 		this.error = true
 		setTimeout(() => {
-		  this.error = false
+			this.error = false
 		}, 3000)
-	  } else {
+		} else {
 		let tempClientArray = []
 		this.choiceclientb.forEach(element => {
-		  tempClientArray.push(element._id)
+			tempClientArray.push(element._id)
 		})
 		console.log(tempClientArray)
 		axios
-		  .post(config.server + '/times', {
+			.post(config.server + '/times', {
 			timesname: this.timesname,
 			timescar: this.choicecar,
 			timesnote: this.timesnote,
 			timesdirver: this.choicedirver,
 			timesclientb: tempClientArray,
 			logOperator: localStorage.getItem('name')
-		  })
-		  .then(response => {
+			})
+			.then(response => {
 			if (response.data.code == 1) {
-			  this.errorMessage = response.data.msg
-			  this.error = true
-			  setTimeout(() => {
+				this.errorMessage = response.data.msg
+				this.error = true
+				setTimeout(() => {
 				this.error = false
-			  }, 3000)
+				}, 3000)
 			} else {
-			  this.changeclientb()
-			  this.errorMessage = response.data.msg
-			  this.error = true
-			  this.showDialog = false
-			  this.timesname = ''
-			  this.getalltimes()
-			  setTimeout(() => {
+				this.changeclientb()
+				this.errorMessage = response.data.msg
+				this.error = true
+				this.showDialog = false
+				this.timesname = ''
+				this.getalltimes()
+				setTimeout(() => {
 				this.error = false
-			  }, 3000)
+				}, 3000)
 			}
-		  })
-		  .catch(err => {
+			})
+			.catch(err => {
 			console.log(err)
 			this.errorMessage = response.data.msg
 			this.error = true
 			setTimeout(() => {
-			  this.error = false
+				this.error = false
 			}, 3000)
-		  })
-	  }
+			})
+		}
 	},
 	changeclientb() {
-	  axios
+		axios
 		.post(config.server + '/clientb/changeline', {
-		  choiceclientb: this.choiceclientb,
-		  timesname: this.timesname
+			choiceclientb: this.choiceclientb,
+			timesname: this.timesname
 		})
 		.then(res => {
-		  if (res.data.code == 1 || res.data.code == 2) {
+			if (res.data.code == 1 || res.data.code == 2) {
 			this.errorMessage = res.data.msg
 			this.error = true
 			setTimeout(() => {
-			  this.error = false
+				this.error = false
 			}, 3000)
-		  } else {
+			} else {
 			this.errorMessage = res.data.msg
 			this.error = true
 			setTimeout(() => {
-			  this.error = false
+				this.error = false
 			}, 3000)
-		  }
+			}
 		})
 	},
 	editbutton(item) {
-	  this.choiceclient_id = []
-	  this.savemode = false
-	  this.showDialog = true
-	  this._id = item._id
-	  this.timesname = item.timesname
-	  this.timesnote = item.timesnote
-	  if (item.timescar === null) {
+		this.savemode = false
+		this.showDialog = true
+		this._id = item._id
+		this.timesname = item.timesname
+		this.timesnote = item.timesnote
+		if (item.timescar === null) {
 		this.setCarText = '车辆信息错误，请重新选择'
-	  } else {
+		} else {
 		this.choicecar = item.timescar._id
-	  }
+		}
 
-	  if (item.timesdirver === null) {
+		if (item.timesdirver === null) {
 		this.setDriverText = '司机信息错误，请重新选择'
-	  } else {
+		} else {
 		this.choicedirver = item.timesdirver._id
-	  }
-	  this.choicedirver = item.timesdirver._id
-	  this.choiceclientb = item.timesclientb
-	  item.timesclientb.forEach(tempClient => {
-		this.choiceclient_id.push(tempClient._id)
-	  })
-	  if (this.choicecar == '') {
+		}
+		this.choicedirver = item.timesdirver._id
+		this.choiceclientb = item.timesclientb
+		if (this.choicecar == '') {
 		//不做操作
-	  } else {
+		} else {
 		this.acarinfo = this.allcarinfo.find(
-		  element => element._id == this.choicecar
+			element => element._id == this.choicecar
 		)
-	  }
-	  if (this.choicedirver == '') {
+		}
+		if (this.choicedirver == '') {
 		//不做操作
-	  } else {
+		} else {
 		this.adirverinfo = this.alldirverinfo.find(
-		  element => element._id == this.choicedirver
+			element => element._id == this.choicedirver
 		)
-	  }
+		}
 	},
 	confirmEdit() {
-	  if (!this.timesname) {
+		if (!this.timesname) {
 		this.errorMessage = '请填写必要信息'
 		this.error = true
 		setTimeout(() => {
-		  this.error = false
+			this.error = false
 		}, 3000)
-	  } else {
+		} else {
 		axios
-		  .post(config.server + '/times/edit', {
+			.post(config.server + '/times/edit', {
 			_id: this._id,
 			timesname: this.timesname,
 			timescar: this.choicecar,
@@ -1168,302 +1152,302 @@ export default {
 			timesclientnumber: this.choiceclientb.length,
 			timesnote: this.timesnote,
 			logOperator: localStorage.getItem('name')
-		  })
-		  .then(res => {
+			})
+			.then(res => {
 			this.tipMsg = res.data.msg
 			this.showTipDialog = true
 			setTimeout(() => {
-			  this.showTipDialog = false
+				this.showTipDialog = false
 			}, 3000)
 			if (res.data.code == 0) {
-			  this.getalltimes()
-			  this.showDialog = false
+				this.getalltimes()
+				this.showDialog = false
 			}
-		  })
-		  .catch(err => {
+			})
+			.catch(err => {
 			console.log(err)
 			this.errorMessage = err
 			this.error = true
 			setTimeout(() => {
-			  this.error = false
+				this.error = false
 			}, 3000)
-		  })
-	  }
+			})
+		}
 	},
 	removebutton(item) {
-	  this.removeDialog = true
-	  this._id = item._id
-	  this.timesname = item.timesname
-	  this.timesnote = item.timesnote
-	  this.choicecar = item.timescar.carid
-	  this.choicedirver = item.timesdirver.dirvername
-	  this.timesclientnumber = item.timesclientnumber
+		this.removeDialog = true
+		this._id = item._id
+		this.timesname = item.timesname
+		this.timesnote = item.timesnote
+		this.choicecar = item.timescar.carid
+		this.choicedirver = item.timesdirver.dirvername
+		this.timesclientnumber = item.timesclientnumber
 	},
 	confirmremove() {
-	  axios
+		axios
 		.post(config.server + '/times/remove', {
-		  _id: this._id,
-		  logOperator: localStorage.getItem('name')
+			_id: this._id,
+			logOperator: localStorage.getItem('name')
 		})
 		.then(res => {
-		  this.errorMessage = res.data.msg
-		  this.error = true
-		  setTimeout(() => {
+			this.errorMessage = res.data.msg
+			this.error = true
+			setTimeout(() => {
 			this.error = false
-		  }, 3000)
-		  if (res.data.code == 0) {
+			}, 3000)
+			if (res.data.code == 0) {
 			this.removeDialog = false
 			this.getalltimes()
-		  }
+			}
 		})
 		.catch(err => {
-		  console.log(err)
-		  this.errorMessage = err
-		  this.error = true
-		  setTimeout(() => {
+			console.log(err)
+			this.errorMessage = err
+			this.error = true
+			setTimeout(() => {
 			this.error = false
-		  }, 3000)
+			}, 3000)
 		})
 	},
 	searClientMethods() {
-	  this.clientArea = ''
-	  this.clientServe = ''
-	  if (!this.searchClient) {
+		this.clientArea = ''
+		this.clientServe = ''
+		if (!this.searchClient) {
 		this.ClientTablePageNow = 1
 		this.clientBInfoTable = this.allclientbinfo
 		this.clientTableMode = ''
-	  } else {
+		} else {
 		this.clientTableMode = 'search'
 		axios
-		  .post(config.server + '/clientb/page', {
+			.post(config.server + '/clientb/page', {
 			keyWord: this.searchClient,
 			pageSize: this.pageSize,
 			pageNow: this.ClientTablePageNow
-		  })
-		  .then(res => {
+			})
+			.then(res => {
 			this.clientBInfoTable = res.data.doc
 			this.ClientTablePageCount = Math.ceil(
-			  res.data.countNum / this.pageSize
+				res.data.countNum / this.pageSize
 			)
 			if (res.data.code === 1) {
-			  this.searchClient = ''
-			  this.getallclientb()
-			  this.showTipDialog = true
-			  this.tipMsg = '未找到该客户'
+				this.searchClient = ''
+				this.getallclientb()
+				this.showTipDialog = true
+				this.tipMsg = '未找到该客户'
 			}
 			setTimeout(() => {
-			  this.showTipDialog = false
+				this.showTipDialog = false
 			}, 3000)
-		  })
-		  .catch(err => {
+			})
+			.catch(err => {
 			console.log(err)
-		  })
-	  }
+			})
+		}
 	}
-  }
+	}
 }
 </script>
 
 <style scoped>
 #times {
-  width: 80%;
-  margin: 15px auto;
+	width: 80%;
+	margin: 15px auto;
 }
 
 .topbutton {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  flex-flow: row wrap;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row wrap;
+	flex-flow: row wrap;
 }
 
 .topbutton-left {
-  flex-basis: 30%;
-  text-align: left;
-  margin: 0 auto;
+	flex-basis: 30%;
+	text-align: left;
+	margin: 0 auto;
 }
 
 .topbutton-left input {
-  margin: 5px auto;
-  border-radius: 10px;
-  width: 300px;
-  height: 35px;
-  text-align: center;
-  -web-kit-appearance: none;
-  -moz-appearance: none;
-  outline: 0;
-  font-size: 16px;
+	margin: 5px auto;
+	border-radius: 10px;
+	width: 300px;
+	height: 35px;
+	text-align: center;
+	-web-kit-appearance: none;
+	-moz-appearance: none;
+	outline: 0;
+	font-size: 16px;
 }
 
 .clientsearch {
-  margin: 16px auto 0 auto;
-  border-radius: 10px;
-  width: 250px;
-  height: 32px;
-  text-align: center;
-  -web-kit-appearance: none;
-  -moz-appearance: none;
-  outline: 0;
-  font-size: 16px;
+	margin: 16px auto 0 auto;
+	border-radius: 10px;
+	width: 250px;
+	height: 32px;
+	text-align: center;
+	-web-kit-appearance: none;
+	-moz-appearance: none;
+	outline: 0;
+	font-size: 16px;
 }
 
 .topbutton-right {
-  margin: 0 auto;
-  flex-basis: 50%;
-  text-align: right;
+	margin: 0 auto;
+	flex-basis: 50%;
+	text-align: right;
 }
 
 .centertable {
-  margin: 15px auto;
+	margin: 15px auto;
 }
 
 .dialog-3 {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
-  margin: 0 auto;
-  width: 90%;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+	margin: 0 auto;
+	width: 90%;
 }
 
 .dialog-3-left {
-  flex-basis: 30%;
-  text-align: center;
-  margin: 0 auto;
+	flex-basis: 30%;
+	text-align: center;
+	margin: 0 auto;
 }
 
 .dialog-3-right {
-  flex-basis: 60%;
-  text-align: center;
-  margin: 0 auto;
+	flex-basis: 60%;
+	text-align: center;
+	margin: 0 auto;
 }
 
 .tabletitle {
-  border: 1px solid;
-  border-left: none;
-  border-right: none;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
+	border: 1px solid;
+	border-left: none;
+	border-right: none;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
 }
 
 .tabletitle-item {
-  margin: 0 auto;
-  width: 250px;
-  font-size: 18px;
-  line-height: 34px;
+	margin: 0 auto;
+	width: 250px;
+	font-size: 18px;
+	line-height: 34px;
 }
 
 .rmDialog-center {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
-  margin: 20px;
-  font-size: 20px;
-  width: 100%;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+	margin: 20px;
+	font-size: 20px;
+	width: 100%;
 }
 
 .rmDialog-center-left {
-  flex-basis: 25%;
-  text-align: left;
+	flex-basis: 25%;
+	text-align: left;
 }
 
 .rmDialog-center-right {
-  flex-basis: 60%;
-  text-align: left;
+	flex-basis: 60%;
+	text-align: left;
 }
 
 .tab4-title {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
-  background-color: rgb(244, 244, 244);
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+	background-color: rgb(244, 244, 244);
 }
 
 .tab4-title-item {
-  font-size: 18px;
+	font-size: 18px;
 }
 
 .step-third-title {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
 }
 
 .step-third-title-item {
-  text-align: center;
-  font-size: 16px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  line-height: 28px;
+	text-align: center;
+	font-size: 16px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	line-height: 28px;
 }
 
 .choseListDialog-body {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
-  font-size: 16px;
-  color: #616161;
-  text-align: center;
-  height: 36px;
-  line-height: 36px;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+	font-size: 16px;
+	color: #616161;
+	text-align: center;
+	height: 36px;
+	line-height: 36px;
 }
 
 .choseListDialog-item {
-  border: 1px solid #e0e0e0;
+	border: 1px solid #e0e0e0;
 }
 
 .client-page-bar ul li {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 .client-page-bar li {
-  list-style: none;
-  font-size: 14px;
+	list-style: none;
+	font-size: 14px;
 }
 
 .client-page-bar span {
-  border: 1px solid #ddd;
-  text-decoration: none;
-  position: relative;
-  float: left;
-  padding: 4px 10px;
-  margin-left: -1px;
-  line-height: 1.42857143;
-  color: #337ab7;
-  cursor: pointer;
+	border: 1px solid #ddd;
+	text-decoration: none;
+	position: relative;
+	float: left;
+	padding: 4px 10px;
+	margin-left: -1px;
+	line-height: 1.42857143;
+	color: #337ab7;
+	cursor: pointer;
 }
 
 .client-page-bar span:hover {
-  background-color: #eee;
+	background-color: #eee;
 }
 
 .client-page-bar .active span {
-  color: #fff;
-  cursor: default;
-  background-color: #337ab7;
-  border-color: #337ab7;
+	color: #fff;
+	cursor: default;
+	background-color: #337ab7;
+	border-color: #337ab7;
 }
 
 .client-page-bar i {
-  font-style: normal;
-  color: #d44950;
-  margin: 0px 4px;
-  font-size: 12px;
+	font-style: normal;
+	color: #d44950;
+	margin: 0px 4px;
+	font-size: 12px;
 }
 
 .clientInfoWindowclass {
-  z-index: 30;
-  position: fixed;
-  background-color: #fff;
-  right: 0;
-  bottom: 10px;
+	z-index: 30;
+	position: fixed;
+	background-color: #fff;
+	right: 0;
+	bottom: 10px;
 }
 </style>
