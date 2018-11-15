@@ -4,21 +4,18 @@
 		<div class="backgroundpic-ribbon"></div>
 		<div class="center">
 			
-			<div style="background: rgba(255, 255, 255, .9);width: 100%;position: absolute;height: 490px;">
+			<div style="background: rgba(255, 255, 255, .9);width: 100%;position: absolute;height: 460px;">
 				<div class="backgroundpic-ribbon-top"></div>
 				<div class="backgroundpic-ribbon-bottom"></div>
 			</div>
 			
 			<md-card md-with-hover style="width:500px;margin:220px auto">
-				<md-ripple>
-					<md-card-header style="padding:10px">
+					<md-card-header style="padding:0">
 						<div class="card-title">DELIVERY TO
 							<br>
 							物流管理系统</div>
 					</md-card-header>
-
 					<md-card-content>
-
 						<input type="text" v-model="email" class="inputbox" @keyup.enter="login">
 						<br>
 						<input type="password" class="inputbox" v-model="password" @keyup.enter="login">
@@ -26,12 +23,9 @@
 							<span>{{errmsg}}</span>
 						</div>
 					</md-card-content>
-
-					<md-card-actions>
-						<md-button class="md-raised md-primary" style="margin:0px auto 20px auto" @click="login">登陆</md-button>
+					<md-card-actions style="padding:0">
+						<md-button class="md-raised md-primary" style="margin:0px auto 15px auto" @click="login">登陆</md-button>
 					</md-card-actions>
-				</md-ripple>
-
 				<div class="toplogo">
 					<img src="./../../public/img/ebuyLogo.png" alt="easybuylogo">
 				</div>
@@ -124,9 +118,9 @@ export default {
 .toplogo {
 	border: 1px solid;
 	border-radius: 50%;
-	width: 190px;
-	height: 190px;
-	line-height: 200px;
+	width: 170px;
+	height: 170px;
+	line-height: 177px;
 	position: absolute;
 	left: -95px;
 	top: -60px;
@@ -144,11 +138,12 @@ export default {
 	-web-kit-appearance: none;
 	-moz-appearance: none;
 	outline: 0;
+	font-size: 18px;
 }
 
 .card-title {
 	font-family: sans-serif;
-	font-size: 35px;
+	font-size: 30px;
 	font-weight: 700;
 	margin: 10px auto;
 	line-height: 40px;

@@ -381,776 +381,776 @@ import config from '../../public/js/config.js'
 import lrz from 'lrz'
 
 export default {
-  name: 'Car',
-  data() {
-    return {
-      addmode: true,
-      successdmsg: false,
-      error: false,
-      errormsg: '发生未知错误请联系更牛逼的人',
-      error2: false,
-      error3: false,
-      carid: '',
-      cartype: '',
-      cartimes: '',
-      carnote: '',
-      cardate: '',
-      _id: '',
-      removeDialog: false,
-      newCarDialog: false,
-      selectedCar: '',
-      tailgate: 'no',
-      coolstore: 'no',
-      searchCar: [],
-      allcarinfo: [],
-      searching: false,
-      idErr: false,
-      typeErr: false,
-      pageCount: 0, // 总页码
-      pageNow: 1, // 当前页码
-      pageSize: 15, //每页显示条数
-      showItem: 5, // 最少显示5个页码
-      findMode: false,
-      updateImagePreview: '',
-      updateImage: '',
-      carImage: '',
-      callFlag: false,
-      allCarType: ['Van', '10ft Lorry', '14ft Lorry', '24ft Lorry'],
-      selectorCarType: '车型',
-      showTipDialog: false,
-      tipMsg: '',
-      showCheckCarBox: false,
-      carLog: []
-    }
-  },
+	name: 'Car',
+	data() {
+		return {
+			addmode: true,
+			successdmsg: false,
+			error: false,
+			errormsg: '发生未知错误请联系更牛逼的人',
+			error2: false,
+			error3: false,
+			carid: '',
+			cartype: '',
+			cartimes: '',
+			carnote: '',
+			cardate: '',
+			_id: '',
+			removeDialog: false,
+			newCarDialog: false,
+			selectedCar: '',
+			tailgate: 'no',
+			coolstore: 'no',
+			searchCar: [],
+			allcarinfo: [],
+			searching: false,
+			idErr: false,
+			typeErr: false,
+			pageCount: 0, // 总页码
+			pageNow: 1, // 当前页码
+			pageSize: 15, //每页显示条数
+			showItem: 5, // 最少显示5个页码
+			findMode: false,
+			updateImagePreview: '',
+			updateImage: '',
+			carImage: '',
+			callFlag: false,
+			allCarType: ['Van', '10ft Lorry', '14ft Lorry', '24ft Lorry'],
+			selectorCarType: '车型',
+			showTipDialog: false,
+			tipMsg: '',
+			showCheckCarBox: false,
+			carLog: []
+		}
+	},
 
-  mounted() {
-    this.getallcar()
-  },
+	mounted() {
+		this.getallcar()
+	},
 
-  computed: {
-    pages: function() {
-      let pag = []
-      if (this.pageNow < this.showItem) {
-        //如果当前的激活的项 小于要显示的条数
-        //总页数和要显示的条数那个大就显示多少条
-        let i = Math.min(this.showItem, this.pageCount)
-        while (i) {
-          pag.unshift(i--)
-        }
-      } else {
-        //当前页数大于显示页数了
-        let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
-          i = this.showItem
-        if (middle > this.pageCount - this.showItem) {
-          middle = this.pageCount - this.showItem + 1
-        }
-        while (i--) {
-          pag.push(middle++)
-        }
-      }
-      return pag
-    },
+	computed: {
+		pages: function() {
+			let pag = []
+			if (this.pageNow < this.showItem) {
+				//如果当前的激活的项 小于要显示的条数
+				//总页数和要显示的条数那个大就显示多少条
+				let i = Math.min(this.showItem, this.pageCount)
+				while (i) {
+					pag.unshift(i--)
+				}
+			} else {
+				//当前页数大于显示页数了
+				let middle = this.pageNow - Math.floor(this.showItem / 2), //从哪里开始
+					i = this.showItem
+				if (middle > this.pageCount - this.showItem) {
+					middle = this.pageCount - this.showItem + 1
+				}
+				while (i--) {
+					pag.push(middle++)
+				}
+			}
+			return pag
+		},
 
-    idclass() {
-      return {
-        'md-invalid': this.idErr
-      }
-    },
+		idclass() {
+			return {
+				'md-invalid': this.idErr
+			}
+		},
 
-    typeclass() {
-      return {
-        'md-invalid': this.typeErr
-      }
-    }
-  },
-  methods: {
-    openClickCarLog(item) {
-      axios
-        .post(config.server + '/checkcar/get', {
-          car_id: item._id
-        })
-        .then(doc => {
-          if (doc.data.code === 0) {
-            this.carLog = doc.data.item
-            this.showCheckCarBox = true
-            console.log(this.carLog)
-          } else {
-            console.log(doc)
-            this.tipMsg = '出现未知错误'
-            this.showTipDialog = true
-            setTimeout(() => {
-              this.showTipDialog = false
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    // 下拉框部分 start
-    callCarType() {
-      if (this.callFlag) {
-        this.bodyHideCarType()
-      } else {
-        this.bodyShowCarType()
-      }
-    },
+		typeclass() {
+			return {
+				'md-invalid': this.typeErr
+			}
+		}
+	},
+	methods: {
+		openClickCarLog(item) {
+			axios
+				.post(config.server + '/checkcar/get', {
+					car_id: item._id
+				})
+				.then(doc => {
+					if (doc.data.code === 0) {
+						this.carLog = doc.data.item
+						this.showCheckCarBox = true
+						console.log(this.carLog)
+					} else {
+						console.log(doc)
+						this.tipMsg = '出现未知错误'
+						this.showTipDialog = true
+						setTimeout(() => {
+							this.showTipDialog = false
+						}, 3000)
+					}
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
+		// 下拉框部分 start
+		callCarType() {
+			if (this.callFlag) {
+				this.bodyHideCarType()
+			} else {
+				this.bodyShowCarType()
+			}
+		},
 
-    bodyHideCarType() {
-      let body = document.querySelector('#selector-body-type')
-      body.style.height = '0px'
-      body.style.transition = '0.25s'
-      let arrow = document.querySelector('#selector-arrow-type')
-      arrow.style.transform = 'rotate(-90deg)'
-      arrow.style.transition = '0.25s'
-      this.callFlag = false
-    },
+		bodyHideCarType() {
+			let body = document.querySelector('#selector-body-type')
+			body.style.height = '0px'
+			body.style.transition = '0.25s'
+			let arrow = document.querySelector('#selector-arrow-type')
+			arrow.style.transform = 'rotate(-90deg)'
+			arrow.style.transition = '0.25s'
+			this.callFlag = false
+		},
 
-    bodyShowCarType() {
-      let body = document.querySelector('#selector-body-type')
-      let boxes = document.querySelectorAll('#selector-box-type')
-      let arrow = document.querySelector('#selector-arrow-type')
-      arrow.style.transform = 'rotate(0deg)'
-      body.style.height = '180px'
-      arrow.style.transition = '0.25s'
-      let height = 4
-      boxes.forEach(box => {
-        height += box.clientHeight
-      })
-      body.style.transition = '0.25s'
-      body.style.display = 'block'
-      this.callFlag = true
-    },
+		bodyShowCarType() {
+			let body = document.querySelector('#selector-body-type')
+			let boxes = document.querySelectorAll('#selector-box-type')
+			let arrow = document.querySelector('#selector-arrow-type')
+			arrow.style.transform = 'rotate(0deg)'
+			body.style.height = '180px'
+			arrow.style.transition = '0.25s'
+			let height = 4
+			boxes.forEach(box => {
+				height += box.clientHeight
+			})
+			body.style.transition = '0.25s'
+			body.style.display = 'block'
+			this.callFlag = true
+		},
 
-    choseTypeItem(item) {
-      this.selectorCarType = item
-      this.cartype = item
-      this.bodyHideCarType()
-    },
-    // 下拉框部分 end
-    uploadFile() {
-      document.getElementById('upload_file').click()
-    },
+		choseTypeItem(item) {
+			this.selectorCarType = item
+			this.cartype = item
+			this.bodyHideCarType()
+		},
+		// 下拉框部分 end
+		uploadFile() {
+			document.getElementById('upload_file').click()
+		},
 
-    fileChange(el) {
-      if (typeof FileReader === 'undefined') {
-        return alert('浏览器不支持上传图片')
-      }
-      console.log('###')
-      if (!el.target.files[0].size) return //判断是否有文件数量
-      this.updateImagePreview = window.URL.createObjectURL(el.target.files[0])
-      this.updateImage = el.target.files[0]
-      this.carImage = ''
-      el.target.value = ''
-    },
+		fileChange(el) {
+			if (typeof FileReader === 'undefined') {
+				return alert('浏览器不支持上传图片')
+			}
+			console.log('###')
+			if (!el.target.files[0].size) return //判断是否有文件数量
+			this.updateImagePreview = window.URL.createObjectURL(el.target.files[0])
+			this.updateImage = el.target.files[0]
+			this.carImage = ''
+			el.target.value = ''
+		},
 
-    closeDialog() {
-      this.callFlag = false
-      this.newCarDialog = false
-      this.updateImagePreview = null
-    },
+		closeDialog() {
+			this.callFlag = false
+			this.newCarDialog = false
+			this.updateImagePreview = null
+		},
 
-    newCar() {
-      this.addmode = true
-      this.carid = ''
-      this.cartype = ''
-      this.carnote = ''
-      this.carImage = ''
-      this.newCarDialog = true
-      this.tailgate = 'no'
-      this.coolstore = 'no'
-    },
-    search(item) {
-      if (this.selectedCar == '') {
-        this.findMode = false
-        this.getallcar()
-      } else {
-        this.findMode = true
-        axios
-          .post(config.server + '/car/find', {
-            word: this.selectedCar,
-            pageSize: this.pageSize,
-            pageNow: this.pageNow
-          })
-          .then(res => {
-            this.allcarinfo = res.data.doc
-            this.pageCount = Math.ceil(res.data.count / this.pageSize)
-            if (res.data.code === 1) {
-              this.showTipDialog = true
-              this.tipMsg = res.data.msg
-              this.selectedCar = ''
-              this.getallcar()
-              setTimeout(() => {
-                this.showTipDialog = false
-              }, 3000)
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
-    },
-    editbutton(item) {
-      this.addmode = false
-      this._id = item._id
-      this.carid = item.carid
-      this.cartype = item.cartype
-      this.tailgate = item.tailgate
-      this.coolstore = item.coolstore
-      this.carnote = item.carnote
-      this.carImage = item.image
-      this.newCarDialog = true
-    },
-    removebutton(item) {
-      this._id = item._id
-      this.carid = item.carid
-      this.cartype = item.cartype
-      this.tailgate = item.tailgate
-      this.cartimes = item.cartimes
-      this.carnote = item.carnote
-      this.carImage = item.image
-      this.cardate = item.cardate
-      this.removeDialog = true
-    },
+		newCar() {
+			this.addmode = true
+			this.carid = ''
+			this.cartype = ''
+			this.carnote = ''
+			this.carImage = ''
+			this.newCarDialog = true
+			this.tailgate = 'no'
+			this.coolstore = 'no'
+		},
+		search(item) {
+			if (this.selectedCar == '') {
+				this.findMode = false
+				this.getallcar()
+			} else {
+				this.findMode = true
+				axios
+					.post(config.server + '/car/find', {
+						word: this.selectedCar,
+						pageSize: this.pageSize,
+						pageNow: this.pageNow
+					})
+					.then(res => {
+						this.allcarinfo = res.data.doc
+						this.pageCount = Math.ceil(res.data.count / this.pageSize)
+						if (res.data.code === 1) {
+							this.showTipDialog = true
+							this.tipMsg = res.data.msg
+							this.selectedCar = ''
+							this.getallcar()
+							setTimeout(() => {
+								this.showTipDialog = false
+							}, 3000)
+						}
+					})
+					.catch(err => {
+						console.log(err)
+					})
+			}
+		},
+		editbutton(item) {
+			this.addmode = false
+			this._id = item._id
+			this.carid = item.carid
+			this.cartype = item.cartype
+			this.tailgate = item.tailgate
+			this.coolstore = item.coolstore
+			this.carnote = item.carnote
+			this.carImage = item.image
+			this.newCarDialog = true
+		},
+		removebutton(item) {
+			this._id = item._id
+			this.carid = item.carid
+			this.cartype = item.cartype
+			this.tailgate = item.tailgate
+			this.cartimes = item.cartimes
+			this.carnote = item.carnote
+			this.carImage = item.image
+			this.cardate = item.cardate
+			this.removeDialog = true
+		},
 
-    pageButton(item) {
-      if (item === 'A') {
-        if (this.pageNow > 1) {
-          this.pageNow = this.pageNow - 1
-        }
-      } else if (item === 'B') {
-        if (this.pageNow < this.pageCount) {
-          this.pageNow = this.pageNow + 1
-        }
-      } else {
-        this.pageNow = item
-      }
-      if (this.findmode === false) {
-        axios
-          .post(config.server + '/car/get', {
-            pageSize: this.pageSize,
-            pageNow: this.pageNow
-          })
-          .then(res => {
-            this.allcarinfo = res.data.doc
-            this.pageCount = Math.ceil(res.data.count / this.pageSize)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      } else {
-        axios
-          .post(config.server + '/car/find', {
-            word: this.selectedCar,
-            pageSize: this.pageSize,
-            pageNow: this.pageNow
-          })
-          .then(res => {
-            this.allcarinfo = res.data.doc
-            this.pageCount = Math.ceil(res.data.count / this.pageSize)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      }
-    },
+		pageButton(item) {
+			if (item === 'A') {
+				if (this.pageNow > 1) {
+					this.pageNow = this.pageNow - 1
+				}
+			} else if (item === 'B') {
+				if (this.pageNow < this.pageCount) {
+					this.pageNow = this.pageNow + 1
+				}
+			} else {
+				this.pageNow = item
+			}
+			if (this.findmode === false) {
+				axios
+					.post(config.server + '/car/get', {
+						pageSize: this.pageSize,
+						pageNow: this.pageNow
+					})
+					.then(res => {
+						this.allcarinfo = res.data.doc
+						this.pageCount = Math.ceil(res.data.count / this.pageSize)
+					})
+					.catch(err => {
+						console.log(err)
+					})
+			} else {
+				axios
+					.post(config.server + '/car/find', {
+						word: this.selectedCar,
+						pageSize: this.pageSize,
+						pageNow: this.pageNow
+					})
+					.then(res => {
+						this.allcarinfo = res.data.doc
+						this.pageCount = Math.ceil(res.data.count / this.pageSize)
+					})
+					.catch(err => {
+						console.log(err)
+					})
+			}
+		},
 
-    confirmedit() {
-      if (this.updateImagePreview) {
-        let payload = new FormData()
-        let maxSize = 200 * 1024 //200KB
-        lrz(this.updateImage, {
-          quality: 0.5
-        }).then(res => {
-          if (this.updateImage.size > maxSize) {
-            this.updateImage = res.file
-          }
-          payload.append('image', this.updateImage)
-          payload.append('_id', this._id)
-          payload.append('logOperator', localStorage.getItem('name'))
-          axios({
-            method: 'post',
-            url: config.server + '/car/update/img',
-            data: payload,
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
-            .then(doc => {
-              // console.log(doc)
-            })
-            .catch(err => {
-              console.log(err)
-            })
-        })
-      }
-      axios
-        .post(config.server + '/car/update', {
-          _id: this._id,
-          carid: this.carid,
-          cartype: this.cartype,
-          tailgate: this.tailgate,
-          coolstore: this.coolstore,
-          carnote: this.carnote,
-          logOperator: localStorage.getItem('name')
-        })
-        .then(res => {
-          if (res.data.code == 0) {
-            this.error = true
-            this.errormsg = res.data.msg
-            this.getallcar()
-            this.closeDialog()
-            setTimeout(() => {
-              this.error = false
-            }, 3000)
-          } else {
-            this.error = true
-            this.errormsg = res.data.msg
-            setTimeout(() => {
-              this.error = false
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    confirmremove() {
-      axios
-        .post(config.server + '/car/remove', {
-          _id: this._id,
-          logOperator: localStorage.getItem('name')
-        })
-        .then(res => {
-          if (res.data.code == 0) {
-            this.error = true
-            this.errormsg = res.data.msg
-            this.removeDialog = false
-            this.getallcar()
-            setTimeout(() => {
-              this.error = false
-            }, 3000)
-          } else {
-            this.error = true
-            this.errormsg = res.data.msg
-            setTimeout(() => {
-              this.error = false
-            }, 3000)
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
+		confirmedit() {
+			if (this.updateImagePreview) {
+				let payload = new FormData()
+				let maxSize = 200 * 1024 //200KB
+				lrz(this.updateImage, {
+					quality: 0.5
+				}).then(res => {
+					if (this.updateImage.size > maxSize) {
+						this.updateImage = res.file
+					}
+					payload.append('image', this.updateImage)
+					payload.append('_id', this._id)
+					payload.append('logOperator', localStorage.getItem('name'))
+					axios({
+						method: 'post',
+						url: config.server + '/car/update/img',
+						data: payload,
+						headers: {
+							'Content-Type': 'multipart/form-data'
+						}
+					})
+						.then(doc => {
+							// console.log(doc)
+						})
+						.catch(err => {
+							console.log(err)
+						})
+				})
+			}
+			axios
+				.post(config.server + '/car/update', {
+					_id: this._id,
+					carid: this.carid,
+					cartype: this.cartype,
+					tailgate: this.tailgate,
+					coolstore: this.coolstore,
+					carnote: this.carnote,
+					logOperator: localStorage.getItem('name')
+				})
+				.then(res => {
+					if (res.data.code == 0) {
+						this.error = true
+						this.errormsg = res.data.msg
+						this.getallcar()
+						this.closeDialog()
+						setTimeout(() => {
+							this.error = false
+						}, 3000)
+					} else {
+						this.error = true
+						this.errormsg = res.data.msg
+						setTimeout(() => {
+							this.error = false
+						}, 3000)
+					}
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
+		confirmremove() {
+			axios
+				.post(config.server + '/car/remove', {
+					_id: this._id,
+					logOperator: localStorage.getItem('name')
+				})
+				.then(res => {
+					if (res.data.code == 0) {
+						this.error = true
+						this.errormsg = res.data.msg
+						this.removeDialog = false
+						this.getallcar()
+						setTimeout(() => {
+							this.error = false
+						}, 3000)
+					} else {
+						this.error = true
+						this.errormsg = res.data.msg
+						setTimeout(() => {
+							this.error = false
+						}, 3000)
+					}
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
 
-    getallcar() {
-      axios
-        .post(config.server + '/car/get', {
-          pageSize: this.pageSize,
-          pageNow: this.pageNow
-        })
-        .then(res => {
-          this.allcarinfo = res.data.doc
-          this.pageCount = Math.ceil(res.data.count / this.pageSize)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
+		getallcar() {
+			axios
+				.post(config.server + '/car/get', {
+					pageSize: this.pageSize,
+					pageNow: this.pageNow
+				})
+				.then(res => {
+					this.allcarinfo = res.data.doc
+					this.pageCount = Math.ceil(res.data.count / this.pageSize)
+				})
+				.catch(err => {
+					console.log(err)
+				})
+		},
 
-    addcar() {
-      if (!this.carid || !this.cartype) {
-        if (!this.carid) {
-          this.idErr = true
-        } else {
-          this.idErr = false
-        }
-        if (!this.cartype) {
-          this.typeErr = true
-        } else {
-          this.typeErr = false
-        }
-      } else {
-        let payload = new FormData()
-        let maxSize = 200 * 1024 //200KB
+		addcar() {
+			if (!this.carid || !this.cartype) {
+				if (!this.carid) {
+					this.idErr = true
+				} else {
+					this.idErr = false
+				}
+				if (!this.cartype) {
+					this.typeErr = true
+				} else {
+					this.typeErr = false
+				}
+			} else {
+				let payload = new FormData()
+				let maxSize = 200 * 1024 //200KB
 
-        if (this.updateImage) {
-          lrz(this.updateImage, {
-            quality: 0.5
-          }).then(res => {
-            if (this.updateImage.size > maxSize) {
-              this.updateImage = res.file
-            }
-            payload.append('image', this.updateImage)
-            payload.append('carid', this.carid)
-            payload.append('cartype', this.cartype)
-            payload.append('tailgate', this.tailgate)
-            payload.append('coolstore', this.coolstore)
-            payload.append('carnote', this.carnote)
-            payload.append('logOperator', localStorage.getItem('name'))
-            axios({
-              method: 'post',
-              url: config.server + '/car',
-              data: payload,
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            })
-              .then(response => {
-                if (response.data.code == 1 || response.data.code == 2) {
-                  this.error = true
-                  this.errormsg = response.data.msg
-                  setTimeout(() => {
-                    this.error = false
-                  }, 3000)
-                } else {
-                  this.getallcar()
-                  this.error = true
-                  this.errormsg = response.data.msg
-                  this.closeDialog()
-                  this.carid = ''
-                  this.cartype = ''
-                  this.tailgate = ''
-                  this.carnote = ''
-                  this.selectorCarType = '车型'
-                  setTimeout(() => {
-                    this.error = false
-                  }, 3000)
-                }
-              })
-              .catch(error => {
-                console.log(error)
-                error = true
-                errormsg = error
-                setTimeout(() => {
-                  this.error = false
-                }, 3000)
-              })
-          })
-        } else {
-          payload.append('carid', this.carid)
-          payload.append('cartype', this.cartype)
-          payload.append('tailgate', this.tailgate)
-          payload.append('coolstore', this.coolstore)
-          payload.append('carnote', this.carnote)
-          payload.append('logOperator', localStorage.getItem('name'))
-          axios({
-            method: 'post',
-            url: config.server + '/car',
-            data: payload,
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
-            .then(response => {
-              if (response.data.code == 1 || response.data.code == 2) {
-                this.error = true
-                this.errormsg = response.data.msg
-                setTimeout(() => {
-                  this.error = false
-                }, 3000)
-              } else {
-                this.getallcar()
-                this.error = true
-                this.errormsg = response.data.msg
-                this.closeDialog()
-                this.carid = ''
-                this.cartype = ''
-                this.tailgate = ''
-                this.carnote = ''
-                this.selectorCarType = '车型'
-                setTimeout(() => {
-                  this.error = false
-                }, 3000)
-              }
-            })
-            .catch(error => {
-              console.log(error)
-              error = true
-              errormsg = error
-              setTimeout(() => {
-                this.error = false
-              }, 3000)
-            })
-        }
-      }
-    }
-  }
+				if (this.updateImage) {
+					lrz(this.updateImage, {
+						quality: 0.5
+					}).then(res => {
+						if (this.updateImage.size > maxSize) {
+							this.updateImage = res.file
+						}
+						payload.append('image', this.updateImage)
+						payload.append('carid', this.carid)
+						payload.append('cartype', this.cartype)
+						payload.append('tailgate', this.tailgate)
+						payload.append('coolstore', this.coolstore)
+						payload.append('carnote', this.carnote)
+						payload.append('logOperator', localStorage.getItem('name'))
+						axios({
+							method: 'post',
+							url: config.server + '/car',
+							data: payload,
+							headers: {
+								'Content-Type': 'multipart/form-data'
+							}
+						})
+							.then(response => {
+								if (response.data.code == 1 || response.data.code == 2) {
+									this.error = true
+									this.errormsg = response.data.msg
+									setTimeout(() => {
+										this.error = false
+									}, 3000)
+								} else {
+									this.getallcar()
+									this.error = true
+									this.errormsg = response.data.msg
+									this.closeDialog()
+									this.carid = ''
+									this.cartype = ''
+									this.tailgate = ''
+									this.carnote = ''
+									this.selectorCarType = '车型'
+									setTimeout(() => {
+										this.error = false
+									}, 3000)
+								}
+							})
+							.catch(error => {
+								console.log(error)
+								error = true
+								errormsg = error
+								setTimeout(() => {
+									this.error = false
+								}, 3000)
+							})
+					})
+				} else {
+					payload.append('carid', this.carid)
+					payload.append('cartype', this.cartype)
+					payload.append('tailgate', this.tailgate)
+					payload.append('coolstore', this.coolstore)
+					payload.append('carnote', this.carnote)
+					payload.append('logOperator', localStorage.getItem('name'))
+					axios({
+						method: 'post',
+						url: config.server + '/car',
+						data: payload,
+						headers: {
+							'Content-Type': 'multipart/form-data'
+						}
+					})
+						.then(response => {
+							if (response.data.code == 1 || response.data.code == 2) {
+								this.error = true
+								this.errormsg = response.data.msg
+								setTimeout(() => {
+									this.error = false
+								}, 3000)
+							} else {
+								this.getallcar()
+								this.error = true
+								this.errormsg = response.data.msg
+								this.closeDialog()
+								this.carid = ''
+								this.cartype = ''
+								this.tailgate = ''
+								this.carnote = ''
+								this.selectorCarType = '车型'
+								setTimeout(() => {
+									this.error = false
+								}, 3000)
+							}
+						})
+						.catch(error => {
+							console.log(error)
+							error = true
+							errormsg = error
+							setTimeout(() => {
+								this.error = false
+							}, 3000)
+						})
+				}
+			}
+		}
+	}
 }
 </script>
 
 <style scoped>
 #car {
-  width: 80%;
-  margin: 15px auto;
+	width: 80%;
+	margin: 15px auto;
 }
 
 .dialog-title {
-  text-align: left;
-  padding: 26px 0 0 26px;
+	text-align: left;
+	padding: 26px 0 0 26px;
 }
 
 .dialog-title span {
-  font-size: 30px;
+	font-size: 30px;
 }
 
 .dialog-body {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  flex-flow: row wrap;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row wrap;
+	flex-flow: row wrap;
 }
 
 .dialog-body-item {
-  flex-basis: 40%;
-  text-align: left;
-  margin: 0 auto;
+	flex-basis: 40%;
+	text-align: left;
+	margin: 0 auto;
 }
 
 .topbutton {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  flex-flow: row wrap;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row wrap;
+	flex-flow: row wrap;
 }
 
 .topbutton-left {
-  flex-basis: 30%;
-  text-align: left;
-  margin: 0 auto;
+	flex-basis: 30%;
+	text-align: left;
+	margin: 0 auto;
 }
 
 .topbutton-left input {
-  margin: 5px auto;
-  border-radius: 10px;
-  width: 300px;
-  height: 35px;
-  text-align: center;
-  -web-kit-appearance: none;
-  -moz-appearance: none;
-  outline: 0;
-  font-size: 16px;
+	margin: 5px auto;
+	border-radius: 10px;
+	width: 300px;
+	height: 35px;
+	text-align: center;
+	-web-kit-appearance: none;
+	-moz-appearance: none;
+	outline: 0;
+	font-size: 16px;
 }
 
 .topbutton-right {
-  margin: 0 auto;
-  flex-basis: 50%;
-  text-align: right;
+	margin: 0 auto;
+	flex-basis: 50%;
+	text-align: right;
 }
 
 .centertable {
-  margin: 15px auto;
+	margin: 15px auto;
 }
 
 .tabletitle {
-  border: 1px solid;
-  border-left: none;
-  border-right: none;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
-  font-size: 18px;
-  font-weight: 600;
-  height: 40px;
-  line-height: 35px;
+	border: 1px solid;
+	border-left: none;
+	border-right: none;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+	font-size: 18px;
+	font-weight: 600;
+	height: 40px;
+	line-height: 35px;
 }
 
 .tabletitle-item {
-  margin: 0 auto;
-  width: 250px;
-  font-size: 16px;
-  line-height: 29px;
+	margin: 0 auto;
+	width: 250px;
+	font-size: 16px;
+	line-height: 29px;
 }
 
 .tablebody {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
-  line-height: 50px;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+	line-height: 50px;
 }
 
 .editdialog {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
-  width: 600px;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+	width: 600px;
 }
 
 .rmDialog-center {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
-  margin: 20px;
-  font-size: 20px;
-  width: 100%;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
+	margin: 20px;
+	font-size: 20px;
+	width: 100%;
 }
 
 .rmDialog-center-left {
-  flex-basis: 35%;
-  text-align: left;
+	flex-basis: 35%;
+	text-align: left;
 }
 
 .rmDialog-center-right {
-  flex-basis: 65%;
-  text-align: left;
+	flex-basis: 65%;
+	text-align: left;
 }
 
 .dialog-body-radio {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  flex-flow: row wrap;
-  border-bottom: 1px solid;
-  padding: 12px 0;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row wrap;
+	flex-flow: row wrap;
+	border-bottom: 1px solid;
+	padding: 12px 0;
 }
 
 .dialog-body-radio input {
-  width: 20px;
-  height: 20px;
+	width: 20px;
+	height: 20px;
 }
 
 .dialog-body-radio-item {
-  flex-basis: 45%;
-  margin: 0 auto;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row;
-  flex-flow: row;
+	flex-basis: 45%;
+	margin: 0 auto;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row;
+	flex-flow: row;
 }
 
 .windowdialog {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 20;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: 20;
 }
 
 .photoarea {
-  margin: 0 auto;
-  text-align: center;
-  border: 3px dashed #696969;
-  width: 250px;
-  height: 250px;
-  background-color: #eee;
+	margin: 0 auto;
+	text-align: center;
+	border: 3px dashed #696969;
+	width: 250px;
+	height: 250px;
+	background-color: #eee;
 }
 
 .photoarea img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .deldialog {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  flex-flow: row wrap;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-flow: row wrap;
+	flex-flow: row wrap;
 }
 
 .deldialog-left {
-  flex-basis: 50%;
-  padding: 12px 0;
+	flex-basis: 50%;
+	padding: 12px 0;
 }
 
 .deldialog-right {
-  flex-basis: 50%;
+	flex-basis: 50%;
 }
 
 .selector-body {
-  height: 0;
-  transition: 0.25s;
-  overflow: hidden;
-  border-left: 1px solid #eee;
-  border-right: 1px solid #eee;
-  overflow: auto;
-  position: absolute;
-  z-index: 100;
-  background-color: #eee;
+	height: 0;
+	transition: 0.25s;
+	overflow: hidden;
+	border-left: 1px solid #eee;
+	border-right: 1px solid #eee;
+	overflow: auto;
+	position: absolute;
+	z-index: 100;
+	background-color: #eee;
 }
 
 .box {
-  cursor: pointer;
-  padding: 7px;
-  border-bottom: 1px solid #eee;
-  transition: 0.5s;
-  width: 243px;
+	cursor: pointer;
+	padding: 7px;
+	border-bottom: 1px solid #eee;
+	transition: 0.5s;
+	width: 243px;
 }
 
 .box:hover {
-  background-color: dodgerblue;
-  color: white;
-  transition: 0.5s;
+	background-color: dodgerblue;
+	color: white;
+	transition: 0.5s;
 }
 
 .checkcar-back {
-  background: rgba(0, 0, 0, 0.12);
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 23;
+	background: rgba(0, 0, 0, 0.12);
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 23;
 }
 
 .checkcar-front {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 24;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 24;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .checkcar-front-box {
-  background: #fff;
+	background: #fff;
 }
 
 .checkcar-front-box-top {
-  font-size: 18px;
-  height: 30px;
-  line-height: 30px;
-  background: #ff5252;
-  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-    0 1px 5px 0 rgba(0, 0, 0, 0.12);
-  color: #fff;
-  text-align: left;
-  padding-left: 24px;
+	font-size: 18px;
+	height: 30px;
+	line-height: 30px;
+	background: #ff5252;
+	box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+		0 1px 5px 0 rgba(0, 0, 0, 0.12);
+	color: #fff;
+	text-align: left;
+	padding-left: 24px;
 }
 
 .checkcar-front-box-body {
-  padding: 20px 24px;
+	padding: 20px 24px;
 }
 
 .checkcar-front-box-body-title {
-  display: flex;
-  display: -webkit-flex;
-  font-size: 16px;
-  color: #6a6a6a;
-  border-bottom: 1px solid #696969;
-  height: 30px;
+	display: flex;
+	display: -webkit-flex;
+	font-size: 16px;
+	color: #6a6a6a;
+	border-bottom: 1px solid #696969;
+	height: 30px;
 }
 
 .checkcar-front-box-body-title-item {
-  width: 60px;
-  text-align: left;
+	width: 60px;
+	text-align: left;
 }
 
 .checkcar-front-box-body-item {
-  display: flex;
-  display: -webkit-flex;
-  height: 30px;
-  line-height: 30px;
+	display: flex;
+	display: -webkit-flex;
+	height: 30px;
+	line-height: 30px;
 }
 
 .checkcar-front-box-body-center-item {

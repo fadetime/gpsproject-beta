@@ -12,7 +12,6 @@ import 'animate.css'
 import imgUrl from '../public/js/imgUrl'
 
 Vue.filter('imgurl',imgUrl)
-
 Vue.use(VueMaterial)
 Vue.config.productionTip = false
 Vue.filter('datefilter',DateFilter)
