@@ -305,7 +305,7 @@
 							<div style="width:420px">
 								<div class="step-third" style="border: 3px dashed #448aff;padding:10px;position: relative;">
 									<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 90px;top:-24px">
-										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 4px;color:#fff;font-size:16px">所有客户</span>
+										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 4px;color:#fff;font-size:16px">{{leftWindowInfo}}</span>
 									</div>
 									<div class="step-third-title" style="background-color: #f4f4f4">
 										<div class="step-third-title-item" style="width:40px;"></div>
@@ -323,14 +323,14 @@
 										</div>
 									</div>
 									<div style="overflow:auto;">
-										<md-card md-with-hover v-for="(item,index) in allclientbinfo" :key="index">
+										<md-card md-with-hover v-for="(item,index) in aLineInfo.timesclientb" :key="index">
 											<md-card-content>
 												<div class="step-third-title-body">
 													<label :for="index" class="step-third-title">
-														<input type="checkbox" :id="index" :value="item" v-model="aLineInfo.timesclientb" style="width:25px;height:25px">
+														<input type="checkbox" :id="index" :value="item" v-model="choiceClient" style="width:25px;height:25px">
 														<span class="step-third-title-item" style="width:150px">{{item.clientbname}}</span>
 														<span class="step-third-title-item" style="width:80px">{{item.clientbserve.clientaname}}</span>
-														<span class="step-third-title-item" style="width:50px">{{item.clientbarea.areaName}}</span>
+														<span class="step-third-title-item" style="width:50px" @click="testMethod">{{item.clientbarea.areaName}}</span><!-- test method -->
 													</label>
 													<div @click="clientInfoMethod(item)">
 														<md-icon class="step-third-title-item" style="width:50px">info</md-icon>
@@ -365,8 +365,8 @@
 											</div>
 										</div>
 										<div class="tab4-body" style="height:404px;overflow-y:auto">
-											<draggable v-model="aLineInfo.timesclientb" :options="{group:'timesclientb'}" @start="drag=true" @end="drag=false">
-												<md-card md-with-hover v-for="(item,index) in aLineInfo.timesclientb" :key="index">
+											<draggable v-model="choiceClient" :options="{group:'timesclientb'}" @start="drag=true" @end="drag=false">
+												<md-card md-with-hover v-for="(item,index) in choiceClient" :key="index" class="choiceClientCard">
 													<md-card-content>
 														<div style="display:flex">
 															<div class="step-third-title-item" style="width:170px" @click="clientInfoMethod(item)">
@@ -476,9 +476,11 @@
 								<span v-if="item.timeLimit">{{item.timeLimit}}</span>
 								<span v-else>无要求</span>
 							</div>
-							<div style="flex-basis:15%;text-align:center;margin:0 auto" @click="openMapMethod(item)">
-								<md-icon v-if="item.position" style="color:green">map</md-icon>
-								<md-icon v-else style="color:rgb(249,207,151)">map</md-icon>
+							<div v-if="item.position" style="flex-basis:15%;text-align:center;margin:0 auto" @click="openMapMethod(item)">
+								<md-icon style="color:green">map</md-icon>
+							</div>
+							<div v-else style="flex-basis:15%;text-align:center;margin:0 auto" @click="noMapMethod">
+								<md-icon style="color:rgb(249,207,151)">map</md-icon>
 							</div>
 						</div>
 					</div>
@@ -487,6 +489,7 @@
 
 			<md-dialog-actions style="margin:0 auto">
 				<md-button class="md-raised md-primary" @click="detaildialog = false" style="font-size:16px;width:80px;height:30px">关闭</md-button>
+				<!-- <md-button v-if="missionShipping" class="md-raised md-primary" @click="editMissionMethod" style="font-size:16px;width:80px;height:30px">修改</md-button> -->
 				<md-button class="md-raised md-accent" @click="removeMission" style="font-size:16px;width:80px;height:30px">删除</md-button>
 			</md-dialog-actions>
 		</md-dialog>
@@ -498,10 +501,12 @@
 
 		<!-- confirm dialog start -->
 		<md-dialog :md-active.sync="confirmDialog">
-			<md-dialog-title>确认删除此任务</md-dialog-title>
+			<md-dialog-title>
+				<span style="font-size:16px">确认删除此任务?</span>
+			</md-dialog-title>
 			<md-dialog-actions>
-				<md-button class="md-raised md-primary" @click="confirmDialog = false" style="font-size:20px;width:100px;height:40px">关闭</md-button>
-				<md-button class="md-raised md-accent" @click="confirmRemoveMission" style="font-size:20px;width:100px;height:40px">确认</md-button>
+				<md-button class="md-raised md-primary" @click="confirmDialog = false" style="font-size:16px;width:80px;height:30px">关闭</md-button>
+				<md-button class="md-raised md-accent" @click="confirmRemoveMission" style="font-size:16px;width:80px;height:30px">确认</md-button>
 			</md-dialog-actions>
 		</md-dialog>
 
@@ -624,7 +629,7 @@
 												<span>驾照</span>
 											</div>
 											<div style="width:100px" class="choseListDialog-item">
-												<span>电话</span>
+												<span>删除</span>
 											</div>
 										</div>
 										<div class="choseListDialog-body" v-for="(item,index) in usedDriverInfo" :key="index">
@@ -638,9 +643,9 @@
 											<label :for="item._id" style="width:90px" class="choseListDialog-item">
 												<span>{{item.dirvercard}}</span>
 											</label>
-											<label :for="item._id" style="width:100px" class="choseListDialog-item">
-												<span>{{item.dirverphone}}</span>
-											</label>
+											<div style="width:100px" class="choseListDialog-item" @click="removeUsedDriverMethod(item._id,index)">
+												<md-icon style="color:red">clear</md-icon>
+											</div>
 										</div>
 									</div>
 									<div v-else style="width: 330px;">
@@ -716,12 +721,24 @@
 		</transition>
 		<!-- tip box end -->
 		<!-- map box start -->
-		<div v-if="showMapBox" class="mapbox-back"></div>
-		<div v-if="showMapBox" class="mapbox-front" @click="showMapBox = false">
-			<div class="mapbox-front-box">
-				此功能正在添加中。。。
+		<transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+			<div v-if="showMapBox" class="mapbox-back"></div>
+		</transition>
+		<transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+			<div v-if="showMapBox" class="mapbox-front" @click.self.prevent="showMapBox = false">
+				<div class="mapbox-front-box">
+					<div class="mapbox-front-box-top">
+						<span>货运地图</span>
+					</div>
+					<div style="width:400px;height:400px">
+						<div id="driverMap" style="height:400px"></div>
+					</div>
+					<div>
+						<md-button class="md-raised md-primary" @click="showMapBox = false" style="font-size:18px;width:80px;height:30px">取消</md-button>
+					</div>
+				</div>
 			</div>
-		</div>
+		</transition>
 		<!-- map box end -->
 	</div>
 </template>
@@ -802,7 +819,17 @@ export default {
       showTipDialog: false,
       showMapBox: false,
       dirverChangePageFlag: true,
-      usedDriverInfo: []
+      usedDriverInfo: [],
+      latlng: { lat: -34.397, lng: 150.644 },
+      map: null,
+      _id: '',
+      missionShipping: null,
+      editMode: false,
+      newLine: [],
+      NCDate: null,
+      leftWindowInfo: '线路客户',
+      choiceClient: [], //与ebuy后台对比后的客户数据
+      comparedClient: [] //ebuy后台获取的单条线路数据
     }
   },
   computed: {
@@ -866,10 +893,117 @@ export default {
     this.getMission()
     this.getAllArea()
   },
+
+  activated() {
+    this.getMission()
+  },
+
   methods: {
+    testMethod() {
+      console.log(this.aLineInfo.timesclientb)
+    },
+    getNewControllerLine(item) {
+      let tempDate
+      if (item === 'today') {
+        tempDate = new Date().toDateString()
+      } else if (item === 'tomorrow') {
+        tempDate = new Date().getTime() + 86400000
+        tempDate = new Date(tempDate).toDateString()
+      } else {
+        tempDate = new Date(this.missionDateModePacker).toDateString()
+      }
+      axios
+        .post(config.newC + '/suppliers/getVegCarsCustomers', {
+          dateQuery: {
+            start: tempDate,
+            end: tempDate
+          }
+        })
+        .then(doc => {
+          if (doc.data.status === 0) {
+            this.newLine = doc.data.payload
+          } else {
+            console.log('获取管理后台数据失败')
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    noMapMethod() {
+      this.showTipDialog = true
+      this.errormsg = '该客户还未送达'
+      setTimeout(() => {
+        this.showTipDialog = false
+      }, 3000)
+    },
+    editMissionMethod() {
+      this.getallclientb()
+      this.getalltimes()
+      this.getalldirver('nameFindDriver')
+      this.getallcar('idFindCar')
+      this.editMode = true
+      setTimeout(() => {
+        console.log(this.alldirverinfo)
+      }, 300)
+
+      console.log('###')
+      this.selectorText = this.missionShipping.missionline
+      this.detaildialog = false
+      this.addDialog = true
+      this.aLineInfo.timesname = this.missionShipping.missionline
+      this.aLineInfo.timesnote = this.missionShipping.missionnote
+      this.choseLine = {
+        timesname: this.missionShipping.missionline,
+        timesnote: this.missionShipping.missionnote
+      }
+    },
+    removeUsedDriverMethod(usedDriver, index) {
+      axios
+        .post(config.server + '/times/useddriverdel', {
+          _id: this._id,
+          usedDriver: usedDriver
+        })
+        .then(doc => {
+          console.log(doc)
+          if (doc.data.code === 0) {
+            this.usedDriverInfo.splice(index, 1)
+          } else {
+            this.errormsg = '删除常用司机时出现错误'
+            this.showTipDialog = true
+            setTimeout(() => {
+              this.showTipDialog = false
+            }, 2000)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     openMapMethod(item) {
-      console.log(item)
       this.showMapBox = true
+      // test map start
+      this.latlng = item.position
+      let infowindow = new google.maps.InfoWindow({
+        content: item.clientbname + '的货物位置'
+      })
+      setTimeout(() => {
+        let map = new google.maps.Map(document.getElementById('driverMap'), {
+          center: this.latlng,
+          zoom: 14
+        })
+        let marker = new google.maps.Marker({
+          position: this.latlng,
+          // icon:'https://maps.google.com/mapfiles/kml/shapes/parking_lot_maps.png',
+          map: map
+        })
+        infowindow.open(map, marker)
+        google.maps.event.addListener(marker, 'click', () => {
+          infowindow.open(map, marker)
+        })
+      }, 200)
+
+      // test map end
     },
     changeNeedPicMethod(item) {
       axios
@@ -925,22 +1059,19 @@ export default {
       } else {
         if (this.tempData) {
           this.selectorDriver = this.tempData
+
           axios
-            .post(config.server + '/useddriver', {
-              car_id: this.tempData._id
+            .post(config.server + '/times/useddriveradd', {
+              _id: this._id,
+              usedDriver: this.tempData._id
             })
             .then(doc => {
-              if (doc.data.code != 0) {
-                this.errormsg = '更新常用司机异常'
-                this.showTipDialog = true
-                setTimeout(() => {
-                  this.showTipDialog = false
-                }, 3000)
-              }
+              console.log('添加常用成功')
             })
             .catch(err => {
               console.log(err)
             })
+
           this.tempData = ''
         }
       }
@@ -957,30 +1088,11 @@ export default {
         this.radioCar = this.selectorCar._id
         this.isCarList = true
       } else {
-        axios
-          .get(config.server + '/useddriver')
-          .then(doc => {
-            if (doc.data.code === 0 && doc.data.doc) {
-              this.usedDriverInfo = []
-              this.alldirverinfo.forEach(element => {
-                doc.data.doc.car_id.forEach(item => {
-                  if (item === element._id) {
-                    this.usedDriverInfo.push(element)
-                  }
-                })
-              })
-            } else {
-              console.log('used driver of number is 0')
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
         this.radioDriver = this.selectorDriver._id
         this.isCarList = false
       }
       this.choseListDialog = true
-      this.radioCar = this.selectorCar._id
+      //   this.radioCar = this.selectorCar._id
     },
     removeChoseClient(item) {
       this.aLineInfo.timesclientb.splice(item, 1)
@@ -995,6 +1107,11 @@ export default {
     },
 
     searClientMethods() {
+      if (this.searchClient) {
+        this.leftWindowInfo = '搜索结果'
+      } else {
+        this.leftWindowInfo = '线路客户'
+      }
       this.clientArea = ''
       this.clientServe = ''
       if (!this.searchClient) {
@@ -1237,6 +1354,15 @@ export default {
     },
 
     choseitem(item) {
+      this._id = item._id
+      this.usedDriverInfo = []
+      this.alldirverinfo.forEach(element => {
+        item.usedDriver.forEach(element2 => {
+          if (element2 === element._id) {
+            this.usedDriverInfo.push(element)
+          }
+        })
+      })
       this.choseLine = item
       this.bodyHide()
       this.aLineInfo = item
@@ -1269,11 +1395,22 @@ export default {
     // 下拉选择框部分 end
 
     //获取所有司机数据 start
-    getalldirver() {
+    getalldirver(item) {
       axios
         .get(config.server + '/dirver')
         .then(res => {
-          this.alldirverinfo = res.data
+          if (item === 'nameFindDriver') {
+            //如果需要司机反查
+            console.log('enter find driver')
+            this.alldirverinfo = res.data
+            this.alldirverinfo.forEach(element => {
+              if (element.dirvername === this.missionShipping.missiondirver) {
+                this.selectorDriver = element
+              }
+            })
+          } else {
+            this.alldirverinfo = res.data
+          }
         })
         .catch(err => {
           console.log(err)
@@ -1281,6 +1418,11 @@ export default {
     },
     //获取所有司机数据 end
     openMissionInfo(item) {
+      if (item.count === 0) {
+        this.missionShipping = item
+      } else {
+        this.missionShipping = null
+      }
       let time = new Date(item.missiondate).toLocaleDateString()
       this.detaildialog = true
       this.missionline = item.missionline
@@ -1322,6 +1464,14 @@ export default {
     },
     setDone(id, index) {
       if (id == 'first') {
+        if (this.missionDateModeButtonCSS1) {
+          this.getNewControllerLine('today')
+        } else if (this.missionDateModeButtonCSS2) {
+          this.getNewControllerLine('tomorrow')
+        } else {
+          this.getNewControllerLine('other')
+        }
+
         if (this.choseLine == '') {
           this.firstStepError = '未选择线路'
         } else if (
@@ -1331,22 +1481,37 @@ export default {
           this.firstStepError = '未选日期'
         } else {
           this[id] = true
-          this.selectorDriver = {
-            dirvername: this.aLineInfo.timesdirver.dirvername,
-            dirverphone: this.aLineInfo.timesdirver.dirverphone,
-            dirvercard: this.aLineInfo.timesdirver.dirvercard,
-            dirvernote: this.aLineInfo.timesdirver.dirvernote,
-            _id: this.aLineInfo.timesdirver._id,
-            image: this.aLineInfo.timesdirver.image
+          if (!this.editMode) {
+            this.selectorDriver = {
+              dirvername: this.aLineInfo.timesdirver.dirvername,
+              dirverphone: this.aLineInfo.timesdirver.dirverphone,
+              dirvercard: this.aLineInfo.timesdirver.dirvercard,
+              dirvernote: this.aLineInfo.timesdirver.dirvernote,
+              _id: this.aLineInfo.timesdirver._id,
+              image: this.aLineInfo.timesdirver.image
+            }
+            this.selectorCar = {
+              carid: this.aLineInfo.timescar.carid,
+              cartype: this.aLineInfo.timescar.cartype,
+              tailgate: this.aLineInfo.timescar.tailgate,
+              carnote: this.aLineInfo.timescar.carnote,
+              _id: this.aLineInfo.timescar._id,
+              image: this.aLineInfo.timescar.image
+            }
+          } else {
+            this.choseLine = {
+              timesdirver: {
+                dirvername: this.missionShipping.missiondirver
+              },
+              timescar: {
+                carid: this.missionShipping.carid
+              }
+            }
+            this.aLineInfo = {
+              timesclientb: this.missionShipping.missionclient
+            }
           }
-          this.selectorCar = {
-            carid: this.aLineInfo.timescar.carid,
-            cartype: this.aLineInfo.timescar.cartype,
-            tailgate: this.aLineInfo.timescar.tailgate,
-            carnote: this.aLineInfo.timescar.carnote,
-            _id: this.aLineInfo.timescar._id,
-            image: this.aLineInfo.timescar.image
-          }
+
           this.firstStepError = null
           if (index) {
             this.active = index
@@ -1374,6 +1539,35 @@ export default {
           this[id] = true
           this.secondStepError = null
           if (index) {
+            if (index === 'third') {
+              //if have NcNumber
+              if (this.aLineInfo.NcNumber) {
+                // let tempLine
+                this.newLine.forEach(element => {
+                  if (element.carNumber == this.aLineInfo.NcNumber) {
+                    this.comparedClient = element
+                  }
+                })
+                this.choiceClient = []
+                this.aLineInfo.timesclientb.forEach(element1 => {
+                  this.comparedClient.customers.forEach(element2 => {
+                    if (element1.clientbname == element2) {
+                      this.choiceClient.push(element1)
+                    }
+                  })
+                })
+              } else {
+                this.choiceClient = this.aLineInfo.timesclientb
+                this.showTipDialog = true
+                this.errormsg = '获取ebuy后台数据失败'
+                setTimeout(() => {
+                  this.showTipDialog = false
+                }, 3000)
+              }
+              console.log('###ebuy后台数据###')
+              console.log(this.comparedClient)
+              console.log('#################')
+            }
             this.active = index
           }
         }
@@ -1381,6 +1575,7 @@ export default {
     },
 
     addMission() {
+      this.editMode = false
       this.selectorText = '请选择'
       this.active = 'first'
       this.aLineInfo = ''
@@ -1390,6 +1585,7 @@ export default {
       this.getalldirver()
       this.getallcar()
       this.addDialog = true
+      this.getNewControllerLine()
     },
     getAllArea() {
       axios
@@ -1412,11 +1608,20 @@ export default {
         })
     },
 
-    getallcar() {
+    getallcar(item) {
       axios
         .get(config.server + '/car')
         .then(res => {
-          this.allcarinfo = res.data
+          if (item === 'idFindCar') {
+            console.log(res.data)
+            res.data.forEach(element => {
+              if (element._id === this.missionShipping.Car_id) {
+                this.selectorCar = element
+              }
+            })
+          } else {
+            this.allcarinfo = res.data
+          }
         })
         .catch(err => {
           console.log(err)
@@ -1480,6 +1685,7 @@ export default {
     },
 
     saveMission() {
+      this.$set(this.aLineInfo, 'timesclientb', this.choiceClient)
       let query = {}
       this.aLineInfo.timesclientb.forEach(element => {
         if (element.clientbserve == null) {
@@ -1887,8 +2093,22 @@ export default {
 }
 
 .mapbox-front-box {
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+    rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
   background: #fff;
-  width: 100px;
-  height: 100px;
+}
+
+.mapbox-front-box-top {
+  height: 35px;
+  font-size: 18px;
+  line-height: 35px;
+  background: #d44950;
+  color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+    rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.choiceClientCard:hover {
+  background-color: #eee !important;
 }
 </style>

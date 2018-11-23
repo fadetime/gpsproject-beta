@@ -96,6 +96,26 @@
             </div>
         </div>
 
+        <div class="itemflex" style="margin:10px 0 0 0">
+            <div :class="boxborder2">
+                <div :class="titleclass2" style="text-align: left;">
+                    <span>
+                        初始化
+                    </span>
+                </div>
+                <div class="itemflex" style="color:#696969;line-height:52px">
+                    <div style="width:400px;display:flex;justify-content:space-between">
+                        <div style="text-align:left">
+                            <span style="font-size:16px;">初始化设置(初装或新功能缺失时使用)</span>
+                        </div>
+                        <div style="display:flex;justify-content:right;">
+                            <md-button class="md-raised" @click="setInitMethod">启动</md-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- <div class="itemflex" style="margin:10px 0 0 0">
             <div :class="boxborder2">
                 <div :class="titleclass2" style="text-align: left;">
@@ -136,216 +156,233 @@
 </template>
 
 <script>
-import config from "../../public/js/config.js";
-import axios from "axios";
+import config from '../../public/js/config.js'
+import axios from 'axios'
 export default {
-    data() {
-        return {
-            oldpassword: "",
-            newpassword: "",
-            confirmpassword: "",
-            showNumber: "",
-            buttonNumber: "",
-            boxborder1: "item1",
-            titleclass1: "item1-title",
-            boxborder2: "item1",
-            titleclass2: "item1-title",
-            showLogo: true,
-            disableButton: true,
-            oldpswErrMsg: false,
-            newpswErrMsg: false,
-            comfirmpswErrMsg: false,
-            newPswErrText: "请确认新密码",
-            softVersion: "",
-            softText: "",
-            errorMessage: "",
-            errorDialog: false
-        };
-    },
-    mounted() {
-        this.softVersion = config.version;
-        this.softText = config.text;
-        if (localStorage.showLogo) {
-            this.showLogo = false;
-        }
-    },
-    computed: {
-        oldpasswordErrClass() {
-            return {
-                "md-invalid": this.oldpswErrMsg
-            };
-        },
-        newpasswordErrClass() {
-            return {
-                "md-invalid": this.newpswErrMsg
-            };
-        },
-        confirmpasswordErrClass() {
-            return {
-                "md-invalid": this.comfirmpswErrMsg
-            };
-        }
-    },
-    methods: {
-        goLogPage(item){
-            if(item === 'journal'){
-                this.$router.push('/log')
-            }else{
-                this.$router.push('/staff')
-            }
-            
-        },
-        getfocus(floor) {
-            if (floor === "l1") {
-                this.titleclass1 = "item1-title2";
-                this.boxborder1 = "item1focus";
-            } else {
-                this.titleclass2 = "item1-title2";
-                this.boxborder2 = "item1focus";
-            }
-        },
-        lossfocus(floor) {
-            if (floor === "l1") {
-                this.titleclass1 = "item1-title";
-                this.boxborder1 = "item1";
-            } else {
-                this.titleclass2 = "item1-title";
-                this.boxborder2 = "item1";
-            }
-        },
-        checkDisable(item) {
-            if (item === "switch") {
-                this.disableButton = false;
-                if (this.showLogo) {
-                    localStorage.removeItem("showLogo");
-                } else {
-                    localStorage.setItem("showLogo", this.showLogo);
-                }
-            } else {
-                if (
-                    this.oldpassword ||
-                    this.newpassword ||
-                    this.confirmpassword ||
-                    this.showNumber ||
-                    this.buttonNumber
-                ) {
-                    this.disableButton = false;
-                } else {
-                    this.disableButton = true;
-                }
-            }
-        },
-        logout() {
-            this.$router.push("/login");
-            let item = null;
-            this.$store.dispatch("setToken", item);
-            localStorage.removeItem("token");
-        },
-        submitbutton() {
-            if (this.oldpassword || this.newpassword || this.confirmpassword) {
-                if (!this.oldpassword) {
-                    this.oldpswErrMsg = true;
-                } else {
-                    this.oldpswErrMsg = false;
-                }
-                if (!this.newpassword) {
-                    this.newpswErrMsg = true;
-                } else {
-                    this.newpswErrMsg = false;
-                }
-                if (!this.confirmpassword) {
-                    this.comfirmpswErrMsg = true;
-                } else {
-                    this.comfirmpswErrMsg = false;
-                }
-                if (this.newpassword != this.confirmpassword) {
-                    this.newPswErrText = "确认密码不一致";
-                    this.comfirmpswErrMsg = true;
-                } else {
-                    this.comfirmpswErrMsg = false;
-                    this.newPswErrText = "请确认新密码";
-                }
-                if (
-                    this.oldpswErrMsg === false &&
-                    this.newpswErrMsg === false &&
-                    this.comfirmpswErrMsg === false
-                ) {
-                    console.log("send msg to server");
-                    axios
-                        .post(config.server + "/admin", {
-                            oldpassword: this.oldpassword,
-                            newpassword: this.newpassword
-                        })
-                        .then(doc => {
-                            console.log(doc);
-                            this.errorMessage = doc.data.msg;
-                            this.errorDialog = true;
-                            setTimeout(() => {
-                                this.errorDialog = false;
-                            }, 2000);
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
-                }
-            } else {
-                window.location.reload();
-                console.log("not change psw");
-            }
-        },
-        cancelbutton() {
-            this.$router.push("/");
-        }
+  data() {
+    return {
+      oldpassword: '',
+      newpassword: '',
+      confirmpassword: '',
+      showNumber: '',
+      buttonNumber: '',
+      boxborder1: 'item1',
+      titleclass1: 'item1-title',
+      boxborder2: 'item1',
+      titleclass2: 'item1-title',
+      showLogo: true,
+      disableButton: true,
+      oldpswErrMsg: false,
+      newpswErrMsg: false,
+      comfirmpswErrMsg: false,
+      newPswErrText: '请确认新密码',
+      softVersion: '',
+      softText: '',
+      errorMessage: '',
+      errorDialog: false
     }
-};
+  },
+  mounted() {
+    this.softVersion = config.version
+    this.softText = config.text
+    if (localStorage.showLogo) {
+      this.showLogo = false
+    }
+  },
+  computed: {
+    oldpasswordErrClass() {
+      return {
+        'md-invalid': this.oldpswErrMsg
+      }
+    },
+    newpasswordErrClass() {
+      return {
+        'md-invalid': this.newpswErrMsg
+      }
+    },
+    confirmpasswordErrClass() {
+      return {
+        'md-invalid': this.comfirmpswErrMsg
+      }
+    }
+  },
+  methods: {
+    setInitMethod() {
+      axios
+        .get(config.server + '/admin/init1')
+        .then(doc => {
+          console.log(doc)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      axios
+        .get(config.server + '/admin/init2')
+        .then(doc => {
+          console.log(doc)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    goLogPage(item) {
+      if (item === 'journal') {
+        this.$router.push('/log')
+      } else {
+        this.$router.push('/staff')
+      }
+    },
+    getfocus(floor) {
+      if (floor === 'l1') {
+        this.titleclass1 = 'item1-title2'
+        this.boxborder1 = 'item1focus'
+      } else {
+        this.titleclass2 = 'item1-title2'
+        this.boxborder2 = 'item1focus'
+      }
+    },
+    lossfocus(floor) {
+      if (floor === 'l1') {
+        this.titleclass1 = 'item1-title'
+        this.boxborder1 = 'item1'
+      } else {
+        this.titleclass2 = 'item1-title'
+        this.boxborder2 = 'item1'
+      }
+    },
+    checkDisable(item) {
+      if (item === 'switch') {
+        this.disableButton = false
+        if (this.showLogo) {
+          localStorage.removeItem('showLogo')
+        } else {
+          localStorage.setItem('showLogo', this.showLogo)
+        }
+      } else {
+        if (
+          this.oldpassword ||
+          this.newpassword ||
+          this.confirmpassword ||
+          this.showNumber ||
+          this.buttonNumber
+        ) {
+          this.disableButton = false
+        } else {
+          this.disableButton = true
+        }
+      }
+    },
+    logout() {
+      this.$router.push('/login')
+      let item = null
+      this.$store.dispatch('setToken', item)
+      localStorage.removeItem('token')
+    },
+    submitbutton() {
+      if (this.oldpassword || this.newpassword || this.confirmpassword) {
+        if (!this.oldpassword) {
+          this.oldpswErrMsg = true
+        } else {
+          this.oldpswErrMsg = false
+        }
+        if (!this.newpassword) {
+          this.newpswErrMsg = true
+        } else {
+          this.newpswErrMsg = false
+        }
+        if (!this.confirmpassword) {
+          this.comfirmpswErrMsg = true
+        } else {
+          this.comfirmpswErrMsg = false
+        }
+        if (this.newpassword != this.confirmpassword) {
+          this.newPswErrText = '确认密码不一致'
+          this.comfirmpswErrMsg = true
+        } else {
+          this.comfirmpswErrMsg = false
+          this.newPswErrText = '请确认新密码'
+        }
+        if (
+          this.oldpswErrMsg === false &&
+          this.newpswErrMsg === false &&
+          this.comfirmpswErrMsg === false
+        ) {
+          console.log('send msg to server')
+          axios
+            .post(config.server + '/admin', {
+              oldpassword: this.oldpassword,
+              newpassword: this.newpassword
+            })
+            .then(doc => {
+              console.log(doc)
+              this.errorMessage = doc.data.msg
+              this.errorDialog = true
+              setTimeout(() => {
+                this.errorDialog = false
+              }, 2000)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+        }
+      } else {
+        window.location.reload()
+        console.log('not change psw')
+      }
+    },
+    cancelbutton() {
+      this.$router.push('/')
+    }
+  }
+}
 </script>
 
 <style scoped>
 .itemflex {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .item1 {
-    border: 3px dashed #696969;
-    width: 500px;
+  border: 3px dashed #696969;
+  width: 500px;
 }
 
 .item1focus {
-    border: 3px dashed #448aff;
-    width: 500px;
+  border: 3px dashed #448aff;
+  width: 500px;
 }
 
 .item1-title {
-    font-size: 20px;
-    color: #696969;
-    padding: 10px 0 10px 10px;
-    transition: 1s;
+  font-size: 20px;
+  color: #696969;
+  padding: 10px 0 10px 10px;
+  transition: 1s;
 }
 
 .item1-title2 {
-    font-size: 20px;
-    color: #448aff;
-    padding: 10px 0 10px 10px;
-    transition: 1s;
+  font-size: 20px;
+  color: #448aff;
+  padding: 10px 0 10px 10px;
+  transition: 1s;
 }
 
 .tipbox span {
-    display: none;
+  display: none;
 }
 
 .tipbox:hover span {
-    display: block;
+  display: block;
 }
 
 .tipstart:hover + .tipbox span {
-    display: block;
-    position: absolute;
-    width: 150px;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
-    border-radius: 20px;
-    top: 50px;
-    right: 0px;
+  display: block;
+  position: absolute;
+  width: 150px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: 20px;
+  top: 50px;
+  right: 0px;
 }
 </style>

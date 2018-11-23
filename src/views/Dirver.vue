@@ -296,6 +296,10 @@ export default {
 	mounted() {
 		this.getalldirver()
 	},
+	activated() {
+		this.getalldirver()
+	},
+
 	computed: {
 		pages: function() {
 			let pag = []

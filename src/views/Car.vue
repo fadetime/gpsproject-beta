@@ -331,6 +331,21 @@
 							<div class="checkcar-front-box-body-title-item">
 								<span>刹车</span>
 							</div>
+							<div class="checkcar-front-box-body-title-item">
+								<span>其他</span>
+							</div>
+							<div class="checkcar-front-box-body-title-item">
+								<span>框数(前)</span>
+							</div>
+							<div class="checkcar-front-box-body-title-item">
+								<span>框数(后)</span>
+							</div>
+							<div class="checkcar-front-box-body-title-item">
+								<span>清洁</span>
+							</div>
+							<div class="checkcar-front-box-body-title-item">
+								<span>描述</span>
+							</div>
 						</div>
 						<div class="checkcar-front-box-body-item" v-for="(item , index) in carLog" :key="index">
 							<div style="width:160px;text-align:left">
@@ -362,6 +377,23 @@
 							<div class="checkcar-front-box-body-center-item" style="width:58px">
 								<md-icon v-if="item.brake" style="color:green">check_circle</md-icon>
 								<md-icon v-else style="color:red">cancel</md-icon>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:58px">
+								<md-icon v-if="!item.text" style="color:green">check_circle</md-icon>
+								<md-icon v-else style="color:red">cancel</md-icon>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:58px">
+								<span>{{item.boxNum}}</span>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:58px">
+								<span>{{item.boxNumAgain}}</span>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:58px">
+								<md-icon v-if="item.clean" style="color:green">check_circle</md-icon>
+								<md-icon v-else style="color:red">cancel</md-icon>
+							</div>
+							<div class="checkcar-front-box-body-center-item" style="width:140px;text-align:center">
+								<span>{{item.text}}</span>
 							</div>
 						</div>
 					</div>
@@ -425,6 +457,10 @@ export default {
 	},
 
 	mounted() {
+		this.getallcar()
+	},
+
+	activated() {
 		this.getallcar()
 	},
 
