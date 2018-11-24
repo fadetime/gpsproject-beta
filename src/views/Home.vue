@@ -322,7 +322,7 @@
 											信息
 										</div>
 									</div>
-									<div style="overflow:auto;">
+									<div style="height:404px;overflow-y:auto">
 										<md-card md-with-hover v-for="(item,index) in aLineInfo.timesclientb" :key="index">
 											<md-card-content>
 												<div class="step-third-title-body">
@@ -330,7 +330,7 @@
 														<input type="checkbox" :id="index" :value="item" v-model="choiceClient" style="width:25px;height:25px">
 														<span class="step-third-title-item" style="width:150px">{{item.clientbname}}</span>
 														<span class="step-third-title-item" style="width:80px">{{item.clientbserve.clientaname}}</span>
-														<span class="step-third-title-item" style="width:50px" @click="testMethod">{{item.clientbarea.areaName}}</span><!-- test method -->
+														<span class="step-third-title-item" style="width:50px">{{item.clientbarea.areaName}}</span>
 													</label>
 													<div @click="clientInfoMethod(item)">
 														<md-icon class="step-third-title-item" style="width:50px">info</md-icon>
@@ -346,8 +346,8 @@
 							<!-- right window start -->
 							<div>
 								<div style="padding-left:10px">
-									<div style="border: 3px dashed #448aff;padding:10px;position: relative;">
-										<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 36px;top:-24px">
+									<div style="border: 3px dashed #448aff;padding:10px;position: relative;display: flex;flex-direction: column;align-items: center;">
+										<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;top:-24px">
 											<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 4px;color:#fff;font-size:16px">已选客户</span>
 										</div>
 										<div class="tab4-title" style="height:32px;line-height:30px;margin-bottom: 2px;background-color: #f4f4f4">
@@ -364,7 +364,7 @@
 												<span>删除</span>
 											</div>
 										</div>
-										<div class="tab4-body" style="height:404px;overflow-y:auto">
+										<div class="tab4-body" style="height:398px;overflow-y:auto">
 											<draggable v-model="choiceClient" :options="{group:'timesclientb'}" @start="drag=true" @end="drag=false">
 												<md-card md-with-hover v-for="(item,index) in choiceClient" :key="index" class="choiceClientCard">
 													<md-card-content>
@@ -391,7 +391,7 @@
 							</div>
 							<!-- right window end -->
 						</div>
-						<div style="display:flex;justify-content: center;">
+						<!-- <div style="display:flex;justify-content: center;">
 							<div class="client-page-bar" v-if=" clientTablePageCount != 1 && clientTablePageCount">
 								<ul style="width:455px;margin-top: 5px;">
 									<li @click="clientTablePageButton('A')">
@@ -408,7 +408,7 @@
 									</li>
 								</ul>
 							</div>
-						</div>
+						</div> -->
 						<div style="text-align:center">
 							<md-button class="md-raised md-primary" @click="saveMission">保存</md-button>
 						</div>
@@ -899,9 +899,6 @@ export default {
   },
 
   methods: {
-    testMethod() {
-      console.log(this.aLineInfo.timesclientb)
-    },
     getNewControllerLine(item) {
       let tempDate
       if (item === 'today') {
@@ -1095,7 +1092,7 @@ export default {
       //   this.radioCar = this.selectorCar._id
     },
     removeChoseClient(item) {
-      this.aLineInfo.timesclientb.splice(item, 1)
+      this.choiceClient.splice(item, 1)
     },
     clientInfoMethod(item) {
       clearTimeout(this.timeOutName)
@@ -1705,7 +1702,8 @@ export default {
           logOperator: localStorage.getItem('name'),
           missionclient: this.aLineInfo.timesclientb.map(item => {
             let obj = {
-              clientbname: item.clientbname,
+			  clientbname: item.clientbname,
+			  clientbnameEN: item.clientbnameEN,
               clientbaddress: item.clientbaddress,
               clientbphone: item.clientbphone,
               clientbpostcode: item.clientbpostcode,
@@ -1729,7 +1727,8 @@ export default {
           logOperator: localStorage.getItem('name'),
           missionclient: this.aLineInfo.timesclientb.map(item => {
             let obj = {
-              clientbname: item.clientbname,
+			  clientbname: item.clientbname,
+			  clientbnameEN: item.clientbnameEN,
               clientbaddress: item.clientbaddress,
               clientbphone: item.clientbphone,
               clientbpostcode: item.clientbpostcode,
@@ -1753,7 +1752,8 @@ export default {
           logOperator: localStorage.getItem('name'),
           missionclient: this.aLineInfo.timesclientb.map(item => {
             let obj = {
-              clientbname: item.clientbname,
+			  clientbname: item.clientbname,
+			  clientbnameEN: item.clientbnameEN,
               clientbaddress: item.clientbaddress,
               clientbphone: item.clientbphone,
               clientbpostcode: item.clientbpostcode,

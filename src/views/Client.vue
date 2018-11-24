@@ -199,14 +199,17 @@
 					</div>
 					<div class="dialogb-body-right">
 						<md-field style="margin:0px auto" :class="classname">
-							<label style="font-size:18px">客户名称</label>
+							<label style="font-size:16px">客户名称</label>
 							<md-input v-model="clientbname" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
 							<span class="md-error">客户标识信息，必填项目</span>
 						</md-field>
-
-						<div style="display:flex;width:180px;padding-top:15px">
+						<md-field style="margin:23px auto 0 auto">
+							<label style="font-size:16px">英文名称</label>
+							<md-input v-model="clientbnameEN" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
+						</md-field>
+						<div style="display:flex;width:180px;padding-top:8px">
 							<md-field style="margin:12px auto" :class="classser">
-								<label for="choseArea" style="font-size:18px">所属地区</label>
+								<label for="choseArea" style="font-size:16px">所属地区</label>
 								<md-select v-model="choseArea" name="choseArea" id="choseArea" style="border-bottom: 1px solid #000;font-size:20px;height:40px;padding-top:6px;width:150px">
 									<md-option :value="item._id" v-for="(item,index) in allAreaArray" :key="index">{{item.areaName}}</md-option>
 								</md-select>
@@ -214,9 +217,9 @@
 							</md-field>
 							<md-button :class="classA" @click="openAreaWindow" style="font-size:18px;min-width:60px;height:30px;margin-top: 36px;">区域</md-button>
 						</div>
-						<div style="padding-top:15px">
+						<div style="padding-top:5px">
 							<md-field style="margin:0 auto" :class="classadd">
-								<label style="font-size:18px">客户地址</label>
+								<label style="font-size:16px">客户地址</label>
 								<md-input v-model="clientbaddress" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
 								<span class="md-error">客户地址标识信息</span>
 							</md-field>
@@ -229,7 +232,7 @@
 
 						<div style="padding-top:10px">
 							<div>
-								<span style="font-size:18px;color:rgba(0,0,0,0.54)">必要拍照</span>
+								<span style="font-size:16px;color:rgba(0,0,0,0.54)">必要拍照</span>
 							</div>
 							<div class="dialogb-body-status" style="padding-top:7px">
 								<div class="dialogb-body-status-left">
@@ -252,13 +255,13 @@
 						</div>
 
 						<md-field style="margin:10px auto" :class="classpho">
-							<label style="font-size:18px">客户电话</label>
+							<label style="font-size:16px">客户电话</label>
 							<md-input v-model="clientbphone" style="border-bottom: 1px solid #000;font-size:16px;height:40px" @change="check_phone($event)"></md-input>
 							<span class="md-error">请输入8位纯数字</span>
 						</md-field>
 
 						<md-field style="margin:20px auto" :class="classser">
-							<label for="choseaname" style="font-size:18px">服务商</label>
+							<label for="choseaname" style="font-size:16px">服务商</label>
 							<md-select v-model="choseaname" name="choseaname" id="choseaname" style="border-bottom: 1px solid #000;font-size:18px;height:44px;padding-top:6px">
 								<md-option :value="item._id" v-for="(item,index) in allclientainfo" :key="index">{{item.clientaname}}</md-option>
 							</md-select>
@@ -267,7 +270,7 @@
 					</div>
 					<div class="dialogb-body-right">
 						<div style="margin:8px auto;border-bottom:1px solid #000">
-							<div style="font-size:18px;color: rgba(0, 0, 0, 0.54);padding-bottom: 7px;">
+							<div style="font-size:16px;color: rgba(0, 0, 0, 0.54);padding-bottom: 7px;">
 								<span>要求时间</span>
 							</div>
 							<div style="display:flex;display:-webkit-flex;height:32px;cursor: pointer;" @click="showTimePick = true">
@@ -282,14 +285,14 @@
 						</div>
 
 						<md-field style="margin:10px auto" :class="classpos">
-							<label style="font-size:18px">客户邮编</label>
+							<label style="font-size:16px">客户邮编</label>
 							<md-input v-model="clientbpostcode" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
 							<span class="md-error">客户邮编标识信息</span>
 						</md-field>
 
 						<div style="padding-top:10px">
 							<div>
-								<span style="font-size:18px;color:rgba(0,0,0,0.54)">客户状态</span>
+								<span style="font-size:16px;color:rgba(0,0,0,0.54)">客户状态</span>
 							</div>
 							<div class="dialogb-body-status" style="padding-top:8px">
 								<div class="dialogb-body-status-left">
@@ -846,6 +849,7 @@ export default {
 			classA: 'md-raised',
 			classB: 'md-raised md-primary',
 			clientbname: '',
+			clientbnameEN:'',
 			clientbaddress: '',
 			clientbphone: '',
 			clientbstatus: 'active',
@@ -1163,12 +1167,14 @@ export default {
 					console.log(err)
 				})
 		},
+
 		removeArea(item) {
 			this.areaName = item.areaName
 			this.areaDescription = item.areaDescription
 			this._id = item._id
 			this.confirmRemove = true
 		},
+
 		editArea(item) {
 			console.log(item)
 			this.areaEditMode = true
@@ -1177,10 +1183,12 @@ export default {
 			this._id = item._id
 			this.areaDescription = item.areaDescription
 		},
+
 		closeAreaWindowMethod() {
 			this.areaWindow = false
 			this.addNewAreaMode = false
 		},
+
 		getAllarea() {
 			axios
 				.get(config.server + '/area/')
@@ -1191,6 +1199,7 @@ export default {
 					console.log(err)
 				})
 		},
+
 		onConfirm() {
 			this.SMSErr = false
 			this.openSMS = false
@@ -1206,6 +1215,7 @@ export default {
 					console.log(err)
 				})
 		},
+
 		openSendSMS() {
 			if (this.openSMS) {
 				this.nowDate = new Date()
@@ -1216,9 +1226,11 @@ export default {
 				}
 			}
 		},
+
 		uploadFile() {
 			document.getElementById('upload_file').click()
 		},
+
 		fileChange(el) {
 			if (typeof FileReader === 'undefined') {
 				return alert('浏览器不支持上传图片')
@@ -1230,6 +1242,7 @@ export default {
 			this.clientImage = ''
 			el.target.value = ''
 		},
+
 		check_phone(event, type) {
 			if (type === 'date') {
 				let value = event.target.value
@@ -1423,6 +1436,7 @@ export default {
 				this.savemodeb = true
 				this.showDialogb = true
 				this.clientbname = ''
+				this.clientbnameEN = ''
 				this.clientbaddress = ''
 				this.clientbphone = ''
 				this.clientbpostcode = ''
@@ -1447,6 +1461,7 @@ export default {
 				this.clientamail = ''
 			}
 		},
+
 		getallclienta() {
 			axios
 				.post(config.server + '/clienta/get', {
@@ -1461,6 +1476,7 @@ export default {
 					console.log(err)
 				})
 		},
+
 		getallclientb() {
 			axios
 				.post(config.server + '/clientb/get', {
@@ -1475,6 +1491,7 @@ export default {
 					console.log(err)
 				})
 		},
+
 		addclienta() {
 			this.selectedSMSDate = ''
 			if (this.openSMS) {
@@ -1734,6 +1751,7 @@ export default {
 				}
 			}
 		},
+
 		addclientb() {
 			if (
 				!this.clientbname ||
@@ -1781,6 +1799,7 @@ export default {
 					payload.append('image', this.updateImage)
 				}
 				payload.append('clientbname', this.clientbname)
+				payload.append('clientbnameEN', this.clientbnameEN)
 				payload.append('clientbaddress', this.clientbaddress)
 				payload.append('clientbphone', this.clientbphone)
 				payload.append('clientbstatus', this.clientbstatus)
@@ -1844,6 +1863,7 @@ export default {
 			this.showDialogb = true
 			this._id = item._id
 			this.clientbname = item.clientbname
+			this.clientbnameEN = item.clientbnameEN
 			this.clientbaddress = item.clientbaddress
 			this.clientbphone = item.clientbphone
 			this.clientbstatus = item.clientbstatus
@@ -1936,6 +1956,7 @@ export default {
 					.post(config.server + '/clientb/edit', {
 						_id: this._id,
 						clientbname: this.clientbname,
+						clientbnameEN: this.clientbnameEN,
 						clientbaddress: this.clientbaddress,
 						clientbphone: this.clientbphone,
 						clientbstatus: this.clientbstatus,
