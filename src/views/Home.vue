@@ -12,22 +12,22 @@
 			<md-card style="background-color: #eff3f5">
 				<md-card-content>
 					<div class="tabletitle">
-						<div class="tabletitle-item">
+						<div class="tabletitle-item-wide">
 							<span>车次</span>
 						</div>
-						<div class="tabletitle-item">
+						<div class="tabletitle-item-wide">
 							<span>司机</span>
 						</div>
-						<div class="tabletitle-item">
+						<div class="tabletitle-item-wide">
 							<span>车牌号</span>
 						</div>
-						<div class="tabletitle-item">
+						<div class="tabletitle-item-narrow">
 							<span>已送</span>
 						</div>
-						<div class="tabletitle-item">
+						<div class="tabletitle-item-narrow">
 							<span>总量</span>
 						</div>
-						<div class="tabletitle-item">
+						<div class="tabletitle-item-wide">
 							<span>联系方式</span>
 						</div>
 					</div>
@@ -38,12 +38,12 @@
 				<md-card md-with-hover v-for="(item,index) in allmission" :key="index" style="background-color: #eff3f5">
 					<md-card-content>
 						<div @click="openMissionInfo(item)" class="tabletitle2">
-							<span class="tabletitle-item">{{item.missionline}}</span>
-							<span class="tabletitle-item">{{item.missiondirver}}</span>
-							<span class="tabletitle-item">{{item.missioncar}}</span>
-							<span class="tabletitle-item">{{item.count}}</span>
-							<span class="tabletitle-item">{{item.missionclient.length}}</span>
-							<span class="tabletitle-item">{{item.missionphone}}</span>
+							<span class="tabletitle-item-wide">{{item.missionline}}</span>
+							<span class="tabletitle-item-wide">{{item.missiondirver}}</span>
+							<span class="tabletitle-item-wide">{{item.missioncar}}</span>
+							<span class="tabletitle-item-narrow">{{item.count}}</span>
+							<span class="tabletitle-item-narrow">{{item.missionclient.length}}</span>
+							<span class="tabletitle-item-wide">{{item.missionphone}}</span>
 						</div>
 					</md-card-content>
 				</md-card>
@@ -53,7 +53,7 @@
 			<img src="../../public/img/ebuyLogo.png" alt="easylogo" style="margin:100px auto;width:500px">
 		</div>
 		<!-- add dialog start -->
-		<md-dialog :md-active.sync="addDialog" style="width:812px">
+		<md-dialog :md-active.sync="addDialog" style="width:878px">
 			<md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:4px">
 				<span style="color:#fff">添加今日任务</span>
 			</md-dialog-title>
@@ -147,17 +147,14 @@
 								</div>
 							</div>
 						</div>
-
 						<div style="text-align:center">
 							<md-button class="md-raised md-primary " @click="setDone('first', 'second')">下一步</md-button>
 						</div>
-
 					</md-step>
 
 					<md-step id="second" md-label="司机车辆" :md-done.sync="second" :md-error="secondStepError">
 						<div>
 							<div class="step-second" id="addmissionsecond">
-
 								<div class="dialog-3" style="padding: 5px;">
 									<div @click="openChoiceList('driver')" style="margin:0 auto">
 										<div style="width:370px;height:282px;position: relative;box-shadow:0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);overflow: hidden;">
@@ -204,10 +201,8 @@
 															<div style="flex-basis:70%;text-align: center;">
 																<span>{{selectorDriver.dirvernote}}</span>
 															</div>
-
 														</div>
 													</div>
-
 												</div>
 											</div>
 										</div>
@@ -357,6 +352,12 @@
 											<div>
 												<span>拍照</span>
 											</div>
+											<div style="width:45px;padding-left:5px">
+												<span>置顶</span>
+											</div>
+											<div style="width:45px;padding-left:5px">
+												<span>置底</span>
+											</div>
 											<div class="step-third-title-item" style="width:50px">
 												<span>信息</span>
 											</div>
@@ -374,6 +375,12 @@
 															</div>
 															<div>
 																<md-switch v-model="item.isNeedPic" style="margin:0" @change="changeNeedPicMethod(item)"></md-switch>
+															</div>
+															<div style="width:45px;padding-left:5px" @click="toTheTop(item,index)">
+																<md-icon>vertical_align_top</md-icon>
+															</div>
+															<div style="width:40px;padding-left:5px" @click="toTheBottom(item,index)">
+																<md-icon>vertical_align_bottom</md-icon>
 															</div>
 															<div @click="clientInfoMethod(item)">
 																<md-icon class="step-third-title-item" style="width:50px">info</md-icon>
@@ -410,6 +417,7 @@
 							</div>
 						</div> -->
 						<div style="text-align:center">
+							<md-button class="md-raised md-primary" @click="setDone('third', 'second')">上一步</md-button>
 							<md-button class="md-raised md-primary" @click="saveMission">保存</md-button>
 						</div>
 					</md-step>
@@ -900,6 +908,14 @@ export default {
   },
 
   methods: {
+		toTheTop(item, index) {
+      this.choiceClient.splice(index, 1)
+      this.choiceClient.unshift(item)
+    },
+    toTheBottom(item, index) {
+      this.choiceClient.splice(index, 1)
+      this.choiceClient.push(item)
+    },
 	getNewControllerLine(item) {
 	  let tempDate
 	  if (item === 'today') {
@@ -1569,7 +1585,10 @@ export default {
 			this.active = index
 		  }
 		}
-	  }
+		}
+		if (id == 'third') {
+			this.active = index
+		}
 	},
 
 	addMission() {
@@ -1847,13 +1866,18 @@ export default {
   flex-flow: row wrap;
 }
 
-.tabletitle-item {
+.tabletitle-item-narrow {
   margin: 0 auto;
-  width: 250px;
-  font-size: 20px;
+	flex-basis: 10%;
+  font-size: 18px;
   line-height: 39px;
 }
-
+.tabletitle-item-wide {
+  margin: 0 auto;
+	flex-basis: 20%;
+  font-size: 18px;
+  line-height: 39px;
+}
 .tablebody {
   display: -webkit-flex;
   display: flex;
