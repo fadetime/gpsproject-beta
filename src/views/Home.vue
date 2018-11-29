@@ -53,9 +53,17 @@
 			<img src="../../public/img/ebuyLogo.png" alt="easylogo" style="margin:100px auto;width:500px">
 		</div>
 		<!-- add dialog start -->
-		<md-dialog :md-active.sync="addDialog" style="width:878px">
-			<md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:4px">
-				<span style="color:#fff">添加今日任务</span>
+		<md-dialog :md-active.sync="addDialog" id="newmission">
+			<!-- style="width:878px" -->
+			<md-dialog-title style="font-size:18px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:0;margin-bottom:4px">
+				<div style="display:flex;display:-webkit-flex;justify-content: space-between;">
+					<div style="line-height: 48px;padding-left:24px">
+						<span style="color:#fff">添加今日任务</span>
+					</div>
+					<div class="adddialog-top-button">
+						<md-button class="md-raised" style="background: #ff5252;color:#fff;font-size: 16px" @click="closeAddDialogMethod">关闭</md-button>
+					</div>
+				</div>
 			</md-dialog-title>
 			<md-dialog-content style="padding:0">
 				<md-steppers md-linear :md-active-step.sync="active">
@@ -147,7 +155,7 @@
 								</div>
 							</div>
 						</div>
-						<div style="text-align:center">
+						<div class="dialog-first-body-bottom" style="text-align:center">
 							<md-button class="md-raised md-primary " @click="setDone('first', 'second')">下一步</md-button>
 						</div>
 					</md-step>
@@ -264,7 +272,7 @@
 								</div>
 
 							</div>
-							<div style="text-align:center">
+							<div class="step-second-button" style="text-align:center">
 								<md-button class="md-raised md-primary" @click="setDone('second', 'first')">上一步</md-button>
 								<md-button class="md-raised md-primary" @click="setDone('second', 'third')">下一步</md-button>
 							</div>
@@ -274,10 +282,10 @@
 
 					<md-step id="third" md-label="确认客户" style="padding:0 24px">
 						<div style="display:flex;display: -webkit-flex;padding-bottom: 8px;justify-content: space-between;">
-							<div>
+							<div class="third-body-search">
 								<input class="clientsearch" type="text" v-model="searchClient" @keyup.enter="searClientMethods" placeholder="搜索客户名称">
 							</div>
-							<div style="display: -webkit-flex;display: flex;">
+							<div class="third-body-top-right" style="display: -webkit-flex;display: flex;">
 								<div style="width:160px;padding-left: 10px;">
 									<md-field style="padding-top:16px;margin: 0;">
 										<md-select v-model="clientServe" name="clientServe" id="clientServe" placeholder="筛选服务商">
@@ -295,9 +303,9 @@
 								</div>
 							</div>
 						</div>
-						<div style="display:flex;display:-webkit-flex;padding-top:20px">
+						<div class="third-body" style="display:flex;display:-webkit-flex;padding-top:20px;">
 							<!-- left window start -->
-							<div style="width:420px">
+							<div>
 								<div class="step-third" style="border: 3px dashed #448aff;padding:10px;position: relative;">
 									<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 90px;top:-24px">
 										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 4px;color:#fff;font-size:16px">{{leftWindowInfo}}</span>
@@ -317,7 +325,7 @@
 											信息
 										</div>
 									</div>
-									<div style="height:404px;overflow-y:auto">
+									<div class="third-body-leftbox" style="overflow-y:auto">
 										<md-card md-with-hover v-for="(item,index) in leftBoxArray" :key="index">
 											<md-card-content>
 												<div class="step-third-title-body">
@@ -346,10 +354,10 @@
 											<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 4px;color:#fff;font-size:16px">已选客户</span>
 										</div>
 										<div class="tab4-title" style="height:32px;line-height:30px;margin-bottom: 2px;background-color: #f4f4f4">
-											<div class="step-third-title-item" style="width:176px">
+											<div class="step-third-title-item" style="width:142px;padding-left:16px;text-align:left">
 												<span>客户名称</span>
 											</div>
-											<div>
+											<div style="width:45px;">
 												<span>拍照</span>
 											</div>
 											<div style="width:45px;padding-left:5px">
@@ -365,15 +373,15 @@
 												<span>删除</span>
 											</div>
 										</div>
-										<div class="tab4-body" style="height:398px;overflow-y:auto">
+										<div id="tab4-body" class="tab4-body" style="overflow-y:auto;">
 											<draggable v-model="choiceClient" :options="{group:'timesclientb'}" @start="drag=true" @end="drag=false">
 												<md-card md-with-hover v-for="(item,index) in choiceClient" :key="index" class="choiceClientCard">
 													<md-card-content>
 														<div style="display:flex">
-															<div class="step-third-title-item" style="width:170px" @click="clientInfoMethod(item)">
+															<div class="step-third-title-item" style="width:142px;padding-left:16px;text-align:left" @click="clientInfoMethod(item)">
 																<span>{{item.clientbname}}</span>
 															</div>
-															<div>
+															<div style="width:45px;">
 																<md-switch v-model="item.isNeedPic" style="margin:0" @change="changeNeedPicMethod(item)"></md-switch>
 															</div>
 															<div style="width:45px;padding-left:5px" @click="toTheTop(item,index)">
@@ -416,7 +424,7 @@
 								</ul>
 							</div>
 						</div> -->
-						<div style="text-align:center">
+						<div class="third-body-button" style="text-align:center">
 							<md-button class="md-raised md-primary" @click="setDone('third', 'second')">上一步</md-button>
 							<md-button class="md-raised md-primary" @click="saveMission">保存</md-button>
 						</div>
@@ -458,15 +466,19 @@
 						<div style="flex-basis:30%;text-align:center;margin:0 auto">
 							<span>名字</span>
 						</div>
+						<div style="flex-basis:15%;text-align:center;margin:0 auto">
+							<span>备注</span>
+						</div>
 						<div style="flex-basis:20%;text-align:center;margin:0 auto">
 							<span>时间</span>
 						</div>
 						<div style="flex-basis:15%;text-align:center;margin:0 auto">
 							<span>要求时间</span>
 						</div>
-						<div style="flex-basis:15%;text-align:center;margin:0 auto">
+						<!-- 位置需ssl -->
+						<!-- <div style="flex-basis:15%;text-align:center;margin:0 auto">
 							<span>位置</span>
-						</div>
+						</div> -->
 					</div>
 					<div style="height:400px;overflow:auto;">
 						<div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;padding:5px 0" v-for="(item,index) in missionclient" :key="index">
@@ -476,6 +488,10 @@
 							<div style="flex-basis:30%;text-align:center;margin:0 auto">
 								{{item.clientbname}}
 							</div>
+							<div style="flex-basis:15%;text-align:center;margin:0 auto">
+								<span v-if="item.note">{{item.note}}</span>
+								<span v-else>无备注</span>
+							</div>
 							<div style="flex-basis:20%;text-align:center;margin:0 auto">
 								<span v-if="item.finishdate">{{item.finishdate | timefilter}}</span>
 								<span v-else style="color:#f9cf97">未送达</span>
@@ -484,12 +500,12 @@
 								<span v-if="item.timeLimit">{{item.timeLimit}}</span>
 								<span v-else>无要求</span>
 							</div>
-							<div v-if="item.position" style="flex-basis:15%;text-align:center;margin:0 auto" @click="openMapMethod(item)">
+							<!-- <div v-if="item.position" style="flex-basis:15%;text-align:center;margin:0 auto" @click="openMapMethod(item)">
 								<md-icon style="color:green">map</md-icon>
-							</div>
+							</div> 
 							<div v-else style="flex-basis:15%;text-align:center;margin:0 auto" @click="noMapMethod">
 								<md-icon style="color:rgb(249,207,151)">map</md-icon>
-							</div>
+							</div>-->
 						</div>
 					</div>
 				</div>
@@ -497,7 +513,7 @@
 
 			<md-dialog-actions style="margin:0 auto">
 				<md-button class="md-raised md-primary" @click="detaildialog = false" style="font-size:16px;width:80px;height:30px">关闭</md-button>
-				<!-- <md-button v-if="missionShipping" class="md-raised md-primary" @click="editMissionMethod" style="font-size:16px;width:80px;height:30px">修改</md-button> -->
+				<md-button class="md-raised md-primary" @click="showEditMissionBox = true" style="font-size:16px;width:80px;height:30px">修改</md-button>
 				<md-button class="md-raised md-accent" @click="removeMission" style="font-size:16px;width:80px;height:30px">删除</md-button>
 			</md-dialog-actions>
 		</md-dialog>
@@ -517,7 +533,6 @@
 				<md-button class="md-raised md-accent" @click="confirmRemoveMission" style="font-size:16px;width:80px;height:30px">确认</md-button>
 			</md-dialog-actions>
 		</md-dialog>
-
 		<!-- confirm dialog end -->
 		<!-- client info window start -->
 		<transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutRight">
@@ -748,6 +763,144 @@
 			</div>
 		</transition>
 		<!-- map box end -->
+
+		<!-- edit mission start -->
+		<transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+			<div v-if="showEditMissionBox" class="mapbox-back"></div>
+		</transition>
+		<transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+			<div v-if="showEditMissionBox" class="mapbox-front" @click.self.prevent="showEditMissionBox = false">
+				<div class="mapbox-front-box">
+					<div class="mapbox-front-box-top">
+						<span>修改任务</span>
+					</div>
+					<div>
+						<md-button class="md-raised" @click="editMissionClientMethod" style="font-size:18px;width:80px;height:30px">修改客户</md-button>
+					</div>
+					<div>
+						<md-button class="md-raised md-primary" @click="showEditMissionBox = false" style="font-size:18px;width:80px;height:30px">关闭</md-button>
+					</div>
+				</div>
+			</div>
+		</transition>
+		<!-- edit mission end -->
+
+		<!-- edit mission-client start -->
+		<transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+			<div v-if="showEditMissionClientBox" class="mapbox-back"></div>
+		</transition>
+		<transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+			<div v-if="showEditMissionClientBox" class="mapbox-front" @click.self.prevent="showEditMissionClientBox = false">
+				<div class="mapbox-front-box">
+					<div class="mapbox-front-box-top">
+						<span>客户修改</span>
+					</div>
+					<!-- search input box -->
+					<div>
+						<input class="clientsearch" type="text" v-model="searchClient" @keyup.enter="searClientMethods" placeholder="搜索客户名称">
+					</div>
+
+					<div style="display:flex;display:-webkit-flex;padding-top:30px;padding-left:10px;padding-right:10px">
+							<!-- left window start -->
+							<div style="width:420px">
+								<div class="step-third" style="border: 3px dashed #448aff;padding:10px;position: relative;">
+									<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 90px;top:-24px">
+										<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 4px;color:#fff;font-size:16px">{{leftWindowInfo}}</span>
+									</div>
+									<div class="step-third-title" style="background-color: #f4f4f4">
+										<div class="step-third-title-item" style="width:160px">
+											搜索用户
+										</div>
+										<div class="step-third-title-item" style="width:60px">
+											服务商
+										</div>
+										<div class="step-third-title-item" style="width:65px">
+											区域
+										</div>
+										<div class="step-third-title-item" style="width:40px">
+											信息
+										</div>
+										<div class="step-third-title-item" style="width:40px">
+											添加
+										</div>
+									</div>
+									<div style="height:404px;overflow-y:auto">
+										<md-card md-with-hover v-for="(item,index) in leftBoxArray" :key="index">
+											<md-card-content>
+												<div class="step-third-title-body">
+													<label :for="index" class="step-third-title">
+														<span class="step-third-title-item" style="width:143px">{{item.clientbname}}</span>
+														<span class="step-third-title-item" style="width:80px">{{item.clientbserve.clientaname}}</span>
+														<span class="step-third-title-item" style="width:50px">{{item.clientbarea.areaName}}</span>
+													</label>
+													<div @click="clientInfoMethod(item)">
+														<md-icon class="step-third-title-item" style="width:55px">info</md-icon>
+													</div>
+													<div @click="addToChoiseClientMethod(item)">
+														<md-icon>forward</md-icon>
+													</div>
+												</div>
+											</md-card-content>
+										</md-card>
+									</div>
+
+								</div>
+							</div>
+							<!-- left window end -->
+							<!-- right window start -->
+							<div>
+								<div style="padding-left:10px">
+									<div style="border: 3px dashed #448aff;padding:10px;position: relative;display: flex;flex-direction: column;align-items: center;">
+										<div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;top:-24px">
+											<span style="line-height:32px;margin:0 auto;margin: 10px 64px;padding-left: 4px;color:#fff;font-size:16px">已选客户</span>
+										</div>
+										<div class="tab4-title" style="height:32px;line-height:30px;margin-bottom: 2px;background-color: #f4f4f4">
+											<div class="step-third-title-item" style="width:120px;padding-left:16px;text-align:left">
+												<span>客户名称</span>
+											</div>
+											<div>
+												<span style="font-size:16px">拍照</span>
+											</div>
+											<div class="step-third-title-item" style="width:40px">
+												<span>删除</span>
+											</div>
+										</div>
+										<div class="tab4-body" style="height:398px;overflow-y:auto">
+											<!-- <md-card md-with-hover v-for="(item,index) in choiceClient" :key="index" class="choiceClientCard">
+												<div style="height: 38px;line-height:38px;font-size:16px;border: 1px dashed #6a6a6a;color: #6a6a6a;" >
+													<md-icon>add_circle</md-icon>
+													<span>添加新客户</span>
+												</div>
+											</md-card> -->
+												<md-card md-with-hover v-for="(item,index) in choiceClient" :key="index" class="choiceClientCard">
+													<md-card-content>
+														<div style="display:flex">
+															<div class="step-third-title-item" style="width:120px;padding-left:16px;text-align:left" @click="clientInfoMethod(item)">
+																<span>{{item.clientbname}}</span>
+															</div>
+															<div>
+																<md-switch v-model="item.isNeedPic" style="margin:0" @change="changeNeedPicMethod(item)"></md-switch>
+															</div>
+															<div @click="removeChoiseClientMethod(item,index)">
+																<md-icon class="step-third-title-item" style="width:40px">block</md-icon>
+															</div>
+														</div>
+													</md-card-content>
+												</md-card>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- right window end -->
+						</div>
+					<div>
+						<md-button class="md-raised md-primary" @click="showEditMissionClientBox = false" style="font-size:18px;width:80px;height:30px">关闭</md-button>
+						<md-button class="md-raised md-primary" @click="showEditMissionClientBox = false" style="font-size:18px;width:80px;height:30px">保存</md-button>
+					</div>
+				</div>
+			</div>
+		</transition>
+		<!-- edit mission-client end -->
 	</div>
 </template>
 
@@ -838,7 +991,9 @@ export default {
 	  leftWindowInfo: '线路客户',
 	  choiceClient: [], //与ebuy后台对比后的客户数据
 	  comparedClient: [], //ebuy后台获取的单条线路数据
-	  leftBoxArray: []
+		leftBoxArray: [],
+		showEditMissionBox:false,
+		showEditMissionClientBox:false
 	}
   },
   computed: {
@@ -908,6 +1063,166 @@ export default {
   },
 
   methods: {
+		closeAddDialogMethod(){
+			this.addDialog = false
+		},
+		removeChoiseClientMethod(item,index) {
+			let obj = {
+			  clientbname: item.clientbname,
+			  clientbnameEN: item.clientbnameEN,
+			  clientbaddress: item.clientbaddress,
+			  clientbphone: item.clientbphone,
+			  clientbpostcode: item.clientbpostcode,
+			  clientbserve: item.clientbserve.clientaname,
+			  image: item.image,
+			  isNeedPic: item.isNeedPic,
+			  timeLimit: item.timeLimit
+			}
+			axios.post(config.server + '/mission/delclient',{
+				obj:obj,
+				mission_id: this.missionShipping._id
+			})
+			.then(doc => {
+				console.log(doc)
+				if(doc.data.code === 0){
+					this.choiceClient.splice(index,1)
+				//refresh left box line client while remove choise client
+				// axios.post(config.server + '/times/one',{
+				// 	line_id:this.missionShipping.line_id
+				// })
+				// .then(doc => {
+					
+				// 	this.leftBoxArray = []
+				// 	let tempArray = doc.data.doc.timesclientb
+				// 	console.log(tempArray)
+				// 	let countNum = 0
+				// 	tempArray.forEach(elementX => {
+				// 		this.choiceClient.forEach(elementY => {
+				// 			if(elementX.clientbname === elementY.clientbname){
+				// 				tempArray.splice(countNum,1)
+				// 			}
+				// 		})
+				// 		countNum += 1
+				// 	});
+				// 	setTimeout(() => {
+				// 			this.leftBoxArray = tempArray
+				// 	}, 200);
+					
+				// })
+				// .catch(err => {
+				// 	console.log(err)
+				// })
+				}else{
+					this.errormsg = '删除任务客户出错'
+					this.showTipDialog = true
+					setTimeout(() => {
+						this.showTipDialog = false
+					}, 2000)
+				}
+			})
+			.catch(err => {
+				console.log(err)
+			})
+		},
+		addToChoiseClientMethod(item){
+			console.log(this.choiceClient)
+			let tempFlag = true
+			this.choiceClient.some(element => {
+				if(item.clientbname === element.clientbname){
+					console.log(element.clientbname)
+					tempFlag = false
+					return true
+				}
+			})
+			if(tempFlag){
+				let obj = {
+			  clientbname: item.clientbname,
+			  clientbnameEN: item.clientbnameEN,
+			  clientbaddress: item.clientbaddress,
+			  clientbphone: item.clientbphone,
+			  clientbpostcode: item.clientbpostcode,
+			  clientbserve: item.clientbserve.clientaname,
+			  image: item.image,
+			  isNeedPic: item.isNeedPic,
+			  timeLimit: item.timeLimit
+			}
+			axios.post(config.server + '/mission/addclient',{
+				obj:obj,
+				mission_id: this.missionShipping._id
+			})
+			.then(doc => {
+				console.log(doc)
+				if(doc.data.code === 0) {
+						//refresh choised client table while add client success
+						axios.post(config.server + '/mission/one',{
+							_id:this.missionShipping._id
+						})
+						.then(doc => {
+							this.missionShipping = doc.data
+							this.choiceClient = this.missionShipping.missionclient
+						})
+						.catch(err => {
+							console.log(err)
+						})
+				}else{
+						this.errormsg = '添加任务客户出错'
+						this.showTipDialog = true
+						setTimeout(() => {
+							this.showTipDialog = false
+						}, 2000)
+					}
+				})
+				.catch(err => {
+					console.log(err)
+				})
+			}else{
+				this.errormsg = '选择客户已存在'
+					this.showTipDialog = true
+					setTimeout(() => {
+						this.showTipDialog = false
+					}, 2000)
+			}
+			
+		},
+		editMissionClientMethod(){
+			this.showEditMissionClientBox = true
+			this.detaildialog=false
+			this.showEditMissionBox = false
+			this.choiceClient = this.missionShipping.missionclient
+			axios.post(config.server + '/times/one',{
+				line_id:this.missionShipping.line_id
+			})
+			.then(doc => {
+				this.leftBoxArray = []
+				let tempArray = doc.data.doc.timesclientb
+				console.log('@@@@')
+				console.log(doc.data)
+				console.log('@@@@')
+				let countNum = 0
+				// tempArray.forEach(elementX => {
+				// 	this.missionShipping.missionclient.forEach(elementY => {
+				// 		if(elementX.clientbname == elementY.clientbname){
+				// 			tempArray.splice(countNum,1)
+				// 			console.log('!!!!!')
+				// 			console.log(elementX.clientbname)
+				// 			console.log('!!!!!')
+				// 		}
+				// 	})
+				// 	countNum += 1
+				// });
+				setTimeout(() => {
+						this.leftBoxArray = tempArray
+						this.aLineInfo.timesclientb = this.leftBoxArray
+				}, 200);
+				
+			})
+			.catch(err => {
+				console.log(err)
+			})
+			console.log('#####')
+			console.log(this.missionShipping)
+			console.log('#####')
+		},
 		toTheTop(item, index) {
       this.choiceClient.splice(index, 1)
       this.choiceClient.unshift(item)
@@ -952,25 +1267,26 @@ export default {
 	  }, 3000)
 	},
 	editMissionMethod() {
-	  this.getallclientb()
-	  this.getalltimes()
-	  this.getalldirver('nameFindDriver')
-	  this.getallcar('idFindCar')
-	  this.editMode = true
-	  setTimeout(() => {
-		console.log(this.alldirverinfo)
-	  }, 300)
+		console.log(this.aLineInfo)
+	  // this.getallclientb()
+	  // this.getalltimes()
+	  // this.getalldirver('nameFindDriver')
+	  // this.getallcar('idFindCar')
+	  // this.editMode = true
+	  // setTimeout(() => {
+		// console.log(this.alldirverinfo)
+	  // }, 300)
 
-	  console.log('###')
-	  this.selectorText = this.missionShipping.missionline
-	  this.detaildialog = false
-	  this.addDialog = true
-	  this.aLineInfo.timesname = this.missionShipping.missionline
-	  this.aLineInfo.timesnote = this.missionShipping.missionnote
-	  this.choseLine = {
-		timesname: this.missionShipping.missionline,
-		timesnote: this.missionShipping.missionnote
-	  }
+	  // console.log('###')
+	  // this.selectorText = this.missionShipping.missionline
+	  // this.detaildialog = false
+	  // this.addDialog = true
+	  // this.aLineInfo.timesname = this.missionShipping.missionline
+	  // this.aLineInfo.timesnote = this.missionShipping.missionnote
+	  // this.choseLine = {
+		// timesname: this.missionShipping.missionline,
+		// timesnote: this.missionShipping.missionnote
+	  // }
 	},
 	removeUsedDriverMethod(usedDriver, index) {
 	  axios
@@ -1429,11 +1745,7 @@ export default {
 	},
 	//获取所有司机数据 end
 	openMissionInfo(item) {
-	  if (item.count === 0) {
 		this.missionShipping = item
-	  } else {
-		this.missionShipping = null
-	  }
 	  let time = new Date(item.missiondate).toLocaleDateString()
 	  this.detaildialog = true
 	  this.missionline = item.missionline
@@ -1713,7 +2025,8 @@ export default {
 	  })
 	  if (this.missionDateModeButtonCSS1) {
 		query = {
-		  missionline: this.aLineInfo.timesname,
+			missionline: this.aLineInfo.timesname,
+			line_id:this.aLineInfo._id,
 		  missionnote: this.aLineInfo.timesnote,
 		  missiondirver: this.selectorDriver.dirvername,
 		  missionphone: this.aLineInfo.timesdirver.dirverphone,
@@ -1729,7 +2042,8 @@ export default {
 			  clientbpostcode: item.clientbpostcode,
 			  clientbserve: item.clientbserve.clientaname,
 			  image: item.image,
-			  isNeedPic: item.isNeedPic,
+				isNeedPic: item.isNeedPic,
+				note:item.note,
 			  timeLimit: item.timeLimit
 			}
 			return obj
@@ -1739,7 +2053,8 @@ export default {
 		let nextDay = new Date().getTime() + 86400000
 		query = {
 		  missiondate: new Date(nextDay).toISOString(),
-		  missionline: this.aLineInfo.timesname,
+			missionline: this.aLineInfo.timesname,
+			line_id:this.aLineInfo._id,
 		  missionnote: this.aLineInfo.timesnote,
 		  missiondirver: this.selectorDriver.dirvername,
 		  missionphone: this.aLineInfo.timesdirver.dirverphone,
@@ -1755,7 +2070,8 @@ export default {
 			  clientbpostcode: item.clientbpostcode,
 			  clientbserve: item.clientbserve.clientaname,
 			  image: item.image,
-			  isNeedPic: item.isNeedPic,
+				isNeedPic: item.isNeedPic,
+				note:item.note,
 			  timeLimit: item.timeLimit
 			}
 			return obj
@@ -1765,7 +2081,8 @@ export default {
 		let otherDay = new Date(this.missionDateModePacker).toISOString()
 		query = {
 		  missiondate: otherDay,
-		  missionline: this.aLineInfo.timesname,
+			missionline: this.aLineInfo.timesname,
+			line_id:this.aLineInfo._id,
 		  missionnote: this.aLineInfo.timesnote,
 		  missiondirver: this.selectorDriver.dirvername,
 		  missionphone: this.aLineInfo.timesdirver.dirverphone,
@@ -1781,7 +2098,8 @@ export default {
 			  clientbpostcode: item.clientbpostcode,
 			  clientbserve: item.clientbserve.clientaname,
 			  image: item.image,
-			  isNeedPic: item.isNeedPic,
+				isNeedPic: item.isNeedPic,
+				note:item.note,
 			  timeLimit: item.timeLimit
 			}
 			return obj
@@ -1889,7 +2207,8 @@ export default {
   display: -webkit-flex;
   display: flex;
   -webkit-flex-flow: row;
-  flex-flow: row;
+	flex-flow: row;
+	justify-content: center;
 }
 
 .step-second-item {
@@ -2138,4 +2457,84 @@ export default {
 .choiceClientCard:hover {
   background-color: #eee !important;
 }
+
+
+
+.third-body-leftbox{
+	height: 404px;
+}
+
+.tab4-body{
+	height: 398px;
+}
+
+	#tab4-body::-webkit-scrollbar  {  
+    width: 16px;  
+    height: 16px;  
+	} 
+
+	#tab4-body::-webkit-scrollbar-track{
+			-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+			border-radius: 10px;
+			background-color: #f5f5f5;
+	}
+
+	#tab4-body::-webkit-scrollbar-thumb{
+			/*width: 10px;*/
+			height: 20px;
+			border-radius: 10px;
+			-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+			background-color: #555;
+	}
+
+@media screen and (min-width: 1025px){
+	#newmission{
+		max-width: 878px;
+	}
+	.adddialog-top-button{
+		display: none;
+	}
+}
+
+@media screen and (max-width: 1024px){
+	.dialog-first-body {
+		margin-top:60px
+	}
+
+	.dialog-first-body-bottom {
+		margin-top:60px; 
+	}
+
+	.step-second{
+		margin-top:60px; 
+	}
+
+	.step-second-button{
+		margin-top:60px; 
+	}
+
+	.third-body{
+		justify-content: space-around;
+	}
+	.third-body-leftbox{
+		height: 445px;
+	}
+
+	.third-body-button{
+		margin-top: 24px;
+	}
+
+	.third-body-search{
+		padding-left: 90px;
+	}
+
+	.third-body-top-right{
+		padding-right: 90px
+	}
+
+	.tab4-body{
+		height: 440px;
+	}
+}
+
 </style>

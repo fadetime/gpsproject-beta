@@ -217,13 +217,7 @@
 							</md-field>
 							<md-button :class="classA" @click="openAreaWindow" style="font-size:18px;min-width:60px;height:30px;margin-top: 36px;">区域</md-button>
 						</div>
-						<div style="padding-top:5px">
-							<md-field style="margin:0 auto" :class="classadd">
-								<label style="font-size:16px">客户地址</label>
-								<md-input v-model="clientbaddress" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
-								<span class="md-error">客户地址标识信息</span>
-							</md-field>
-						</div>
+						
 
 					</div>
 				</div>
@@ -254,6 +248,12 @@
 							</div>
 						</div>
 
+						<md-field style="margin:0 auto;padding-top:24px" :class="classadd">
+							<label style="font-size:16px">客户地址</label>
+							<md-input v-model="clientbaddress" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
+							<span class="md-error">客户地址标识信息</span>
+						</md-field>
+
 						<md-field style="margin:10px auto" :class="classpho">
 							<label style="font-size:16px">客户电话</label>
 							<md-input v-model="clientbphone" style="border-bottom: 1px solid #000;font-size:16px;height:40px" @change="check_phone($event)"></md-input>
@@ -283,6 +283,11 @@
 								</div>
 							</div>
 						</div>
+
+						<md-field style="margin:0 auto" :class="classadd">
+							<label style="font-size:16px">客户备注</label>
+							<md-input v-model="clientNote" style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
+						</md-field>
 
 						<md-field style="margin:10px auto" :class="classpos">
 							<label style="font-size:16px">客户邮编</label>
@@ -918,9 +923,10 @@ export default {
 			tipMsg: 'info MSG',
 			isNeedPic: false,
 			showConfirmRemoveClient: false,
-		showTimePick: false,
-		choiceH:null,
-		choiceM:null,
+			showTimePick: false,
+			choiceH:null,
+			choiceM:null,
+			clientNote:null
 		}
 	},
 	mounted() {
@@ -1808,6 +1814,7 @@ export default {
 				payload.append('clientbserve', this.choseaname)
 				payload.append('clientbarea', this.choseArea)
 				payload.append('isNeedPic', this.isNeedPic)
+				payload.append('note', this.clientNote)
 				payload.append('logOperator', localStorage.getItem('name'))
 				axios({
 					method: 'post',
@@ -1871,6 +1878,7 @@ export default {
 			this.timeLimit = item.timeLimit
 			this.clientImage = item.image
 			this.isNeedPic = item.isNeedPic
+			this.clientNote = item.note
 			if (item.clientbserve == null) {
 				this.choseaname = ''
 				this.error = true
@@ -1965,6 +1973,7 @@ export default {
 						clientbserve: this.choseaname,
 						clientbarea: this.choseArea,
 						isNeedPic: this.isNeedPic,
+						note:this.clientNote,
 						logOperator: localStorage.getItem('name')
 					})
 					.then(doc => {
