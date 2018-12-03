@@ -1,11 +1,21 @@
 <template>
 <div id="topbar">
     <div class="buttomarea">
-            <router-link to="/" class="buttomarea-item" style="color: aliceblue;">今日任务</router-link>
-            <router-link to="/times" class="buttomarea-item" style="color: aliceblue;">车次管理</router-link>
-            <router-link to="/client" class="buttomarea-item" style="color: aliceblue;">客户管理</router-link>
-            <router-link to="/dirver" class="buttomarea-item" style="color: aliceblue;">司机管理</router-link>
-            <router-link to="/car" class="buttomarea-item" style="color: aliceblue;">车辆管理</router-link>
+            <router-link to="/" class="buttomarea-item" style="color: aliceblue;">
+                <span class="titlefont">今日任务</span>
+            </router-link>
+            <router-link to="/times" class="buttomarea-item" style="color: aliceblue;">
+                <span class="titlefont">车次管理</span>
+            </router-link>
+            <router-link to="/client" class="buttomarea-item" style="color: aliceblue;">
+                <span class="titlefont">客户管理</span>
+            </router-link>
+            <router-link to="/dirver" class="buttomarea-item" style="color: aliceblue;">
+                <span class="titlefont">司机管理</span>
+            </router-link>
+            <router-link to="/car" class="buttomarea-item" style="color: aliceblue;">
+                <span class="titlefont">车辆管理</span>
+            </router-link>
         
     </div>
 </div>
@@ -55,5 +65,12 @@ export default {
     background: linear-gradient(to bottom, rgba(240, 248, 255, 0), rgba(240, 248, 255, 0.2));
 	border-radius: 40px;
     -moz-border-radius:40px; /* Old Firefox */
+}
+
+@media screen and (max-width: 600px) {
+    .titlefont{
+        font-size: 20px;
+    }
+
 }
 </style>

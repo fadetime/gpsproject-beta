@@ -400,12 +400,11 @@
                     <div class="checkcar-front-box-top">
                         <span>检查记录</span>
                     </div>
-                    <div v-if="carLog.length===0"
+                    <div v-if="!carLog"
                          style="padding: 24px 100px;font-size: 16px;">
                         <span>~暂无记录~</span>
                     </div>
-                    <div v-else
-                         class="checkcar-front-box-body">
+                    <div v-else class="checkcar-front-box-body">
                         <div class="checkcar-front-box-body-title">
                             <div class="checkcar-front-box-body-title-item"
                                  style="width:160px">
@@ -450,83 +449,81 @@
                                 <span>描述</span>
                             </div>
                         </div>
-                        <div class="checkcar-front-box-body-item"
-                             v-for="(item , index) in carLog"
-                             :key="index">
+                        <div class="checkcar-front-box-body-item">
                             <div style="width:160px;text-align:left">
-                                <span>{{item.date | datefilter}}{{item.date | timefilter}}</span>
+                                <span>{{carLog.date | datefilter}}{{carLog.date | timefilter}}</span>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:32px">
-                                <span>{{item.driver}}</span>
+                                <span>{{carLog.driver}}</span>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:63px">
-                                <md-icon v-if="item.wiper"
+                                <md-icon v-if="carLog.wiper"
                                          style="color:green">check_circle</md-icon>
                                 <md-icon v-else
                                          style="color:red">cancel</md-icon>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:59px">
-                                <md-icon v-if="item.headlight"
+                                <md-icon v-if="carLog.headlight"
                                          style="color:green">check_circle</md-icon>
                                 <md-icon v-else
                                          style="color:red">cancel</md-icon>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:77px">
-                                <md-icon v-if="item.mirror"
+                                <md-icon v-if="carLog.mirror"
                                          style="color:green">check_circle</md-icon>
                                 <md-icon v-else
                                          style="color:red">cancel</md-icon>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:65px">
-                                <md-icon v-if="item.tyre"
+                                <md-icon v-if="carLog.tyre"
                                          style="color:green">check_circle</md-icon>
                                 <md-icon v-else
                                          style="color:red">cancel</md-icon>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:92px">
-                                <md-icon v-if="item.backup"
+                                <md-icon v-if="carLog.backup"
                                          style="color:green">check_circle</md-icon>
                                 <md-icon v-else
                                          style="color:red">cancel</md-icon>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:58px">
-                                <md-icon v-if="item.brake"
+                                <md-icon v-if="carLog.brake"
                                          style="color:green">check_circle</md-icon>
                                 <md-icon v-else
                                          style="color:red">cancel</md-icon>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:58px">
-                                <md-icon v-if="!item.text"
+                                <md-icon v-if="!carLog.text"
                                          style="color:green">check_circle</md-icon>
                                 <md-icon v-else
                                          style="color:red">cancel</md-icon>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:58px">
-                                <span>{{item.boxNum}}</span>
+                                <span>{{carLog.boxNum}}</span>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:58px">
-                                <span>{{item.boxNumAgain}}</span>
+                                <span>{{carLog.boxNumAgain}}</span>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:58px">
-                                <md-icon v-if="item.clean"
+                                <md-icon v-if="carLog.clean"
                                          style="color:green">check_circle</md-icon>
                                 <md-icon v-else
                                          style="color:red">cancel</md-icon>
                             </div>
                             <div class="checkcar-front-box-body-center-item"
                                  style="width:140px;text-align:center">
-                                <span>{{item.text}}</span>
+                                <span>{{carLog.text}}</span>
                             </div>
                         </div>
                     </div>
@@ -638,14 +635,14 @@ export default {
     methods: {
         openClickCarLog(item) {
             axios
-                .post(config.server + "/checkcar/get", {
+                .post(config.server + "/checkcar/getlastone", {
                     car_id: item._id
                 })
                 .then(doc => {
+                    console.log(doc)
                     if (doc.data.code === 0) {
-                        this.carLog = doc.data.item;
-                        this.showCheckCarBox = true;
-                        console.log(this.carLog);
+                        this.carLog = doc.data.doc
+                        this.showCheckCarBox = true
                     } else {
                         console.log(doc);
                         this.tipMsg = "出现未知错误";

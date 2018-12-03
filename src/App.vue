@@ -155,4 +155,10 @@ p {
     letter-spacing: 0;
     text-decoration: none;
 }
+
+@media screen and (max-width: 600px) {
+    #logout {
+        display: none
+    }
+}
 </style>

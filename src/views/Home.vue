@@ -5,13 +5,13 @@
                 <md-datepicker v-model="selectedDate"
                                md-immediately
                                md-closed="getMission()"
-                               style="border-radius: 0;" />
+                               style="border-radius: 0;width:260px" />
             </div>
             <div class="topbutton-right"
                  style="padding-top:10px">
                 <md-button class="md-raised md-primary"
                            @click="addMission"
-                           style="font-size:20px;width:100px;height:40px;">新建任务</md-button>
+                           style="font-size:18px;width:100px;height:40px;">新建任务</md-button>
             </div>
         </div>
         <div class="centertable"
@@ -19,22 +19,22 @@
             <md-card style="background-color: #eff3f5">
                 <md-card-content>
                     <div class="tabletitle">
-                        <div class="tabletitle-item-wide">
+                        <div class="tabletitle-item-wide class600">
                             <span>车次</span>
                         </div>
-                        <div class="tabletitle-item-wide">
+                        <div class="tabletitle-item-wide class600">
                             <span>司机</span>
                         </div>
-                        <div class="tabletitle-item-wide">
+                        <div class="tabletitle-item-wide class600tonone">
                             <span>车牌号</span>
                         </div>
-                        <div class="tabletitle-item-narrow">
+                        <div class="tabletitle-item-narrow class600">
                             <span>已送</span>
                         </div>
-                        <div class="tabletitle-item-narrow">
+                        <div class="tabletitle-item-narrow class600">
                             <span>总量</span>
                         </div>
-                        <div class="tabletitle-item-wide">
+                        <div class="tabletitle-item-wide class600">
                             <span>联系方式</span>
                         </div>
                     </div>
@@ -49,12 +49,12 @@
                     <md-card-content>
                         <div @click="openMissionInfo(item)"
                              class="tabletitle2">
-                            <span class="tabletitle-item-wide">{{item.missionline}}</span>
-                            <span class="tabletitle-item-wide">{{item.missiondirver}}</span>
-                            <span class="tabletitle-item-wide">{{item.missioncar}}</span>
-                            <span class="tabletitle-item-narrow">{{item.count}}</span>
-                            <span class="tabletitle-item-narrow">{{item.missionclient.length}}</span>
-                            <span class="tabletitle-item-wide">{{item.missionphone}}</span>
+                            <span class="tabletitle-item-wide class600">{{item.missionline}}</span>
+                            <span class="tabletitle-item-wide class600">{{item.missiondirver}}</span>
+                            <span class="tabletitle-item-wide class600tonone">{{item.missioncar}}</span>
+                            <span class="tabletitle-item-narrow class600">{{item.count}}</span>
+                            <span class="tabletitle-item-narrow class600">{{item.missionclient.length}}</span>
+                            <span class="tabletitle-item-wide class600">{{item.missionphone}}</span>
                         </div>
                     </md-card-content>
                 </md-card>
@@ -348,6 +348,15 @@
                              md-label="确认客户"
                              style="padding:0 24px">
                         <div style="display:flex;display: -webkit-flex;padding-bottom: 8px;justify-content: space-between;">
+                            <div style="padding-top: 10px;">
+                                <md-button class="md-raised"
+                                           style="font-size:16px;margin:0"
+                                           @click="changeSortModeMethod">
+                                    <md-icon>swap_horiz</md-icon>
+                                    <span>客服排序</span>
+                                </md-button>
+                            </div>
+                            
                             <div class="third-body-search">
                                 <input class="clientsearch"
                                        type="text"
@@ -623,25 +632,44 @@
                     </div>
                 </div>
             </div>
-            <div style="overflow:hidden auto;font-size:16px">
+            <div class="class600" style="overflow:hidden auto;font-size:16px">
                 <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;padding:5px 0">
-                    <div style="flex-basis:30%;text-align:left;margin:0 auto"
+                    <div style="flex-basis:25%;text-align:center;margin:0 auto"
                          :title="missiondriver">
                         <span>司机:{{missiondriver}}</span>
                     </div>
-                    <div style="flex-basis:30%;text-align:left;margin:0 auto;">
+                    <div style="flex-basis:25%;text-align:center;margin:0 auto;">
+                        <span v-if="checkCarInfo.date">出车时间:{{checkCarInfo.date | timefilter}}</span>
+                        <span v-else>出车时间:未提交</span>
+                    </div>
+                    <div style="flex-basis:25%;text-align:center;margin:0 auto;">
+                        <span  v-if="checkCarInfo.boxNum">出车框数:{{checkCarInfo.boxNum}}</span>
+                        <span v-else>出车框数:未提交</span>
+                    </div>
+                    <div style="flex-basis:25%;text-align:left;margin:0 auto;">
                         <span>车次:{{missionline}}</span>
                     </div>
                 </div>
 
                 <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;border-bottom:1px solid;padding:5px 0">
-                    <div style="flex-basis:30%;text-align:left;margin:0 auto">日期:{{missiondate}}</div>
-                    <div style="flex-basis:30%;text-align:left;margin:0 auto">总单数:{{missioncount}}</div>
+                    <div style="flex-basis:25%;text-align:center;margin:0 auto">
+                        <span>日期:{{missiondate}}</span>
+                    </div>
+                    <div style="flex-basis:25%;text-align:center;margin:0 auto">
+                        <span v-if="checkCarInfo.finishDate">收车时间:{{checkCarInfo.finishDate | timefilter}}</span>
+                        <span v-else>收车时间:未提交</span>
+                    </div>
+                    <div style="flex-basis:25%;text-align:center;margin:0 auto">
+                        <span v-if="checkCarInfo.boxNumAgain">收车框数:{{checkCarInfo.boxNumAgain}}</span>
+                        <span v-else>收车框数:未提交</span>
+                    </div>
+                    <div style="flex-basis:25%;text-align:left;margin:0 auto">
+                        <span>总单数:{{missioncount}}</span>
+                    </div>
                 </div>
-
                 <div style="padding:5px 0;border:1px solid #989898;width:90%;margin:10px auto">
                     <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;font-weight:600;padding:5px 0">
-                        <div style="flex-basis:20%;text-align:center;margin:0 auto">
+                        <div style="flex-basis:15%;text-align:center;margin:0 auto">
                             <span>序号</span>
                         </div>
                         <div style="flex-basis:30%;text-align:center;margin:0 auto">
@@ -653,7 +681,7 @@
                         <div style="flex-basis:20%;text-align:center;margin:0 auto">
                             <span>时间</span>
                         </div>
-                        <div style="flex-basis:15%;text-align:center;margin:0 auto">
+                        <div style="flex-basis:20%;text-align:center;margin:0 auto">
                             <span>要求时间</span>
                         </div>
                         <!-- 位置需ssl -->
@@ -666,10 +694,10 @@
                         <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;padding:5px 0"
                              v-for="(item,index) in missionclient"
                              :key="index">
-                            <div style="flex-basis:20%;text-align:center;margin:0 auto">
+                            <div style="flex-basis:15%;text-align:center;margin:0 auto">
                                 <span>{{index+1}}</span>
                             </div>
-                            <div style="flex-basis:30%;text-align:center;margin:0 auto">{{item.clientbname}}</div>
+                            <div style="flex-basis:30%;text-align:center;margin:0 auto;text-overflow: ellipsis;overflow: hidden;">{{item.clientbname}}</div>
                             <div style="flex-basis:15%;text-align:center;margin:0 auto">
                                 <span v-if="item.note">{{item.note}}</span>
                                 <span v-else>无备注</span>
@@ -679,7 +707,7 @@
                                 <span v-else
                                       style="color:#f9cf97">未送达</span>
                             </div>
-                            <div style="flex-basis:15%;text-align:center;margin:0 auto">
+                            <div style="flex-basis:20%;text-align:center;margin:0 auto">
                                 <span v-if="item.timeLimit">{{item.timeLimit}}</span>
                                 <span v-else>无要求</span>
                             </div>
@@ -690,11 +718,15 @@
 								<md-icon style="color:rgb(249,207,151)">map</md-icon>
 							</div>-->
                         </div>
+                        <div style="height:40px">
+                            <!-- 底部占位符 -->
+                        </div>
                     </div>
                 </div>
+                
             </div>
 
-            <md-dialog-actions style="margin:0 auto">
+            <md-dialog-actions class="buttonarea600" style="margin:0 auto">
                 <md-button class="md-raised md-primary"
                            @click="detaildialog = false"
                            style="font-size:16px;width:80px;height:30px">关闭</md-button>
@@ -1318,7 +1350,10 @@ export default {
             leftBoxArray: [],
             showEditMissionBox: false,
             showEditMissionClientBox: false,
-            isShowChoiseClient: true
+            isShowChoiseClient: true,
+            checkCarInfo:'',
+            isShowNcSort:false,
+            tempArrayData:[]
         };
     },
     computed: {
@@ -1389,6 +1424,27 @@ export default {
     },
 
     methods: {
+        changeSortModeMethod() {
+            if(!this.isShowNcSort){
+                console.log('enter if')
+                console.log(this.leftBoxArray)
+                this.leftWindowInfo ='客服排序'
+                this.tempArrayData = []
+                this.tempArrayData = this.leftBoxArray.concat()
+                this.leftBoxArray = _.orderBy(
+                        this.leftBoxArray,
+                        ['NcSortNum'],
+                        ['asc']
+                    )
+                this.isShowNcSort = true
+            }else{
+                console.log('enter else')
+                this.leftWindowInfo ='线路客户'
+                this.leftBoxArray = []
+                this.leftBoxArray=this.tempArrayData.concat()
+                this.isShowNcSort = false
+            }
+        },
         closeAddDialogMethod() {
             this.addDialog = false;
         },
@@ -2081,20 +2137,55 @@ export default {
                 });
         },
         //获取所有司机数据 end
+
         openMissionInfo(item) {
-            this.missionShipping = item;
-            let time = new Date(item.missiondate).toLocaleDateString();
-            this.detaildialog = true;
-            this.missionline = item.missionline;
-            this.missiondriver = item.missiondirver;
-            this.missioncar = item.missioncar;
-            this.missioncount = item.missionclient.length;
-            this.missionclient = item.missionclient;
-            this.missionfinish = "finish";
-            this.missionphone = item.missionphone;
-            this.missiondate = time;
-            this.missionid = item._id;
+            console.log(item)
+            this.getMission()
+            axios.post(config.server + "/mission/one",{
+                _id:item._id
+            })
+            .then(doc => {
+                if(doc.data.carCheck_id){
+                this.getOneCheckCarInfoMethod(doc.data.carCheck_id)
+                }
+                this.missionShipping = doc.data
+                let time = new Date(doc.data.missiondate).toLocaleDateString();
+                this.detaildialog = true;
+                this.missionline = doc.data.missionline;
+                this.missiondriver = doc.data.missiondirver;
+                this.missioncar = doc.data.missioncar;
+                this.missioncount = doc.data.missionclient.length;
+                this.missionclient = doc.data.missionclient;
+                this.missionfinish = "finish";
+                this.missionphone = doc.data.missionphone;
+                this.missiondate = time;
+                this.missionid = doc.data._id
+            })
+            .catch(err => {
+                console.log(err)
+            })
         },
+
+        getOneCheckCarInfoMethod(item){
+            axios.post(config.server + "/checkcar/getone",{
+                checkCar_id:item
+            })
+            .then(doc => {
+                if(doc.data.code === 0) {
+                    console.log(this.checkCarInfo)
+                    this.checkCarInfo = doc.data.doc
+                }else{
+                    this.checkCarInfo = {
+                        date:false
+                    }
+                }
+                
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
+
         getMission() {
             setTimeout(() => {
                 axios
@@ -2501,19 +2592,19 @@ export default {
 .topbutton {
     display: -webkit-flex;
     display: flex;
-    -webkit-flex-flow: row;
-    flex-flow: row;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
 }
 
 .topbutton-left {
-    flex-basis: 20%;
+    flex-basis: 50%;
     text-align: left;
     margin: 0 auto;
 }
 
 .topbutton-right {
     margin: 0 auto;
-    flex-basis: 70%;
+    flex-basis: 50%;
     text-align: right;
 }
 
@@ -2672,7 +2763,7 @@ export default {
 .clientsearch {
     margin: 16px auto 0 auto;
     border-radius: 10px;
-    width: 300px;
+    width: 265px;
     height: 32px;
     text-align: center;
     -web-kit-appearance: none;
@@ -2906,5 +2997,41 @@ export default {
     .detaildialog-body {
         height: 400px;
     }
+}
+
+@media screen and (max-width: 600px) {
+    #home {
+        width: 100%;
+        margin: 0;
+    }
+    .topbutton-right {
+        text-align: center;
+        padding-top:0 !important;
+    }
+
+    .class600{
+        font-size: 14px !important;
+    }
+
+    .class600tonone {
+        display: none
+    }
+    
+    .buttonarea600{
+        justify-content: center;
+        bottom: 0;
+        width: 100%;
+        background: #fff;
+        position:fixed;
+        padding:0 !important;
+        min-height: 40px !important;
+    }
+
+    /* .bottomemptey{
+        display: block !important;
+        height: 1000px;
+        width: 100px;
+        position: relative;
+    } */
 }
 </style>

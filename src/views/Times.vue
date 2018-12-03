@@ -299,6 +299,14 @@
                                     </md-field>
                                 </div>
 
+                                <div style="padding-top:17px">
+                                    <md-button class="md-raised"
+                                               @click="changeSortModeMethod"
+                                               style="font-size:16px;width:80px;height:30px;margin:0">
+                                        <span v-if="isShowNcSort">出车排序</span>
+                                        <span v-else>客服排序</span>
+                                    </md-button>
+                                </div>
                             </div>
 
                         </div>
@@ -371,7 +379,8 @@
                             <div style="padding-left:10px">
                                 <div style="border: 3px dashed #448aff;padding:10px;position: relative;">
                                     <div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 86px;top:-24px">
-                                        <span style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">已选客户</span>
+                                        <span v-if="!isShowNcSort" style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">已选客户</span>
+                                        <span v-else style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">客服顺序</span>
                                     </div>
                                     <div class="tab4-title"
                                          style="height:32px;line-height:30px;margin-bottom: 2px;">
@@ -397,7 +406,7 @@
                                         </div>
                                     </div>
                                     <div class="tab4-body"
-                                         style="height:411px;overflow-y:auto">
+                                         style="height:411px;overflow-y:auto;overflow-x: hidden;position:relative;">
                                         <draggable v-model="choiceclientb"
                                                    :options="{group:'choiceclientb'}"
                                                    @start="drag=true"
@@ -481,6 +490,10 @@
                            v-else
                            @click="confirmEdit"
                            style="font-size:18px;width:80px;height:30px">修改</md-button>
+                <md-button class="md-raised md-primary"
+                           v-if="isShowNcSort"
+                           @click="sortClientMethod"
+                           style="font-size:16px;width:80px;height:30px">保存顺序</md-button>
             </md-dialog-actions>
         </md-dialog>
         <!-- Dialog end-->
@@ -963,7 +976,9 @@ export default {
             choseDriverListDialog: false,
             dirverChangePageFlag: true,
             newLine: [],
-            NcNumber: null
+            NcNumber: null,
+            isShowNcSort:false,
+
         };
     },
     mounted() {
@@ -1039,6 +1054,41 @@ export default {
     },
 
     methods: {
+        //sort client start
+        changeSortModeMethod(){
+            if(!this.isShowNcSort){
+                this.temparray = []
+                this.temparray=this.choiceclientb.concat()
+                this.choiceclientb = _.orderBy(
+                        this.choiceclientb,
+                        ['NcSortNum'],
+                        ['asc']
+                    )
+                this.isShowNcSort = true
+            }else{
+                this.choiceclientb = []
+                this.choiceclientb=this.temparray.concat()
+                this.isShowNcSort = false
+            }
+        },
+
+            sortClientMethod() {
+                let clientId = []
+                this.choiceclientb.forEach(element => {
+                    clientId.push(element._id)
+                })
+                console.log(clientId)
+                axios.post(config.server + "/times/clientsort",{
+                    clientId:clientId
+                })
+                .then(doc => {
+                    console.log(doc)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            },
+        //sort client end
         choiceNCNum(carNum) {
             this.NcNumber = carNum;
         },
@@ -1891,6 +1941,7 @@ export default {
 .choiceClientCard:hover {
     background-color: #eee !important;
 }
+
 
 @media screen and (min-width: 1025px) {
     .linedialog {
