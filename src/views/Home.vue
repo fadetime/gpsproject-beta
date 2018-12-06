@@ -2,13 +2,10 @@
     <div id="home">
         <div class="topbutton">
             <div class="topbutton-left">
-                <md-datepicker v-model="selectedDate"
-                               md-immediately
-                               md-closed="getMission()"
-                               style="border-radius: 0;width:260px" />
+                <vue-datepicker-local v-model="selectedDate" @change="getMission()"/>
             </div>
             <div class="topbutton-right"
-                 style="padding-top:10px">
+                 style="padding-top:5px">
                 <md-button class="md-raised md-primary"
                            @click="addMission"
                            style="font-size:18px;width:100px;height:40px;">新建任务</md-button>
@@ -431,7 +428,7 @@
                                             <md-card-content>
                                                 <div class="step-third-title-body">
                                                     <label :for="index"
-                                                           class="step-third-title">
+                                                           class="step-third-title" @click="autoSortMethod">
                                                         <input type="checkbox"
                                                                :id="index"
                                                                :value="item"
@@ -615,13 +612,13 @@
         <!-- detail dialog start -->
         <md-dialog class="detaildialog"
                    :md-active.sync="detaildialog">
-            <div style="text-align:center;box-shadow:0px 1px 5px #000;background-color:#d74342;height:48px;line-height:48px;margin-bottom:20px;font-size:18px">
+            <div style="text-align:center;box-shadow:0px 1px 5px #000;background-color:#d74342;height:40px;line-height:40px;margin-bottom:20px;font-size:18px">
                 <div class="detaildialog-title-www">
                     <span style="color:#fff">出车报表</span>
                 </div>
                 <div class="detaildialog-title-ipad"
                      style="display:flex;display:-webkit-flex;justify-content: space-between;">
-                    <div style="line-height: 48px;padding-left:24px">
+                    <div style="line-height: 40px;padding-left:24px">
                         <span style="color:#fff">出车报表</span>
                     </div>
                     <div class="adddialog-top-button"
@@ -1265,11 +1262,13 @@ import axios from "axios";
 import config from "../../public/js/config.js";
 import _ from "lodash";
 import draggable from "vuedraggable";
+import VueDatepickerLocal from 'vue-datepicker-local' //时间选择组件
 
 export default {
     name: "home",
     components: {
-        draggable
+        draggable,
+        VueDatepickerLocal
     },
     data() {
         return {
@@ -1424,26 +1423,32 @@ export default {
     },
 
     methods: {
+        autoSortMethod() {
+            setTimeout(() => {
+                this.choiceClient = _.orderBy(
+                            this.choiceClient,
+                            ['driverSortNum'],
+                            ['asc']
+                        )
+            }, 30);
+            
+        },
         changeSortModeMethod() {
             if(!this.isShowNcSort){
-                console.log('enter if')
-                console.log(this.leftBoxArray)
-                this.leftWindowInfo ='客服排序'
-                this.tempArrayData = []
-                this.tempArrayData = this.leftBoxArray.concat()
-                this.leftBoxArray = _.orderBy(
-                        this.leftBoxArray,
-                        ['NcSortNum'],
-                        ['asc']
-                    )
-                this.isShowNcSort = true
-            }else{
-                console.log('enter else')
-                this.leftWindowInfo ='线路客户'
-                this.leftBoxArray = []
-                this.leftBoxArray=this.tempArrayData.concat()
-                this.isShowNcSort = false
-            }
+                    this.leftBoxArray = _.orderBy(
+                            this.leftBoxArray,
+                            ['NcSortNum'],
+                            ['asc']
+                        )
+                    this.isShowNcSort = true
+                }else{
+                    this.leftBoxArray = _.orderBy(
+                            this.leftBoxArray,
+                            ['driverSortNum'],
+                            ['asc']
+                        )
+                    this.isShowNcSort = false
+                }
         },
         closeAddDialogMethod() {
             this.addDialog = false;
@@ -2586,7 +2591,7 @@ export default {
 <style scoped>
 #home {
     width: 80%;
-    margin: 15px auto;
+    margin: 20px auto;
 }
 
 .topbutton {
@@ -2597,6 +2602,7 @@ export default {
 }
 
 .topbutton-left {
+    padding-top: 10px;
     flex-basis: 50%;
     text-align: left;
     margin: 0 auto;

@@ -409,6 +409,7 @@
                                          style="height:411px;overflow-y:auto;overflow-x: hidden;position:relative;">
                                         <draggable v-model="choiceclientb"
                                                    :options="{group:'choiceclientb'}"
+                                                   :move="hasMoved"
                                                    @start="drag=true"
                                                    @end="drag=false">
                                             <md-card md-with-hover
@@ -490,10 +491,6 @@
                            v-else
                            @click="confirmEdit"
                            style="font-size:18px;width:80px;height:30px">修改</md-button>
-                <md-button class="md-raised md-primary"
-                           v-if="isShowNcSort"
-                           @click="sortClientMethod"
-                           style="font-size:16px;width:80px;height:30px">保存顺序</md-button>
             </md-dialog-actions>
         </md-dialog>
         <!-- Dialog end-->
@@ -906,6 +903,39 @@
             </div>
         </transition>
         <!-- tip box end -->
+
+        <!-- confirm box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showConfirmBox"
+                 class="confirmbox-back"></div>
+        </transition>
+        <transition name="confirm-box-transition"
+                    enter-active-class="animated fadeIn"
+                    leave-active-class="animated fadeOut">
+            <div class="confirmbox-front"
+                 v-if="showConfirmBox" @click.self.prevent="showConfirmBox = false">
+                 <div class="confirmbox-front-box">  
+                     <div class="confirmbox-front-title">
+                        <span>提示</span>
+                    </div>
+                    <div class="confirmbox-front-center">
+                        是否保存修改数据？
+                    </div>
+                    <div class="confirmbox-front-bottom">
+                        <md-button class="md-raised md-primary"
+                               @click="cancelSortMethod"
+                               style="font-size:18px;width:80px;height:30px">取消</md-button>
+                        <md-button class="md-raised md-primary"
+                               @click="sortClientMethod"
+                               style="font-size:18px;width:80px;height:30px">保存</md-button>
+                    </div>
+                 </div>
+                
+            </div>
+        </transition>
+        <!-- confirm box end -->
     </div>
 </template>
 
@@ -978,7 +1008,9 @@ export default {
             newLine: [],
             NcNumber: null,
             isShowNcSort:false,
-
+            isHasChangeDriverSort:false,
+            isHasChangeNcSort:false,
+            showConfirmBox:false
         };
     },
     mounted() {
@@ -1054,39 +1086,117 @@ export default {
     },
 
     methods: {
-        //sort client start
-        changeSortModeMethod(){
-            if(!this.isShowNcSort){
-                this.temparray = []
-                this.temparray=this.choiceclientb.concat()
-                this.choiceclientb = _.orderBy(
-                        this.choiceclientb,
-                        ['NcSortNum'],
-                        ['asc']
-                    )
-                this.isShowNcSort = true
+        hasMoved(){
+            if(this.isShowNcSort){
+                this.isHasChangeNcSort = true
             }else{
-                this.choiceclientb = []
-                this.choiceclientb=this.temparray.concat()
-                this.isShowNcSort = false
+                this.isHasChangeDriverSort = true
             }
+        },
+        //sort client start
+        cancelSortMethod(){
+            this.showConfirmBox=false
+            if(this.isHasChangeNcSort){
+                this.isHasChangeNcSort=false
+                this.choiceclientb = _.orderBy(
+                            this.choiceclientb,
+                            ['driverSortNum'],
+                            ['asc']
+                        )
+                this.isShowNcSort = false
+            }else{
+                this.isHasChangeDriverSort=false
+                this.choiceclientb = _.orderBy(
+                            this.choiceclientb,
+                            ['NcSortNum'],
+                            ['asc']
+                        )
+                this.isShowNcSort = true
+            }
+        },
+        
+        changeSortModeMethod(){
+            if(this.isHasChangeNcSort || this.isHasChangeDriverSort) {//如果 客服排序 或 司机排序有变动
+                this.showConfirmBox = true
+            }else{
+                if(!this.isShowNcSort){
+                    this.choiceclientb = _.orderBy(
+                            this.choiceclientb,
+                            ['NcSortNum'],
+                            ['asc']
+                        )
+                    this.isShowNcSort = true
+                }else{
+                    this.choiceclientb = _.orderBy(
+                            this.choiceclientb,
+                            ['driverSortNum'],
+                            ['asc']
+                        )
+                    this.isShowNcSort = false
+                }
+            }
+            
         },
 
             sortClientMethod() {
-                let clientId = []
-                this.choiceclientb.forEach(element => {
-                    clientId.push(element._id)
-                })
-                console.log(clientId)
-                axios.post(config.server + "/times/clientsort",{
-                    clientId:clientId
-                })
-                .then(doc => {
-                    console.log(doc)
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+                if(this.isHasChangeNcSort){
+                    let clientId = []
+                    this.choiceclientb.forEach(element => {
+                        clientId.push(element._id)
+                    })
+                    axios.post(config.server + "/times/clientsort",{
+                        clientId:clientId
+                    })
+                    .then(doc => {
+                        this.isHasChangeNcSort = false
+                        if(doc.data.code === 0) {
+                            this.showTipDialog =true
+                            this.tipMsg = '修改客服顺序成功'
+                            setTimeout(() => {
+                                this.showTipDialog = false
+                            }, 3000);
+                        }else{
+                            this.showTipDialog =true
+                            this.tipMsg = '修改客服顺序时发生错误'
+                            setTimeout(() => {
+                                this.showTipDialog = false
+                            }, 3000);
+                        }
+                        this.showConfirmBox = false
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                }else{
+                    let clientId = []
+                    this.choiceclientb.forEach(element => {
+                        clientId.push(element._id)
+                    })
+                    axios.post(config.server + "/times/driversort",{
+                        clientId:clientId
+                    })
+                    .then(doc => {
+                        this.isHasChangeDriverSort = false
+                        if(doc.data.code === 0) {
+                            this.showTipDialog =true
+                            this.tipMsg = '修改司机次序成功'
+                            setTimeout(() => {
+                                this.showTipDialog = false
+                            }, 3000);
+                        }else{
+                            this.showTipDialog =true
+                            this.tipMsg = '修改司机次序时发生错误'
+                            setTimeout(() => {
+                                this.showTipDialog = false
+                            }, 3000);
+                        }
+                        this.showConfirmBox = false
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                }
+                
             },
         //sort client end
         choiceNCNum(carNum) {
@@ -1129,10 +1239,20 @@ export default {
                 });
         },
         toTheTop(item, index) {
+            if(this.isShowNcSort){
+                this.isHasChangeNcSort = true
+            }else{
+                this.isHasChangeDriverSort = true
+            }
             this.choiceclientb.splice(index, 1);
             this.choiceclientb.unshift(item);
         },
         toTheBottom(item, index) {
+            if(this.isShowNcSort){
+                this.isHasChangeNcSort = true
+            }else{
+                this.isHasChangeDriverSort = true
+            }
             this.choiceclientb.splice(index, 1);
             this.choiceclientb.push(item);
         },
@@ -1546,6 +1666,10 @@ export default {
                         }, 3000);
                     });
             }
+
+            if(this.isHasChangeNcSort || this.isHasChangeDriverSort){//如果排序
+                this.sortClientMethod()
+            }
         },
         changeclientb() {
             axios
@@ -1942,7 +2066,48 @@ export default {
     background-color: #eee !important;
 }
 
+.confirmbox-back{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+    z-index: 23;
+}
 
+.confirmbox-front{
+    z-index:24;
+    position: fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirmbox-front-box{
+    background: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.confirmbox-front-title{
+    height: 40px;
+    font-size: 16px;
+    line-height: 40px;
+    background: #d44950;
+    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.confirmbox-front-center{
+    padding-top:20px;
+    padding-bottom:20px;
+}
 @media screen and (min-width: 1025px) {
     .linedialog {
         width: 828px;
