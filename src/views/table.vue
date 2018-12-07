@@ -49,6 +49,9 @@
                         <span>司机</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
+                        <span>出车日期</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
                         <span>出车时间</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
@@ -75,10 +78,15 @@
                             <span>{{item.driver}}</span>
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.date | datefilter}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
                             <span>{{item.date | timefilter}}</span>
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
-                            <span>{{item.finishDate | timefilter}}</span>
+                            <span v-if="item.finishDate === null">未提交</span>
+                            <span v-else>{{item.finishDate | timefilter}}</span>
+
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
                             <span>{{item.boxNum}}</span>
@@ -87,7 +95,10 @@
                             <span>{{item.boxNumAgain}}</span>
                         </div>
                         <div style="flex-basis: 7%;text-align: center;">
-                            <span>{{item.clean}}</span>
+                            <md-icon v-if="item.clean"
+                                     style="color:green">check_circle</md-icon>
+                            <md-icon v-else
+                                     style="color:red">cancel</md-icon>
                         </div>
                     </div>
                 </div>
@@ -187,15 +198,17 @@
                                 <span>司机姓名</span>
                             </div>
                         </div>
-                        <div class="driver-front-box-body-center"
-                             v-for="(item,index) in driverArray"
-                             :key="index"
-                             @click="choiseDriverMethod(item)">
-                            <div class="driver-front-box-body-left">
-                                <span>{{index + 1}}</span>
-                            </div>
-                            <div class="driver-front-box-body-right">
-                                <span>{{item.dirvername}}</span>
+                        <div style="height:40vh;overflow-y: auto;">
+                            <div class="driver-front-box-body-center"
+                                 v-for="(item,index) in driverArray"
+                                 :key="index"
+                                 @click="choiseDriverMethod(item)">
+                                <div class="driver-front-box-body-left">
+                                    <span>{{index + 1}}</span>
+                                </div>
+                                <div class="driver-front-box-body-right">
+                                    <span>{{item.dirvername}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -249,10 +262,10 @@ export default {
             startDate: null,
             endDate: null,
             tableInfo: [],
-            missionInfo:[],
+            missionInfo: [],
             startBox: 0,
-            countClient:0,
-            averageClient:0,
+            countClient: 0,
+            averageClient: 0,
             endBox: 0,
             moreSearchInfo: false,
             isOpenDriverBox: false,
@@ -311,6 +324,7 @@ export default {
                                 if (doc.data.code === 1) {
                                     this.tipsMsg = "未找到该数据！！！";
                                     this.isOpenTipBox = true;
+                                    this.tableInfo = [];
                                     setTimeout(() => {
                                         this.isOpenTipBox = false;
                                     }, 3000);
@@ -372,11 +386,23 @@ export default {
                     driverName: this.driverText
                 })
                 .then(doc => {
-                    this.missionInfo = doc.data.doc
-                    doc.data.doc.forEach(element => {
-                       this.countClient += element.missionclient.length
-                    });
-                    this.averageClient = Math.ceil(this.countClient/doc.data.doc.length)
+                    if (doc.data.code === 1) {
+                        this.tipsMsg = "未找到该数据！！！";
+                        this.isOpenTipBox = true;
+                        this.missionInfo = [];
+                        setTimeout(() => {
+                            this.isOpenTipBox = false;
+                        }, 3000);
+                    } else {
+                        this.missionInfo = doc.data.doc;
+                        this.countClient = 0;
+                        doc.data.doc.forEach(element => {
+                            this.countClient += element.missionclient.length;
+                        });
+                        this.averageClient = Math.ceil(
+                            this.countClient / doc.data.doc.length
+                        );
+                    }
                 })
                 .catch(err => {
                     console.log(err);
@@ -429,7 +455,7 @@ export default {
     margin: auto 10px;
     height: 40vh;
     overflow-y: auto;
-    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .centerarea-body-item {

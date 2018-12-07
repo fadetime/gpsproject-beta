@@ -1382,12 +1382,14 @@ export default {
     },
     watch: {
         selectedDate: function() {
+            this.selectedDate = new Date(this.selectedDate).toDateString()
             axios
                 .post(config.server + "/mission", {
                     startdate: this.selectedDate
                 })
                 .then(res => {
                     this.allmission = res.data;
+                    console.log(this.selectedDate)
                 })
                 .catch(err => {
                     console.log("获取数据失败");
@@ -2193,6 +2195,7 @@ export default {
 
         getMission() {
             setTimeout(() => {
+                this.selectedDate = new Date(this.selectedDate).toDateString()
                 axios
                     .post(config.server + "/mission", {
                         startdate: this.selectedDate
