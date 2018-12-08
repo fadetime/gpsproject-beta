@@ -2,7 +2,7 @@
     <div id="home">
         <div class="topbutton">
             <div class="topbutton-left">
-                <vue-datepicker-local v-model="selectedDate" @change="getMission()"/>
+                <vue-datepicker-local v-model="selectedDate"/>
             </div>
             <div class="topbutton-right"
                  style="padding-top:5px">
@@ -1383,12 +1383,15 @@ export default {
     watch: {
         selectedDate: function() {
             this.selectedDate = new Date(this.selectedDate).toDateString()
+            this.selectedDate = new Date(this.selectedDate).toISOString()
+            console.log(this.selectedDate)
             axios
                 .post(config.server + "/mission", {
                     startdate: this.selectedDate
                 })
                 .then(res => {
                     this.allmission = res.data;
+                    this.countfinish()
                     console.log(this.selectedDate)
                 })
                 .catch(err => {
@@ -1590,7 +1593,7 @@ export default {
                     console.log("@@@@");
                     console.log(doc.data);
                     console.log("@@@@");
-                    let countNum = 0;
+                    // let countNum = 0;
                     // tempArray.forEach(elementX => {
                     // 	this.missionShipping.missionclient.forEach(elementY => {
                     // 		if(elementX.clientbname == elementY.clientbname){
@@ -2146,7 +2149,6 @@ export default {
         //获取所有司机数据 end
 
         openMissionInfo(item) {
-            console.log(item)
             this.getMission()
             axios.post(config.server + "/mission/one",{
                 _id:item._id
@@ -2154,6 +2156,8 @@ export default {
             .then(doc => {
                 if(doc.data.carCheck_id){
                 this.getOneCheckCarInfoMethod(doc.data.carCheck_id)
+                }else{
+                    this.checkCarInfo = ''
                 }
                 this.missionShipping = doc.data
                 let time = new Date(doc.data.missiondate).toLocaleDateString();
@@ -2179,7 +2183,6 @@ export default {
             })
             .then(doc => {
                 if(doc.data.code === 0) {
-                    console.log(this.checkCarInfo)
                     this.checkCarInfo = doc.data.doc
                 }else{
                     this.checkCarInfo = {
@@ -2196,11 +2199,13 @@ export default {
         getMission() {
             setTimeout(() => {
                 this.selectedDate = new Date(this.selectedDate).toDateString()
+                this.selectedDate = new Date(this.selectedDate).toISOString()
                 axios
                     .post(config.server + "/mission", {
                         startdate: this.selectedDate
                     })
                     .then(res => {
+                        console.log('go to the get mission')
                         this.allmission = res.data;
                         this.countfinish();
                     })
