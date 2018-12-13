@@ -252,7 +252,7 @@ export default {
     }
 
     .buttomarea600 {
-        z-index: 20;
+        z-index: 11;
         background: #e0e0e0d4;
         width: 60px;
         height: 60px;

@@ -160,5 +160,14 @@ p {
     #logout {
         display: none
     }
+
+    .datepicker-popup {
+        font-size: 14px !important;
+    }
+
+    .calendar-body{
+        width:290px !important;
+        height: 290px !important;
+    }
 }
 </style>

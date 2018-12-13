@@ -1327,31 +1327,24 @@ export default {
     },
     methods: {
         confirmChoiceTime() {
-            if (this.choiceH < 10) {
-                this.choiceH = "0" + this.choiceH;
-            }
-            if (this.choiceM < 10) {
-                this.choiceM = "0" + this.choiceM;
-            }
             this.timeLimit = this.choiceH + ":" + this.choiceM;
             this.showTimePick = false;
         },
+
         choiceHMethod(item) {
             if (item < 10) {
                 item = "0" + item;
             }
             this.choiceH = item;
         },
+
         choiceMMethod(item) {
             if (item < 10) {
                 item = "0" + item;
             }
             this.choiceM = item;
         },
-        testMethod() {
-            console.log(this.timeLimit);
-            console.log(this.timeLimit.HH);
-        },
+
         openNewAreaBox() {
             if (this.addNewAreaMode) {
                 this.addNewAreaMode = false;
@@ -1362,9 +1355,11 @@ export default {
                 this.addNewAreaMode = true;
             }
         },
+
         openAreaWindow() {
             this.areaWindow = true;
         },
+
         setupArea() {
             if (!this.areaEditMode) {
                 this.saveArea();
@@ -1372,6 +1367,7 @@ export default {
                 this.confirmEditArea();
             }
         },
+
         saveArea() {
             axios
                 .post(config.server + "/area/post", {
@@ -1395,6 +1391,7 @@ export default {
                     console.log(err);
                 });
         },
+
         confirmEditArea() {
             axios
                 .post(config.server + "/area/update", {
@@ -1423,6 +1420,7 @@ export default {
                     console.log(err);
                 });
         },
+        
         confirmRemoveArea() {
             axios
                 .post(config.server + "/area/remove", {

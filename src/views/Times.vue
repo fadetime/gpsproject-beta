@@ -124,8 +124,8 @@
                             style="color:#000">
                         <div style="display:flex;display:-webkit-flex;justify-content: space-evenly;">
                             <div style="border: 3px dashed #448aff;flex-basis: 45%;">
-                                <md-field style="margin:45px auto;width:80%">
-                                    <label style="font-size:16px;color:#000">路线名称</label>
+                                <md-field style="margin:15px auto;width:80%">
+                                    <label style="font-size:16px;color: rgba(0, 0, 0, 0.54);">路线名称</label>
                                     <md-input v-model="timesname"
                                               style="border-bottom: 1px solid #000;font-size:16px;height:55px;text-align:center"></md-input>
                                     <span class="md-helper-text"
@@ -133,11 +133,45 @@
                                           v-if="!timesname">车次标识信息，必填项目</span>
                                 </md-field>
 
-                                <md-field style="margin:45px auto;width:80%">
-                                    <label style="font-size:16px;color:#000">备注</label>
+                                <md-field style="margin:15px auto;width:80%">
+                                    <label style="font-size:16px;color: rgba(0, 0, 0, 0.54);">备注</label>
                                     <md-input v-model="timesnote"
                                               style="border-bottom: 1px solid #000;font-size:16px;height:55px;text-align:center"></md-input>
                                 </md-field>
+
+                                <div style="margin:8px auto;width: 268px;display:flex;display:-webkit-flex;justify-content: space-between;">
+                                    <div style="flex-basis:45%;border-bottom: 1px solid rgb(0, 0, 0);">
+                                        <div style="font-size:16px;color: rgba(0, 0, 0, 0.54);padding-bottom: 7px;">
+                                            <span>预计出车</span>
+                                        </div>
+                                        <div style="display:flex;display:-webkit-flex;height:32px;cursor: pointer;"
+                                            @click="openTimePickMethod('start')">
+                                            <div style="font-size:18px;flex-basis: 80%;text-align: center;line-height: 32px;">
+                                                <span style="padding-left: 10px;" v-if="startTimeLimit">{{startTimeLimit}}</span>
+                                                <span style="padding-left: 10px;" v-else>Null</span>
+                                            </div>
+                                            <div style="flex-basis: 20%;text-align:center;line-height: 32px;">
+                                                <md-icon style="font-size:30px!important">access_time</md-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="flex-basis:45%;border-bottom: 1px solid rgb(0, 0, 0); */">
+                                        <div style="font-size:16px;color: rgba(0, 0, 0, 0.54);padding-bottom: 7px;">
+                                            <span>预计收车</span>
+                                        </div>
+                                        <div style="display:flex;display:-webkit-flex;height:32px;cursor: pointer;"
+                                            @click="openTimePickMethod('end')">
+                                            <div style="font-size:18px;flex-basis: 80%;text-align: center;line-height: 32px;">
+                                                <span style="padding-left: 10px;" v-if="endTimeLimit">{{endTimeLimit}}</span>
+                                                <span style="padding-left: 10px;" v-else>Null</span>
+                                            </div>
+                                            <div style="flex-basis: 20%;text-align:center;line-height: 32px;">
+                                                <md-icon style="font-size:30px!important">access_time</md-icon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
                             </div>
                             <div style="border: 3px dashed #448aff;flex-basis: 45%;">
                                 <div>
@@ -206,7 +240,6 @@
                                                     <span>{{acarinfo.coolstore}}</span>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -269,7 +302,6 @@
                                        v-model="searchClient"
                                        @keyup.enter="searClientMethods"
                                        placeholder="搜索客户名称">
-
                             </div>
 
                             <div style="display: -webkit-flex;display: flex;">
@@ -308,7 +340,6 @@
                                     </md-button>
                                 </div>
                             </div>
-
                         </div>
                         <div style="display: -webkit-flex;display: flex;padding-top:20px;justify-content:space-around">
                             <!-- left window start-->
@@ -366,7 +397,6 @@
                                                         <md-icon class="step-third-title-item"
                                                                  style="width:50px">info</md-icon>
                                                     </div>
-
                                                 </div>
                                             </md-card-content>
                                         </md-card>
@@ -690,7 +720,6 @@
                 <span style="color:#fff">司机选择</span>
             </md-dialog-title>
             <md-dialog-content style="padding:5px 24px">
-
                 <div style="overflow-x:hidden;position:relative;height:320px">
                     <div style="text-align:center;height:25px;line-height:25px;border-bottom:1px solid rgba(0,0,0,.12);margin-bottom:10px">
                         <div v-if="dirverChangePageFlag">常用司机</div>
@@ -881,7 +910,6 @@
                             <span>{{tempClientInfo.clientbaddress}}</span>
                         </div>
                     </div>
-
                 </div>
             </div>
         </transition>
@@ -932,10 +960,68 @@
                                style="font-size:18px;width:80px;height:30px">保存</md-button>
                     </div>
                  </div>
-                
             </div>
         </transition>
         <!-- confirm box end -->
+
+        <!-- pick time box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showTimePick"
+                 class="timepick-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="showTimePick"
+                 class="timepick-front">
+                <div class="timepick-box">
+                    <div class="timepick-box-title">
+                        时间选择
+                    </div>
+                    <div class="timepick-box-body">
+                        <div class="timepickerlist-top">
+                            <input type="number"
+                                   v-model="choiceH">
+                            <span>:</span>
+                            <input type="number"
+                                   v-model="choiceM">
+                            <!-- <span>12:12</span> -->
+                        </div>
+                        <div class="timepickerlist">
+                            <div class="timepickerlist-box">
+                                <div v-for="(hour,hourindex) in 24"
+                                     :key="hourindex+100"
+                                     class="timepickerlist-box-item"
+                                     @click="choiceHMethod(hour)">
+                                    <span v-if="hour<10">{{'0'+hour}}</span>
+                                    <span v-else>{{hour}}</span>
+                                </div>
+                            </div>
+                            <div class="timepickerlist-box">
+                                <div v-for="(min, minindex) in 60"
+                                     :key="minindex"
+                                     class="timepickerlist-box-item"
+                                     @click="choiceMMethod(min)">
+                                    <span v-if="min<10">{{'0'+min}}</span>
+                                    <span v-else>{{min}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <md-button class="md-raised md-primary"
+                                   @click="showTimePick = false"
+                                   style="font-size:18px;min-width:80px;height:30px">关闭</md-button>
+                        <md-button class="md-raised md-accent"
+                                   @click="confirmChoiceTime"
+                                   style="font-size:18px;min-width:80px;height:30px">确认</md-button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- pick time box end -->
     </div>
 </template>
 
@@ -1010,7 +1096,14 @@ export default {
             isShowNcSort:false,
             isHasChangeDriverSort:false,
             isHasChangeNcSort:false,
-            showConfirmBox:false
+            showConfirmBox:false,
+            showTimePick:false,
+            timeLimit:null,
+            startTimeLimit:null,
+            endTimeLimit:null,
+            choiceH:null,
+            choiceM:null,
+            isStartTimeMode:false
         };
     },
     mounted() {
@@ -1086,6 +1179,38 @@ export default {
     },
 
     methods: {
+        openTimePickMethod(mode){
+            this.showTimePick = true
+            if(mode === 'start'){
+                console.log('start')
+                this.isStartTimeMode = true
+            }else{
+                console.log('end')
+                this.isStartTimeMode = false
+            }
+        },
+        confirmChoiceTime() {
+            if(this.isStartTimeMode){
+                console.log('start')
+                this.startTimeLimit = this.choiceH + ":" + this.choiceM;
+            }else{
+                console.log('end')
+                this.endTimeLimit = this.choiceH + ":" + this.choiceM;
+            }
+            this.showTimePick = false;
+        },
+        choiceHMethod(item) {
+            if (item < 10) {
+                item = "0" + item;
+            }
+            this.choiceH = item;
+        },
+        choiceMMethod(item) {
+            if (item < 10) {
+                item = "0" + item;
+            }
+            this.choiceM = item;
+        },
         hasMoved(){
             if(this.isShowNcSort){
                 this.isHasChangeNcSort = true
@@ -1463,6 +1588,8 @@ export default {
             this.choicecar = "";
             this.choicedirver = "";
             this.adirverinfo = "";
+            this.startTimeLimit = null
+            this.endTimeLimit = null
             this.choiceclientb = [];
             this.usedDriverInfo = [];
             this.savemode = true;
@@ -1636,7 +1763,9 @@ export default {
                         timesdirver: this.choicedirver,
                         timesclientb: tempClientArray,
                         logOperator: localStorage.getItem("name"),
-                        NcNumber: this.NcNumber
+                        NcNumber: this.NcNumber,
+                        goTime: this.startTimeLimit,
+                        backTime: this.endTimeLimit
                     })
                     .then(response => {
                         if (response.data.code == 1) {
@@ -1708,6 +1837,8 @@ export default {
             this._id = item._id;
             this.timesname = item.timesname;
             this.timesnote = item.timesnote;
+            this.startTimeLimit = item.goTime
+            this.endTimeLimit = item.backTime
             this.usedDriverInfo = [];
             this.alldirverinfo.forEach(element => {
                 item.usedDriver.forEach(item => {
@@ -1762,7 +1893,9 @@ export default {
                         timesclientnumber: this.choiceclientb.length,
                         timesnote: this.timesnote,
                         logOperator: localStorage.getItem("name"),
-                        NcNumber: this.NcNumber
+                        NcNumber: this.NcNumber,
+                        goTime:this.startTimeLimit,
+                        backTime:this.endTimeLimit
                     })
                     .then(res => {
                         this.tipMsg = res.data.msg;

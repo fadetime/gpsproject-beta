@@ -2,7 +2,7 @@
     <div id="home">
         <div class="topbutton">
             <div class="topbutton-left">
-                <vue-datepicker-local v-model="selectedDate"/>
+                <vue-datepicker-local v-model="selectedDate" />
             </div>
             <div class="topbutton-right"
                  style="padding-top:5px">
@@ -64,6 +64,7 @@
         </div>
         <!-- add dialog start -->
         <md-dialog :md-active.sync="addDialog"
+                   :md-click-outside-to-close="false"
                    id="newmission">
             <!-- style="width:878px" -->
             <md-dialog-title style="font-size:18px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:0;margin-bottom:4px">
@@ -353,7 +354,7 @@
                                     <span>客服排序</span>
                                 </md-button>
                             </div>
-                            
+
                             <div class="third-body-search">
                                 <input class="clientsearch"
                                        type="text"
@@ -428,7 +429,8 @@
                                             <md-card-content>
                                                 <div class="step-third-title-body">
                                                     <label :for="index"
-                                                           class="step-third-title" @click="autoSortMethod">
+                                                           class="step-third-title"
+                                                           @click="autoSortMethod">
                                                         <input type="checkbox"
                                                                :id="index"
                                                                :value="item"
@@ -562,7 +564,9 @@
                                                                 <span>{{index}}</span>
                                                             </div>
                                                             <div style="width:249px;padding-left:24px;font-size: 16px;">
-                                                                <span>{{item}}</span>
+                                                                <span v-if="!redBoxArray[index]"
+                                                                      style="background:red;color:#fff">{{item}}</span>
+                                                                <span v-else>{{item}}</span>
                                                             </div>
                                                             <div style="width:60px;font-size: 16px;">
                                                                 <span>第</span>
@@ -614,57 +618,67 @@
                    :md-active.sync="detaildialog">
             <div style="text-align:center;box-shadow:0px 1px 5px #000;background-color:#d74342;height:40px;line-height:40px;margin-bottom:20px;font-size:18px">
                 <div class="detaildialog-title-www">
-                    <span style="color:#fff">出车报表</span>
+                    <span style="color:#fff">{{missionline}}</span>
                 </div>
                 <div class="detaildialog-title-ipad"
                      style="display:flex;display:-webkit-flex;justify-content: space-between;">
                     <div style="line-height: 40px;padding-left:24px">
                         <span style="color:#fff">出车报表</span>
                     </div>
-                    <div class="adddialog-top-button"
-                         style="padding-top: 4px;">
+                    <div class="adddialog-top-button detaildialogbutton">
                         <md-button class="md-raised"
                                    style="background: #ff5252;color:#fff;font-size: 16px;height:30px;line-height:30px"
                                    @click="detaildialog=false">关闭</md-button>
                     </div>
                 </div>
             </div>
-            <div class="class600" style="overflow:hidden auto;font-size:16px">
-                <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;padding:5px 0">
-                    <div style="flex-basis:25%;text-align:center;margin:0 auto"
+            <div class="class600"
+                 style="overflow:hidden auto;font-size:16px">
+                <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row wrap;flex-flow:row wrap;width:90%;margin:0 auto;padding:5px 0">
+                    <div class="oldertitle"
+                         style="flex-basis:25%;text-align:left;margin:0 auto"
                          :title="missiondriver">
-                        <span>司机:{{missiondriver}}</span>
+                        <span>车次司机:{{missiondriver}}</span>
                     </div>
-                    <div style="flex-basis:25%;text-align:center;margin:0 auto;">
+                    <div class="oldertitle"
+                         style="flex-basis:25%;text-align:left;margin:0 auto;">
+                        <span>预计出车:{{goTime}}</span>
+                    </div>
+                    <div class="oldertitle"
+                         style="flex-basis:25%;text-align:left;margin:0 auto;">
                         <span v-if="checkCarInfo.date">出车时间:{{checkCarInfo.date | timefilter}}</span>
                         <span v-else>出车时间:未提交</span>
                     </div>
-                    <div style="flex-basis:25%;text-align:center;margin:0 auto;">
-                        <span  v-if="checkCarInfo.boxNum">出车框数:{{checkCarInfo.boxNum}}</span>
+                    <div class="oldertitle"
+                         style="flex-basis:25%;text-align:left;margin:0 auto;">
+                        <span v-if="checkCarInfo.boxNum">出车框数:{{checkCarInfo.boxNum}}</span>
                         <span v-else>出车框数:未提交</span>
                     </div>
-                    <div style="flex-basis:25%;text-align:left;margin:0 auto;">
-                        <span>车次:{{missionline}}</span>
-                    </div>
+
                 </div>
 
-                <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;width:90%;margin:0 auto;border-bottom:1px solid;padding:5px 0">
-                    <div style="flex-basis:25%;text-align:center;margin:0 auto">
-                        <span>日期:{{missiondate}}</span>
+                <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row wrap;flex-flow:row wrap;width:90%;margin:0 auto;border-bottom:1px solid;padding:5px 0">
+                    <div class="oldertitle"
+                         style="flex-basis:25%;text-align:left;margin:0 auto">
+                        <span>任务日期:{{missiondate}}</span>
                     </div>
-                    <div style="flex-basis:25%;text-align:center;margin:0 auto">
+                    <div class="oldertitle"
+                         style="flex-basis:25%;text-align:left;margin:0 auto">
+                        <span>预计收车:{{backTime}}</span>
+                    </div>
+                    <div class="oldertitle"
+                         style="flex-basis:25%;text-align:left;margin:0 auto">
                         <span v-if="checkCarInfo.finishDate">收车时间:{{checkCarInfo.finishDate | timefilter}}</span>
                         <span v-else>收车时间:未提交</span>
                     </div>
-                    <div style="flex-basis:25%;text-align:center;margin:0 auto">
+                    <div class="oldertitle"
+                         style="flex-basis:25%;text-align:left;margin:0 auto">
                         <span v-if="checkCarInfo.boxNumAgain">收车框数:{{checkCarInfo.boxNumAgain}}</span>
                         <span v-else>收车框数:未提交</span>
                     </div>
-                    <div style="flex-basis:25%;text-align:left;margin:0 auto">
-                        <span>总单数:{{missioncount}}</span>
-                    </div>
+
                 </div>
-                <div style="padding:5px 0;border:1px solid #989898;width:90%;margin:10px auto">
+                <div style="padding:5px 0;border:1px solid #989898;width:90%;margin:5px auto">
                     <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row;flex-flow:row;font-weight:600;padding:5px 0">
                         <div style="flex-basis:15%;text-align:center;margin:0 auto">
                             <span>序号</span>
@@ -720,10 +734,14 @@
                         </div>
                     </div>
                 </div>
-                
-            </div>
 
-            <md-dialog-actions class="buttonarea600" style="margin:0 auto">
+            </div>
+            <div class="rightbottom"
+                 style="text-align:right;margin:0 40px;color:#6a6a6a">
+                <span>总单数:{{missioncount}}</span>
+            </div>
+            <md-dialog-actions class="buttonarea600"
+                               style="margin:0 auto">
                 <md-button class="md-raised md-primary"
                            @click="detaildialog = false"
                            style="font-size:16px;width:80px;height:30px">关闭</md-button>
@@ -1100,6 +1118,11 @@
                                    style="font-size:18px;width:80px;height:30px">修改客户</md-button>
                     </div>
                     <div>
+                        <md-button class="md-raised"
+                                   @click="editMissionDateMethod"
+                                   style="font-size:18px;width:80px;height:30px">修改时间</md-button>
+                    </div>
+                    <div>
                         <md-button class="md-raised md-primary"
                                    @click="showEditMissionBox = false"
                                    style="font-size:18px;width:80px;height:30px">关闭</md-button>
@@ -1254,6 +1277,54 @@
             </div>
         </transition>
         <!-- edit mission-client end -->
+
+        <!-- edit mission-date start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showEditMissionDateBox"
+                 class="mapbox-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="showEditMissionDateBox"
+                 class="mapbox-front"
+                 @click.self.prevent="showEditMissionDateBox = false">
+                 <div class="mapbox-front-box">
+                    <div class="mapbox-front-box-top">
+                        <span>日期修改</span>
+                    </div>
+                    <div style="font-size: 16px;padding-top: 16px;">
+                        <div style="border: 1px solid #e0e0e0;position:relative;width: 160px;margin: 0 auto;">
+                            <div style="position:absolute;top: -10px;left:0;right:0">
+                                <span style="background:#fff">当前日期</span>
+                            </div>
+                            <div style="padding-top:12px;padding-bottom:10px">
+                                <span>{{dateNow | datefilter}}</span>
+                            </div>
+                        </div>
+                        <div style="border: 1px solid #e0e0e0;position:relative;width: 160px;margin: 16px auto 0 auto;">
+                            <div style="position:absolute;top: -10px;left:0;right:0">
+                                <span style="background:#fff">任务日期</span>
+                            </div>
+                            <div style="padding-top:12px;padding-bottom:10px;padding-left: 10px;padding-right: 10px;">
+                                <vue-datepicker-local v-model="dateEdit" />
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <md-button class="md-raised md-primary"
+                                   @click="showEditMissionDateBox = false"
+                                   style="font-size:18px;width:80px;height:30px">关闭</md-button>
+                        <md-button class="md-raised md-primary"
+                                   @click="confirmEditMissionDate"
+                                   style="font-size:18px;width:80px;height:30px">保存</md-button>
+                    </div>
+                 </div>
+            </div>
+        </transition>
+        <!-- edit mission-date end -->
     </div>
 </template>
 
@@ -1262,7 +1333,7 @@ import axios from "axios";
 import config from "../../public/js/config.js";
 import _ from "lodash";
 import draggable from "vuedraggable";
-import VueDatepickerLocal from 'vue-datepicker-local' //时间选择组件
+import VueDatepickerLocal from "vue-datepicker-local"; //时间选择组件
 
 export default {
     name: "home",
@@ -1298,6 +1369,8 @@ export default {
             secondStepError: null,
             missionline: "",
             missiondriver: "",
+            goTime: "",
+            backTime: "",
             missioncar: "",
             missioncount: "",
             missionfinish: "",
@@ -1350,9 +1423,13 @@ export default {
             showEditMissionBox: false,
             showEditMissionClientBox: false,
             isShowChoiseClient: true,
-            checkCarInfo:'',
-            isShowNcSort:false,
-            tempArrayData:[]
+            checkCarInfo: "",
+            isShowNcSort: false,
+            tempArrayData: [],
+            redBoxArray: [],
+            showEditMissionDateBox:false,
+            dateNow:new Date(),
+            dateEdit:new Date()
         };
     },
     computed: {
@@ -1382,17 +1459,15 @@ export default {
     },
     watch: {
         selectedDate: function() {
-            this.selectedDate = new Date(this.selectedDate).toDateString()
-            this.selectedDate = new Date(this.selectedDate).toISOString()
-            console.log(this.selectedDate)
+            this.selectedDate = new Date(this.selectedDate).toDateString();
+            this.selectedDate = new Date(this.selectedDate).toISOString();
             axios
                 .post(config.server + "/mission", {
                     startdate: this.selectedDate
                 })
                 .then(res => {
                     this.allmission = res.data;
-                    this.countfinish()
-                    console.log(this.selectedDate)
+                    this.countfinish();
                 })
                 .catch(err => {
                     console.log("获取数据失败");
@@ -1428,32 +1503,34 @@ export default {
     },
 
     methods: {
+        testMethod() {
+            console.log("123123");
+        },
         autoSortMethod() {
             setTimeout(() => {
                 this.choiceClient = _.orderBy(
-                            this.choiceClient,
-                            ['driverSortNum'],
-                            ['asc']
-                        )
+                    this.choiceClient,
+                    ["driverSortNum"],
+                    ["asc"]
+                );
             }, 30);
-            
         },
         changeSortModeMethod() {
-            if(!this.isShowNcSort){
-                    this.leftBoxArray = _.orderBy(
-                            this.leftBoxArray,
-                            ['NcSortNum'],
-                            ['asc']
-                        )
-                    this.isShowNcSort = true
-                }else{
-                    this.leftBoxArray = _.orderBy(
-                            this.leftBoxArray,
-                            ['driverSortNum'],
-                            ['asc']
-                        )
-                    this.isShowNcSort = false
-                }
+            if (!this.isShowNcSort) {
+                this.leftBoxArray = _.orderBy(
+                    this.leftBoxArray,
+                    ["NcSortNum"],
+                    ["asc"]
+                );
+                this.isShowNcSort = true;
+            } else {
+                this.leftBoxArray = _.orderBy(
+                    this.leftBoxArray,
+                    ["driverSortNum"],
+                    ["asc"]
+                );
+                this.isShowNcSort = false;
+            }
         },
         closeAddDialogMethod() {
             this.addDialog = false;
@@ -1578,6 +1655,57 @@ export default {
                 }, 2000);
             }
         },
+
+        confirmEditMissionDate(){
+            axios
+                .post(config.server + "/mission/editdate", {
+                    _id: this._id,
+                    dateEdit:this.dateEdit
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.getMission();
+                        this.showEditMissionDateBox = false
+                        this.errormsg = "修改任务时间成功";
+                        this.showTipDialog = true;
+                        setTimeout(() => {
+                            this.showTipDialog = false;
+                        }, 2000);
+                    }else{
+                        this.showEditMissionDateBox = false
+                        this.errormsg = "出现错误，请联系管理员";
+                        this.showTipDialog = true;
+                        console.log(doc)
+                        setTimeout(() => {
+                            this.showTipDialog = false;
+                        }, 2000);
+                    }
+                    
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        
+        editMissionDateMethod(){
+            this.showEditMissionDateBox = true
+            this.detaildialog = false;
+            this.showEditMissionBox = false;
+
+            axios
+                .post(config.server + "/mission/getdate", {
+                    _id: this._id
+                })
+                .then(doc => {
+                    console.log(doc)
+                    this.dateEdit = new Date(doc.data)
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
         editMissionClientMethod() {
             this.showEditMissionClientBox = true;
             this.detaildialog = false;
@@ -1589,10 +1717,7 @@ export default {
                 })
                 .then(doc => {
                     this.leftBoxArray = [];
-                    let tempArray = doc.data.doc.timesclientb;
-                    console.log("@@@@");
-                    console.log(doc.data);
-                    console.log("@@@@");
+                    let tempArray = doc.data.doc.timesclientb
                     // let countNum = 0;
                     // tempArray.forEach(elementX => {
                     // 	this.missionShipping.missionclient.forEach(elementY => {
@@ -1613,9 +1738,6 @@ export default {
                 .catch(err => {
                     console.log(err);
                 });
-            console.log("#####");
-            console.log(this.missionShipping);
-            console.log("#####");
         },
         toTheTop(item, index) {
             this.choiceClient.splice(index, 1);
@@ -1660,28 +1782,7 @@ export default {
                 this.showTipDialog = false;
             }, 3000);
         },
-        editMissionMethod() {
-            console.log(this.aLineInfo);
-            // this.getallclientb()
-            // this.getalltimes()
-            // this.getalldirver('nameFindDriver')
-            // this.getallcar('idFindCar')
-            // this.editMode = true
-            // setTimeout(() => {
-            // console.log(this.alldirverinfo)
-            // }, 300)
 
-            // console.log('###')
-            // this.selectorText = this.missionShipping.missionline
-            // this.detaildialog = false
-            // this.addDialog = true
-            // this.aLineInfo.timesname = this.missionShipping.missionline
-            // this.aLineInfo.timesnote = this.missionShipping.missionnote
-            // this.choseLine = {
-            // timesname: this.missionShipping.missionline,
-            // timesnote: this.missionShipping.missionnote
-            // }
-        },
         removeUsedDriverMethod(usedDriver, index) {
             axios
                 .post(config.server + "/times/useddriverdel", {
@@ -2149,63 +2250,68 @@ export default {
         //获取所有司机数据 end
 
         openMissionInfo(item) {
-            this.getMission()
-            axios.post(config.server + "/mission/one",{
-                _id:item._id
-            })
-            .then(doc => {
-                if(doc.data.carCheck_id){
-                this.getOneCheckCarInfoMethod(doc.data.carCheck_id)
-                }else{
-                    this.checkCarInfo = ''
-                }
-                this.missionShipping = doc.data
-                let time = new Date(doc.data.missiondate).toLocaleDateString();
-                this.detaildialog = true;
-                this.missionline = doc.data.missionline;
-                this.missiondriver = doc.data.missiondirver;
-                this.missioncar = doc.data.missioncar;
-                this.missioncount = doc.data.missionclient.length;
-                this.missionclient = doc.data.missionclient;
-                this.missionfinish = "finish";
-                this.missionphone = doc.data.missionphone;
-                this.missiondate = time;
-                this.missionid = doc.data._id
-            })
-            .catch(err => {
-                console.log(err)
-            })
+            this.getMission();
+            this._id = item._id
+            axios
+                .post(config.server + "/mission/one", {
+                    _id: item._id
+                })
+                .then(doc => {
+                    if (doc.data.carCheck_id) {
+                        this.getOneCheckCarInfoMethod(doc.data.carCheck_id);
+                    } else {
+                        this.checkCarInfo = "";
+                    }
+                    this.missionShipping = doc.data;
+                    let time = new Date(
+                        doc.data.missiondate
+                    ).toLocaleDateString();
+                    this.detaildialog = true;
+                    this.missionline = doc.data.missionline;
+                    this.missiondriver = doc.data.missiondirver;
+                    this.goTime = doc.data.goTime;
+                    this.backTime = doc.data.backTime;
+                    this.missioncar = doc.data.missioncar;
+                    this.missioncount = doc.data.missionclient.length;
+                    this.missionclient = doc.data.missionclient;
+                    this.missionfinish = "finish";
+                    this.missionphone = doc.data.missionphone;
+                    this.missiondate = time;
+                    this.missionid = doc.data._id;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
 
-        getOneCheckCarInfoMethod(item){
-            axios.post(config.server + "/checkcar/getone",{
-                checkCar_id:item
-            })
-            .then(doc => {
-                if(doc.data.code === 0) {
-                    this.checkCarInfo = doc.data.doc
-                }else{
-                    this.checkCarInfo = {
-                        date:false
+        getOneCheckCarInfoMethod(item) {
+            axios
+                .post(config.server + "/checkcar/getone", {
+                    checkCar_id: item
+                })
+                .then(doc => {
+                    if (doc.data.code === 0) {
+                        this.checkCarInfo = doc.data.doc;
+                    } else {
+                        this.checkCarInfo = {
+                            date: false
+                        };
                     }
-                }
-                
-            })
-            .catch(err => {
-                console.log(err)
-            })
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
 
         getMission() {
             setTimeout(() => {
-                this.selectedDate = new Date(this.selectedDate).toDateString()
-                this.selectedDate = new Date(this.selectedDate).toISOString()
+                this.selectedDate = new Date(this.selectedDate).toDateString();
+                this.selectedDate = new Date(this.selectedDate).toISOString();
                 axios
                     .post(config.server + "/mission", {
                         startdate: this.selectedDate
                     })
                     .then(res => {
-                        console.log('go to the get mission')
                         this.allmission = res.data;
                         this.countfinish();
                     })
@@ -2317,8 +2423,10 @@ export default {
                                     }
                                 });
                                 this.choiceClient = [];
+                                this.redBoxArray = [];
                                 this.aLineInfo.timesclientb.forEach(
                                     element1 => {
+                                        let redindex = 0;
                                         this.comparedClient.customers.forEach(
                                             element2 => {
                                                 if (
@@ -2328,7 +2436,11 @@ export default {
                                                     this.choiceClient.push(
                                                         element1
                                                     );
+                                                    this.redBoxArray[
+                                                        redindex
+                                                    ] = true;
                                                 }
+                                                redindex += 1;
                                             }
                                         );
                                     }
@@ -2346,9 +2458,6 @@ export default {
                                     this.showTipDialog = false;
                                 }, 3000);
                             }
-                            console.log("###ebuy后台数据###");
-                            console.log(this.comparedClient);
-                            console.log("#################");
                         }
                         this.active = index;
                     }
@@ -2483,6 +2592,8 @@ export default {
                 query = {
                     missionline: this.aLineInfo.timesname,
                     line_id: this.aLineInfo._id,
+                    goTime: this.aLineInfo.goTime,
+                    backTime: this.aLineInfo.backTime,
                     missionnote: this.aLineInfo.timesnote,
                     missiondirver: this.selectorDriver.dirvername,
                     missionphone: this.aLineInfo.timesdirver.dirverphone,
@@ -2952,6 +3063,10 @@ export default {
         max-width: 878px;
     }
     .adddialog-top-button {
+        display: inline;
+    }
+
+    .detaildialogbutton {
         display: none;
     }
 
@@ -3009,7 +3124,7 @@ export default {
     }
 
     .detaildialog-body {
-        height: 400px;
+        height: 390px;
     }
 }
 
@@ -3020,25 +3135,34 @@ export default {
     }
     .topbutton-right {
         text-align: center;
-        padding-top:0 !important;
+        padding-top: 0 !important;
     }
 
-    .class600{
+    .class600 {
         font-size: 14px !important;
     }
 
     .class600tonone {
-        display: none
+        display: none;
     }
-    
-    .buttonarea600{
+
+    .buttonarea600 {
         justify-content: center;
         bottom: 0;
         width: 100%;
         background: #fff;
-        position:fixed;
-        padding:0 !important;
+        position: fixed;
+        padding: 0 !important;
         min-height: 40px !important;
+    }
+
+    .oldertitle {
+        flex-basis: 50% !important;
+        white-space: nowrap;
+    }
+
+    .rightbottom {
+        margin: 0 20px !important;
     }
 
     /* .bottomemptey{
