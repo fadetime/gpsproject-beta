@@ -68,10 +68,10 @@
                      @click="routerPushMethod('home')">
                     今日任务
                 </div>
-                <div class="leftmenu-item"
+                <!-- <div class="leftmenu-item"
                      @click="routerPushMethod('searchOrder')">
                     来单查询
-                </div>
+                </div> -->
                 <div class="leftmenu-item"
                      @click="routerPushMethod('line')">
                     车次管理
