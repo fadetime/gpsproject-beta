@@ -1,6 +1,18 @@
 <template>
     <div id="tablepage">
+        <div class="topbuttonarea">
+            <div class="topbuttonarea-item" style="border-top-left-radius:10px;border-bottom-left-radius:10px;">
+                <span>left</span>
+            </div>
+            <div class="topbuttonarea-item" style="margin-left:10px;margin-right:10px">
+                <span>center</span>
+            </div>
+            <div class="topbuttonarea-item" style="border-top-right-radius:10px;border-bottom-right-radius:10px;">
+                <span>right</span>
+            </div>
+        </div>
         <div class="toparea">
+            
             <div style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff">
                 <vue-datepicker-local v-model="startDate"
                                       style="margin-top: 12px;"
@@ -417,6 +429,22 @@ export default {
     padding-top: 20px;
     width: 80%;
     margin: 0 auto;
+}
+
+.topbuttonarea{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.topbuttonarea-item{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
 }
 
 .toparea {

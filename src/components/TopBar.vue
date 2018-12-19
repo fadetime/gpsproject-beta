@@ -69,6 +69,10 @@
                     今日任务
                 </div>
                 <div class="leftmenu-item"
+                     @click="routerPushMethod('searchOrder')">
+                    来单查询
+                </div>
+                <div class="leftmenu-item"
                      @click="routerPushMethod('line')">
                     车次管理
                 </div>
@@ -102,6 +106,8 @@ export default {
         routerPushMethod(item) {
             if (item === "home") {
                 this.$router.push("/");
+            } else if (item === "searchOrder") {
+                this.$router.push("/searchorder");
             } else if (item === "line") {
                 this.$router.push("/times");
             } else if (item === "client") {

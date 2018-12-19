@@ -1,5 +1,8 @@
 <template>
     <div id="home">
+        <div class="toptitle600">
+            <span>今日任务</span>
+        </div>
         <div class="topbutton">
             <div class="topbutton-left">
                 <vue-datepicker-local v-model="selectedDate" />
@@ -60,7 +63,7 @@
         <div v-else>
             <img src="../../public/img/ebuyLogo.png"
                  alt="easylogo"
-                 style="margin:100px auto;width:500px">
+                 style="margin:100px auto;width:50%">
         </div>
         <!-- add dialog start -->
         <md-dialog :md-active.sync="addDialog"
@@ -3058,6 +3061,10 @@ export default {
 .detaildialog-body {
     height: 400px;
 }
+
+.toptitle600{
+    display: none;
+}
 @media screen and (min-width: 1025px) {
     #newmission {
         max-width: 878px;
@@ -3133,6 +3140,17 @@ export default {
         width: 100%;
         margin: 0;
     }
+
+    .toptitle600{
+        display: inline;
+        position: fixed;
+        top: 10px;
+        font-size: 18px;
+        left: 0;
+        right: 0;
+        color: #fff;
+    }
+
     .topbutton-right {
         text-align: center;
         padding-top: 0 !important;

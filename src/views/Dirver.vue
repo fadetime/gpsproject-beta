@@ -98,7 +98,7 @@
         <!-- Dialog start-->
         <md-dialog :md-active.sync="showDialog"
                    class="driverdialog">
-            <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:12px">
+            <md-dialog-title style="font-size:18px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:12px;line-height: 20px;">
                 <span style="color:#fff">司机管理</span>
             </md-dialog-title>
             <md-dialog-content style="padding: 0 24px;">
@@ -131,9 +131,9 @@
                         <div class="dialog-body-item">
                             <md-field style="margin:0 auto"
                                       :class="nameclass">
-                                <label style="font-size:20px">司机姓名</label>
+                                <label style="font-size:16px">司机姓名</label>
                                 <md-input v-model="dirvername"
-                                          style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
                                 <span class="md-error"
                                       style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
                             </md-field>
@@ -141,11 +141,11 @@
                             <md-field style="margin:20px auto"
                                       :class="cardclass">
                                 <label for="dirvercard"
-                                       style="font-size:20px">驾照类型</label>
+                                       style="font-size:16px">驾照类型</label>
                                 <md-select v-model="dirvercard"
                                            name="dirvercard"
                                            id="dirvercard"
-                                           style="border-bottom: 1px solid #000;font-size:18px;height:55px;max-width: 500px;padding-top:21px">
+                                           style="border-bottom: 1px solid #000;font-size:16px;height:33px;max-width: 500px;text-align: center;">
                                     <md-option value="Class 3A">Class 3A</md-option>
                                     <md-option value="Class 3">Class 3</md-option>
                                     <md-option value="Class 4A">Class 4A</md-option>
@@ -156,32 +156,42 @@
 
                             <md-field style="margin:30px auto"
                                       :class="phonclass">
-                                <label style="font-size:20px">联系方式</label>
+                                <label style="font-size:16px">联系方式</label>
                                 <md-input v-model="dirverphone"
-                                          style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"
+                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"
                                           @change="check_phone($event)"></md-input>
                                 <span class="md-error"
                                       style="font-size:15px;margin: -10px auto;">请输入8位整数</span>
                             </md-field>
+                            <div @click="choiseRoleMethod" class="choiseroleclass">
+                                <div style="border: 2px dashed #696969;text-align: center;height: 40px;line-height: 40px;">
+                                    <span v-if="userRole === 'user'">司 机</span>
+                                    <span v-else-if="userRole === 'dayshift'">白 班</span>
+                                    <span v-else-if="userRole === 'maintain'">维修员</span>
+                                    <span v-else-if="userRole === 'checker'">检查员</span>
+                                    <span v-else-if="userRole === 'bill'">账单管理</span>
+                                    <span v-else style="color:#e0e0e0">点击选择角色</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="dialog-body">
                         <div class="dialog-body-item">
                             <md-field style="margin:0 auto"
                                       :class="userclass">
-                                <label style="font-size:20px">用户名</label>
+                                <label style="font-size:16px">用户名</label>
                                 <md-input v-model="dirverusername"
-                                          style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
                                 <span class="md-error"
                                       style="font-size:15px;margin: -10px auto;">登陆用户名</span>
                             </md-field>
 
                             <md-field style="margin:20px auto"
                                       :class="pswclass">
-                                <label style="font-size:20px">密码</label>
+                                <label style="font-size:16px">密码</label>
                                 <md-input v-model="dirverpsw"
                                           type="password"
-                                          style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
                                 <span class="md-error"
                                       style="font-size:15px;margin: -10px auto;">标识密码</span>
                             </md-field>
@@ -190,17 +200,17 @@
                         <div class="dialog-body-item">
                             <md-field style="margin:0 auto"
                                       :class="passclass">
-                                <label style="font-size:20px">准证号码</label>
+                                <label style="font-size:16px">准证号码</label>
                                 <md-input v-model="dirverid"
-                                          style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
                                 <span class="md-error"
                                       style="font-size:15px;margin: -10px auto;">人员标识信息，必填项目</span>
                             </md-field>
 
                             <md-field style="margin:20px auto">
-                                <label style="font-size:20px">备注</label>
+                                <label style="font-size:16px">备注</label>
                                 <md-input v-model="dirvernote"
-                                          style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
+                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
                             </md-field>
                         </div>
                     </div>
@@ -210,15 +220,15 @@
             <md-dialog-actions style="margin:0 auto 10px auto">
                 <md-button class="md-raised md-primary"
                            @click="showDialog = false"
-                           style="font-size:20px;width:100px;height:40px">取消</md-button>
+                           style="font-size:16px;width:100px;height:30px;width:80">取消</md-button>
                 <md-button class="md-raised md-primary"
                            v-if="savemode"
                            @click="adddirver"
-                           style="font-size:20px;width:100px;height:40px">保存</md-button>
+                           style="font-size:16px;width:100px;height:30px;width:80">保存</md-button>
                 <md-button class="md-raised md-primary"
                            v-else
                            @click="confirmedit"
-                           style="font-size:20px;width:100px;height:40px">修改</md-button>
+                           style="font-size:16px;width:100px;height:30px;width:80">修改</md-button>
             </md-dialog-actions>
         </md-dialog>
         <!-- Dialog end-->
@@ -328,6 +338,48 @@
             </div>
         </transition>
         <!-- tip box end -->
+
+        <!-- choise role box start -->
+        <transition name="show-choise-role-box-back"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showChoiseRoleBox"
+                 class="rolebox-back"></div>
+        </transition>
+        <transition name="show-choise-role-box-front"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="showChoiseRoleBox"
+                 class="rolebox-front"
+                 @click.self.prevent="showChoiseRoleBox = false">
+                 <div class="rolebox-front-box">
+                     <div class="rolebox-front-box-title">
+                         <span>选择角色</span>
+                     </div>
+                     <div class="rolebox-front-box-body">
+                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('d')">
+                             <span>司 机</span>
+                         </div>
+                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('b')">
+                             <span>白 班</span>
+                         </div>
+                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('w')">
+                             <span>维修员</span>
+                         </div>
+                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('c')">
+                             <span>检察员</span>
+                         </div>
+                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('bill')">
+                             <span>账单管理</span>
+                         </div>
+                     </div>
+                     <div class="rolebox-front-box-footer" @click="showChoiseRoleBox = false">
+                         <div class="rolebox-button">取消</div>
+                     </div>
+                 </div>
+            </div>
+        </transition>
+        <!-- choise role box end -->
     </div>
 </template>
 
@@ -373,7 +425,9 @@ export default {
             updateImage: "",
             driverImage: "",
             showTipDialog: false,
-            tipMsg: ""
+            tipMsg: "",
+            userRole:null,
+            showChoiseRoleBox:false
         };
     },
     mounted() {
@@ -438,6 +492,25 @@ export default {
         }
     },
     methods: {
+        choiseRoleEventMethod(role){
+            if(role === 'd') {
+                this.userRole = 'user'
+            }else if( role === 'b') {
+                this.userRole = 'dayshift'
+            }else if( role === 'w') {
+                this.userRole = 'maintain'
+            }else if( role === 'bill') {
+                this.userRole = 'bill'
+            }else{
+                this.userRole = 'checker'
+            }
+            this.showChoiseRoleBox = false
+        },
+
+        choiseRoleMethod(){
+            this.showChoiseRoleBox = true
+        },
+
         check_phone(event) {
             let value = event.target.value;
             if (!/^[0-9]{8}$/.test(value)) {
@@ -508,6 +581,7 @@ export default {
             this.dirverusername = "";
             this.dirverpsw = "";
             this.dirvernote = "";
+            this.userRole = null
         },
         deletebutton(item) {
             this.deleteDialog = true;
@@ -560,6 +634,7 @@ export default {
             this.dirvernote = item.dirvernote;
             this.driverImage = item.image;
             this.showDialog = true;
+            this.userRole = item.role
         },
 
         pageButton(item) {
@@ -681,6 +756,7 @@ export default {
                 payload.append("dirvercard", this.dirvercard);
                 payload.append("dirverusername", this.dirverusername);
                 payload.append("dirvernote", this.dirvernote);
+                payload.append("role", this.userRole);
                 payload.append("logOperator", localStorage.getItem("name"));
 
                 axios({
@@ -796,6 +872,7 @@ export default {
                         payload.append("dirverusername", this.dirverusername);
                         payload.append("dirverpsw", this.dirverpsw);
                         payload.append("dirvernote", this.dirvernote);
+                        payload.append("role", this.userRole);
                         axios({
                             method: "post",
                             url: config.server + "/dirver",
@@ -837,6 +914,7 @@ export default {
                     payload.append("dirverusername", this.dirverusername);
                     payload.append("dirverpsw", this.dirverpsw);
                     payload.append("dirvernote", this.dirvernote);
+                    payload.append("role", this.userRole);
                     axios({
                         method: "post",
                         url: config.server + "/dirver",
@@ -1021,6 +1099,95 @@ export default {
 
 .deldialog-right {
     flex-basis: 50%;
+}
+
+.choiseroleclass{
+    cursor: pointer;
+}
+
+.rolebox-back {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+    z-index: 23;
+}
+
+.rolebox-front {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 24;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rolebox-front-box {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    background: #fff;
+}
+
+.rolebox-front-box-title {
+    height: 35px;
+    font-size: 18px;
+    line-height: 35px;
+    background: #d44950;
+    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.rolebox-front-box-body{
+    padding: 10px 10px;
+}
+
+.rolebox-front-box-body-item{
+    border: 1px solid #e0e0e0;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    padding:5px 0;
+    margin: 5px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.rolebox-front-box-body-item:active{
+    background: #eee;   
+    box-shadow: none;
+    transition: 0.2s;
+}
+.rolebox-front-box-footer{
+    display: flex;
+    display: -webkit-flex;
+    padding: 0 10px 10px 10px;
+}
+
+.rolebox-button{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    width: 120px;
+    margin: 0 auto;
+    border-radius: 5px;
+    background: #448aff;
+    color: #fff;
+    height: 30px;
+    line-height: 30px;
+    transition: 0.2s;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.rolebox-button:active{
+    box-shadow:none;
+    transition: 0.2s;
 }
 
 @media screen and (min-width: 1025px) {

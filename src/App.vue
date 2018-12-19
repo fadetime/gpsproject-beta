@@ -50,6 +50,18 @@ export default {
     color: #2c3e50;
 }
 
+#page-body-title-picker input{
+    margin: 5px auto;
+    border-radius: 10px;
+    width: 300px;
+    height: 35px;
+    text-align: center;
+    -web-kit-appearance: none;
+    -moz-appearance: none;
+    outline: 0;
+    font-size: 16px;
+}
+
 body {
     margin: 0;
 }
