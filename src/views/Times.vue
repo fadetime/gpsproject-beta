@@ -2,10 +2,17 @@
     <div id="times">
         <div class="topbutton">
             <div class="topbutton-left">
-                <input type="text"
-                       v-model="selectCar"
-                       @keyup.enter="search"
-                       placeholder="搜索车次信息">
+                <div style="position:relative">
+                    <input type="text"
+                           class="findbox"
+                           v-model="selectCar"
+                           @keyup.enter="search"
+                           placeholder="搜索车次信息">
+                    <div class="findmore-button"
+                         @click="findlinebyclient">
+                        <span>more</span>
+                    </div>
+                </div>
             </div>
             <div class="topbutton-right">
                 <md-button class="md-raised md-primary"
@@ -145,10 +152,12 @@
                                             <span>预计出车</span>
                                         </div>
                                         <div style="display:flex;display:-webkit-flex;height:32px;cursor: pointer;"
-                                            @click="openTimePickMethod('start')">
+                                             @click="openTimePickMethod('start')">
                                             <div style="font-size:18px;flex-basis: 80%;text-align: center;line-height: 32px;">
-                                                <span style="padding-left: 10px;" v-if="startTimeLimit">{{startTimeLimit}}</span>
-                                                <span style="padding-left: 10px;" v-else>Null</span>
+                                                <span style="padding-left: 10px;"
+                                                      v-if="startTimeLimit">{{startTimeLimit}}</span>
+                                                <span style="padding-left: 10px;"
+                                                      v-else>Null</span>
                                             </div>
                                             <div style="flex-basis: 20%;text-align:center;line-height: 32px;">
                                                 <md-icon style="font-size:30px!important">access_time</md-icon>
@@ -160,17 +169,19 @@
                                             <span>预计收车</span>
                                         </div>
                                         <div style="display:flex;display:-webkit-flex;height:32px;cursor: pointer;"
-                                            @click="openTimePickMethod('end')">
+                                             @click="openTimePickMethod('end')">
                                             <div style="font-size:18px;flex-basis: 80%;text-align: center;line-height: 32px;">
-                                                <span style="padding-left: 10px;" v-if="endTimeLimit">{{endTimeLimit}}</span>
-                                                <span style="padding-left: 10px;" v-else>Null</span>
+                                                <span style="padding-left: 10px;"
+                                                      v-if="endTimeLimit">{{endTimeLimit}}</span>
+                                                <span style="padding-left: 10px;"
+                                                      v-else>Null</span>
                                             </div>
                                             <div style="flex-basis: 20%;text-align:center;line-height: 32px;">
                                                 <md-icon style="font-size:30px!important">access_time</md-icon>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div style="border: 3px dashed #448aff;flex-basis: 45%;">
@@ -409,8 +420,10 @@
                             <div style="padding-left:10px">
                                 <div style="border: 3px dashed #448aff;padding:10px;position: relative;">
                                     <div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 86px;top:-24px">
-                                        <span v-if="!isShowNcSort" style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">已选客户</span>
-                                        <span v-else style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">客服顺序</span>
+                                        <span v-if="!isShowNcSort"
+                                              style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">已选客户</span>
+                                        <span v-else
+                                              style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">客服顺序</span>
                                     </div>
                                     <div class="tab4-title"
                                          style="height:32px;line-height:30px;margin-bottom: 2px;">
@@ -943,9 +956,10 @@
                     enter-active-class="animated fadeIn"
                     leave-active-class="animated fadeOut">
             <div class="confirmbox-front"
-                 v-if="showConfirmBox" @click.self.prevent="showConfirmBox = false">
-                 <div class="confirmbox-front-box">  
-                     <div class="confirmbox-front-title">
+                 v-if="showConfirmBox"
+                 @click.self.prevent="showConfirmBox = false">
+                <div class="confirmbox-front-box">
+                    <div class="confirmbox-front-title">
                         <span>提示</span>
                     </div>
                     <div class="confirmbox-front-center">
@@ -953,13 +967,13 @@
                     </div>
                     <div class="confirmbox-front-bottom">
                         <md-button class="md-raised md-primary"
-                               @click="cancelSortMethod"
-                               style="font-size:18px;width:80px;height:30px">取消</md-button>
+                                   @click="cancelSortMethod"
+                                   style="font-size:18px;width:80px;height:30px">取消</md-button>
                         <md-button class="md-raised md-primary"
-                               @click="sortClientMethod"
-                               style="font-size:18px;width:80px;height:30px">保存</md-button>
+                                   @click="sortClientMethod"
+                                   style="font-size:18px;width:80px;height:30px">保存</md-button>
                     </div>
-                 </div>
+                </div>
             </div>
         </transition>
         <!-- confirm box end -->
@@ -987,7 +1001,6 @@
                             <span>:</span>
                             <input type="number"
                                    v-model="choiceM">
-                            <!-- <span>12:12</span> -->
                         </div>
                         <div class="timepickerlist">
                             <div class="timepickerlist-box">
@@ -1022,6 +1035,95 @@
             </div>
         </transition>
         <!-- pick time box end -->
+        <!-- find more box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showFindMoreBox"
+                 class="timepick-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="showFindMoreBox"
+                 @click.self.prevent="showFindMoreBox = false"
+                 class="timepick-front">
+                <div class="timepick-box">
+                    <div class="timepick-box-title">
+                        高级查询
+                    </div>
+                    <div class="timepick-box-body">
+                        <div>
+                            <input type="text"
+                                   class="advancedinput"
+                                   placeholder="请输入客户名"
+                                   v-model="advancedfind"
+                                   @keyup="findTips">
+                        </div>
+                        <div class="advancedbox" v-if="tipsClientName.length != 0">
+                            <div v-for="(item,index) in tipsClientName"
+                                 :key="index"
+                                 @click="findAdvincedClient(item)">
+                                <div class="advancedbox-item">
+                                    {{item.clientbname}}
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="advancedInfo != null" style="font-size:16px" class="advancedInfobox">
+                            <div class="advancedInfobox-item">
+                                <div class="advancedInfobox-item-left">
+                                    <span>所在线路:</span>
+                                </div>
+                                <div class="advancedInfobox-item-right">
+                                    <span>{{advancedInfo.lineInfo.timesname}}</span>
+                                </div>
+                            </div>
+                            <div class="advancedInfobox-item">
+                                <div class="advancedInfobox-item-left">
+                                    <span>客户名称:</span>
+                                </div>
+                                <div class="advancedInfobox-item-right">
+                                    <span>{{advancedInfo.clientInfo.clientbname}}</span>
+                                </div>
+                            </div>
+                            <div class="advancedInfobox-item">
+                                <div class="advancedInfobox-item-left">
+                                    <span>客户电话:</span>
+                                </div>
+                                <div class="advancedInfobox-item-right">
+                                    <span>{{advancedInfo.clientInfo.clientbphone}}</span>
+                                </div>
+                            </div>
+                            <div class="advancedInfobox-item">
+                                <div class="advancedInfobox-item-left">
+                                    <span>客户邮编:</span>
+                                </div>
+                                <div class="advancedInfobox-item-right">
+                                    <span>{{advancedInfo.clientInfo.clientbpostcode}}</span>
+                                </div>
+                            </div>
+                            <div class="advancedInfobox-item">
+                                <div class="advancedInfobox-item-left">
+                                    <span>客户地址:</span>
+                                </div>
+                                <div class="advancedInfobox-item-right">
+                                    <span>{{advancedInfo.clientInfo.clientbaddress}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <md-button class="md-raised md-primary"
+                                   @click="showTimePick = false"
+                                   style="font-size:18px;min-width:80px;height:30px">关闭</md-button>
+                        <md-button class="md-raised md-accent"
+                                   @click="confirmChoiceTime"
+                                   style="font-size:18px;min-width:80px;height:30px">确认</md-button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- find more box end -->
     </div>
 </template>
 
@@ -1093,17 +1195,22 @@ export default {
             dirverChangePageFlag: true,
             newLine: [],
             NcNumber: null,
-            isShowNcSort:false,
-            isHasChangeDriverSort:false,
-            isHasChangeNcSort:false,
-            showConfirmBox:false,
-            showTimePick:false,
-            timeLimit:null,
-            startTimeLimit:null,
-            endTimeLimit:null,
-            choiceH:null,
-            choiceM:null,
-            isStartTimeMode:false
+            isShowNcSort: false,
+            isHasChangeDriverSort: false,
+            isHasChangeNcSort: false,
+            showConfirmBox: false,
+            showTimePick: false,
+            timeLimit: null,
+            startTimeLimit: null,
+            endTimeLimit: null,
+            choiceH: null,
+            choiceM: null,
+            isStartTimeMode: false,
+            showFindMoreBox: false,
+            advancedfind: null,
+            setTimeOutId: null,
+            tipsClientName: [],
+            advancedInfo:null
         };
     },
     mounted() {
@@ -1179,22 +1286,63 @@ export default {
     },
 
     methods: {
-        openTimePickMethod(mode){
-            this.showTimePick = true
-            if(mode === 'start'){
-                console.log('start')
-                this.isStartTimeMode = true
-            }else{
-                console.log('end')
-                this.isStartTimeMode = false
+        findAdvincedClient(clientInfo) {
+            axios
+                .post(config.server + "/times/finda", {
+                    _id: clientInfo._id
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.lineInfo === null){
+                        doc.data.lineInfo={
+                            timesname :'未分配'
+                        }
+                    }
+                    this.advancedInfo = doc.data
+                    this.tipsClientName = []
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
+        findTips() {
+            clearTimeout(this.setTimeOutId);
+            this.setTimeOutId = setTimeout(() => {
+                axios
+                    .post(config.server + "/times/find-tips", {
+                        keyWord: this.advancedfind
+                    })
+                    .then(doc => {
+                        console.log(doc);
+                        this.tipsClientName = doc.data.doc;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }, 1000);
+        },
+
+        findlinebyclient() {
+            this.showFindMoreBox = true;
+        },
+
+        openTimePickMethod(mode) {
+            this.showTimePick = true;
+            if (mode === "start") {
+                console.log("start");
+                this.isStartTimeMode = true;
+            } else {
+                console.log("end");
+                this.isStartTimeMode = false;
             }
         },
         confirmChoiceTime() {
-            if(this.isStartTimeMode){
-                console.log('start')
+            if (this.isStartTimeMode) {
+                console.log("start");
                 this.startTimeLimit = this.choiceH + ":" + this.choiceM;
-            }else{
-                console.log('end')
+            } else {
+                console.log("end");
                 this.endTimeLimit = this.choiceH + ":" + this.choiceM;
             }
             this.showTimePick = false;
@@ -1211,118 +1359,119 @@ export default {
             }
             this.choiceM = item;
         },
-        hasMoved(){
-            if(this.isShowNcSort){
-                this.isHasChangeNcSort = true
-            }else{
-                this.isHasChangeDriverSort = true
+        hasMoved() {
+            if (this.isShowNcSort) {
+                this.isHasChangeNcSort = true;
+            } else {
+                this.isHasChangeDriverSort = true;
             }
         },
         //sort client start
-        cancelSortMethod(){
-            this.showConfirmBox=false
-            if(this.isHasChangeNcSort){
-                this.isHasChangeNcSort=false
+        cancelSortMethod() {
+            this.showConfirmBox = false;
+            if (this.isHasChangeNcSort) {
+                this.isHasChangeNcSort = false;
                 this.choiceclientb = _.orderBy(
-                            this.choiceclientb,
-                            ['driverSortNum'],
-                            ['asc']
-                        )
-                this.isShowNcSort = false
-            }else{
-                this.isHasChangeDriverSort=false
+                    this.choiceclientb,
+                    ["driverSortNum"],
+                    ["asc"]
+                );
+                this.isShowNcSort = false;
+            } else {
+                this.isHasChangeDriverSort = false;
                 this.choiceclientb = _.orderBy(
-                            this.choiceclientb,
-                            ['NcSortNum'],
-                            ['asc']
-                        )
-                this.isShowNcSort = true
+                    this.choiceclientb,
+                    ["NcSortNum"],
+                    ["asc"]
+                );
+                this.isShowNcSort = true;
             }
-        },
-        
-        changeSortModeMethod(){
-            if(this.isHasChangeNcSort || this.isHasChangeDriverSort) {//如果 客服排序 或 司机排序有变动
-                this.showConfirmBox = true
-            }else{
-                if(!this.isShowNcSort){
-                    this.choiceclientb = _.orderBy(
-                            this.choiceclientb,
-                            ['NcSortNum'],
-                            ['asc']
-                        )
-                    this.isShowNcSort = true
-                }else{
-                    this.choiceclientb = _.orderBy(
-                            this.choiceclientb,
-                            ['driverSortNum'],
-                            ['asc']
-                        )
-                    this.isShowNcSort = false
-                }
-            }
-            
         },
 
-            sortClientMethod() {
-                if(this.isHasChangeNcSort){
-                    let clientId = []
-                    this.choiceclientb.forEach(element => {
-                        clientId.push(element._id)
-                    })
-                    axios.post(config.server + "/times/clientsort",{
-                        clientId:clientId
-                    })
-                    .then(doc => {
-                        this.isHasChangeNcSort = false
-                        if(doc.data.code === 0) {
-                            this.showTipDialog =true
-                            this.tipMsg = '修改客服顺序成功'
-                            setTimeout(() => {
-                                this.showTipDialog = false
-                            }, 3000);
-                        }else{
-                            this.showTipDialog =true
-                            this.tipMsg = '修改客服顺序时发生错误'
-                            setTimeout(() => {
-                                this.showTipDialog = false
-                            }, 3000);
-                        }
-                        this.showConfirmBox = false
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                }else{
-                    let clientId = []
-                    this.choiceclientb.forEach(element => {
-                        clientId.push(element._id)
-                    })
-                    axios.post(config.server + "/times/driversort",{
-                        clientId:clientId
-                    })
-                    .then(doc => {
-                        this.isHasChangeDriverSort = false
-                        if(doc.data.code === 0) {
-                            this.showTipDialog =true
-                            this.tipMsg = '修改司机次序成功'
-                            setTimeout(() => {
-                                this.showTipDialog = false
-                            }, 3000);
-                        }else{
-                            this.showTipDialog =true
-                            this.tipMsg = '修改司机次序时发生错误'
-                            setTimeout(() => {
-                                this.showTipDialog = false
-                            }, 3000);
-                        }
-                        this.showConfirmBox = false
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
+        changeSortModeMethod() {
+            if (this.isHasChangeNcSort || this.isHasChangeDriverSort) {
+                //如果 客服排序 或 司机排序有变动
+                this.showConfirmBox = true;
+            } else {
+                if (!this.isShowNcSort) {
+                    this.choiceclientb = _.orderBy(
+                        this.choiceclientb,
+                        ["NcSortNum"],
+                        ["asc"]
+                    );
+                    this.isShowNcSort = true;
+                } else {
+                    this.choiceclientb = _.orderBy(
+                        this.choiceclientb,
+                        ["driverSortNum"],
+                        ["asc"]
+                    );
+                    this.isShowNcSort = false;
                 }
-                
-            },
+            }
+        },
+
+        sortClientMethod() {
+            if (this.isHasChangeNcSort) {
+                let clientId = [];
+                this.choiceclientb.forEach(element => {
+                    clientId.push(element._id);
+                });
+                axios
+                    .post(config.server + "/times/clientsort", {
+                        clientId: clientId
+                    })
+                    .then(doc => {
+                        this.isHasChangeNcSort = false;
+                        if (doc.data.code === 0) {
+                            this.showTipDialog = true;
+                            this.tipMsg = "修改客服顺序成功";
+                            setTimeout(() => {
+                                this.showTipDialog = false;
+                            }, 3000);
+                        } else {
+                            this.showTipDialog = true;
+                            this.tipMsg = "修改客服顺序时发生错误";
+                            setTimeout(() => {
+                                this.showTipDialog = false;
+                            }, 3000);
+                        }
+                        this.showConfirmBox = false;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            } else {
+                let clientId = [];
+                this.choiceclientb.forEach(element => {
+                    clientId.push(element._id);
+                });
+                axios
+                    .post(config.server + "/times/driversort", {
+                        clientId: clientId
+                    })
+                    .then(doc => {
+                        this.isHasChangeDriverSort = false;
+                        if (doc.data.code === 0) {
+                            this.showTipDialog = true;
+                            this.tipMsg = "修改司机次序成功";
+                            setTimeout(() => {
+                                this.showTipDialog = false;
+                            }, 3000);
+                        } else {
+                            this.showTipDialog = true;
+                            this.tipMsg = "修改司机次序时发生错误";
+                            setTimeout(() => {
+                                this.showTipDialog = false;
+                            }, 3000);
+                        }
+                        this.showConfirmBox = false;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
+        },
         //sort client end
         choiceNCNum(carNum) {
             this.NcNumber = carNum;
@@ -1364,19 +1513,19 @@ export default {
                 });
         },
         toTheTop(item, index) {
-            if(this.isShowNcSort){
-                this.isHasChangeNcSort = true
-            }else{
-                this.isHasChangeDriverSort = true
+            if (this.isShowNcSort) {
+                this.isHasChangeNcSort = true;
+            } else {
+                this.isHasChangeDriverSort = true;
             }
             this.choiceclientb.splice(index, 1);
             this.choiceclientb.unshift(item);
         },
         toTheBottom(item, index) {
-            if(this.isShowNcSort){
-                this.isHasChangeNcSort = true
-            }else{
-                this.isHasChangeDriverSort = true
+            if (this.isShowNcSort) {
+                this.isHasChangeNcSort = true;
+            } else {
+                this.isHasChangeDriverSort = true;
             }
             this.choiceclientb.splice(index, 1);
             this.choiceclientb.push(item);
@@ -1588,8 +1737,8 @@ export default {
             this.choicecar = "";
             this.choicedirver = "";
             this.adirverinfo = "";
-            this.startTimeLimit = null
-            this.endTimeLimit = null
+            this.startTimeLimit = null;
+            this.endTimeLimit = null;
             this.choiceclientb = [];
             this.usedDriverInfo = [];
             this.savemode = true;
@@ -1796,8 +1945,9 @@ export default {
                     });
             }
 
-            if(this.isHasChangeNcSort || this.isHasChangeDriverSort){//如果排序
-                this.sortClientMethod()
+            if (this.isHasChangeNcSort || this.isHasChangeDriverSort) {
+                //如果排序
+                this.sortClientMethod();
             }
         },
         changeclientb() {
@@ -1837,8 +1987,8 @@ export default {
             this._id = item._id;
             this.timesname = item.timesname;
             this.timesnote = item.timesnote;
-            this.startTimeLimit = item.goTime
-            this.endTimeLimit = item.backTime
+            this.startTimeLimit = item.goTime;
+            this.endTimeLimit = item.backTime;
             this.usedDriverInfo = [];
             this.alldirverinfo.forEach(element => {
                 item.usedDriver.forEach(item => {
@@ -1894,8 +2044,8 @@ export default {
                         timesnote: this.timesnote,
                         logOperator: localStorage.getItem("name"),
                         NcNumber: this.NcNumber,
-                        goTime:this.startTimeLimit,
-                        backTime:this.endTimeLimit
+                        goTime: this.startTimeLimit,
+                        backTime: this.endTimeLimit
                     })
                     .then(res => {
                         this.tipMsg = res.data.msg;
@@ -2009,9 +2159,13 @@ export default {
     flex-basis: 30%;
     text-align: left;
     margin: 0 auto;
+    display: flex;
+    display: -webkit-flex;
+    position: relative;
+    z-index: 1;
 }
 
-.topbutton-left input {
+.findbox {
     margin: 5px auto;
     border-radius: 10px;
     width: 300px;
@@ -2021,8 +2175,15 @@ export default {
     -moz-appearance: none;
     outline: 0;
     font-size: 16px;
+    border: 1px solid #e0e0e0;
+    transition: 0.2s;
 }
 
+.findbox:focus {
+    transition: 0.2s;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
 .clientsearch {
     margin: 16px auto 0 auto;
     border-radius: 10px;
@@ -2199,7 +2360,7 @@ export default {
     background-color: #eee !important;
 }
 
-.confirmbox-back{
+.confirmbox-back {
     position: fixed;
     top: 0;
     bottom: 0;
@@ -2209,25 +2370,25 @@ export default {
     z-index: 23;
 }
 
-.confirmbox-front{
-    z-index:24;
+.confirmbox-front {
+    z-index: 24;
     position: fixed;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.confirmbox-front-box{
+.confirmbox-front-box {
     background: #fff;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
-.confirmbox-front-title{
+.confirmbox-front-title {
     height: 40px;
     font-size: 16px;
     line-height: 40px;
@@ -2237,9 +2398,95 @@ export default {
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
-.confirmbox-front-center{
-    padding-top:20px;
-    padding-bottom:20px;
+.confirmbox-front-center {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.findmore-button {
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 60px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    height: 30px;
+    line-height: 30px;
+    transition: 0.2s;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 5px;
+    position: absolute;
+    right: 3px;
+    top: 2px;
+}
+
+.findmore-button:active {
+    box-shadow: none;
+    transition: 0.2s;
+}
+
+.advancedinput {
+    font-size: 16px;
+    text-align: center;
+    outline: 0;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    height: 30px;
+}
+
+.advancedinput:focus {
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.advancedbox {
+    width: 197px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    position: absolute;
+    background: #fff;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    z-index: 24;
+}
+
+.advancedbox-item {
+    cursor: pointer;
+    font-size: 14px;
+    height: 30px;
+    line-height: 30px;
+    width: 80%;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.advancedbox-item:hover {
+    border-bottom: 1px solid #d44950;
+    transition: 0.2s;
+}
+
+.advancedInfobox {
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+}
+
+.advancedInfobox-item{
+    display: flex;
+    display: -webkit-flex;
+    line-height: 30px;
+}
+
+.advancedInfobox-item-left{
+    flex-basis: 45%;
+    color: #6a6a6a;
+    text-align: right;
+}
+
+.advancedInfobox-item-right{
+    padding-left: 10px;
+    flex-basis: 55%;
+    text-align: left;
 }
 @media screen and (min-width: 1025px) {
     .linedialog {
