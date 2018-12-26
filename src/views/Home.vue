@@ -2614,6 +2614,7 @@ export default {
                             image: item.image,
                             isNeedPic: item.isNeedPic,
                             note: item.note,
+                            noteEN:item.noteEN,
                             timeLimit: item.timeLimit
                         };
                         return obj;

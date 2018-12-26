@@ -109,10 +109,10 @@
                         <span>收车时间</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
-                        <span>框数(前)</span>
+                        <span>框数(前/Out)</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
-                        <span>框数(后)</span>
+                        <span>框数(后/In)</span>
                     </div>
                     <div style="flex-basis: 7%;text-align: center;">
                         <span>干净</span>
@@ -154,8 +154,8 @@
                     </div>
                 </div>
                 <div class="centerarea-bottom">
-                    <span>带出框数{{startBox}};</span>
-                    <span>带回框数{{endBox}};</span>
+                    <span>带出框数(Out){{startBox}};</span>
+                    <span>带回框数(In){{endBox}};</span>
                     <span>共</span>
                     <span>{{tableInfo.length}}</span>
                     <span>条数据</span>

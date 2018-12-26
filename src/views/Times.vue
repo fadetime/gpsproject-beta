@@ -1114,11 +1114,8 @@
                     </div>
                     <div>
                         <md-button class="md-raised md-primary"
-                                   @click="showTimePick = false"
+                                   @click="showFindMoreBox = false"
                                    style="font-size:18px;min-width:80px;height:30px">关闭</md-button>
-                        <md-button class="md-raised md-accent"
-                                   @click="confirmChoiceTime"
-                                   style="font-size:18px;min-width:80px;height:30px">确认</md-button>
                     </div>
                 </div>
             </div>

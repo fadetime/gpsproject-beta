@@ -254,7 +254,7 @@
         <!-- Dialog b start-->
         <md-dialog :md-active.sync="showDialogb"
                    class="showDialogbclass">
-            <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:12px">
+            <md-dialog-title style="font-size:18px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:8px 0 8px 24px;margin-bottom:12px">
                 <span style="color:#fff">客户管理</span>
             </md-dialog-title>
             <div class="dialogb-body"
@@ -294,12 +294,12 @@
                                       style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
                             <span class="md-error">客户标识信息，必填项目</span>
                         </md-field>
-                        <md-field style="margin:23px auto 0 auto">
+                        <md-field style="margin:18px auto 0 auto">
                             <label style="font-size:16px">英文名称</label>
                             <md-input v-model="clientbnameEN"
                                       style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
                         </md-field>
-                        <div style="display:flex;width:180px;padding-top:8px">
+                        <div style="display:flex;width:180px;padding-top:2px">
                             <md-field style="margin:12px auto"
                                       :class="classser">
                                 <label for="choseArea"
@@ -319,12 +319,7 @@
                                        style="font-size:18px;min-width:60px;height:30px;margin-top: 36px;">区域</md-button>
                         </div>
 
-                    </div>
-                </div>
-                <div class="dialogb-body-item">
-                    <div class="dialogb-body-left">
-
-                        <div style="padding-top:10px">
+                        <div style="padding-top:2px">
                             <div>
                                 <span style="font-size:16px;color:rgba(0,0,0,0.54)">必要拍照</span>
                             </div>
@@ -355,10 +350,25 @@
                             </div>
                         </div>
 
-                        <md-field style="margin:0 auto;padding-top:24px"
+                    </div>
+                </div>
+                <div class="dialogb-body-item">
+                    <div class="dialogb-body-left">
+
+                        
+
+                        <md-field style="margin:0 auto;padding-top:28px"
                                   :class="classadd">
                             <label style="font-size:16px">客户地址</label>
                             <md-input v-model="clientbaddress"
+                                      style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
+                            <span class="md-error">客户地址标识信息</span>
+                        </md-field>
+
+                        <md-field style="margin:0 auto;padding-top:24px"
+                                  :class="classadd">
+                            <label style="font-size:16px">英文备注</label>
+                            <md-input v-model="clientNoteEN"
                                       style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
                             <span class="md-error">客户地址标识信息</span>
                         </md-field>
@@ -406,7 +416,7 @@
 
                         <md-field style="margin:0 auto"
                                   :class="classadd">
-                            <label style="font-size:16px">客户备注</label>
+                            <label style="font-size:16px">中文备注</label>
                             <md-input v-model="clientNote"
                                       style="border-bottom: 1px solid #000;font-size:16px;height:40px"></md-input>
                         </md-field>
@@ -453,18 +463,18 @@
                 </div>
             </div>
 
-            <md-dialog-actions style="margin:10px auto;padding:0">
+            <md-dialog-actions style="margin:2px auto;padding:0">
                 <md-button class="md-raised md-primary"
                            @click="showDialogb = false"
-                           style="font-size:18px;width:80px;height:35px">取消</md-button>
+                           style="font-size:16px;width:80px;height:30px">取消</md-button>
                 <md-button class="md-raised md-primary"
                            v-if="savemodeb"
                            @click="addclientb"
-                           style="font-size:18px;width:80px;height:35px">保存</md-button>
+                           style="font-size:16px;width:80px;height:30px">保存</md-button>
                 <md-button class="md-raised md-primary"
                            v-else
                            @click="confirmEditClientB"
-                           style="font-size:18px;width:80px;height:35px">修改</md-button>
+                           style="font-size:16px;width:80px;height:30px">修改</md-button>
             </md-dialog-actions>
 
         </md-dialog>
@@ -1200,7 +1210,8 @@ export default {
             showTimePick: false,
             choiceH: null,
             choiceM: null,
-            clientNote: null
+            clientNote: null,
+            clientNoteEN:null
         };
     },
     mounted() {
@@ -2101,6 +2112,7 @@ export default {
                 payload.append("clientbarea", this.choseArea);
                 payload.append("isNeedPic", this.isNeedPic);
                 payload.append("note", this.clientNote);
+                payload.append("noteEN", this.clientNoteEN);
                 payload.append("logOperator", localStorage.getItem("name"));
                 axios({
                     method: "post",
@@ -2165,6 +2177,7 @@ export default {
             this.clientImage = item.image;
             this.isNeedPic = item.isNeedPic;
             this.clientNote = item.note;
+            this.clientNoteEN = item.noteEN;
             if (item.clientbserve == null) {
                 this.choseaname = "";
                 this.error = true;
@@ -2260,6 +2273,7 @@ export default {
                         clientbarea: this.choseArea,
                         isNeedPic: this.isNeedPic,
                         note: this.clientNote,
+                        noteEN: this.clientNoteEN,
                         logOperator: localStorage.getItem("name")
                     })
                     .then(doc => {
