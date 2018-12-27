@@ -7,9 +7,14 @@
                 <span>夜班统计</span>
             </div>
             <div :class="centerButtonStyle"
-                 style="margin-left:10px;margin-right:10px"
+                 style="margin-left:10px"
                  @click="reportModeButtonMethod('day')">
                 <span>白班统计</span>
+            </div>
+            <div :class="basketButtonStyle"
+                 style="margin-left:10px;margin-right:10px"
+                 @click="reportModeButtonMethod('basket')">
+                <span>框数统计</span>
             </div>
             <div :class="rightButtonStyle"
                  style="border-top-right-radius:10px;border-bottom-right-radius:10px;"
@@ -69,7 +74,6 @@
 
         <div v-else-if="showWindow === 'bill'"
              class="toparea">
-
             <div style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff">
                 <vue-datepicker-local v-model="startDate"
                                       style="margin-top: 12px;"
@@ -81,6 +85,16 @@
                 <md-button class="md-raised md-primary"
                            @click="findBillReport"
                            style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
+            </div>
+        </div>
+
+        <div v-else
+             class="toparea">
+            <div style="height: 58px;position: relative;z-index:23;display: flex;display:-webkit-flex;justify-content: center;;background:#fff">
+                <div class="whiteButton"
+                     @click="basketTopMethod()">
+                    <span>TOP 5</span>
+                </div>
             </div>
         </div>
         <!-- check car report start -->
@@ -411,6 +425,64 @@
         </transition>
         <!-- bill report end -->
 
+        <!-- basket report start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea"
+                 v-if="basketInfo.length != 0">
+                <div class="centerarea-head">
+                    <span>拖欠 TOP5</span>
+                </div>
+                <div class="centerarea-title">
+                    <div style="flex-basis: 3%;text-align: center;">
+                        <span>No.</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>客户名称</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>拖欠框数</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>客户电话</span>
+                    </div>
+                    <div style="flex-basis: 30%;text-align: center;">
+                        <span>客户地址</span>
+                    </div>
+                </div>
+                <div class="centerarea-body">
+                    <div v-for="(item,index) in basketInfo"
+                         :key="index"
+                         class="centerarea-body-item">
+                        <div style="flex-basis: 3%;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.clientbname}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.basket}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.clientbphone}}</span>
+                        </div>
+                        <div style="flex-basis: 30%;text-align: center;">
+                            <span>{{item.clientbaddress}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="centerarea-bottom">
+                    <!-- <span>客户总数{{countClient}};</span>
+                    <span>客户平均数{{averageClient}};</span> -->
+                    <span>共</span>
+                    <span>{{basketInfo.length}}</span>
+                    <span>条数据</span>
+                </div>
+            </div>
+        </transition>
+        <!-- basket report end -->
+
         <!-- tips box start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated bounceIn"
@@ -451,7 +523,8 @@ export default {
             tableInfo: [],
             missionInfo: [],
             dayShiftInfo: [],
-            billInfo:[],
+            billInfo: [],
+            basketInfo:[],
             startBox: 0,
             countClient: 0,
             averageClient: 0,
@@ -464,28 +537,58 @@ export default {
             isOpenTipBox: false,
             tipsMsg: null,
             showWindow: "night",
-            leftButtonStyle:'topbuttonarea-item-blue',
-            centerButtonStyle:'topbuttonarea-item',
-            rightButtonStyle:'topbuttonarea-item',
+            leftButtonStyle: "topbuttonarea-item-blue",
+            centerButtonStyle: "topbuttonarea-item",
+            basketButtonStyle: "topbuttonarea-item",
+            rightButtonStyle: "topbuttonarea-item"
         };
     },
     methods: {
-        reportModeButtonMethod(mode){
-            if(mode === 'night'){
-                this.showWindow = 'night'
-                this.leftButtonStyle = 'topbuttonarea-item-blue'
-                this.centerButtonStyle = 'topbuttonarea-item'
-                this.rightButtonStyle = 'topbuttonarea-item'
-            }else if(mode === 'bill'){
-                this.showWindow = 'bill'
-                this.leftButtonStyle = 'topbuttonarea-item'
-                this.centerButtonStyle = 'topbuttonarea-item'
-                this.rightButtonStyle = 'topbuttonarea-item-blue'
-            }else{
-                this.showWindow = 'day'
-                this.leftButtonStyle = 'topbuttonarea-item'
-                this.centerButtonStyle = 'topbuttonarea-item-blue'
-                this.rightButtonStyle = 'topbuttonarea-item'
+        basketTopMethod() {
+            axios
+                .get(config.server + "/report/basket")
+                .then(doc => {
+                    if (doc.data.code === 1) {
+                        this.tipsMsg = "未找到该数据！！！";
+                        this.isOpenTipBox = true;
+                        setTimeout(() => {
+                            this.isOpenTipBox = false;
+                        }, 3000);
+                    } else {
+                        this.basketInfo = doc.data.doc;
+                        console.log(doc)
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
+        reportModeButtonMethod(mode) {
+            if (mode === "night") {
+                this.showWindow = "night";
+                this.leftButtonStyle = "topbuttonarea-item-blue";
+                this.centerButtonStyle = "topbuttonarea-item";
+                this.basketButtonStyle = "topbuttonarea-item";
+                this.rightButtonStyle = "topbuttonarea-item";
+            } else if (mode === "bill") {
+                this.showWindow = "bill";
+                this.leftButtonStyle = "topbuttonarea-item";
+                this.centerButtonStyle = "topbuttonarea-item";
+                this.basketButtonStyle = "topbuttonarea-item";
+                this.rightButtonStyle = "topbuttonarea-item-blue";
+            } else if (mode === "day") {
+                this.showWindow = "day";
+                this.leftButtonStyle = "topbuttonarea-item";
+                this.centerButtonStyle = "topbuttonarea-item-blue";
+                this.basketButtonStyle = "topbuttonarea-item";
+                this.rightButtonStyle = "topbuttonarea-item";
+            } else {
+                this.showWindow = "basket";
+                this.leftButtonStyle = "topbuttonarea-item";
+                this.centerButtonStyle = "topbuttonarea-item";
+                this.basketButtonStyle = "topbuttonarea-item-blue";
+                this.rightButtonStyle = "topbuttonarea-item";
             }
         },
 
@@ -506,7 +609,7 @@ export default {
                     console.log(err);
                 });
         },
-        findBillReport(){
+        findBillReport() {
             if (!this.startDate || !this.endDate) {
                 this.tipsMsg = "请选择开始时间和结束时间！！！";
                 this.isOpenTipBox = true;
@@ -514,35 +617,35 @@ export default {
                     this.isOpenTipBox = false;
                 }, 3000);
             } else {
-            let start = new Date(this.startDate).toDateString();
-            start = new Date(start).getTime();
-            let end = new Date(this.endDate).toDateString();
-            end = new Date(end).getTime();
-            axios
-                .post(config.server + "/bill/findall", {
-                    startDate: start,
-                    endDate: end
-                })
-                .then(doc => {
-                    if (doc.data.code === 1) {
-                        this.tipsMsg = "未找到该数据！！！";
-                        this.isOpenTipBox = true;
-                        setTimeout(() => {
-                            this.isOpenTipBox = false;
-                        }, 3000);
-                    }else if(doc.data.code === 0){
-                        this.billInfo = doc.data.doc 
-                    }else{
-                        this.tipsMsg = "查找时出现错误";
-                        this.isOpenTipBox = true;
-                        setTimeout(() => {
-                            this.isOpenTipBox = false;
-                        }, 3000);
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+                let start = new Date(this.startDate).toDateString();
+                start = new Date(start).getTime();
+                let end = new Date(this.endDate).toDateString();
+                end = new Date(end).getTime();
+                axios
+                    .post(config.server + "/bill/findall", {
+                        startDate: start,
+                        endDate: end
+                    })
+                    .then(doc => {
+                        if (doc.data.code === 1) {
+                            this.tipsMsg = "未找到该数据！！！";
+                            this.isOpenTipBox = true;
+                            setTimeout(() => {
+                                this.isOpenTipBox = false;
+                            }, 3000);
+                        } else if (doc.data.code === 0) {
+                            this.billInfo = doc.data.doc;
+                        } else {
+                            this.tipsMsg = "查找时出现错误";
+                            this.isOpenTipBox = true;
+                            setTimeout(() => {
+                                this.isOpenTipBox = false;
+                            }, 3000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
             }
         },
         findDayReport() {
@@ -553,36 +656,36 @@ export default {
                     this.isOpenTipBox = false;
                 }, 3000);
             } else {
-            let start = new Date(this.startDate).toDateString();
-            start = new Date(start).getTime();
-            let end = new Date(this.endDate).toDateString();
-            end = new Date(end).getTime();
-            axios
-                .post(config.server + "/dayShiftmission/findall", {
-                    startDate: start,
-                    endDate: end
-                })
-                .then(doc => {
-                    console.log(doc);
-                    if (doc.data.code === 1) {
-                        this.tipsMsg = "未找到该数据！！！";
-                        this.isOpenTipBox = true;
-                        setTimeout(() => {
-                            this.isOpenTipBox = false;
-                        }, 3000);
-                    }else if(doc.data.code === 0){
-                        this.dayShiftInfo = doc.data.doc
-                    }else{
-                        this.tipsMsg = "查找时出现错误";
-                        this.isOpenTipBox = true;
-                        setTimeout(() => {
-                            this.isOpenTipBox = false;
-                        }, 3000);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+                let start = new Date(this.startDate).toDateString();
+                start = new Date(start).getTime();
+                let end = new Date(this.endDate).toDateString();
+                end = new Date(end).getTime();
+                axios
+                    .post(config.server + "/dayShiftmission/findall", {
+                        startDate: start,
+                        endDate: end
+                    })
+                    .then(doc => {
+                        console.log(doc);
+                        if (doc.data.code === 1) {
+                            this.tipsMsg = "未找到该数据！！！";
+                            this.isOpenTipBox = true;
+                            setTimeout(() => {
+                                this.isOpenTipBox = false;
+                            }, 3000);
+                        } else if (doc.data.code === 0) {
+                            this.dayShiftInfo = doc.data.doc;
+                        } else {
+                            this.tipsMsg = "查找时出现错误";
+                            this.isOpenTipBox = true;
+                            setTimeout(() => {
+                                this.isOpenTipBox = false;
+                            }, 3000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
             }
         },
         findReport() {
@@ -898,5 +1001,23 @@ export default {
 
 .driver-front-box-body-right {
     flex-basis: 80%;
+}
+
+.whiteButton {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    transition: 0.2s;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.whiteButton:active {
+    box-shadow: none;
+    transition: 0.2s;
 }
 </style>

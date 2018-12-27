@@ -208,17 +208,32 @@ export default {
   },
   methods: {
     setInitMethod() {
+      
       axios
         .get(config.server + '/admin/init1')
         .then(doc => {
+          console.log('初始化1')
           console.log(doc)
         })
         .catch(err => {
           console.log(err)
         })
+      
       axios
         .get(config.server + '/admin/init2')
         .then(doc => {
+          console.log('初始化2')
+          console.log(doc)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+
+      //创建剩余订单计数
+      axios
+        .get(config.server + '/admin/init3')
+        .then(doc => {
+          console.log('初始化3')
           console.log(doc)
         })
         .catch(err => {
