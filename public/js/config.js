@@ -3,10 +3,10 @@ const product = '//api.ebuymart.sg'
 const nossl = '//18.136.155.152:3000'
 const newController = '//18.136.155.152:4000'
 
-const softVersion = 'Alpha V0.19.0'
+const softVersion = 'Alpha V0.19.1'
 const softText = 'DELIVERY TO 物流管理系统'
 export default {
-    server : nossl,
+    server : test,
     newC:newController,
     version: softVersion,
     text:softText

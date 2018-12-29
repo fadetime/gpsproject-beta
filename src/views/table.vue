@@ -519,7 +519,7 @@
                         <div style="min-width: 60px;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
-                        <div style="min-width: 140px;text-align: left;">
+                        <div style="min-width: 140px;text-align: left;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
                             <span style="padding-left:16px;padding-right:12px">{{item.clientbname}}</span>
                         </div>
                         <div style="min-width: 140px;text-align: left;">
