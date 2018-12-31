@@ -57,9 +57,6 @@
                          @click="openDriverBox">
                         <span style="font-size:16px;color:#6a6a6a;text-decoration: underline;">{{driverText}}</span>
                     </div>
-                    <md-button class="md-raised md-primary"
-                               @click="moreSearchInfo = !moreSearchInfo"
-                               style="font-size:18px;width:80px;height:30px;margin-top:13px"></md-button>
                 </div>
             </transition>
         </div>
@@ -150,7 +147,7 @@
             <div style="height: 58px;position: relative;z-index:23;display: flex;display:-webkit-flex;justify-content: center;;background:#fff">
                 <div class="whiteButton"
                      @click="basketTopMethod()">
-                    <span>TOP 5</span>
+                    <span>总统计</span>
                 </div>
             </div>
         </div>
@@ -489,7 +486,7 @@
             <div class="centerarea"
                  v-if="basketInfo.length != 0">
                 <div class="centerarea-head">
-                    <span>拖欠 TOP5</span>
+                    <span>客户欠框统计</span>
                 </div>
                 <div class="centerarea-title">
                     <div style="min-width: 60px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">

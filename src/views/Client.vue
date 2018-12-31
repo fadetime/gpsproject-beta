@@ -354,9 +354,6 @@
                 </div>
                 <div class="dialogb-body-item">
                     <div class="dialogb-body-left">
-
-                        
-
                         <md-field style="margin:0 auto;padding-top:28px"
                                   :class="classadd">
                             <label style="font-size:16px">客户地址</label>
@@ -458,6 +455,20 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:10px">
+                    <div style="display:flex;display:-webkit-flex;justify-content: center;">
+                        <div style="height: 30px;line-height: 30px;">
+                            <span style="font-size:16px">客户拖欠框数:</span>
+                            <span style="font-size:18px;padding-left:10px">{{basketNumber}}</span>
+                        </div>
+                        <div class="whiteButton"
+                             style="margin-left:20px"
+                             @click="openEditBasketNumMethod">
+                            <span>修改</span>
                         </div>
                     </div>
                 </div>
@@ -1114,6 +1125,57 @@
             </div>
         </transition>
         <!-- pick time box end -->
+        <!-- edit basket number start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showEditBasketNumBox"
+                 class="confirmRemove-back"
+                 style="z-index:25"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="showEditBasketNumBox"
+                 @click.self.prevent="showEditBasketNumBox = false"
+                 class="confirmRemove-front"
+                 style="z-index:26">
+                <div class="confirmRemove-front-box">
+                    <div class="confirmRemove-front-box-top">
+                        <span>修改拖欠框数</span>
+                    </div>
+                    <div class="confirmRemove-front-box-center">
+                        <div style="display:flex;display:-webkit-flex;margin-bottom:10px;height:30px;line-height:30px">
+                            <div>
+                                <span style="font-size:16px">当前拖欠数量:</span>
+                            </div>
+                            <div style="width:70px;text-align:center;padding-left:10px">
+                                <span style="font-size:18px">{{basketNumber}}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex;display:-webkit-flex;height:30px;line-height:30px">
+                            <div>
+                                <span style="font-size:16px">修改拖欠数量:</span>
+                            </div>
+                            <div style="padding-left:10px">
+                                <input v-model="tempBasketNumber"
+                                       style="width:60px;text-align:center;font-size:18px;height:30px;border:1px solid #e0e0e0"
+                                       type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="confirmRemove-front-box-bottom">
+                        <md-button class="md-raised md-primary"
+                                   @click="showEditBasketNumBox = false"
+                                   style="font-size:18px;min-width:80px;height:30px">关闭</md-button>
+                        <md-button class="md-raised md-accent"
+                                   @click="confirmEditBasketNumMethod"
+                                   style="font-size:18px;min-width:80px;height:30px">修改</md-button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- edit basket number end -->
     </div>
 </template>
 
@@ -1211,7 +1273,10 @@ export default {
             choiceH: null,
             choiceM: null,
             clientNote: null,
-            clientNoteEN:null
+            clientNoteEN: null,
+            basketNumber: null,
+            tempBasketNumber: null,
+            showEditBasketNumBox: false
         };
     },
     mounted() {
@@ -1337,6 +1402,38 @@ export default {
         }
     },
     methods: {
+        confirmEditBasketNumMethod() {
+            axios
+                .post(config.server + "/clientb/basket", {
+                    _id:this._id,
+                    basket: this.tempBasketNumber
+                })
+                .then(res => {
+                    if(res.data.code === 0){
+                        this.tipMsg = '修改成功'
+                        this.showTipDialog = true
+                        this.basketNumber = this.tempBasketNumber
+                        this.showEditBasketNumBox = false
+                        setTimeout(() => {
+                            this.showTipDialog = false
+                        }, 3000);
+                    }else{
+                        this.tipMsg = '修改失败'
+                        setTimeout(() => {
+                            this.showTipDialog = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
+        openEditBasketNumMethod() {
+            this.showEditBasketNumBox = true;
+            this.tempBasketNumber = this.basketNumber;
+        },
+
         confirmChoiceTime() {
             this.timeLimit = this.choiceH + ":" + this.choiceM;
             this.showTimePick = false;
@@ -1431,7 +1528,7 @@ export default {
                     console.log(err);
                 });
         },
-        
+
         confirmRemoveArea() {
             axios
                 .post(config.server + "/area/remove", {
@@ -2178,6 +2275,7 @@ export default {
             this.isNeedPic = item.isNeedPic;
             this.clientNote = item.note;
             this.clientNoteEN = item.noteEN;
+            this.basketNumber = item.basket;
             if (item.clientbserve == null) {
                 this.choseaname = "";
                 this.error = true;
@@ -2895,6 +2993,24 @@ export default {
 
 .timepickerlist-box-item:hover {
     background: rgba(68, 138, 255, 0.3);
+}
+
+.whiteButton {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    transition: 0.2s;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.whiteButton:active {
+    box-shadow: none;
+    transition: 0.2s;
 }
 
 @media screen and (min-width: 1025px) {
