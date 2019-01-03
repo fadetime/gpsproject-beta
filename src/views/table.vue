@@ -1202,7 +1202,7 @@ export default {
             tempDriverCheckCarChartLeft: [],
             tempAllDriverCheckCarChartLeft:[],
             allDriverCheckCarInfo:[],
-            tempWrongInfoForCar:[]
+            tempWrongInfoForCar:{}
         };
     },
 
@@ -1231,7 +1231,7 @@ export default {
                         let tyreNum = 0;
                         let wiperNum = 0;
                         this.tempAllDriverCheckCarInfo = []
-                        this.tempWrongInfoForCar = []
+                        this.tempWrongInfoForCar = {}
                         doc.data.doc.forEach(element => {
                             let countWrongNum = 0;
                             if (!element.backup) {
@@ -1346,11 +1346,10 @@ export default {
                         //show right shart
                         let rightLabels = []
                         let rightDate = []
-                        this.tempWrongInfoForCar.forEach(element => {
-                            rightLabels.push(element.carPlate)
-                            rightDate.push(element.wrongNum)
-                        });
-                        
+                        for (let item in this.tempWrongInfoForCar) {
+                            rightLabels.push(item)
+                            rightDate.push(this.tempWrongInfoForCar[item].wrongNum)
+                        }
                         setTimeout(() => {
                             let driverCheckLeft = document.getElementById(
                                 "alldrivercheckertright"
