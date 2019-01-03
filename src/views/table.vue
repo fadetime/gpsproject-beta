@@ -2066,7 +2066,6 @@ export default {
                                     this.isOpenTipBox = false;
                                 }, 3000);
                             } else {
-                                console.log(doc);
                                 this.tableInfo = doc.data.doc;
                                 this.startBox = 0;
                                 this.endBox = 0;

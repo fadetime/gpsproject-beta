@@ -2595,6 +2595,7 @@ export default {
             if (this.missionDateModeButtonCSS1) {
                 query = {
                     missionline: this.aLineInfo.timesname,
+                    missionLineEN: this.aLineInfo.timesNameEN,
                     line_id: this.aLineInfo._id,
                     goTime: this.aLineInfo.goTime,
                     backTime: this.aLineInfo.backTime,

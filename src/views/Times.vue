@@ -131,22 +131,51 @@
                             style="color:#000">
                         <div style="display:flex;display:-webkit-flex;justify-content: space-evenly;">
                             <div style="border: 3px dashed #448aff;flex-basis: 45%;">
-                                <md-field style="margin:15px auto;width:80%">
+                                <div class="inputboxclass" style="margin-top:10px">
+                                    <span>线路名(CH)</span>
+                                    <input type="text" v-model="timesname">
+                                </div>
+                                <div class="inputboxclass">
+                                    <span>线路名(EN)</span>
+                                    <input type="text" v-model="timesNameEN">
+                                </div>
+                                <!-- <md-field style="margin:15px auto;width:80%">
                                     <label style="font-size:16px;color: rgba(0, 0, 0, 0.54);">路线名称</label>
                                     <md-input v-model="timesname"
                                               style="border-bottom: 1px solid #000;font-size:16px;height:55px;text-align:center"></md-input>
                                     <span class="md-helper-text"
                                           style="font-size:14px;margin: -10px auto;"
                                           v-if="!timesname">车次标识信息，必填项目</span>
-                                </md-field>
+                                </md-field> -->
+                                
+                                <div class="inputboxclass">
+                                    <span>线路备注</span>
+                                    <input type="text" v-model="timesnote">
+                                </div>
 
-                                <md-field style="margin:15px auto;width:80%">
+                                <!-- <md-field style="margin:15px auto;width:80%">
                                     <label style="font-size:16px;color: rgba(0, 0, 0, 0.54);">备注</label>
                                     <md-input v-model="timesnote"
                                               style="border-bottom: 1px solid #000;font-size:16px;height:55px;text-align:center"></md-input>
-                                </md-field>
+                                </md-field> -->
 
-                                <div style="margin:8px auto;width: 268px;display:flex;display:-webkit-flex;justify-content: space-between;">
+                                <div style="display:flex;display:-webkit-flex;justify-content: space-evenly;margin-bottom:10px">
+                                    <div class="inputboxwithiconclass" @click="openTimePickMethod('start')">
+                                        <span class="inputboxwithiconclass-left">预计出车</span>
+                                        <!-- <input type="text" v-model="startTimeLimit" disabled> -->
+                                        <div>{{startTimeLimit}}</div>
+                                        <span class="inputboxwithiconclass-right"><md-icon style="font-size:24px!important">access_time</md-icon></span>
+                                    </div>
+                                    <div class="inputboxwithiconclass" @click="openTimePickMethod('end')">
+                                        <span class="inputboxwithiconclass-left">预计收车</span>
+                                        <!-- <input type="text" v-model="endTimeLimit"> -->
+                                        <div>{{endTimeLimit}}</div>
+                                        <span class="inputboxwithiconclass-right"><md-icon style="font-size:24px!important">access_time</md-icon></span>
+                                    </div>
+                                </div>
+                                
+
+                                <!-- <div style="margin:8px auto;width: 268px;display:flex;display:-webkit-flex;justify-content: space-between;">
                                     <div style="flex-basis:45%;border-bottom: 1px solid rgb(0, 0, 0);">
                                         <div style="font-size:16px;color: rgba(0, 0, 0, 0.54);padding-bottom: 7px;">
                                             <span>预计出车</span>
@@ -182,7 +211,7 @@
                                         </div>
                                     </div>
 
-                                </div>
+                                </div> -->
                             </div>
                             <div style="border: 3px dashed #448aff;flex-basis: 45%;">
                                 <div>
@@ -1142,6 +1171,7 @@ export default {
             error: false,
             errorMessage: "未知错误请联系更牛逼的人",
             timesname: "",
+            timesNameEN:null,
             timesclientnumber: "",
             timesnote: "",
             choicecar: "",
@@ -1730,6 +1760,7 @@ export default {
             this.acarinfo = "";
             this._id = "";
             this.timesname = "";
+            this.timesNameEN = null
             this.timesnote = "";
             this.choicecar = "";
             this.choicedirver = "";
@@ -1904,6 +1935,7 @@ export default {
                 axios
                     .post(config.server + "/times", {
                         timesname: this.timesname,
+                        timesNameEN: this.timesNameEN,
                         timescar: this.choicecar,
                         timesnote: this.timesnote,
                         timesdirver: this.choicedirver,
@@ -1983,6 +2015,7 @@ export default {
             this.showDialog = true;
             this._id = item._id;
             this.timesname = item.timesname;
+            this.timesNameEN = item.timesNameEN;
             this.timesnote = item.timesnote;
             this.startTimeLimit = item.goTime;
             this.endTimeLimit = item.backTime;
@@ -2034,6 +2067,7 @@ export default {
                     .post(config.server + "/times/edit", {
                         _id: this._id,
                         timesname: this.timesname,
+                        timesNameEN:this.timesNameEN,
                         timescar: this.choicecar,
                         timesdirver: this.choicedirver,
                         timesclientb: this.choiceclientb,
@@ -2485,6 +2519,75 @@ export default {
     flex-basis: 55%;
     text-align: left;
 }
+
+.inputboxclass{
+    display: flex;
+    display: -webkit-flex;
+    margin: 20px 10px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+}
+
+.inputboxclass span{
+    background: #eee;
+    border: 1px solid #e0e0e0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    color: #6a6a6a;
+    min-width: 100px;
+    text-align: center;
+}
+
+.inputboxclass input{
+    outline: none;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border: 1px solid #e6e6e6;
+    font-size: 14px;
+    text-align: center;
+    color: #212121;
+    width: 100%;
+}
+
+.inputboxwithiconclass{
+    display: flex;
+    display: -webkit-flex;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.inputboxwithiconclass div{
+    outline: none;
+    border: 1px solid #e6e6e6;
+    font-size: 14px;
+    text-align: center;
+    color: #212121;
+    width: 50px;
+}
+
+.inputboxwithiconclass-left{
+    background: #eee;
+    border: 1px solid #e0e0e0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    color: #6a6a6a;
+    width: 70px;
+    text-align: center;
+}
+
+.inputboxwithiconclass-right{
+    background: #eee;
+    border: 1px solid #e0e0e0;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    color: #6a6a6a;
+    width: 30px;
+    text-align: center;
+}
+
 @media screen and (min-width: 1025px) {
     .linedialog {
         width: 828px;
