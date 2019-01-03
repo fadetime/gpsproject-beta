@@ -123,8 +123,8 @@
                         enter-active-class="animated slideInDown faster"
                         leave-active-class="animated slideOutUp faster">
                 <div v-if="isOpenCheckCarDriverMode"
-                     style="display:flex;display:-webkit-flex;padding-bottom:10px;justify-content: space-evenly;">
-                    <div style="display:flex;display:-webkit-flex">
+                     style="display:flex;display:-webkit-flex;padding-bottom:10px;justify-content: flex-end;">
+                    <div style="display:flex;display:-webkit-flex;margin-right: 20px;">
                         <div>
                             <span style="font-size:18px;color:#6a6a6a;line-height: 34px;">选择司机：</span>
                         </div>
@@ -133,11 +133,19 @@
                             <span style="font-size:16px;color:#6a6a6a;text-decoration: underline;">{{driverText}}</span>
                         </div>
                     </div>
-                    <div class="whiteButton"
-                         @click="checkCarMethod('checker')"
-                         style="margin-top: 0px;margin-right: 6px;;width:80px;background: #448aff;color: #fff;border:none">
-                        <span>开始查询</span>
+                    <div style="display:flex;display:-webkit-flex;width:175px">
+                        <div class="whiteButton"
+                            @click="driverCheckCarMethod()"
+                            style="margin-top: 0px;margin-right: 6px;;width:80px;background: #448aff;color: #fff;border:none">
+                            <span>司机查询</span>
+                        </div>
+                        <div class="whiteButton"
+                            @click="allDriverCheckCarMethod()"
+                            style="margin-top: 0px;margin-right: 6px;;width:80px;background: #448aff;color: #fff;border:none">
+                            <span>全部查询</span>
+                        </div>
                     </div>
+                    
                 </div>
             </transition>
         </div>
@@ -769,6 +777,338 @@
         </transition>
         <!-- check detail information box end -->
 
+        <!-- driver check car report start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea"
+                 v-if="driverCheckCarInfo.length != 0">
+                <div class="centerarea-head">
+                    <span>司机检查报告</span>
+                </div>
+                <div class="centerarea-title">
+                    <div style="min-width: 60px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span class="centerarea-title-item">No.</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>司机</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 120px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建日期</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建时间</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>结束时间</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>车牌号码</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="flex-basis: 300px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>错误数</span>
+                    </div>
+                </div>
+                <div class="centerarea-body">
+                    <div v-for="(item,index) in driverCheckCarInfo"
+                         @click="openDriverCheckCarInfoDetailMethod(item)"
+                         :key="index"
+                         class="centerarea-body-item">
+                        <div style="min-width: 60px;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.driver}}</span>
+                        </div>
+                        <div style="min-width: 120px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.date | datefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.date | timefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.finishDate | timefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.car_id.carid}}</span>
+                        </div>
+                        <div style="flex-basis: 100%;text-align: left;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">
+                            <span style="padding-left:16px;padding-right:12px">{{tempDriverCheckCarInfo[index]}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;justify-content: space-around;display:-webkit-flex;padding: 20px 0;">
+                    <div class="chartBox">
+                        <canvas id="drivercheckertleft"
+                                width="400px"
+                                height="400px"></canvas>
+                    </div>
+                    <div class="chartBox">
+                        <canvas id="drivercheckertright"
+                                width="400px"
+                                height="400px"></canvas>
+                    </div>
+                </div>
+
+                <div class="centerarea-bottom">
+                    <span>共</span>
+                    <span>{{driverCheckCarInfo.length}}</span>
+                    <span>条数据</span>
+                </div>
+            </div>
+        </transition>
+        <!-- driver check car report end -->
+
+        <!-- all driver check car report start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea"
+                 v-if="allDriverCheckCarInfo.length != 0">
+                <div class="centerarea-head">
+                    <span>司机检查报告</span>
+                </div>
+                <div class="centerarea-title">
+                    <div style="min-width: 60px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span class="centerarea-title-item">No.</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>司机</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 120px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建日期</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建时间</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>结束时间</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>车牌号码</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="flex-basis: 300px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>错误数</span>
+                    </div>
+                </div>
+                <div class="centerarea-body">
+                    <div v-for="(item,index) in allDriverCheckCarInfo"
+                         @click="openDriverCheckCarInfoDetailMethod(item)"
+                         :key="index"
+                         class="centerarea-body-item">
+                        <div style="min-width: 60px;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.driver}}</span>
+                        </div>
+                        <div style="min-width: 120px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.date | datefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.date | timefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.finishDate | timefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.car_id.carid}}</span>
+                        </div>
+                        <div style="flex-basis: 100%;text-align: left;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">
+                            <span style="padding-left:16px;padding-right:12px">{{tempAllDriverCheckCarInfo[index]}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;justify-content: space-around;display:-webkit-flex;padding: 20px 0;">
+                    <div class="chartBox">
+                        <canvas id="alldrivercheckertleft"
+                                width="400px"
+                                height="400px"></canvas>
+                    </div>
+                    <div class="chartBox">
+                        <canvas id="alldrivercheckertright"
+                                width="400px"
+                                height="400px"></canvas>
+                    </div>
+                </div>
+
+                <div class="centerarea-bottom">
+                    <span>共</span>
+                    <span>{{allDriverCheckCarInfo.length}}</span>
+                    <span>条数据</span>
+                </div>
+            </div>
+        </transition>
+        <!-- all driver check car report end -->
+
+        <!-- driver check car detail report box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showDriverCheckCarDetailInfo"
+                 class="checkditailbox-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="showDriverCheckCarDetailInfo"
+                 class="checkditailbox-front"
+                 @click.self.prevent="showDriverCheckCarDetailInfo = false">
+                <div class="checkditailbox-front-box">
+                    <div class="checkditailbox-front-box-top">
+                        <span>详细信息</span>
+                    </div>
+                    <div>
+                        <div class="checkditailbox-body-title">
+                            <span>{{tempInfo.car_id.carid}}</span>
+                        </div>
+                        <div>
+                            {{tempInfo.date | datefilter}}
+                            {{tempInfo.date | timefilter}}
+                        </div>
+                        <div class="checkditailbox-body-center">
+                            <div style="display:flex;display:-webkit-flex">
+                                <div style="display:flex;display:-webkit-flex;margin-right:20px">
+                                    <div class="checkdetail-left">
+                                        <span>备用车胎</span>
+                                    </div>
+                                    <div>
+                                        <md-icon v-if="tempInfo.backup"
+                                                 style="color:green">check_circle</md-icon>
+                                        <md-icon v-else
+                                                 style="color:red">cancel</md-icon>
+                                    </div>
+                                </div>
+                                <div style="display:flex;display:-webkit-flex">
+                                    <div class="checkdetail-left">
+                                        <span>刹车系统</span>
+                                    </div>
+                                    <div>
+                                        <md-icon v-if="tempInfo.brake"
+                                                 style="color:green">check_circle</md-icon>
+                                        <md-icon v-else
+                                                 style="color:red">cancel</md-icon>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex;display:-webkit-flex;margin-top:10px">
+                                <div style="display:flex;display:-webkit-flex;margin-right:20px">
+                                    <div class="checkdetail-left">
+                                        <span>车内清洁</span>
+                                    </div>
+                                    <div>
+                                        <md-icon v-if="tempInfo.clean"
+                                                 style="color:green">check_circle</md-icon>
+                                        <md-icon v-else
+                                                 style="color:red">cancel</md-icon>
+                                    </div>
+                                </div>
+                                <div style="display:flex;display:-webkit-flex">
+                                    <div class="checkdetail-left">
+                                        <span>车灯系统</span>
+                                    </div>
+                                    <div>
+                                        <md-icon v-if="tempInfo.headlight"
+                                                 style="color:green">check_circle</md-icon>
+                                        <md-icon v-else
+                                                 style="color:red">cancel</md-icon>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex;display:-webkit-flex;margin-top:10px">
+                                <div style="display:flex;display:-webkit-flex;margin-right:20px">
+                                    <div class="checkdetail-left">
+                                        <span>倒车镜</span>
+                                    </div>
+                                    <div>
+                                        <md-icon v-if="tempInfo.mirror"
+                                                 style="color:green">check_circle</md-icon>
+                                        <md-icon v-else
+                                                 style="color:red">cancel</md-icon>
+                                    </div>
+                                </div>
+                                <div style="display:flex;display:-webkit-flex">
+                                    <div class="checkdetail-left">
+                                        <span>车用油卡</span>
+                                    </div>
+                                    <div>
+                                        <md-icon v-if="tempInfo.petrolCard"
+                                                 style="color:green">check_circle</md-icon>
+                                        <md-icon v-else
+                                                 style="color:red">cancel</md-icon>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex;display:-webkit-flex;margin-top:10px">
+                                <div style="display:flex;display:-webkit-flex;margin-right:20px">
+                                    <div class="checkdetail-left">
+                                        <span>车胎检查</span>
+                                    </div>
+                                    <div>
+                                        <md-icon v-if="tempInfo.tyre"
+                                                 style="color:green">check_circle</md-icon>
+                                        <md-icon v-else
+                                                 style="color:red">cancel</md-icon>
+                                    </div>
+                                </div>
+                                <div style="display:flex;display:-webkit-flex">
+                                    <div class="checkdetail-left">
+                                        <span>雨刷检查</span>
+                                    </div>
+                                    <div>
+                                        <md-icon v-if="tempInfo.wiper"
+                                                 style="color:green">check_circle</md-icon>
+                                        <md-icon v-else
+                                                 style="color:red">cancel</md-icon>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display:flex;display:-webkit-flex;margin-top:10px">
+                                <div class="checkdetail-left">
+                                    <span>其他问题</span>
+                                </div>
+                                <div>
+                                    <md-icon v-if="!tempInfo.text"
+                                             style="color:green">check_circle</md-icon>
+                                    <md-icon v-else
+                                             style="color:red">cancel</md-icon>
+                                </div>
+                            </div>
+
+                            <div v-if="tempInfo.text"
+                                 style="display:flex;display:-webkit-flex;margin-top:10px;margin-bottom:10px">
+                                <div style="border:1px solid #e0e0e0;padding:12px;width:100%">
+                                    {{tempInfo.text}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <md-button class="md-raised md-primary"
+                                   @click="showDriverCheckCarDetailInfo = false"
+                                   style="font-size:18px;width:80px;height:30px">取消</md-button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- driver check car detail report box end -->
+
         <!-- tips box start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated bounceIn"
@@ -851,19 +1191,382 @@ export default {
             basketButtonStyle: "topbuttonarea-item",
             rightButtonStyle: "topbuttonarea-item",
             showDetailCheckInfo: false,
+            showDriverCheckCarDetailInfo: false,
             tempInfo: null,
             wrongNumArray: [],
             tempCar: [],
-            tempCarError: []
+            tempCarError: [],
+            driverCheckCarInfo: [],
+            tempDriverCheckCarInfo: [],
+            tempAllDriverCheckCarInfo: [],
+            tempDriverCheckCarChartLeft: [],
+            tempAllDriverCheckCarChartLeft:[],
+            allDriverCheckCarInfo:[],
+            tempWrongInfoForCar:[]
         };
     },
 
     methods: {
+        openDriverCheckCarInfoDetailMethod(checkInfo) {
+            this.showDriverCheckCarDetailInfo = true;
+            this.tempInfo = checkInfo;
+        },
+
+        allDriverCheckCarMethod(){
+            axios
+                .post(config.server + "/report/alldriver", {
+                    startDate: this.startDate,
+                    endDate: this.endDate
+                })
+                .then(doc => {
+                    if (doc.data.code === 0) {
+                        this.allDriverCheckCarInfo = doc.data.doc;
+                        let backupNum = 0;
+                        let brakeNum = 0;
+                        let cleanNum = 0;
+                        let headlightNum = 0;
+                        let mirrorNum = 0;
+                        let petrolCardNum = 0;
+                        let otherNum = 0;
+                        let tyreNum = 0;
+                        let wiperNum = 0;
+                        this.tempAllDriverCheckCarInfo = []
+                        this.tempWrongInfoForCar = []
+                        doc.data.doc.forEach(element => {
+                            let countWrongNum = 0;
+                            if (!element.backup) {
+                                countWrongNum++;
+                                backupNum++;
+                            }
+                            if (!element.brake) {
+                                countWrongNum++;
+                                brakeNum++;
+                            }
+                            if (!element.clean) {
+                                countWrongNum++;
+                                cleanNum++;
+                            }
+                            if (!element.headlight) {
+                                countWrongNum++;
+                                headlightNum++;
+                            }
+                            if (!element.mirror) {
+                                countWrongNum++;
+                                mirrorNum++;
+                            }
+                            if (!element.petrolCard) {
+                                countWrongNum++;
+                                petrolCardNum++;
+                            }
+                            if (element.text) {
+                                countWrongNum++;
+                                otherNum++;
+                            }
+                            if (!element.tyre) {
+                                countWrongNum++;
+                                tyreNum++;
+                            }
+                            if (!element.wiper) {
+                                countWrongNum++;
+                                wiperNum++;
+                            }
+                            //相同车牌错误数
+                            if (!this.tempWrongInfoForCar[element.car_id.carid]) {
+                                this.tempWrongInfoForCar[element.car_id.carid] = {
+                                    carPlate: element.car_id.carid,
+                                    wrongNum: countWrongNum
+                                };
+                            } else {
+                                this.tempWrongInfoForCar[element.car_id.carid].wrongNum += countWrongNum;
+                            }
+                            //相同车牌错误数
+                            this.tempAllDriverCheckCarInfo.push(countWrongNum);
+                        });
+                        this.tempAllDriverCheckCarChartLeft = []
+                        this.tempAllDriverCheckCarChartLeft.push(backupNum);
+                        this.tempAllDriverCheckCarChartLeft.push(brakeNum);
+                        this.tempAllDriverCheckCarChartLeft.push(cleanNum);
+                        this.tempAllDriverCheckCarChartLeft.push(headlightNum);
+                        this.tempAllDriverCheckCarChartLeft.push(mirrorNum);
+                        this.tempAllDriverCheckCarChartLeft.push(petrolCardNum);
+                        this.tempAllDriverCheckCarChartLeft.push(otherNum);
+                        this.tempAllDriverCheckCarChartLeft.push(tyreNum);
+                        this.tempAllDriverCheckCarChartLeft.push(wiperNum);
+                        //show left shart
+                        setTimeout(() => {
+                            let driverCheckLeft = document.getElementById(
+                                "alldrivercheckertleft"
+                            );
+                            let myChartLeft = new Chart(driverCheckLeft, {
+                                type: "doughnut",
+                                data: {
+                                    labels: ['备胎','刹车','干净','大灯','后视镜','油卡','轮胎','雨刷','其他'],
+                                    datasets: [
+                                        {
+                                            label: "carErrorNum",
+                                            backgroundColor:
+                                                "rgba(225,10,10,0.3)",
+                                            borderColor: "rgba(225,103,110,1)",
+                                            borderWidth: 1,
+                                            pointStrokeColor: "#fff",
+                                            pointStyle: "crossRot",
+                                            data: this.tempAllDriverCheckCarChartLeft,
+                                            cubicInterpolationMode: "monotone",
+                                            spanGaps: "false",
+                                            fill: "false",
+                                            backgroundColor: [
+                                                "aqua",
+                                                "#36a2eb",
+                                                "fuchsia",
+                                                "rgb(255, 99, 132)",
+                                                "rgb(255, 205, 86)",
+                                                "lime",
+                                                "#393939",
+                                                "#f5b031",
+                                                "#fad797",
+                                                "#59ccf7",
+                                                "#c3b4df"
+                                            ],
+                                            borderColor: ["#fff"],
+                                            borderWidth: 2
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    legend: {
+                                        display: true,
+                                        labels: {
+                                            fontColor: "rgb(255, 99, 132)"
+                                        }
+                                    }
+                                }
+                            });
+                        }, 100);
+
+                        //show right shart
+                        let rightLabels = []
+                        let rightDate = []
+                        this.tempWrongInfoForCar.forEach(element => {
+                            rightLabels.push(element.carPlate)
+                            rightDate.push(element.wrongNum)
+                        });
+                        
+                        setTimeout(() => {
+                            let driverCheckLeft = document.getElementById(
+                                "alldrivercheckertright"
+                            );
+                            let myChartRight = new Chart(driverCheckLeft, {
+                                type: "bar",
+                                data: {
+                                    labels: rightLabels,
+                                    datasets: [
+                                        {
+                                            label: "车辆损坏统计",
+                                            backgroundColor:
+                                                "rgba(225,10,10,0.3)",
+                                            borderColor: "rgba(225,103,110,1)",
+                                            borderWidth: 1,
+                                            pointStrokeColor: "#fff",
+                                            pointStyle: "crossRot",
+                                            data: rightDate,
+                                            cubicInterpolationMode: "monotone",
+                                            spanGaps: "false",
+                                            fill: "false",
+                                            backgroundColor: [
+                                                "aqua",
+                                                "#36a2eb",
+                                                "fuchsia",
+                                                "rgb(255, 99, 132)",
+                                                "rgb(255, 205, 86)",
+                                                "lime",
+                                                "#393939",
+                                                "#f5b031",
+                                                "#fad797",
+                                                "#59ccf7",
+                                                "#c3b4df"
+                                            ],
+                                            borderColor: ["#fff"],
+                                            borderWidth: 2
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    legend: {
+                                        display: true,
+                                        labels: {
+                                            fontColor: "rgb(255, 99, 132)"
+                                        }
+                                    }
+                                }
+                            });
+                        }, 200);
+                        
+                    } else if (doc.data.code === 1) {
+                        this.tipsMsg = "未找到对应数据";
+                        this.isOpenTipBox = true;
+                        setTimeout(() => {
+                            this.isOpenTipBox = false;
+                        }, 3000);
+                    } else {
+                        this.tipsMsg = "查询数据出现错误";
+                        this.isOpenTipBox = true;
+                        setTimeout(() => {
+                            this.isOpenTipBox = false;
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        driverCheckCarMethod() {
+            axios
+                .post(config.server + "/report/drivercheckbydate", {
+                    startDate: this.startDate,
+                    endDate: this.endDate,
+                    driverName: this.driverText
+                })
+                .then(doc => {
+                    if (doc.data.code === 0) {
+                        this.driverCheckCarInfo = doc.data.doc;
+                        let backupNum = 0;
+                        let brakeNum = 0;
+                        let cleanNum = 0;
+                        let headlightNum = 0;
+                        let mirrorNum = 0;
+                        let petrolCardNum = 0;
+                        let otherNum = 0;
+                        let tyreNum = 0;
+                        let wiperNum = 0;
+                        this.tempDriverCheckCarInfo = []
+                        doc.data.doc.forEach(element => {
+
+                            let countWrongNum = 0;
+                            if (!element.backup) {
+                                countWrongNum++;
+                                backupNum++;
+                            }
+                            if (!element.brake) {
+                                countWrongNum++;
+                                brakeNum++;
+                            }
+                            if (!element.clean) {
+                                countWrongNum++;
+                                cleanNum++;
+                            }
+                            if (!element.headlight) {
+                                countWrongNum++;
+                                headlightNum++;
+                            }
+                            if (!element.mirror) {
+                                countWrongNum++;
+                                mirrorNum++;
+                            }
+                            if (!element.petrolCard) {
+                                countWrongNum++;
+                                petrolCardNum++;
+                            }
+                            if (element.text) {
+                                countWrongNum++;
+                                otherNum++;
+                            }
+                            if (!element.tyre) {
+                                countWrongNum++;
+                                tyreNum++;
+                            }
+                            if (!element.wiper) {
+                                countWrongNum++;
+                                wiperNum++;
+                            }
+                            this.tempDriverCheckCarInfo.push(countWrongNum);
+                        });
+                        this.tempDriverCheckCarChartLeft = []
+                        this.tempDriverCheckCarChartLeft.push(backupNum);
+                        this.tempDriverCheckCarChartLeft.push(brakeNum);
+                        this.tempDriverCheckCarChartLeft.push(cleanNum);
+                        this.tempDriverCheckCarChartLeft.push(headlightNum);
+                        this.tempDriverCheckCarChartLeft.push(mirrorNum);
+                        this.tempDriverCheckCarChartLeft.push(petrolCardNum);
+                        this.tempDriverCheckCarChartLeft.push(otherNum);
+                        this.tempDriverCheckCarChartLeft.push(tyreNum);
+                        this.tempDriverCheckCarChartLeft.push(wiperNum);
+                        //show shart left
+                        setTimeout(() => {
+                            let checkertleft = document.getElementById(
+                                "drivercheckertleft"
+                            );
+                            let myChart2 = new Chart(checkertleft, {
+                                type: "doughnut",
+                                data: {
+                                    labels: ['备胎','刹车','干净','大灯','后视镜','油卡','轮胎','雨刷','其他'],
+                                    datasets: [
+                                        {
+                                            label: "carErrorNum",
+                                            backgroundColor:
+                                                "rgba(225,10,10,0.3)",
+                                            borderColor: "rgba(225,103,110,1)",
+                                            borderWidth: 1,
+                                            pointStrokeColor: "#fff",
+                                            pointStyle: "crossRot",
+                                            data: this.tempDriverCheckCarChartLeft,
+                                            cubicInterpolationMode: "monotone",
+                                            spanGaps: "false",
+                                            fill: "false",
+                                            backgroundColor: [
+                                                "aqua",
+                                                "#36a2eb",
+                                                "fuchsia",
+                                                "rgb(255, 99, 132)",
+                                                "rgb(255, 205, 86)",
+                                                "lime",
+                                                "#393939",
+                                                "#f5b031",
+                                                "#fad797",
+                                                "#59ccf7",
+                                                "#c3b4df"
+                                            ],
+                                            borderColor: ["#fff"],
+                                            borderWidth: 2
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    legend: {
+                                        display: true,
+                                        labels: {
+                                            fontColor: "rgb(255, 99, 132)"
+                                        }
+                                    }
+                                }
+                            });
+                        }, 100);
+                    } else if (doc.data.code === 1) {
+                        this.tipsMsg = "未找到对应数据";
+                        this.isOpenTipBox = true;
+                        setTimeout(() => {
+                            this.isOpenTipBox = false;
+                        }, 3000);
+                    } else {
+                        this.tipsMsg = "查询数据出现错误";
+                        this.isOpenTipBox = true;
+                        setTimeout(() => {
+                            this.isOpenTipBox = false;
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
         detailCheckInfo(item) {
             this.showDetailCheckInfo = true;
             this.tempInfo = item;
         },
+
         checkCarMethod(mode) {
+            //车辆检查方法
             if (!this.startDate || !this.endDate) {
                 this.tipsMsg = "请选择查询的开始-结束时间";
                 this.isOpenTipBox = true;
@@ -1005,7 +1708,13 @@ export default {
                                     let myChart2 = new Chart(checkertRight, {
                                         type: "bar",
                                         data: {
-                                            labels: ['刹车灯','大灯','油卡','轮胎','其他'],
+                                            labels: [
+                                                "刹车灯",
+                                                "大灯",
+                                                "油卡",
+                                                "轮胎",
+                                                "其他"
+                                            ],
                                             datasets: [
                                                 {
                                                     label: "损坏部件统计",
@@ -1210,7 +1919,6 @@ export default {
             axios
                 .get(config.server + "/dirver")
                 .then(doc => {
-                    console.log(doc);
                     this.driverArray = doc.data;
                 })
                 .catch(err => {
@@ -1733,5 +2441,12 @@ export default {
 .checkditailbox-body-center-item-content {
     padding-left: 12px;
     text-align: left;
+}
+
+.checkdetail-left {
+    height: 24px;
+    line-height: 24px;
+    padding-right: 10px;
+    width: 80px;
 }
 </style>

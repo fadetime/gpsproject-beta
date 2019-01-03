@@ -1617,7 +1617,8 @@ export default {
                     clientbserve: item.clientbserve.clientaname,
                     image: item.image,
                     isNeedPic: item.isNeedPic,
-                    timeLimit: item.timeLimit
+                    timeLimit: item.timeLimit,
+                    note:item.note
                 };
                 axios
                     .post(config.server + "/mission/addclient", {
