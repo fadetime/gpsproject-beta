@@ -1470,13 +1470,18 @@ export default {
                     })
                     .then(doc => {
                         if(doc.data.code === 0){
-                            console.log(doc)
                             this.missionDriverReportArray = doc.data.doc
                             this.countMissionClient = 0
                             doc.data.doc.forEach(element => {
                                 this.countMissionClient += element.missionclient.length
                             });
                             this.averageCountMissionClient = Math.ceil(this.countMissionClient / this.missionDriverReportArray.length)
+                        }else if(doc.data.code === 3){
+                            this.tipsMsg = "搜索时间范围过大";
+                            this.isOpenTipBox = true;
+                            setTimeout(() => {
+                                this.isOpenTipBox = false;
+                            }, 3000);
                         }else{
                             this.tipsMsg = "获取数据失败";
                             this.isOpenTipBox = true;
@@ -1509,7 +1514,6 @@ export default {
                         })
                         .then(doc => {
                             if (doc.data.code === 0) {
-                                console.log(doc);
                                 this.missionReportArray = doc.data.doc;
                                 let tempSortArray = {}
                                 doc.data.doc.forEach(element => {
@@ -1660,7 +1664,13 @@ export default {
                                         }
                                     );
                                 }, 200);
-                            } else {
+                            }else if (doc.data.code === 3){
+                                this.tipsMsg = "搜索时间范围过大";
+                                this.isOpenTipBox = true;
+                                setTimeout(() => {
+                                    this.isOpenTipBox = false;
+                                }, 3000);
+                            }else {
                                 this.tipsMsg = "未找到符合日期的任务";
                                 this.isOpenTipBox = true;
                                 setTimeout(() => {
