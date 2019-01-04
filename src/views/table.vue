@@ -11,6 +11,11 @@
                  @click="reportModeButtonMethod('day')">
                 <span>白班统计</span>
             </div>
+            <div :class="missionButtonStyle"
+                 style="margin-left:10px;"
+                 @click="reportModeButtonMethod('mission')">
+                <span>任务统计</span>
+            </div>
             <div :class="checkCarButtonStyle"
                  style="margin-left:10px;"
                  @click="reportModeButtonMethod('checkCar')">
@@ -93,6 +98,57 @@
             </div>
         </div>
 
+        <div v-else-if="showWindow === 'mission'"
+             class="toparea">
+            <div style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff;display:flex;display: -webkit-flex;">
+                <div>
+                    <vue-datepicker-local v-model="startDate"
+                                          style="margin-top: 12px;"
+                                          placeholder="开始时间" />
+                    <span> ~ </span>
+                    <vue-datepicker-local v-model="endDate"
+                                          style="margin-top: 12px;"
+                                          placeholder="结束时间" />
+                </div>
+                <div style="display: flex;display:-webkit-flex;justify-content: space-around;">
+                    <div class="whiteButton"
+                         @click="missionChartMethod('allChart')"
+                         style="margin-top: 12px;margin-left: 10px;width:80px">
+                        <span>任务查询</span>
+                    </div>
+                    <div class="whiteButton"
+                         @click="missionChartMethod('driverChart')"
+                         style="margin-top: 12px;margin-left: 10px;width:80px">
+                        <span>更多查询</span>
+                    </div>
+                </div>
+            </div>
+            <transition name="custom-classes-transition"
+                        enter-active-class="animated slideInDown faster"
+                        leave-active-class="animated slideOutUp faster">
+                <div v-if="isOpenMissionMode"
+                     style="display:flex;display:-webkit-flex;padding-bottom:10px;justify-content: flex-end;">
+                    <div style="display:flex;display:-webkit-flex;margin-right: 20px;">
+                        <div>
+                            <span style="font-size:18px;color:#6a6a6a;line-height: 34px;">选择司机：</span>
+                        </div>
+                        <div style="border:1px solid #e0e0e0;width:218px;height:34px;line-height:34px;cursor: pointer;"
+                             @click="openDriverBox">
+                            <span style="font-size:16px;color:#6a6a6a;text-decoration: underline;">{{driverText}}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;display:-webkit-flex;width:192px">
+                        <div class="whiteButton"
+                             @click="missionRepotForDriver()"
+                             style="margin-top: 0px;margin-right: 6px;;width:80px;background: #448aff;color: #fff;border:none">
+                            <span>司机查询</span>
+                        </div>
+                    </div>
+
+                </div>
+            </transition>
+        </div>
+
         <div v-else-if="showWindow === 'checkCar'"
              class="toparea">
             <div style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff;display: flex;display:-webkit-flex;justify-content: space-around;">
@@ -135,17 +191,17 @@
                     </div>
                     <div style="display:flex;display:-webkit-flex;width:175px">
                         <div class="whiteButton"
-                            @click="driverCheckCarMethod()"
-                            style="margin-top: 0px;margin-right: 6px;;width:80px;background: #448aff;color: #fff;border:none">
+                             @click="driverCheckCarMethod()"
+                             style="margin-top: 0px;margin-right: 6px;;width:80px;background: #448aff;color: #fff;border:none">
                             <span>司机查询</span>
                         </div>
                         <div class="whiteButton"
-                            @click="allDriverCheckCarMethod()"
-                            style="margin-top: 0px;margin-right: 6px;;width:80px;background: #448aff;color: #fff;border:none">
+                             @click="allDriverCheckCarMethod()"
+                             style="margin-top: 0px;margin-right: 6px;;width:80px;background: #448aff;color: #fff;border:none">
                             <span>全部查询</span>
                         </div>
                     </div>
-                    
+
                 </div>
             </transition>
         </div>
@@ -953,6 +1009,185 @@
         </transition>
         <!-- all driver check car report end -->
 
+        <!-- mission report start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea"
+                 v-if="missionReportArray.length != 0">
+                <div class="centerarea-head">
+                    <span>任务统计报告</span>
+                </div>
+                <div class="centerarea-title">
+                    <div style="min-width: 60px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span class="centerarea-title-item">No.</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>线路名称</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>司机</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 120px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建日期</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建时间</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>客户数量</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>任务状态</span>
+                    </div>
+                </div>
+                <div class="centerarea-body">
+                    <div v-for="(item,index) in missionReportArray"
+                         @click="openDriverCheckCarInfoDetailMethod(item)"
+                         :key="index"
+                         class="centerarea-body-item">
+                        <div style="min-width: 60px;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.missionline}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.missiondirver}}</span>
+                        </div>
+                        <div style="min-width: 120px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.missiondate | datefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.missiondate | timefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: center;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.missionclient.length}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span v-if="item.complete"
+                                  style="padding-left:16px;padding-right:12px">已完成</span>
+                            <span v-else
+                                  style="padding-left:16px;padding-right:12px">未完成</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;justify-content: space-around;display:-webkit-flex;padding: 20px 0;">
+                    <div class="chartBox">
+                        <canvas id="missionreportleft"
+                                width="400px"
+                                height="400px"></canvas>
+                    </div>
+                    <div class="chartBox">
+                        <canvas id="missionreportright"
+                                width="400px"
+                                height="400px"></canvas>
+                    </div>
+                </div>
+
+                <div class="centerarea-bottom">
+                    <span>共</span>
+                    <span>{{missionReportArray.length}}</span>
+                    <span>条数据</span>
+                </div>
+            </div>
+        </transition>
+        <!-- mission report end -->
+
+        <!-- mission-driver report start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea"
+                 v-if="missionDriverReportArray.length != 0">
+                <div class="centerarea-head">
+                    <span>任务统计报告</span>
+                </div>
+                <div class="centerarea-title">
+                    <div style="min-width: 60px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span class="centerarea-title-item">No.</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>线路名称</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>司机</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 120px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建日期</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建时间</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>客户数量</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>任务状态</span>
+                    </div>
+                </div>
+                <div class="centerarea-body">
+                    <div v-for="(item,index) in missionDriverReportArray"
+                         @click="openDriverCheckCarInfoDetailMethod(item)"
+                         :key="index"
+                         class="centerarea-body-item">
+                        <div style="min-width: 60px;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.missionline}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.missiondirver}}</span>
+                        </div>
+                        <div style="min-width: 120px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.missiondate | datefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.missiondate | timefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: center;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.missionclient.length}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span v-if="item.complete"
+                                  style="padding-left:16px;padding-right:12px">已完成</span>
+                            <span v-else
+                                  style="padding-left:16px;padding-right:12px">未完成</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="centerarea-bottom">
+                    <span>共</span>
+                    <span>{{countMissionClient}}</span>
+                    <span>个客户;</span>
+
+                    <span>平均每次任务</span>
+                    <span>{{averageCountMissionClient}}</span>
+                    <span>个客户;</span>
+
+                    <span>共</span>
+                    <span>{{missionDriverReportArray.length}}</span>
+                    <span>条数据</span>
+                </div>
+            </div>
+        </transition>
+        <!-- mission-driver report end -->
+
+
         <!-- driver check car detail report box start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -1188,6 +1423,7 @@ export default {
             leftButtonStyle: "topbuttonarea-item-blue",
             centerButtonStyle: "topbuttonarea-item",
             checkCarButtonStyle: "topbuttonarea-item",
+            missionButtonStyle: "topbuttonarea-item",
             basketButtonStyle: "topbuttonarea-item",
             rightButtonStyle: "topbuttonarea-item",
             showDetailCheckInfo: false,
@@ -1200,19 +1436,251 @@ export default {
             tempDriverCheckCarInfo: [],
             tempAllDriverCheckCarInfo: [],
             tempDriverCheckCarChartLeft: [],
-            tempAllDriverCheckCarChartLeft:[],
-            allDriverCheckCarInfo:[],
-            tempWrongInfoForCar:{}
+            tempAllDriverCheckCarChartLeft: [],
+            allDriverCheckCarInfo: [],
+            missionReportArray: [],
+            missionDriverReportArray:[],
+            tempWrongInfoForCar: {},
+            isOpenMissionMode: false,
+            countMissionClient:0,
+            averageCountMissionClient:0
         };
     },
 
     methods: {
+        missionRepotForDriver(){
+            if(!this.startDate || !this.endDate){
+                this.tipsMsg = "请填写开始结束时间";
+                this.isOpenTipBox = true;
+                setTimeout(() => {
+                    this.isOpenTipBox = false;
+                }, 3000);
+            }else if(this.choiseDriver === null){
+                this.tipsMsg = "请选择司机";
+                this.isOpenTipBox = true;
+                setTimeout(() => {
+                    this.isOpenTipBox = false;
+                }, 3000);
+            }else{
+                axios
+                    .post(config.server + "/report/mission", {
+                        startDate: this.startDate,
+                        endDate: this.endDate,
+                        driver:this.choiseDriver
+                    })
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            console.log(doc)
+                            this.missionDriverReportArray = doc.data.doc
+                            this.countMissionClient = 0
+                            doc.data.doc.forEach(element => {
+                                this.countMissionClient += element.missionclient.length
+                            });
+                            this.averageCountMissionClient = Math.ceil(this.countMissionClient / this.missionDriverReportArray.length)
+                        }else{
+                            this.tipsMsg = "获取数据失败";
+                            this.isOpenTipBox = true;
+                            setTimeout(() => {
+                                this.isOpenTipBox = false;
+                            }, 3000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+        },
+
+        missionChartMethod(mode) {
+            if (!this.startDate || !this.endDate) {
+                this.tipsMsg = "请填写开始结束时间";
+                this.isOpenTipBox = true;
+                setTimeout(() => {
+                    this.isOpenTipBox = false;
+                }, 3000);
+            } else {
+                if (mode === "driverChart") {
+                    this.isOpenMissionMode = !this.isOpenMissionMode;
+                } else {
+                    axios
+                        .post(config.server + "/report/mission", {
+                            startDate: this.startDate,
+                            endDate: this.endDate
+                        })
+                        .then(doc => {
+                            if (doc.data.code === 0) {
+                                console.log(doc);
+                                this.missionReportArray = doc.data.doc;
+                                let tempSortArray = {}
+                                doc.data.doc.forEach(element => {
+                                    if(!tempSortArray[element.missionline]){
+                                        tempSortArray[element.missionline]={
+                                            lineName:element.missionline,
+                                            lineClientCount:element.missionclient.length
+                                        }
+                                    }else{
+                                        tempSortArray[element.missionline].lineClientCount += element.missionclient.length
+                                    }
+                                });
+                                let tempLabels = []
+                                let tempDatas = []
+                                
+                                for(let item in tempSortArray){
+                                    tempLabels.push(item)
+                                    tempDatas.push(tempSortArray[item].lineClientCount)
+                                }
+                                //show left shart
+                                setTimeout(() => {
+                                    let driverCheckLeft = document.getElementById(
+                                        "missionreportleft"
+                                    );
+                                    let myChartLeft = new Chart(
+                                        driverCheckLeft,
+                                        {
+                                            type: "doughnut",
+                                            data: {
+                                                labels: tempLabels,
+                                                datasets: [
+                                                    {
+                                                        label: "carErrorNum",
+                                                        backgroundColor:
+                                                            "rgba(225,10,10,0.3)",
+                                                        borderColor:
+                                                            "rgba(225,103,110,1)",
+                                                        borderWidth: 1,
+                                                        pointStrokeColor:
+                                                            "#fff",
+                                                        pointStyle: "crossRot",
+                                                        data: tempDatas,
+                                                        cubicInterpolationMode:
+                                                            "monotone",
+                                                        spanGaps: "false",
+                                                        fill: "false",
+                                                        backgroundColor: [
+                                                            "aqua",
+                                                            "#36a2eb",
+                                                            "fuchsia",
+                                                            "rgb(255, 99, 132)",
+                                                            "rgb(255, 205, 86)",
+                                                            "lime",
+                                                            "#393939",
+                                                            "#f5b031",
+                                                            "#fad797",
+                                                            "#59ccf7",
+                                                            "#c3b4df"
+                                                        ],
+                                                        borderColor: ["#fff"],
+                                                        borderWidth: 2
+                                                    }
+                                                ]
+                                            },
+                                            options: {
+                                                legend: {
+                                                    display: true,
+                                                    labels: {
+                                                        fontColor:
+                                                            "rgb(255, 99, 132)"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    );
+                                }, 100);
+                                let driverSortArray = {}
+                                doc.data.doc.forEach(element => {
+                                    if(!driverSortArray[element.missiondirver]){
+                                        driverSortArray[element.missiondirver]={
+                                            lineDriver:element.missiondirver,
+                                            lineClientCount:element.missionclient.length
+                                        }
+                                    }else{
+                                        driverSortArray[element.missiondirver].lineClientCount += element.missionclient.length
+                                    }
+                                });
+                                let rightLabels = []
+                                let rightDatas =[]
+                                for(let item in driverSortArray){
+                                    rightLabels.push(item)
+                                    rightDatas.push(driverSortArray[item].lineClientCount)
+                                }
+                                //show left shart
+                                setTimeout(() => {
+                                    let driverCheckLeft = document.getElementById(
+                                        "missionreportright"
+                                    );
+                                    let myChartLeft = new Chart(
+                                        driverCheckLeft,
+                                        {
+                                            type: "bar",
+                                            data: {
+                                                labels: rightLabels,
+                                                datasets: [
+                                                    {
+                                                        label: "司机任务数",
+                                                        backgroundColor:
+                                                            "rgba(225,10,10,0.3)",
+                                                        borderColor:
+                                                            "rgba(225,103,110,1)",
+                                                        borderWidth: 1,
+                                                        pointStrokeColor:
+                                                            "#fff",
+                                                        pointStyle: "crossRot",
+                                                        data: rightDatas,
+                                                        cubicInterpolationMode:
+                                                            "monotone",
+                                                        spanGaps: "false",
+                                                        fill: "false",
+                                                        backgroundColor: [
+                                                            "aqua",
+                                                            "#36a2eb",
+                                                            "fuchsia",
+                                                            "rgb(255, 99, 132)",
+                                                            "rgb(255, 205, 86)",
+                                                            "lime",
+                                                            "#393939",
+                                                            "#f5b031",
+                                                            "#fad797",
+                                                            "#59ccf7",
+                                                            "#c3b4df"
+                                                        ],
+                                                        borderColor: ["#fff"],
+                                                        borderWidth: 2
+                                                    }
+                                                ]
+                                            },
+                                            options: {
+                                                legend: {
+                                                    display: true,
+                                                    labels: {
+                                                        fontColor:
+                                                            "rgb(255, 99, 132)"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    );
+                                }, 200);
+                            } else {
+                                this.tipsMsg = "未找到符合日期的任务";
+                                this.isOpenTipBox = true;
+                                setTimeout(() => {
+                                    this.isOpenTipBox = false;
+                                }, 3000);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                }
+            }
+        },
+
         openDriverCheckCarInfoDetailMethod(checkInfo) {
             this.showDriverCheckCarDetailInfo = true;
             this.tempInfo = checkInfo;
         },
 
-        allDriverCheckCarMethod(){
+        allDriverCheckCarMethod() {
             axios
                 .post(config.server + "/report/alldriver", {
                     startDate: this.startDate,
@@ -1230,8 +1698,8 @@ export default {
                         let otherNum = 0;
                         let tyreNum = 0;
                         let wiperNum = 0;
-                        this.tempAllDriverCheckCarInfo = []
-                        this.tempWrongInfoForCar = {}
+                        this.tempAllDriverCheckCarInfo = [];
+                        this.tempWrongInfoForCar = {};
                         doc.data.doc.forEach(element => {
                             let countWrongNum = 0;
                             if (!element.backup) {
@@ -1271,18 +1739,24 @@ export default {
                                 wiperNum++;
                             }
                             //相同车牌错误数
-                            if (!this.tempWrongInfoForCar[element.car_id.carid]) {
-                                this.tempWrongInfoForCar[element.car_id.carid] = {
+                            if (
+                                !this.tempWrongInfoForCar[element.car_id.carid]
+                            ) {
+                                this.tempWrongInfoForCar[
+                                    element.car_id.carid
+                                ] = {
                                     carPlate: element.car_id.carid,
                                     wrongNum: countWrongNum
                                 };
                             } else {
-                                this.tempWrongInfoForCar[element.car_id.carid].wrongNum += countWrongNum;
+                                this.tempWrongInfoForCar[
+                                    element.car_id.carid
+                                ].wrongNum += countWrongNum;
                             }
                             //相同车牌错误数
                             this.tempAllDriverCheckCarInfo.push(countWrongNum);
                         });
-                        this.tempAllDriverCheckCarChartLeft = []
+                        this.tempAllDriverCheckCarChartLeft = [];
                         this.tempAllDriverCheckCarChartLeft.push(backupNum);
                         this.tempAllDriverCheckCarChartLeft.push(brakeNum);
                         this.tempAllDriverCheckCarChartLeft.push(cleanNum);
@@ -1300,7 +1774,17 @@ export default {
                             let myChartLeft = new Chart(driverCheckLeft, {
                                 type: "doughnut",
                                 data: {
-                                    labels: ['备胎','刹车','干净','大灯','后视镜','油卡','轮胎','雨刷','其他'],
+                                    labels: [
+                                        "备胎",
+                                        "刹车",
+                                        "干净",
+                                        "大灯",
+                                        "后视镜",
+                                        "油卡",
+                                        "轮胎",
+                                        "雨刷",
+                                        "其他"
+                                    ],
                                     datasets: [
                                         {
                                             label: "carErrorNum",
@@ -1310,7 +1794,8 @@ export default {
                                             borderWidth: 1,
                                             pointStrokeColor: "#fff",
                                             pointStyle: "crossRot",
-                                            data: this.tempAllDriverCheckCarChartLeft,
+                                            data: this
+                                                .tempAllDriverCheckCarChartLeft,
                                             cubicInterpolationMode: "monotone",
                                             spanGaps: "false",
                                             fill: "false",
@@ -1344,11 +1829,13 @@ export default {
                         }, 100);
 
                         //show right shart
-                        let rightLabels = []
-                        let rightDate = []
+                        let rightLabels = [];
+                        let rightDate = [];
                         for (let item in this.tempWrongInfoForCar) {
-                            rightLabels.push(item)
-                            rightDate.push(this.tempWrongInfoForCar[item].wrongNum)
+                            rightLabels.push(item);
+                            rightDate.push(
+                                this.tempWrongInfoForCar[item].wrongNum
+                            );
                         }
                         setTimeout(() => {
                             let driverCheckLeft = document.getElementById(
@@ -1399,7 +1886,6 @@ export default {
                                 }
                             });
                         }, 200);
-                        
                     } else if (doc.data.code === 1) {
                         this.tipsMsg = "未找到对应数据";
                         this.isOpenTipBox = true;
@@ -1415,8 +1901,8 @@ export default {
                     }
                 })
                 .catch(err => {
-                    console.log(err)
-                })
+                    console.log(err);
+                });
         },
 
         driverCheckCarMethod() {
@@ -1438,9 +1924,8 @@ export default {
                         let otherNum = 0;
                         let tyreNum = 0;
                         let wiperNum = 0;
-                        this.tempDriverCheckCarInfo = []
+                        this.tempDriverCheckCarInfo = [];
                         doc.data.doc.forEach(element => {
-
                             let countWrongNum = 0;
                             if (!element.backup) {
                                 countWrongNum++;
@@ -1480,7 +1965,7 @@ export default {
                             }
                             this.tempDriverCheckCarInfo.push(countWrongNum);
                         });
-                        this.tempDriverCheckCarChartLeft = []
+                        this.tempDriverCheckCarChartLeft = [];
                         this.tempDriverCheckCarChartLeft.push(backupNum);
                         this.tempDriverCheckCarChartLeft.push(brakeNum);
                         this.tempDriverCheckCarChartLeft.push(cleanNum);
@@ -1498,7 +1983,17 @@ export default {
                             let myChart2 = new Chart(checkertleft, {
                                 type: "doughnut",
                                 data: {
-                                    labels: ['备胎','刹车','干净','大灯','后视镜','油卡','轮胎','雨刷','其他'],
+                                    labels: [
+                                        "备胎",
+                                        "刹车",
+                                        "干净",
+                                        "大灯",
+                                        "后视镜",
+                                        "油卡",
+                                        "轮胎",
+                                        "雨刷",
+                                        "其他"
+                                    ],
                                     datasets: [
                                         {
                                             label: "carErrorNum",
@@ -1508,7 +2003,8 @@ export default {
                                             borderWidth: 1,
                                             pointStrokeColor: "#fff",
                                             pointStyle: "crossRot",
-                                            data: this.tempDriverCheckCarChartLeft,
+                                            data: this
+                                                .tempDriverCheckCarChartLeft,
                                             cubicInterpolationMode: "monotone",
                                             spanGaps: "false",
                                             fill: "false",
@@ -1874,6 +2370,7 @@ export default {
                 this.showWindow = "night";
                 this.leftButtonStyle = "topbuttonarea-item-blue";
                 this.centerButtonStyle = "topbuttonarea-item";
+                this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
@@ -1881,13 +2378,23 @@ export default {
                 this.showWindow = "bill";
                 this.leftButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
+                this.missionButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item-blue";
+            } else if (mode === "mission") {
+                this.showWindow = "mission";
+                this.leftButtonStyle = "topbuttonarea-item";
+                this.centerButtonStyle = "topbuttonarea-item";
+                this.missionButtonStyle = "topbuttonarea-item-blue";
+                this.checkCarButtonStyle = "topbuttonarea-item";
+                this.basketButtonStyle = "topbuttonarea-item";
+                this.rightButtonStyle = "topbuttonarea-item";
             } else if (mode === "day") {
                 this.showWindow = "day";
                 this.leftButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item-blue";
+                this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
@@ -1895,6 +2402,7 @@ export default {
                 this.showWindow = "basket";
                 this.leftButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
+                this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item-blue";
                 this.rightButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
@@ -1902,6 +2410,7 @@ export default {
                 this.showWindow = "checkCar";
                 this.leftButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
+                this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item-blue";
