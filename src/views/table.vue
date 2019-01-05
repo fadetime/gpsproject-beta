@@ -1049,7 +1049,7 @@
                 </div>
                 <div class="centerarea-body">
                     <div v-for="(item,index) in missionReportArray"
-                         @click="openDriverCheckCarInfoDetailMethod(item)"
+                         @click="openMissionDetailMethod(item)"
                          :key="index"
                          class="centerarea-body-item">
                         <div style="min-width: 60px;text-align: center;">
@@ -1140,7 +1140,7 @@
                 </div>
                 <div class="centerarea-body">
                     <div v-for="(item,index) in missionDriverReportArray"
-                         @click="openDriverCheckCarInfoDetailMethod(item)"
+                         @click="openMissionDetailMethod(item)"
                          :key="index"
                          class="centerarea-body-item">
                         <div style="min-width: 60px;text-align: center;">
@@ -1344,6 +1344,141 @@
         </transition>
         <!-- driver check car detail report box end -->
 
+        <!-- mission detail report box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showMissionDetailInfo"
+                 class="checkditailbox-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="showMissionDetailInfo"
+                 class="checkditailbox-front"
+                 @click.self.prevent="showMissionDetailInfo = false">
+                <div class="checkditailbox-front-box">
+                    <div class="checkditailbox-front-box-top">
+                        <span>任务详情</span>
+                    </div>
+                    <div>
+                        <div class="checkditailbox-body-title">
+                            <div style="height: 30px;line-height: 30px;margin-top: 10px;">
+                                <span>{{shippingMission.missionline}}</span>
+                            </div>
+                        </div>
+                        <div>{{shippingMission.missiondate | datefilter}}{{shippingMission.missiondate | timefilter}}</div>
+                        <div style="margin: 0 12px;display:flex;display:-webkit-flex">
+                            <div class="missiondetailleft" style="margin-top: 12px;">
+                                <div class="missiondetailleftbox">
+                                    <div class="missiondetailleftbox-left">线路名(中)</div>
+                                    <div style="margin: 0 auto;">
+                                        <span>{{shippingMission.missionline}}</span>
+                                    </div>
+                                </div>
+
+                                <div class="missiondetailleftbox">
+                                    <div class="missiondetailleftbox-left">线路名(英)</div>
+                                    <div style="margin: 0 auto;">
+                                        <span>{{shippingMission.missionLineEN}}</span>
+                                    </div>
+                                </div>
+
+                                <div style="display:flex;display:-webkit-flex">
+                                    <div class="missiondetailleftbox">
+                                        <div class="missiondetailleftbox-left">应出时间</div>
+                                        <div style="width:60px">
+                                            <span>{{shippingMission.goTime}}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="missiondetailleftbox" style="margin-left:10px">
+                                        <div class="missiondetailleftbox-left">实出时间</div>
+                                        <div style="width:60px">
+                                            <span>{{missionCreateDate}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="display:flex;display:-webkit-flex">
+                                    <div class="missiondetailleftbox">
+                                        <div class="missiondetailleftbox-left">应收时间</div>
+                                        <div style="width:60px">
+                                            <span>{{shippingMission.finishDate}}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="missiondetailleftbox" style="margin-left:10px">
+                                        <div class="missiondetailleftbox-left">实收时间</div>
+                                        <div style="width:60px">
+                                            <span>{{missionFinishDate}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="missiondetailright" style="margin-left:10px;margin-top: 20px;">
+                                <div style="border:3px solid #eee;position: relative;">
+                                    <div style="background: #eee;border-top-left-radius: 10px;border-top-right-radius: 10px;position: absolute;width: 100px;top: -26px;height: 24px;line-height: 24px;right: 12px;">
+                                        <span>任务客户</span>
+                                    </div>
+                                    <div style="padding:12px;height: 200px;overflow: auto;">
+                                        <div class="missiondetailright-card" v-for="(item,index) in shippingMission.missionclient" :key="index">
+                                            <div style="margin-left:12px;width:100%;height:100px">
+                                                <div style="border-bottom:1px solid #eee;text-align: left;padding-top:10px;font-size:16px">
+                                                    {{item.clientbname}}
+                                                </div>
+                                                <div v-if="item.finishphoto" style="text-align: left;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width:180px">
+                                                    {{item.clientbnameEN}}
+                                                </div>
+                                                <div v-else style="text-align: left;white-space: nowrap;overflow: hidden;text-overflow: ellipsis">
+                                                    {{item.clientbnameEN}}
+                                                </div>
+                                                <div style="text-align: left;padding-top:10px;">
+                                                    完成时间:{{item.finishdate | timefilter}}
+                                                </div>
+                                            </div>
+                                            <div v-if="item.finishphoto" style="min-width:100px" @click="openViewPicMethod(item.finishphoto)">
+                                                <img :src="item.finishphoto | imgurl"
+                                                    style="width: 100px;height:100px;object-fit: cover;"
+                                                     alt="carphoto">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div>
+                        <md-button class="md-raised md-primary"
+                                   @click="showMissionDetailInfo = false"
+                                   style="font-size:18px;width:80px;height:30px">取消</md-button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- mission detail report box end -->
+
+        <!-- view pic start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showMissionImg"
+                 class="checkditailbox-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="showMissionImg"
+                 class="checkditailbox-front"
+                 @click.self.prevent="showMissionImg = false">
+                 <div class="viewbox">
+                     <img :src="missionImgSrc | imgurl" alt="viewImg">
+                 </div>
+            </div>
+        </transition>
+        <!-- view pic start -->
+
         <!-- tips box start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated bounceIn"
@@ -1443,11 +1578,64 @@ export default {
             tempWrongInfoForCar: {},
             isOpenMissionMode: false,
             countMissionClient:0,
-            averageCountMissionClient:0
+            averageCountMissionClient:0,
+            showMissionDetailInfo:false,
+            shippingMission : null,
+            missionCreateDate:null,
+            missionFinishDate:null,
+            missionImgSrc:null,
+            showMissionImg:false
         };
     },
 
     methods: {
+        openViewPicMethod(src){
+            this.missionImgSrc = src
+            this.showMissionImg = true
+        },
+
+        openMissionDetailMethod(item){
+            console.log('1')
+            axios
+                .post(config.server + "/checkcar/getone", {
+                    checkCar_id: item.carCheck_id
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        if(doc.data.doc.date){
+                            let tempHours = new Date(doc.data.doc.date).getHours()
+                            let tempMinutes = new Date(doc.data.doc.date).getMinutes()
+                            this.missionCreateDate = tempHours + ':' + tempMinutes
+                        }else{
+                            this.missionCreateDate = '未提交'
+                        }
+
+                        if(doc.data.doc.finishDate){
+                            let tempHours = new Date(doc.data.doc.date).getHours()
+                            let tempMinutes = new Date(doc.data.doc.date).getMinutes()
+                            this.missionFinishDate = tempHours + ':' + tempMinutes
+                        }else{
+                            this.missionFinishDate = '未提交'
+                        }
+                    }else{
+                        this.missionCreateDate = 'Null'
+                        this.missionFinishDate = 'Null'
+                        this.tipsMsg = "获取检查信息失败";
+                        this.isOpenTipBox = true;
+                        setTimeout(() => {
+                            this.isOpenTipBox = false;
+                        }, 3000);
+                    }
+                    this.shippingMission = item
+                    this.showMissionDetailInfo = true
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            
+        },
+
         missionRepotForDriver(){
             if(!this.startDate || !this.endDate){
                 this.tipsMsg = "请填写开始结束时间";
@@ -1463,10 +1651,10 @@ export default {
                 }, 3000);
             }else{
                 axios
-                    .post(config.server + "/report/mission", {
+                    .post(config.server + "/report/missionwithdriver", {
                         startDate: this.startDate,
                         endDate: this.endDate,
-                        driver:this.choiseDriver
+                        driver:this.choiseDriver.dirvername
                     })
                     .then(doc => {
                         if(doc.data.code === 0){
@@ -2965,5 +3153,36 @@ export default {
     line-height: 24px;
     padding-right: 10px;
     width: 80px;
+}
+
+.missiondetailleftbox{
+    border:1px solid #e6e6e6;
+    display: flex;
+    display: -webkit-flex;
+    height:30px;
+    line-height:30px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.missiondetailleftbox-left{
+    background: #eee;
+    width:80px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.missiondetailright-card{
+    display:flex;
+    display:-webkit-flex;
+    width: 300px;
+    margin-bottom: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.viewbox{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 </style>
