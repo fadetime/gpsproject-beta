@@ -207,13 +207,79 @@
         </div>
 
         <div v-else
-             class="toparea">
+             class="toparea" style="overflow: hidden;" ref="basketbox">
             <div style="height: 58px;position: relative;z-index:23;display: flex;display:-webkit-flex;justify-content: center;;background:#fff">
                 <div class="whiteButton"
                      @click="basketTopMethod()">
                     <span>总统计</span>
                 </div>
+                <div class="whiteButton" style="margin-left:10px"
+                     @click="openDetailBasketBox">
+                    <span>详细统计</span>
+                </div>
             </div>
+
+            <transition name="custom-classes-transition"
+                        enter-active-class="animated slideInDown faster"
+                        leave-active-class="animated slideOutUp faster">
+                <div v-if="isShowDetailBasketReport"
+                     style="padding-bottom:10px;justify-content: flex-end;">
+                     <div style="border-top:1px solid #eee">
+                        <vue-datepicker-local v-model="startDate"
+                                            style="margin-top: 12px;"
+                                            placeholder="开始时间" />
+                        <span> ~ </span>
+                        <vue-datepicker-local v-model="endDate"
+                                            style="margin-top: 12px;"
+                                            placeholder="结束时间" />
+                    </div>
+                    <div style="display:flex;display:-webkit-flex;justify-content: center;margin-top:10px">
+                        <!-- part 1 -->
+                        <div style="display:flex;display:-webkit-flex;margin-right: 10px;margin-left: 10px">
+                            <div style="background-color: #eee;border-top-left-radius: 10px;border-bottom-left-radius: 10px;width: 80px;">
+                                <span style="font-size:16px;color:#6a6a6a;line-height: 34px;">选择司机</span>
+                            </div>
+                            <div style="border:1px solid #e0e0e0;width:120px;height:34px;line-height:34px;cursor: pointer;border-top-right-radius: 10px;border-bottom-right-radius: 10px"
+                                @click="openDriverBox">
+                                <span style="font-size:16px;color:#6a6a6a;text-decoration: underline;">{{driverText}}</span>
+                            </div>
+                        </div>
+
+                        <!-- part 2 -->
+                        <div style="display:flex;display:-webkit-flex;margin-right: 10px;">
+                            <div style="background-color: #eee;border-top-left-radius: 10px;border-bottom-left-radius: 10px;width: 80px;">
+                                <span style="font-size:16px;color:#6a6a6a;line-height: 34px;">任务线路</span>
+                            </div>
+                            <div style="border:1px solid #e0e0e0;width:120px;height:34px;line-height:34px;cursor: pointer;border-top-right-radius: 10px;border-bottom-right-radius: 10px"
+                                @click="openLineBox">
+                                <span v-if="lineText" style="font-size:16px;color:#6a6a6a;text-decoration: underline;">{{lineText}}</span>
+                                <span v-else style="font-size:16px;color:#6a6a6a;text-decoration: underline;">请选择线路</span>
+                            </div>
+                        </div>
+
+                        <!-- part 3 -->
+                        <div style="display:flex;display:-webkit-flex;margin-right: 10px;">
+                            <div style="background-color: #eee;border-top-left-radius: 10px;border-bottom-left-radius: 10px;width: 80px;">
+                                <span style="font-size:16px;color:#6a6a6a;line-height: 34px;">客户名称</span>
+                            </div>
+                            <div style="border:1px solid #e0e0e0;width:120px;height:34px;line-height:34px;cursor: pointer;border-top-right-radius: 10px;border-bottom-right-radius: 10px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;"
+                                @click="openClientBox">
+                                <span v-if="clientText" style="font-size:16px;color:#6a6a6a;text-decoration: underline;">{{clientText}}</span>
+                                <span v-else style="font-size:16px;color:#6a6a6a;text-decoration: underline;">请选择客户</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display:flex;display:-webkit-flex;margin-top: 10px;justify-content: center;">
+                        <div class="whiteButton"
+                             @click="detailBasketReport"
+                             style="margin-top: 0px;width:100px;background: #448aff;color: #fff;border:none">
+                            <span>开始查询</span>
+                        </div>
+                    </div>
+
+                </div>
+            </transition>
         </div>
         <!-- check car report start -->
         <transition name="custom-classes-transition"
@@ -406,6 +472,106 @@
             </div>
         </transition>
         <!-- driver choise box end -->
+
+        <!-- line choise box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isOpenLineBox"
+                 class="driverbox-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isOpenLineBox"
+                 class="driverbox-front"
+                 @click.self.prevent="isOpenLineBox = false">
+                <div class="driver-front-box">
+                    <div class="driver-front-box-title">
+                        <span>线路选择</span>
+                    </div>
+                    <div class="driver-front-box-body"
+                         style="width:300px;margin:0 12px">
+                        <div class="driver-front-box-body-title">
+                            <div class="driver-front-box-body-left">
+                                <span>No.</span>
+                            </div>
+                            <div class="driver-front-box-body-right">
+                                <span>线路名称</span>
+                            </div>
+                        </div>
+                        <div style="height:40vh;overflow-y: auto;">
+                            <div class="driver-front-box-body-center"
+                                 v-for="(item,index) in driverArray"
+                                 :key="index"
+                                 @click="choiseLineMethod(item)">
+                                <div class="driver-front-box-body-left">
+                                    <span>{{index + 1}}</span>
+                                </div>
+                                <div class="driver-front-box-body-right">
+                                    <span>{{item.timesname}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <md-button class="md-raised md-primary"
+                                   @click="moreSearchInfo = !moreSearchInfo"
+                                   style="font-size:18px;width:80px;height:30px;margin-top:13px">
+                            <span>关闭</span>
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- line choise box end -->
+
+        <!-- client choise box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isOpenClientBox"
+                 class="driverbox-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isOpenClientBox"
+                 class="driverbox-front"
+                 @click.self.prevent="isOpenClientBox = false">
+                <div class="driver-front-box">
+                    <div class="driver-front-box-title">
+                        <span>客户选择</span>
+                    </div>
+                    <div class="driver-front-box-body"
+                         style="width:300px;margin:0 12px;height:40vh;">
+                         <div>
+                             <input type="text" placeholder="搜索客户" class="searchclientinput" v-model="keyWord" @keyup.enter="searchClientMethod">
+                         </div>
+                        <div class="driver-front-box-body-title" style="justify-content: center;">
+                            <span>搜索结果</span>
+                        </div>
+                        <div style="overflow-y: auto;height: 260px;">
+                            <div class="driver-front-box-body-center"
+                                 v-for="(item,index) in clientArray"
+                                 :key="index"
+                                 @click="choiseClientMethod(item)"
+                                 style="justify-content: center;">
+                                    <span>{{item.clientbname}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <md-button class="md-raised md-primary"
+                                   @click="isOpenClientBox = false"
+                                   style="font-size:18px;width:80px;height:30px;margin-top:13px">
+                            <span>关闭</span>
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- client choise box end -->
 
         <!-- dayShift report start -->
         <transition name="custom-classes-transition"
@@ -1055,7 +1221,7 @@
                         <div style="min-width: 60px;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
-                        <div style="min-width: 140px;text-align: left;">
+                        <div style="width: 140px;text-align: left;;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">
                             <span style="padding-left:16px;padding-right:12px">{{item.missionline}}</span>
                         </div>
                         <div style="min-width: 140px;text-align: left;">
@@ -1146,10 +1312,10 @@
                         <div style="min-width: 60px;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
-                        <div style="min-width: 140px;text-align: left;">
+                        <div style="width: 140px;text-align: left;;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">
                             <span style="padding-left:16px;padding-right:12px">{{item.missionline}}</span>
                         </div>
-                        <div style="min-width: 140px;text-align: left;">
+                        <div style="min-width:140px;text-align:left">
                             <span style="padding-left:16px;padding-right:12px">{{item.missiondirver}}</span>
                         </div>
                         <div style="min-width: 120px;text-align: left;">
@@ -1187,6 +1353,88 @@
         </transition>
         <!-- mission-driver report end -->
 
+        <!-- basket-client report start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea"
+                 v-if="basketClientReportArray.length != 0">
+                <div class="centerarea-head">
+                    <span>框数统计报告</span>
+                </div>
+                <div class="centerarea-title">
+                    <div style="min-width: 60px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span class="centerarea-title-item">No.</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>客户名称</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>司机姓名</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 120px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建日期</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建时间</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>所属线路</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 100px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>出框数</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 100px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>收框数</span>
+                    </div>
+                </div>
+                <div class="centerarea-body">
+                    <div v-for="(item,index) in basketClientReportArray"
+                         @click="openMissionDetailMethod(item)"
+                         :key="index"
+                         class="centerarea-body-item">
+                        <div style="min-width: 60px;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="width: 140px;text-align: left;;white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.clientName}}</span>
+                        </div>
+                        <div style="min-width:140px;text-align:left">
+                            <span style="padding-left:16px;padding-right:12px">{{item.driverName}}</span>
+                        </div>
+                        <div style="min-width: 120px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.date | datefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.date | timefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.lineName}}</span>
+                        </div>
+                        <div style="min-width: 100px;text-align: center;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.outBasket}}</span>
+                        </div>
+                        <div style="min-width: 100px;text-align: center;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.inBasket}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="centerarea-bottom">
+                    <span>共</span>
+                    <span>{{basketClientReportArray.length}}</span>
+                    <span>条数据</span>
+                </div>
+            </div>
+        </transition>
+        <!-- basket-client report end -->
 
         <!-- driver check car detail report box start -->
         <transition name="custom-classes-transition"
@@ -1548,9 +1796,12 @@ export default {
             moreSearchInfo: false,
             isOpenDriverBox: false,
             driverArray: [],
+            clientArray:[],
             checkerArray: [],
             choiseDriver: null,
             driverText: "请点击选择",
+            lineText:null,
+            clientText:null,
             isOpenTipBox: false,
             tipsMsg: null,
             showWindow: "night",
@@ -1575,6 +1826,7 @@ export default {
             allDriverCheckCarInfo: [],
             missionReportArray: [],
             missionDriverReportArray:[],
+            basketClientReportArray:[],
             tempWrongInfoForCar: {},
             isOpenMissionMode: false,
             countMissionClient:0,
@@ -1584,36 +1836,133 @@ export default {
             missionCreateDate:null,
             missionFinishDate:null,
             missionImgSrc:null,
-            showMissionImg:false
+            showMissionImg:false,
+            isShowDetailBasketReport:false,
+            isOpenLineBox:false,
+            isOpenClientBox:false,
+            keyWord:null
         };
     },
 
     methods: {
+        searchClientMethod(){
+            let pageNow = 1;
+            let pageSize = 10
+            if (!this.keyWord) {
+                this.tipsMsg = "请填客户名";
+                this.isOpenTipBox = true;
+                setTimeout(() => {
+                    this.isOpenTipBox = false;
+                }, 3000);
+            } else {
+                axios
+                    .post(config.server + "/clientb/find", {
+                        word: this.keyWord,
+                        pageSize: pageSize,
+                        pageNow: pageNow
+                    })
+                    .then(doc => {
+                        console.log(doc)
+                        this.clientArray = doc.data.doc
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
+        },
+
+        openClientBox(){
+            this.isOpenClientBox = true
+        },
+
+        openDetailBasketBox(){
+            if(this.isShowDetailBasketReport){
+                this.$refs.basketbox.style.overflow='hidden'
+                this.isShowDetailBasketReport = false
+            }else{
+                setTimeout(() => {
+                    this.$refs.basketbox.style.overflow='unset'
+                }, 1000);
+                this.isShowDetailBasketReport = true
+            }
+        },
+
+        detailBasketReport(){
+            if(!this.startDate || !this.endDate){
+                this.tipsMsg = "请填写开始结束时间";
+                this.isOpenTipBox = true;
+                setTimeout(() => {
+                    this.isOpenTipBox = false;
+                }, 3000);
+            }else{
+                if(!this.choiseDriver && !this.lineText && !this.clientText){
+                    this.tipsMsg = "请选择筛选条件";
+                    this.isOpenTipBox = true;
+                    setTimeout(() => {
+                        this.isOpenTipBox = false;
+                    }, 3000);
+                }else{
+                    let shippingData = {}
+                    shippingData['startDate'] = this.startDate
+                    shippingData['endDate'] = this.endDate
+                    if(this.choiseDriver){
+                        shippingData['driverName'] = this.driverText
+                    }
+                    if(this.lineText){
+                        shippingData['lineName'] = this.lineText
+                    }
+                    if(this.clientText){
+                        shippingData['clientName'] = this.clientText
+                    }
+                    axios
+                    .post(config.server + "/report/basket", shippingData)
+                    .then(doc => {
+                        console.log(doc)
+                        this.basketClientReportArray = doc.data.doc
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                }
+                
+            }
+        },
+
         openViewPicMethod(src){
             this.missionImgSrc = src
             this.showMissionImg = true
         },
 
         openMissionDetailMethod(item){
-            console.log('1')
             axios
                 .post(config.server + "/checkcar/getone", {
                     checkCar_id: item.carCheck_id
                 })
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.code === 0){
                         if(doc.data.doc.date){
                             let tempHours = new Date(doc.data.doc.date).getHours()
+                            if(tempHours < 10){
+                                tempHours = '0' + tempHours
+                            }
                             let tempMinutes = new Date(doc.data.doc.date).getMinutes()
+                            if(tempMinutes < 10){
+                                tempMinutes = '0' + tempMinutes
+                            }
                             this.missionCreateDate = tempHours + ':' + tempMinutes
                         }else{
                             this.missionCreateDate = '未提交'
                         }
 
                         if(doc.data.doc.finishDate){
-                            let tempHours = new Date(doc.data.doc.date).getHours()
-                            let tempMinutes = new Date(doc.data.doc.date).getMinutes()
+                            let tempHours = new Date(doc.data.doc.finishDate).getHours()
+                            if(tempHours < 10){
+                                tempHours = '0' + tempHours
+                            }
+                            let tempMinutes = new Date(doc.data.doc.finishDate).getMinutes()
+                            if(tempMinutes < 10){
+                                tempMinutes = '0' + tempMinutes
+                            }
                             this.missionFinishDate = tempHours + ':' + tempMinutes
                         }else{
                             this.missionFinishDate = '未提交'
@@ -2615,11 +2964,21 @@ export default {
             }
         },
 
+        choiseClientMethod(item){
+            this.clientText = item.clientbname
+            this.isOpenClientBox = false;
+        },
+
+        choiseLineMethod(item){
+            this.lineText = item.timesname
+            this.isOpenLineBox = false;
+        },
         choiseDriverMethod(item) {
             this.choiseDriver = item;
             this.driverText = item.dirvername;
             this.isOpenDriverBox = false;
         },
+
         openDriverBox() {
             this.isOpenDriverBox = true;
             axios
@@ -2631,6 +2990,30 @@ export default {
                     console.log(err);
                 });
         },
+
+        openLineBox() {
+            this.isOpenLineBox = true;
+            axios
+                .get(config.server + "/times/name")
+                .then(doc => {
+                    console.log(doc)
+                    this.driverArray = []
+                    if(doc.data.code === 0){
+                        this.driverArray = doc.data.doc;
+                    }else{
+                        this.tipsMsg = "获取数据失败";
+                        this.isOpenTipBox = true;
+                        setTimeout(() => {
+                            this.isOpenTipBox = false;
+                        }, 3000);
+                    }
+                    
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
         findBillReport() {
             if (!this.startDate || !this.endDate) {
                 this.tipsMsg = "请选择开始时间和结束时间！！！";
@@ -3184,5 +3567,14 @@ export default {
 .viewbox{
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.searchclientinput {
+    text-align: center;
+    font-size: 16px;
+    height: 40px;
+    outline: none;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
 }
 </style>
