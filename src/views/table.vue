@@ -26,6 +26,11 @@
                  @click="reportModeButtonMethod('basket')">
                 <span>框数统计</span>
             </div>
+            <div :class="carWashButtonStyle"
+                 style="margin-right:10px"
+                 @click="reportModeButtonMethod('carWash')">
+                <span>洗车统计</span>
+            </div>
             <div :class="rightButtonStyle"
                  style="border-top-right-radius:10px;border-bottom-right-radius:10px;"
                  @click="reportModeButtonMethod('bill')">
@@ -206,6 +211,58 @@
             </transition>
         </div>
 
+        <div v-else-if="showWindow === 'carWash'"
+             class="toparea">
+            <div style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff;display: flex;display:-webkit-flex;justify-content: space-around;">
+                <div>
+                    <vue-datepicker-local v-model="startDate"
+                                          style="margin-top: 12px;"
+                                          placeholder="开始时间" />
+                    <span> ~ </span>
+                    <vue-datepicker-local v-model="endDate"
+                                          style="margin-top: 12px;"
+                                          placeholder="结束时间" />
+                </div>
+                <div style="display: flex;display:-webkit-flex;justify-content: space-around;">
+                    <div class="whiteButton"
+                         @click="carWashMethod('find')"
+                         style="margin-top: 12px;margin-left: 10px;width:80px">
+                        <span>洗车记录</span>
+                    </div>
+                    <div class="whiteButton"
+                         @click="carWashMethod('more')"
+                         style="margin-top: 12px;margin-left: 10px;width:80px">
+                        <span>更多查询</span>
+                    </div>
+                </div>
+            </div>
+            <transition name="custom-classes-transition"
+                        enter-active-class="animated slideInDown faster"
+                        leave-active-class="animated slideOutUp faster">
+                <div v-if="isOpenCarWashDriverMode"
+                     style="display:flex;display:-webkit-flex;padding-bottom:10px;justify-content: flex-end;">
+                    <div style="display:flex;display:-webkit-flex;margin-right: 20px;">
+                        <div>
+                            <span style="font-size:18px;color:#6a6a6a;line-height: 34px;">选择司机：</span>
+                        </div>
+                        <div style="border:1px solid #e0e0e0;width:218px;height:34px;line-height:34px;cursor: pointer;"
+                             @click="openDriverBox">
+                            <span style="font-size:16px;color:#6a6a6a;text-decoration: underline;">{{driverText}}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;display:-webkit-flex;width:175px">
+                        <div class="whiteButton"
+                             @click="driverCarWashMethod()"
+                             style="margin-top: 0px;margin-right: 6px;;width:80px;background: #448aff;color: #fff;border:none">
+                            <span>司机查询</span>
+                        </div>
+                    </div>
+
+                </div>
+            </transition>
+        </div>
+
+
         <div v-else
              class="toparea" style="overflow: hidden;" ref="basketbox">
             <div style="height: 58px;position: relative;z-index:23;display: flex;display:-webkit-flex;justify-content: center;;background:#fff">
@@ -287,6 +344,9 @@
                     leave-active-class="animated fadeOut faster">
             <div class="centerarea"
                  v-if="tableInfo.length != 0">
+                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="tableInfo=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
                 <div class="centerarea-head">
                     <span>出车收车情况统计</span>
                 </div>
@@ -294,16 +354,16 @@
                     <div style="flex-basis: 4%;text-align: center;">
                         <span>No.</span>
                     </div>
-                    <div style="flex-basis: 10%;text-align: center;">
+                    <div style="flex-basis: 12%;text-align: center;">
                         <span>司机</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
                         <span>出车日期</span>
                     </div>
-                    <div style="flex-basis: 12%;text-align: center;">
+                    <div style="flex-basis: 14%;text-align: center;">
                         <span>出车时间</span>
                     </div>
-                    <div style="flex-basis: 12%;text-align: center;">
+                    <div style="flex-basis: 14%;text-align: center;">
                         <span>收车时间</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
@@ -323,16 +383,16 @@
                         <div style="flex-basis: 4%;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
-                        <div style="flex-basis: 10%;text-align: center;">
+                        <div style="flex-basis: 12%;text-align: center;">
                             <span>{{item.driver}}</span>
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
                             <span>{{item.date | datefilter}}</span>
                         </div>
-                        <div style="flex-basis: 12%;text-align: center;">
+                        <div style="flex-basis: 14%;text-align: center;">
                             <span>{{item.date | timefilter}}</span>
                         </div>
-                        <div style="flex-basis: 12%;text-align: center;">
+                        <div style="flex-basis: 14%;text-align: center;">
                             <span v-if="item.finishDate === null">未提交</span>
                             <span v-else>{{item.finishDate | timefilter}}</span>
 
@@ -368,6 +428,9 @@
                     leave-active-class="animated fadeOut faster">
             <div class="centerarea"
                  v-if="missionInfo.length != 0">
+                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="missionInfo=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
                 <div class="centerarea-head">
                     <span>司机任务情况统计</span>
                 </div>
@@ -375,16 +438,16 @@
                     <div style="flex-basis: 4%;text-align: center;">
                         <span>No.</span>
                     </div>
-                    <div style="flex-basis: 10%;text-align: center;">
+                    <div style="flex-basis: 20%;text-align: center;">
                         <span>司机</span>
                     </div>
-                    <div style="flex-basis: 12%;text-align: center;">
+                    <div style="flex-basis: 20%;text-align: center;">
                         <span>任务日期</span>
                     </div>
-                    <div style="flex-basis: 12%;text-align: center;">
+                    <div style="flex-basis: 20%;text-align: center;">
                         <span>使用车辆</span>
                     </div>
-                    <div style="flex-basis: 7%;text-align: center;">
+                    <div style="flex-basis: 20%;text-align: center;">
                         <span>客户数</span>
                     </div>
                 </div>
@@ -395,16 +458,16 @@
                         <div style="flex-basis: 4%;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
-                        <div style="flex-basis: 10%;text-align: center;">
+                        <div style="flex-basis: 20%;text-align: center;">
                             <span>{{item.missiondirver}}</span>
                         </div>
-                        <div style="flex-basis: 12%;text-align: center;">
+                        <div style="flex-basis: 20%;text-align: center;">
                             <span>{{item.missiondate | datefilter}}</span>
                         </div>
-                        <div style="flex-basis: 12%;text-align: center;">
+                        <div style="flex-basis: 20%;text-align: center;">
                             <span>{{item.missioncar}}</span>
                         </div>
-                        <div style="flex-basis: 7%;text-align: center;">
+                        <div style="flex-basis: 20%;text-align: center;">
                             <span>{{item.missionclient.length}}</span>
                         </div>
                     </div>
@@ -579,6 +642,9 @@
                     leave-active-class="animated fadeOut faster">
             <div class="centerarea"
                  v-if="dayShiftInfo.length != 0">
+                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="dayShiftInfo=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
                 <div class="centerarea-head">
                     <span>白班任务情况统计</span>
                 </div>
@@ -650,14 +716,17 @@
                     leave-active-class="animated fadeOut faster">
             <div class="centerarea"
                  v-if="billInfo.length != 0">
+                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="billInfo=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
                 <div class="centerarea-head">
                     <span>账单情况统计</span>
                 </div>
                 <div class="centerarea-title">
-                    <div style="flex-basis: 3%;text-align: center;">
+                    <div style="flex-basis: 10%;text-align: center;">
                         <span>No.</span>
                     </div>
-                    <div style="flex-basis: 8%;text-align: center;">
+                    <div style="flex-basis: 12%;text-align: center;">
                         <span>司机</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
@@ -666,10 +735,10 @@
                     <div style="flex-basis: 12%;text-align: center;">
                         <span>剩余数量</span>
                     </div>
-                    <div style="flex-basis: 12%;text-align: center;">
+                    <div style="flex-basis: 20%;text-align: center;">
                         <span>统计日期</span>
                     </div>
-                    <div style="flex-basis: 12%;text-align: center;">
+                    <div style="flex-basis: 20%;text-align: center;">
                         <span>统计时间</span>
                     </div>
                 </div>
@@ -677,10 +746,10 @@
                     <div v-for="(item,index) in billInfo"
                          :key="index"
                          class="centerarea-body-item">
-                        <div style="flex-basis: 3%;text-align: center;">
+                        <div style="flex-basis: 10%;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
-                        <div style="flex-basis: 8%;text-align: center;">
+                        <div style="flex-basis: 12%;text-align: center;">
                             <span>{{item.driverName}}</span>
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
@@ -690,10 +759,10 @@
                             <span v-if="item.endNum">{{item.endNum}}</span>
                             <span v-else>未完成</span>
                         </div>
-                        <div style="flex-basis: 12%;text-align: center;">
+                        <div style="flex-basis: 20%;text-align: center;">
                             <span>{{item.date | datefilter}}</span>
                         </div>
-                        <div style="flex-basis: 12%;text-align: center;">
+                        <div style="flex-basis: 20%;text-align: center;">
                             <span>{{item.date | timefilter}}</span>
                         </div>
                     </div>
@@ -715,6 +784,9 @@
                     leave-active-class="animated fadeOut faster">
             <div class="centerarea"
                  v-if="basketInfo.length != 0">
+                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="basketInfo=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
                 <div class="centerarea-head">
                     <span>客户欠框统计</span>
                 </div>
@@ -788,6 +860,9 @@
                     leave-active-class="animated fadeOut faster">
             <div class="centerarea"
                  v-if="checkerArray.length != 0">
+                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="checkerArray=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
                 <div class="centerarea-head">
                     <span>车辆检查报告</span>
                 </div>
@@ -876,6 +951,87 @@
             </div>
         </transition>
         <!-- checker report end -->
+
+        <!-- car wash report start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea"
+                 v-if="carWashArray.length != 0">
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="carWashArray=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
+                <div class="centerarea-head">
+                    <span>洗车检查报告</span>
+                </div>
+                <div class="centerarea-title">
+                    <div style="min-width: 60px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span class="centerarea-title-item">No.</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>司机姓名</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 120px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建日期</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>创建时间</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>结束日期</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>结束时间</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 120px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>车牌号码</span>
+                    </div>
+                </div>
+                <div class="centerarea-body">
+                    <div v-for="(item,index) in carWashArray"
+                         @click="detailCheckInfo(item)"
+                         :key="index"
+                         class="centerarea-body-item">
+                        <div style="min-width: 60px;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.creator}}</span>
+                        </div>
+                        <div style="min-width: 120px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.createDate | datefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.createDate | timefilter}}</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span v-if="item.finishDate" style="padding-left:16px;padding-right:12px">{{item.finishDate | datefilter}}</span>
+                            <span v-else style="padding-left:16px;padding-right:12px">未执行</span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span v-if="item.finishDate" style="padding-left:16px;padding-right:12px">{{item.finishDate | timefilter}}</span>
+                            <span v-else style="padding-left:16px;padding-right:12px">未执行</span>
+                        </div>
+                        <div style="min-width: 120px;text-align: left;">
+                            <span style="padding-left:16px;padding-right:12px">{{item.carPlate}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="centerarea-bottom">
+                    <span>共</span>
+                    <span>{{carWashArray.length}}</span>
+                    <span>条数据</span>
+                </div>
+            </div>
+        </transition>
+        <!-- car wash report end -->
 
         <!-- check detail information box start -->
         <transition name="custom-classes-transition"
@@ -1005,6 +1161,9 @@
                     leave-active-class="animated fadeOut faster">
             <div class="centerarea"
                  v-if="driverCheckCarInfo.length != 0">
+                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="driverCheckCarInfo=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
                 <div class="centerarea-head">
                     <span>司机检查报告</span>
                 </div>
@@ -1093,6 +1252,9 @@
                     leave-active-class="animated fadeOut faster">
             <div class="centerarea"
                  v-if="allDriverCheckCarInfo.length != 0">
+                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="allDriverCheckCarInfo=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
                 <div class="centerarea-head">
                     <span>司机检查报告</span>
                 </div>
@@ -1181,6 +1343,9 @@
                     leave-active-class="animated fadeOut faster">
             <div class="centerarea"
                  v-if="missionReportArray.length != 0">
+                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="missionReportArray=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
                 <div class="centerarea-head">
                     <span>任务统计报告</span>
                 </div>
@@ -1272,6 +1437,9 @@
                     leave-active-class="animated fadeOut faster">
             <div class="centerarea"
                  v-if="missionDriverReportArray.length != 0">
+                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="missionDriverReportArray=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
                 <div class="centerarea-head">
                     <span>任务统计报告</span>
                 </div>
@@ -1359,6 +1527,9 @@
                     leave-active-class="animated fadeOut faster">
             <div class="centerarea"
                  v-if="basketClientReportArray.length != 0">
+                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="basketClientReportArray=[]">
+                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
                 <div class="centerarea-head">
                     <span>框数统计报告</span>
                 </div>
@@ -1397,7 +1568,6 @@
                 </div>
                 <div class="centerarea-body">
                     <div v-for="(item,index) in basketClientReportArray"
-                         @click="openMissionDetailMethod(item)"
                          :key="index"
                          class="centerarea-body-item">
                         <div style="min-width: 60px;text-align: center;">
@@ -1694,7 +1864,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                     <div>
@@ -1798,6 +1967,7 @@ export default {
             driverArray: [],
             clientArray:[],
             checkerArray: [],
+            carWashArray:[],
             choiseDriver: null,
             driverText: "请点击选择",
             lineText:null,
@@ -1806,11 +1976,13 @@ export default {
             tipsMsg: null,
             showWindow: "night",
             isOpenCheckCarDriverMode: false,
+            isOpenCarWashDriverMode:false,
             leftButtonStyle: "topbuttonarea-item-blue",
             centerButtonStyle: "topbuttonarea-item",
             checkCarButtonStyle: "topbuttonarea-item",
             missionButtonStyle: "topbuttonarea-item",
             basketButtonStyle: "topbuttonarea-item",
+            carWashButtonStyle: "topbuttonarea-item",
             rightButtonStyle: "topbuttonarea-item",
             showDetailCheckInfo: false,
             showDriverCheckCarDetailInfo: false,
@@ -1845,6 +2017,107 @@ export default {
     },
 
     methods: {
+        driverCarWashMethod(){
+            if(!this.startDate || !this.endDate){
+                this.tipsMsg = "请填写开始结束时间";
+                this.isOpenTipBox = true;
+                setTimeout(() => {
+                    this.isOpenTipBox = false;
+                }, 3000);
+            }else{
+                if(this.choiseDriver){
+                    axios
+                        .post(config.server + "/report/carwash", {
+                            startDate:this.startDate,
+                            endDate:this.endDate,
+                            creator:this.driverText
+                        })
+                        .then(doc => {
+                            if(doc.data.code === 0){
+                                console.log(doc)
+                                this.carWashArray = doc.data.doc
+                            }else if(doc.data.code === 1){
+                                this.tipsMsg = "未找到对应数据";
+                                this.isOpenTipBox = true;
+                                setTimeout(() => {
+                                    this.isOpenTipBox = false;
+                                }, 3000);
+                            }else if(doc.data.code === 3){
+                                this.tipsMsg = "查询最大不能超过31天";
+                                this.isOpenTipBox = true;
+                                setTimeout(() => {
+                                    this.isOpenTipBox = false;
+                                }, 3000);
+                            }else{
+                                this.tipsMsg = "获取数据出现错误";
+                                this.isOpenTipBox = true;
+                                setTimeout(() => {
+                                    this.isOpenTipBox = false;
+                                }, 3000);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }else{
+                    this.tipsMsg = "请选择相应司机";
+                    this.isOpenTipBox = true;
+                    setTimeout(() => {
+                        this.isOpenTipBox = false;
+                    }, 3000);
+                }
+            }
+        },
+
+        carWashMethod(mode){
+            if(!this.startDate || !this.endDate){
+                this.tipsMsg = "请填写开始结束时间";
+                this.isOpenTipBox = true;
+                setTimeout(() => {
+                    this.isOpenTipBox = false;
+                }, 3000);
+            }else{
+                if(mode === 'find'){
+                    console.log('find')
+                    axios
+                        .post(config.server + "/report/carwash", {
+                            startDate:this.startDate,
+                            endDate:this.endDate
+                        })
+                        .then(doc => {
+                            if(doc.data.code === 0){
+                                console.log(doc)
+                                this.carWashArray = doc.data.doc
+                            }else if(doc.data.code === 1){
+                                this.tipsMsg = "未找到对应数据";
+                                this.isOpenTipBox = true;
+                                setTimeout(() => {
+                                    this.isOpenTipBox = false;
+                                }, 3000);
+                            }else if(doc.data.code === 3){
+                                this.tipsMsg = "查询最大不能超过31天";
+                                this.isOpenTipBox = true;
+                                setTimeout(() => {
+                                    this.isOpenTipBox = false;
+                                }, 3000);
+                            }else{
+                                this.tipsMsg = "获取数据出现错误";
+                                this.isOpenTipBox = true;
+                                setTimeout(() => {
+                                    this.isOpenTipBox = false;
+                                }, 3000);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }else{
+                    console.log('more')
+                    this.isOpenCarWashDriverMode = !this.isOpenCarWashDriverMode
+                }
+            }
+        },
+
         searchClientMethod(){
             let pageNow = 1;
             let pageSize = 10
@@ -2919,6 +3192,7 @@ export default {
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
+                this.carWashButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
             } else if (mode === "bill") {
@@ -2928,6 +3202,7 @@ export default {
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
+                this.carWashButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item-blue";
             } else if (mode === "mission") {
                 this.showWindow = "mission";
@@ -2936,6 +3211,7 @@ export default {
                 this.missionButtonStyle = "topbuttonarea-item-blue";
                 this.checkCarButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
+                this.carWashButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
             } else if (mode === "day") {
                 this.showWindow = "day";
@@ -2944,6 +3220,7 @@ export default {
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
+                this.carWashButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
             } else if (mode === "basket") {
                 this.showWindow = "basket";
@@ -2952,14 +3229,25 @@ export default {
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item-blue";
                 this.rightButtonStyle = "topbuttonarea-item";
+                this.carWashButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
-            } else {
+            } else if (mode === "carWash") {
+                this.showWindow = "carWash";
+                this.leftButtonStyle = "topbuttonarea-item";
+                this.centerButtonStyle = "topbuttonarea-item";
+                this.missionButtonStyle = "topbuttonarea-item";
+                this.basketButtonStyle = "topbuttonarea-item";
+                this.rightButtonStyle = "topbuttonarea-item";
+                this.carWashButtonStyle = "topbuttonarea-item-blue";
+                this.checkCarButtonStyle = "topbuttonarea-item";
+            }else {
                 this.showWindow = "checkCar";
                 this.leftButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
+                this.carWashButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item-blue";
             }
         },
@@ -3272,6 +3560,7 @@ export default {
     margin-left: auto;
     margin-right: auto;
     border-radius: 10px;
+    position:relative;
 }
 
 .centerarea-head {
