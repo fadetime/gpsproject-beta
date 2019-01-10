@@ -1506,9 +1506,6 @@ export default {
     },
 
     methods: {
-        testMethod() {
-            console.log("123123");
-        },
         autoSortMethod() {
             setTimeout(() => {
                 this.choiceClient = _.orderBy(
@@ -2582,6 +2579,89 @@ export default {
                 });
         },
 
+        updateCSmissionState(CSmission_id,mission_id){
+            axios
+                .post(config.server + "/customerService/update", {
+                    _id:CSmission_id,
+                    mission_id:mission_id
+                })
+                .then(doc => {
+                    console.log('update csmission')
+                    console.log(doc)
+                })
+                .catch(err => {
+                    console.log(err)
+                })            
+        },
+
+        findCustomerServiceNightMission (item,mission_id){
+            console.log('item')
+            console.log(item)
+            let factor = {
+                missionDate:item.missiondate
+            }
+            axios
+                .post(config.server + "/customerService/find", factor)
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        let addCSmissionNum = 0
+                        let ClientPositionNum = -2
+                        item.missionclient.forEach(elementX => {
+                            ClientPositionNum += 2
+                            doc.data.doc.forEach(elementY => {
+                                if(elementY.clientName === elementX.clientbname){
+                                    addCSmissionNum ++
+                                    console.log('ClientPositionNum')
+                                    console.log(ClientPositionNum)
+                                    let shippingDate = {
+                                        mission_id:mission_id,
+                                        ClientPositionNum:ClientPositionNum,
+                                        obj:[{
+                                            clientbname: elementX.clientbname,
+                                            clientbnameEN: elementX.clientbnameEN,
+                                            clientbaddress: elementX.clientbaddress,
+                                            clientbphone: elementX.clientbphone,
+                                            clientbpostcode: elementX.clientbpostcode,
+                                            clientbserve: elementX.clientbserve.clientaname,
+                                            image: elementX.image,
+                                            isNeedPic: elementX.isNeedPic,
+                                            timeLimit: elementX.timeLimit,
+                                            note:elementY.note,
+                                            isReturn:true
+                                        }]
+                                    }
+                                    axios
+                                        .post(config.server + "/mission/addclientSort", shippingDate)
+                                        .then(doc => {
+                                            console.log('addclient')
+                                            console.log(doc)
+                                            this.updateCSmissionState(elementY._id,mission_id)
+                                        })
+                                        .catch(err => {
+                                            console.log(err)
+                                        })
+                                }
+                                
+                            });
+                        });
+                        if(addCSmissionNum != 0){
+                            this.errormsg = "添加了"+ addCSmissionNum + "条夜班退菜任务";
+                            this.showTipDialog = true;
+                            setTimeout(() => {
+                                this.showTipDialog = false;
+                            }, 3000);
+                        }
+                    }else{
+                        console.log('enter CSmission else')
+                        console.log(doc)
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
         saveMission() {
             this.$set(this.aLineInfo, "timesclientb", this.choiceClient);
             let query = {};
@@ -2593,7 +2673,9 @@ export default {
                 }
             });
             if (this.missionDateModeButtonCSS1) {
+                let dateToday = new Date().toISOString();
                 query = {
+                    missiondate: dateToday,
                     missionline: this.aLineInfo.timesname,
                     missionLineEN: this.aLineInfo.timesNameEN,
                     line_id: this.aLineInfo._id,
@@ -2684,6 +2766,8 @@ export default {
             axios
                 .post(config.server + "/mission/create", query)
                 .then(res => {
+                    console.log(res)
+                    this.findCustomerServiceNightMission (query,res.data._id)
                     this.missionDateModePacker = "";
                     if (this.missionDateModeButtonCSS2) {
                         this.errormsg = "明日任务已建立完成";
