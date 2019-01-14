@@ -1598,6 +1598,12 @@
                 </div>
 
                 <div class="centerarea-bottom">
+                    <span>送出框数</span>
+                    <span>{{tempOutBasketNum}}</span>
+                    <span>个|</span>
+                    <span>收回框数</span>
+                    <span>{{tempInBasketNum}}</span>
+                    <span>个|</span>
                     <span>共</span>
                     <span>{{basketClientReportArray.length}}</span>
                     <span>条数据</span>
@@ -2012,7 +2018,9 @@ export default {
             isShowDetailBasketReport:false,
             isOpenLineBox:false,
             isOpenClientBox:false,
-            keyWord:null
+            keyWord:null,
+            tempInBasketNum:0,
+            tempOutBasketNum:0
         };
     },
 
@@ -2192,6 +2200,12 @@ export default {
                     .then(doc => {
                         console.log(doc)
                         this.basketClientReportArray = doc.data.doc
+                        this.tempInBasketNum = 0
+                        this.tempOutBasketNum = 0
+                        doc.data.doc.forEach(element => {
+                            this.tempOutBasketNum += element.outBasket
+                            this.tempInBasketNum +=element.inBasket
+                        });
                     })
                     .catch(err => {
                         console.log(err)

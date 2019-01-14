@@ -167,6 +167,7 @@
                                 <div style="border: 2px dashed #696969;text-align: center;height: 40px;line-height: 40px;">
                                     <span v-if="userRole === 'user'">司 机</span>
                                     <span v-else-if="userRole === 'dayshift'">白 班</span>
+                                    <span v-else-if="userRole === 'dayshiftLeader'">白班主管</span>
                                     <span v-else-if="userRole === 'maintain'">维修员</span>
                                     <span v-else-if="userRole === 'checker'">检查员</span>
                                     <span v-else-if="userRole === 'bill'">账单管理</span>
@@ -363,6 +364,9 @@
                          <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('b')">
                              <span>白 班</span>
                          </div>
+                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('dLeader')">
+                             <span>白班主管</span>
+                         </div>
                          <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('w')">
                              <span>维修员</span>
                          </div>
@@ -493,10 +497,13 @@ export default {
     },
     methods: {
         choiseRoleEventMethod(role){
+            
             if(role === 'd') {
                 this.userRole = 'user'
             }else if( role === 'b') {
                 this.userRole = 'dayshift'
+            }else if( role === 'dLeader') {
+                this.userRole = 'dayshiftLeader'
             }else if( role === 'w') {
                 this.userRole = 'maintain'
             }else if( role === 'bill') {
