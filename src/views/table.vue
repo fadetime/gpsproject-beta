@@ -2199,13 +2199,22 @@ export default {
                     .post(config.server + "/report/basket", shippingData)
                     .then(doc => {
                         console.log(doc)
-                        this.basketClientReportArray = doc.data.doc
-                        this.tempInBasketNum = 0
-                        this.tempOutBasketNum = 0
-                        doc.data.doc.forEach(element => {
-                            this.tempOutBasketNum += element.outBasket
-                            this.tempInBasketNum +=element.inBasket
-                        });
+                        if(doc.data.code === 0){
+                            this.basketClientReportArray = doc.data.doc
+                            this.tempInBasketNum = 0
+                            this.tempOutBasketNum = 0
+                            doc.data.doc.forEach(element => {
+                                this.tempOutBasketNum += element.outBasket
+                                this.tempInBasketNum +=element.inBasket
+                            });
+                        }else{
+                            this.tipsMsg = "未找到对应数据";
+                            this.isOpenTipBox = true;
+                            setTimeout(() => {
+                                this.isOpenTipBox = false;
+                            }, 3000);
+                        }
+                        
                     })
                     .catch(err => {
                         console.log(err)
