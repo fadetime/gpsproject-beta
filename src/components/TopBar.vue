@@ -26,7 +26,7 @@
                 <router-link to="/dirver"
                              class="buttomarea-item"
                              style="color: aliceblue;">
-                    <span class="titlefont">司机管理</span>
+                    <span class="titlefont">人员管理</span>
                 </router-link>
                 <router-link to="/car"
                              class="buttomarea-item"

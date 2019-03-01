@@ -9,9 +9,12 @@
             </div>
             <div class="topbutton-right"
                  style="padding-top:5px">
-                <md-button class="md-raised md-primary"
+                <md-button class="md-raised md-primary pc_version_mission_button"
                            @click="addMission"
                            style="font-size:18px;width:100px;height:40px;">新建任务</md-button>
+                <!-- add mission button for phone version -->
+                <div class="add_mission_button_phone_version"
+                     @click="addMissionForPhoneVersionMethod">新建任务</div>
             </div>
         </div>
         <div class="centertable"
@@ -69,7 +72,6 @@
         <md-dialog :md-active.sync="addDialog"
                    :md-click-outside-to-close="false"
                    id="newmission">
-            <!-- style="width:878px" -->
             <md-dialog-title style="font-size:18px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:0;margin-bottom:4px">
                 <div style="display:flex;display:-webkit-flex;justify-content: space-between;">
                     <div style="line-height: 48px;padding-left:24px">
@@ -616,6 +618,297 @@
             </md-dialog-content>
         </md-dialog>
         <!-- add dialog end -->
+
+        <!-- add mission dialog for phone version start -->
+        <div v-if="isShowAddDialogPhoneVersion"
+             class="phone_version_dialog">
+            <div class="phone_version_dialog_title">
+                <div style="padding-left:10px;display:flex"
+                     @click="closeDialog">
+                    <div>
+                        <img src="../../public/img/left.png"
+                             alt="lefticon"
+                             style="width:18px">
+                    </div>
+                    <div style="padding-top: 1px;">
+                        <span style="padding-top:1px">返回</span>
+                    </div>
+                </div>
+                <div>
+                    <span>添加物流任务</span>
+                </div>
+                <div style="width:61px">
+                </div>
+            </div>
+            <div style="height:40px">
+                <!-- <span>title empty space</span> -->
+            </div>
+            <div class="phone_version_dialog_step_box">
+                <div class="phone_version_dialog_step_box_item"
+                     @click="jumpStepButtonMethod(0)">
+                    <span>选择车次</span>
+                </div>
+                <div style="border-bottom: 1px solid #e6e6e6;width: 30px;height: 1px;margin-top: 16px;"></div>
+                <div class="phone_version_dialog_step_box_item" style="color:#eee" ref="phoneStepSecondButton"
+                     @click="jumpStepButtonMethod(1)">
+                    <span>司机车辆</span>
+                </div>
+                <div style="border-bottom: 1px solid #e6e6e6;width: 30px;height: 1px;margin-top: 16px;"></div>
+                <div class="phone_version_dialog_step_box_item" style="color:#eee" ref="phoneStepThirdButton"
+                     @click="jumpStepButtonMethod(2)">
+                    <span>确认客户</span>
+                </div>
+            </div>
+            <div class="phone_version_dialog_body" ref="addDialogPhoneVersion" style="overflow-y:auto">
+                <div class="phone_version_dialog_body_step_1" v-if="doNum === 0">
+                    <div class="phone_version_dialog_body_linebox"
+                         style="padding:8px 0;margin-top:4px"
+                         v-for="(item,index) in alltimesinfo"
+                         :key="index"
+                         @click="choseitemForPhone(item)">
+                        <div style="height:30px;border-bottom:1px solid #eee;line-height:30px;width:300px;margin:0 auto">
+                            <span>{{item.timesname}}</span>
+                        </div>
+                        <div style="height:30px;line-height:30px">
+                            <span>{{item.timesnote}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone_version_dialog_body_step_2"
+                     v-if="doNum === 1">
+                    <!-- driver info box start -->
+                    <div class="dialog-3"
+                         style="padding: 5px;">
+                        <div @click="openChoiceList('driver')"
+                             style="margin:8px 10px">
+                            <div style="font-size:14px;position: relative;box-shadow:0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);overflow: hidden;">
+                                <div>
+                                    <img v-if="!selectorDriver.image"
+                                         src="../../public/img/ebuyLogo.png"
+                                         alt="logo"
+                                         style="width:100%;height:100%;object-fit: contain;">
+                                    <img v-else
+                                         :src="selectorDriver.image | imgurl"
+                                         alt="carphoto"
+                                         style="width:100%;height:100%;object-fit: contain;">
+                                </div>
+                                <div style="position: absolute;bottom: 0;background: rgba(0,0,0,0.7);width: 100%;height: 64px;color:#fff">
+                                    <div v-if="!selectorDriver"
+                                         style="text-align: center;">
+                                        <span style="font-size:16px;line-height:100px;">{{setDriverText}}</span>
+                                    </div>
+                                    <div v-else>
+                                        <div style="display:-webkit-flex;display: flex;padding-top:8px">
+                                            <div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+                                                <div style="flex-basis:30%;text-align: right;">
+                                                    <span>姓名:</span>
+                                                </div>
+                                                <div style="flex-basis:70%;text-align: center;">
+                                                    <span>{{selectorDriver.dirvername}}</span>
+                                                </div>
+                                            </div>
+                                            <div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+                                                <div style="flex-basis:30%;text-align: right;">
+                                                    <span>电话:</span>
+                                                </div>
+                                                <div style="flex-basis:70%;text-align: center;">
+                                                    <span>{{selectorDriver.dirverphone}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="display:-webkit-flex;display: flex;padding-top:8px">
+                                            <div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+                                                <div style="flex-basis:30%;text-align: right;">
+                                                    <span>驾照:</span>
+                                                </div>
+                                                <div style="flex-basis:70%;text-align: center;">
+                                                    <span>{{selectorDriver.dirvercard}}</span>
+                                                </div>
+                                            </div>
+                                            <div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+                                                <div style="flex-basis:30%;text-align: right;">
+                                                    <span>备注:</span>
+                                                </div>
+                                                <div style="flex-basis:70%;text-align: center;">
+                                                    <span>{{selectorDriver.dirvernote}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- driver info box end -->
+
+                    <!-- truck info box start -->
+                    <div class="dialog-3"
+                         style="padding: 5px;">
+                        <div @click="openChoiceList('car')"
+                             style="margin:8px 10px">
+                            <div style="font-size:14px;position: relative;box-shadow:0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);overflow: hidden;">
+                                <div>
+                                    <img v-if="!selectorCar.image"
+                                         src="../../public/img/ebuyLogo.png"
+                                         alt="logo"
+                                         style="width:100%;height:100%;object-fit: contain;">
+                                    <img v-else
+                                         :src="selectorCar.image | imgurl"
+                                         alt="carphoto"
+                                         style="width:100%;height:100%;object-fit: contain;">
+                                </div>
+                                <div style="position: absolute;bottom: 0;background: rgba(0,0,0,0.7);width: 100%;height: 64px;color:#fff">
+                                    <div v-if="!selectorCar"
+                                         style="text-align: center;">
+                                        <span style="font-size:16px;line-height:100px;">{{setCarText}}</span>
+                                    </div>
+                                    <div v-else>
+                                        <div style="display:-webkit-flex;display: flex;padding-top:8px">
+                                            <div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+                                                <div style="flex-basis:30%;text-align: right;">
+                                                    <span>车牌:</span>
+                                                </div>
+                                                <div style="flex-basis:70%;text-align: center;">
+                                                    <span>{{selectorCar.carid}}</span>
+                                                </div>
+                                            </div>
+                                            <div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+                                                <div style="flex-basis:30%;text-align: right;">
+                                                    <span>型号:</span>
+                                                </div>
+                                                <div style="flex-basis:70%;text-align: center;">
+                                                    <span>{{selectorCar.cartype}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="display:-webkit-flex;display: flex;padding-top:8px">
+                                            <div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+                                                <div style="flex-basis:30%;text-align: right;">
+                                                    <span>尾门:</span>
+                                                </div>
+                                                <div style="flex-basis:70%;text-align: center;">
+                                                    <span>{{selectorCar.tailgate}}</span>
+                                                </div>
+                                            </div>
+                                            <div style="flex-basis:50%;display:-webkit-flex;display: flex;padding:0 10px">
+                                                <div style="flex-basis:30%;text-align: right;">
+                                                    <span>备注:</span>
+                                                </div>
+                                                <div style="flex-basis:70%;text-align: center;">
+                                                    <span>{{selectorCar.carnote}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- truck info box end -->
+                </div>
+                <div class="phone_version_dialog_body_step_3"
+                     v-if="doNum === 2">
+                    <!-- top change mode button start -->
+                    <div style="display:flex;display: -webkit-flex;justify-content: center;">
+                        <div class="phone_version_dialog_change_mode_button_left"
+                            @click="changeComfirmClientModeMethod('left')" ref="leftModeButton">
+                            <span>线路客户</span>
+                        </div> 
+                        <div class="phone_version_dialog_change_mode_button_right"
+                            @click="changeComfirmClientModeMethod('right')" ref="rightModeButton">
+                            <span>客服数据</span>
+                        </div> 
+                    </div>
+                    <!-- top change mode button end -->
+
+                    <div v-if="isShowLineInfoMode">
+                        <div class="third-body-leftbox"
+                                style="overflow-y:auto;overflow-x:hidden;margin-top:4px" ref="clientListForPhone">
+                            <div md-with-hover
+                                v-for="(item,index) in leftBoxArray"
+                                :key="index">
+                                <div class="step-third-title-body" style="background-color: #fff;margin-bottom: 2px;">
+                                    <label :for="index"
+                                            class="step-third-title"
+                                            @click="autoSortMethod">
+                                        <input type="checkbox"
+                                                :id="index"
+                                                :value="item"
+                                                v-model="choiceClient"
+                                                style="width:25px;height:25px">
+                                        <span class="step-third-title-item"
+                                                style="width:150px">{{item.clientbname}}</span>
+                                        <span class="step-third-title-item"
+                                                style="width:80px">{{item.clientbserve.clientaname}}</span>
+                                        <span class="step-third-title-item"
+                                                style="width:50px">{{item.clientbarea.areaName}}</span>
+                                    </label>
+                                    <div @click="clientInfoMethod(item)">
+                                        <md-icon class="step-third-title-item"
+                                                    style="width:50px">info</md-icon>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else style="margin-top:8px">
+                        <div id="tab4-body"
+                            class="tab4-body"
+                            style="overflow-y:auto;">
+                            <div v-for="(item,index) in comparedClient.customers"
+                                        :key="index"
+                                        class="choiceClientCard">
+                                <div style="display:flex;line-height: 28px;margin-bottom:2px;">
+                                    <div class="step-third-title-item"
+                                            style="width:37px;padding-left:14px;text-align:left">
+                                        <span>{{index}}</span>
+                                    </div>
+                                    <div style="width:249px;padding-left:24px;font-size: 16px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                                        <span v-if="!redBoxArray[index]"
+                                                style="background:red;color:#fff">{{item}}</span>
+                                        <span v-else>{{item}}</span>
+                                    </div>
+                                    <div style="width:60px;font-size: 16px;">
+                                        <span>第</span>
+                                        <span>{{comparedClient.carNumber}}</span>
+                                        <span>车</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="phone_version_dialog_bottom">
+                <div style="height:32px;display:flex;display:-webkit-flex;line-height:32px;justify-content: center;">
+                    <div class="phone_version_dialog_bottom_info_text_box">
+                        <span>{{selectorTextForPhone}}</span>
+                    </div>
+                    <div class="phone_version_dialog_bottom_info_text_box">
+                        <span>{{selectorDriverTextForPhone}}</span>
+                    </div>
+                    <div class="phone_version_dialog_bottom_info_text_box">
+                        <span>{{selectorTruckTextForPhone}}</span>
+                    </div>
+                    <div class="phone_version_dialog_bottom_info_text_box">
+                        <span>已选客户{{choiceClient.length}}</span>
+                    </div>
+                </div>
+                <div @click="nextStepForPhone" style="background-color:#448aff;height:32px;line-height:32px">
+                    <span style="font-size:16px;color:#fff">下一步</span>
+                </div>
+            </div>
+        </div>
+        <!-- add mission dialog for phone version end -->
+        <!-- small tips for phone version start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated slideInDown fast"
+                    leave-active-class="animated slideOutUp fast">
+            <div v-if="isShowSmallTipsForPhone" @click="closeSmallTipsForPhone" class="samll_tips_for_phone">
+                <span>{{smallTipsInfo}}</span>
+            </div>
+        </transition>
+        <!-- small tips for phone version end -->
         <!-- detail dialog start -->
         <md-dialog class="detaildialog"
                    :md-active.sync="detaildialog">
@@ -841,13 +1134,13 @@
                     enter-active-class="animated fadeIn faster"
                     leave-active-class="animated fadeOut faster">
             <div v-if="choseListDialog"
-                 style="background: rgba(0,0,0,.6);z-index:20;position: fixed;top:0;bottom:0;left:0;right:0"></div>
+                 style="background: rgba(0,0,0,.6);z-index:25;position: fixed;top:0;bottom:0;left:0;right:0"></div>
         </transition>
         <transition name="custom-classes-transition"
                     enter-active-class="animated zoomIn faster"
                     leave-active-class="animated zoomOut faster">
             <div v-if="choseListDialog"
-                 style="z-index:21;position: fixed;top:0;bottom:0;left:0;right:0;display: flex;justify-content: center;align-items: center;"
+                 style="z-index:26;position: fixed;top:0;bottom:0;left:0;right:0;display: flex;justify-content: center;align-items: center;"
                  @click.self.prevent="closeListDialog">
                 <div style="width:370px;background:#fff;">
                     <div style="background:#ff5252;box-shadow: rgb(0, 0, 0) 0px 1px 5px;height:30px;line-height: 30px;">
@@ -1294,7 +1587,7 @@
             <div v-if="showEditMissionDateBox"
                  class="mapbox-front"
                  @click.self.prevent="showEditMissionDateBox = false">
-                 <div class="mapbox-front-box">
+                <div class="mapbox-front-box">
                     <div class="mapbox-front-box-top">
                         <span>日期修改</span>
                     </div>
@@ -1324,7 +1617,7 @@
                                    @click="confirmEditMissionDate"
                                    style="font-size:18px;width:80px;height:30px">保存</md-button>
                     </div>
-                 </div>
+                </div>
             </div>
         </transition>
         <!-- edit mission-date end -->
@@ -1382,6 +1675,9 @@ export default {
             missionclient: [],
             missionid: "",
             selectorText: "请选择",
+            selectorTextForPhone: "未选线路",
+            selectorDriverTextForPhone:"未选司机",
+            selectorTruckTextForPhone:"未选车辆",
             selectorDriver: "",
             selectorCar: "",
             bodyShowFlag: false,
@@ -1430,9 +1726,16 @@ export default {
             isShowNcSort: false,
             tempArrayData: [],
             redBoxArray: [],
-            showEditMissionDateBox:false,
-            dateNow:new Date(),
-            dateEdit:new Date()
+            showEditMissionDateBox: false,
+            dateNow: new Date(),
+            dateEdit: new Date(),
+            isShowAddDialogPhoneVersion: false,
+            doNum: 0,
+            addMissionStepGuard1:false,
+            addMissionStepGuard2:false,
+            isShowLineInfoMode:true,
+            isShowSmallTipsForPhone:false,
+            smallTipsInfo:'未知错误'
         };
     },
     computed: {
@@ -1506,6 +1809,240 @@ export default {
     },
 
     methods: {
+        closeSmallTipsForPhone(){
+            this.isShowSmallTipsForPhone = false
+        },
+
+        changeComfirmClientModeMethod(mode){
+            if(mode === 'left'){
+                this.$refs.leftModeButton.style.color = '#2c3e50'
+                this.$refs.rightModeButton.style.color = '#eee'
+                this.isShowLineInfoMode = true
+            }else{
+                this.$refs.rightModeButton.style.color = '#2c3e50'
+                this.$refs.leftModeButton.style.color = '#eee'
+                this.isShowLineInfoMode = false
+            }
+        },
+
+        nextStepForPhone() {
+            if (this.doNum === 0) {
+                if(this.selectorTextForPhone === "未选线路"){
+                    this.isShowSmallTipsForPhone = true
+                    this.smallTipsInfo = '请选择任务线路'
+                    setTimeout(() => {
+                        this.isShowSmallTipsForPhone = false
+                    }, 2000);
+                }else{
+                    this.addMissionStepGuard1 = true
+                    this.getalldirver();
+                    this.getallcar();
+                    this.getNewControllerLine();
+                    this.getallclientb();
+                    this.selectorDriver = {
+                        dirvername: this.aLineInfo.timesdirver.dirvername,
+                        dirverphone: this.aLineInfo.timesdirver.dirverphone,
+                        dirvercard: this.aLineInfo.timesdirver.dirvercard,
+                        dirvernote: this.aLineInfo.timesdirver.dirvernote,
+                        _id: this.aLineInfo.timesdirver._id,
+                        image: this.aLineInfo.timesdirver.image
+                    };
+                    this.selectorDriverTextForPhone = this.aLineInfo.timesdirver.dirvername
+                    this.selectorCar = {
+                        carid: this.aLineInfo.timescar.carid,
+                        cartype: this.aLineInfo.timescar.cartype,
+                        tailgate: this.aLineInfo.timescar.tailgate,
+                        carnote: this.aLineInfo.timescar.carnote,
+                        _id: this.aLineInfo.timescar._id,
+                        image: this.aLineInfo.timescar.image
+                    };
+                    this.selectorTruckTextForPhone = this.aLineInfo.timescar.carid
+                    this.doNum++;
+                    this.$refs.phoneStepSecondButton.style.color = "#2c3e50"
+                }
+            }else if(this.doNum === 1) {
+                this.addMissionStepGuard2 = true
+                this.doNum ++
+                this.$refs.phoneStepThirdButton.style.color = "#2c3e50"
+                //
+                this.leftBoxArray = this.aLineInfo.timesclientb.concat();
+                if (this.aLineInfo.NcNumber) {
+                    // let tempLine
+                    this.newLine.forEach(element => {
+                        if (
+                            element.carNumber ==
+                            this.aLineInfo.NcNumber
+                        ) {
+                            this.comparedClient = element;
+                        }
+                    });
+                    this.choiceClient = [];
+                    this.redBoxArray = [];
+                    this.aLineInfo.timesclientb.forEach(
+                        element1 => {
+                            let redindex = 0;
+                            this.comparedClient.customers.forEach(
+                                element2 => {
+                                    if (
+                                        element1.clientbname ==
+                                        element2
+                                    ) {
+                                        this.choiceClient.push(
+                                            element1
+                                        );
+                                        this.redBoxArray[
+                                            redindex
+                                        ] = true;
+                                    }
+                                    redindex += 1;
+                                }
+                            );
+                        }
+                    );
+                } else {
+                    console.log("enter else");
+                    this.choiceClient = this.aLineInfo.timesclientb;
+                    this.showTipDialog = true;
+                    this.errormsg = "获取ebuy后台数据失败";
+                    this.comparedClient = {
+                        carNumber: "n/a",
+                        customers: ["未绑定客服线路"]
+                    };
+                    setTimeout(() => {
+                        this.showTipDialog = false;
+                    }, 3000);
+                }
+                //
+                let screenHeight = document.documentElement.clientHeight
+                let lindBoxHeight = screenHeight - 144 -42
+                setTimeout(() => {
+                    this.$refs.clientListForPhone.style.height = lindBoxHeight + 'px'
+                }, 100);
+            }else{
+                console.log('done')
+                //submit mission start
+                this.$set(this.aLineInfo, "timesclientb", this.choiceClient);
+                let query = {};
+                this.aLineInfo.timesclientb.forEach(element => {
+                    if (element.clientbserve == null) {
+                        element.clientbserve = {
+                            clientaname: "客户未包含服务商"
+                        };
+                    }
+                });
+                let dateToday = new Date().toISOString();
+                query = {
+                    missiondate: dateToday,
+                    missionline: this.aLineInfo.timesname,
+                    missionLineEN: this.aLineInfo.timesNameEN,
+                    line_id: this.aLineInfo._id,
+                    goTime: this.aLineInfo.goTime,
+                    backTime: this.aLineInfo.backTime,
+                    missionnote: this.aLineInfo.timesnote,
+                    missiondirver: this.selectorDriver.dirvername,
+                    missionphone: this.aLineInfo.timesdirver.dirverphone,
+                    missioncar: this.selectorCar.carid,
+                    Car_id: this.selectorCar._id,
+                    logOperator: localStorage.getItem("name"),
+                    missionclient: this.aLineInfo.timesclientb.map(item => {
+                        let obj = {
+                            clientbname: item.clientbname,
+                            clientbnameEN: item.clientbnameEN,
+                            clientbaddress: item.clientbaddress,
+                            clientbphone: item.clientbphone,
+                            clientbpostcode: item.clientbpostcode,
+                            clientbserve: item.clientbserve.clientaname,
+                            image: item.image,
+                            isNeedPic: item.isNeedPic,
+                            note: item.note,
+                            noteEN: item.noteEN,
+                            timeLimit: item.timeLimit
+                        };
+                        return obj;
+                    })
+                };
+                axios
+                    .post(config.server + "/mission/create", query)
+                    .then(res => {
+                        this.findCustomerServiceNightMission(query, res.data._id);
+                        if (res.data.code == 0) {
+                            this.isShowAddDialogPhoneVersion = false;
+                            this.doNum = 0
+                            this.addMissionStepGuard1 = false
+                            this.addMissionStepGuard2 = false
+                            this.getMission();
+                            this.isShowSmallTipsForPhone = true
+                            this.smallTipsInfo = '添加任务成功'
+                            setTimeout(() => {
+                                this.isShowSmallTipsForPhone = false
+                            }, 2000);
+                        }else{
+                            this.isShowSmallTipsForPhone = true
+                            this.smallTipsInfo = '添加任务失败'
+                            setTimeout(() => {
+                                this.isShowSmallTipsForPhone = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err => {
+                        this.error = true;
+                        this.errormsg = err;
+                        setTimeout(() => {
+                            this.error = false;
+                        }, 3000);
+                    });
+                //submit mission end
+            }
+        },
+
+        jumpStepButtonMethod(tempNum) {
+            if(tempNum === 1){
+                if(this.addMissionStepGuard1){
+                    this.doNum = 1;
+                }else{
+                    this.isShowSmallTipsForPhone = true
+                    this.smallTipsInfo = '请选择任务路线'
+                    setTimeout(() => {
+                        this.isShowSmallTipsForPhone = false
+                    }, 2000);
+                }
+            }else if(tempNum === 2){
+                if(this.addMissionStepGuard2){
+                    this.doNum = 2;
+                }else{
+                    this.isShowSmallTipsForPhone = true
+                    this.smallTipsInfo = '请确认司机与车辆'
+                    setTimeout(() => {
+                        this.isShowSmallTipsForPhone = false
+                    }, 2000);
+                }
+            }else{
+                this.doNum = 0
+            }
+        },
+
+        closeDialog() {
+            this.doNum = 0
+            this.isShowAddDialogPhoneVersion = false;
+            this.addMissionStepGuard1 = false
+            this.addMissionStepGuard2 = false
+            this.selectorDriverTextForPhone = "未选司机"
+            this.selectorTruckTextForPhone = "未选车辆"
+            this.choiceClient.length = 0
+            this.selectorTextForPhone = "未选线路"
+        },
+
+        addMissionForPhoneVersionMethod() {
+            this.isShowAddDialogPhoneVersion = true;
+            let screenHeight = document.documentElement.clientHeight
+            let lindBoxHeight = screenHeight - 144
+            setTimeout(() => {
+                this.$refs.addDialogPhoneVersion.style.height = lindBoxHeight + 'px'
+            }, 100);
+            
+            this.getalltimes();
+        },
+
         autoSortMethod() {
             setTimeout(() => {
                 this.choiceClient = _.orderBy(
@@ -1615,7 +2152,7 @@ export default {
                     image: item.image,
                     isNeedPic: item.isNeedPic,
                     timeLimit: item.timeLimit,
-                    note:item.note
+                    note: item.note
                 };
                 axios
                     .post(config.server + "/mission/addclient", {
@@ -1657,40 +2194,39 @@ export default {
             }
         },
 
-        confirmEditMissionDate(){
+        confirmEditMissionDate() {
             axios
                 .post(config.server + "/mission/editdate", {
                     _id: this._id,
-                    dateEdit:this.dateEdit
+                    dateEdit: this.dateEdit
                 })
                 .then(doc => {
-                    console.log(doc)
-                    if(doc.data.code === 0){
+                    console.log(doc);
+                    if (doc.data.code === 0) {
                         this.getMission();
-                        this.showEditMissionDateBox = false
+                        this.showEditMissionDateBox = false;
                         this.errormsg = "修改任务时间成功";
                         this.showTipDialog = true;
                         setTimeout(() => {
                             this.showTipDialog = false;
                         }, 2000);
-                    }else{
-                        this.showEditMissionDateBox = false
+                    } else {
+                        this.showEditMissionDateBox = false;
                         this.errormsg = "出现错误，请联系管理员";
                         this.showTipDialog = true;
-                        console.log(doc)
+                        console.log(doc);
                         setTimeout(() => {
                             this.showTipDialog = false;
                         }, 2000);
                     }
-                    
                 })
                 .catch(err => {
                     console.log(err);
                 });
         },
-        
-        editMissionDateMethod(){
-            this.showEditMissionDateBox = true
+
+        editMissionDateMethod() {
+            this.showEditMissionDateBox = true;
             this.detaildialog = false;
             this.showEditMissionBox = false;
 
@@ -1699,8 +2235,8 @@ export default {
                     _id: this._id
                 })
                 .then(doc => {
-                    console.log(doc)
-                    this.dateEdit = new Date(doc.data)
+                    console.log(doc);
+                    this.dateEdit = new Date(doc.data);
                 })
                 .catch(err => {
                     console.log(err);
@@ -1718,7 +2254,7 @@ export default {
                 })
                 .then(doc => {
                     this.leftBoxArray = [];
-                    let tempArray = doc.data.doc.timesclientb
+                    let tempArray = doc.data.doc.timesclientb;
                     // let countNum = 0;
                     // tempArray.forEach(elementX => {
                     // 	this.missionShipping.missionclient.forEach(elementY => {
@@ -2196,6 +2732,7 @@ export default {
             this.bodyHide();
             this.aLineInfo = item;
             this.selectorText = item.timesname;
+            this.selectorTextForPhone = item.timesname;
 
             if (this.choseLine.timescar == null) {
                 this.choseLine.timescar = {
@@ -2222,6 +2759,45 @@ export default {
             });
         },
         // 下拉选择框部分 end
+
+        choseitemForPhone(item) {
+            this._id = item._id;
+            this.usedDriverInfo = [];
+            this.alldirverinfo.forEach(element => {
+                item.usedDriver.forEach(element2 => {
+                    if (element2 === element._id) {
+                        this.usedDriverInfo.push(element);
+                    }
+                });
+            });
+            this.choseLine = item;
+            this.aLineInfo = item;
+            this.selectorTextForPhone = item.timesname;
+
+            if (this.choseLine.timescar == null) {
+                this.choseLine.timescar = {
+                    carid: "信息错误请更新",
+                    tailgate: "信息错误请更新",
+                    cartype: "信息错误请更新"
+                };
+            }
+
+            if (this.choseLine.timesdirver == null) {
+                this.choseLine.timesdirver = {
+                    dirvername: "信息错误请更新",
+                    dirverphone: "信息错误请更新",
+                    dirvercard: "信息错误请更新"
+                };
+            }
+
+            this.aLineInfo.timesclientb.forEach(element => {
+                if (element.clientbserve == null) {
+                    element.clientbserve = {
+                        clientaname: "客户未包含服务商"
+                    };
+                }
+            });
+        },
 
         //获取所有司机数据 start
         getalldirver(item) {
@@ -2252,7 +2828,7 @@ export default {
 
         openMissionInfo(item) {
             this.getMission();
-            this._id = item._id
+            this._id = item._id;
             axios
                 .post(config.server + "/mission/one", {
                     _id: item._id
@@ -2579,88 +3155,108 @@ export default {
                 });
         },
 
-        updateCSmissionState(CSmission_id,mission_id){
+        updateCSmissionState(CSmission_id, mission_id) {
             axios
                 .post(config.server + "/customerService/update", {
-                    _id:CSmission_id,
-                    mission_id:mission_id
+                    _id: CSmission_id,
+                    mission_id: mission_id
                 })
                 .then(doc => {
-                    console.log('update csmission')
-                    console.log(doc)
+                    console.log("update csmission");
+                    console.log(doc);
                 })
                 .catch(err => {
-                    console.log(err)
-                })            
+                    console.log(err);
+                });
         },
 
-        findCustomerServiceNightMission (item,mission_id){
-            console.log('item')
-            console.log(item)
+        //未知功能方法start
+        findCustomerServiceNightMission(item, mission_id) {
+            console.log("item");
+            console.log(item);
             let factor = {
-                missionDate:item.missiondate
-            }
+                missionDate: item.missiondate
+            };
             axios
                 .post(config.server + "/customerService/find", factor)
                 .then(doc => {
-                    console.log(doc)
-                    if(doc.data.code === 0){
-                        let addCSmissionNum = 0
-                        let ClientPositionNum = -2
+                    console.log(doc);
+                    if (doc.data.code === 0) {
+                        let addCSmissionNum = 0;
+                        let ClientPositionNum = -2;
                         item.missionclient.forEach(elementX => {
-                            ClientPositionNum += 2
+                            ClientPositionNum += 2;
                             doc.data.doc.forEach(elementY => {
-                                if(elementY.clientName === elementX.clientbname){
-                                    addCSmissionNum ++
-                                    console.log('ClientPositionNum')
-                                    console.log(ClientPositionNum)
+                                if (
+                                    elementY.clientName === elementX.clientbname
+                                ) {
+                                    addCSmissionNum++;
+                                    console.log("ClientPositionNum");
+                                    console.log(ClientPositionNum);
                                     let shippingDate = {
-                                        mission_id:mission_id,
-                                        ClientPositionNum:ClientPositionNum,
-                                        obj:[{
-                                            clientbname: elementX.clientbname,
-                                            clientbnameEN: elementX.clientbnameEN,
-                                            clientbaddress: elementX.clientbaddress,
-                                            clientbphone: elementX.clientbphone,
-                                            clientbpostcode: elementX.clientbpostcode,
-                                            clientbserve: elementX.clientbserve.clientaname,
-                                            image: elementX.image,
-                                            isNeedPic: elementX.isNeedPic,
-                                            timeLimit: elementX.timeLimit,
-                                            note:elementY.note,
-                                            isReturn:true
-                                        }]
-                                    }
+                                        mission_id: mission_id,
+                                        ClientPositionNum: ClientPositionNum,
+                                        obj: [
+                                            {
+                                                clientbname:
+                                                    elementX.clientbname,
+                                                clientbnameEN:
+                                                    elementX.clientbnameEN,
+                                                clientbaddress:
+                                                    elementX.clientbaddress,
+                                                clientbphone:
+                                                    elementX.clientbphone,
+                                                clientbpostcode:
+                                                    elementX.clientbpostcode,
+                                                clientbserve:
+                                                    elementX.clientbserve
+                                                        .clientaname,
+                                                image: elementX.image,
+                                                isNeedPic: elementX.isNeedPic,
+                                                timeLimit: elementX.timeLimit,
+                                                note: elementY.note,
+                                                isReturn: true
+                                            }
+                                        ]
+                                    };
                                     axios
-                                        .post(config.server + "/mission/addclientSort", shippingDate)
+                                        .post(
+                                            config.server +
+                                                "/mission/addclientSort",
+                                            shippingDate
+                                        )
                                         .then(doc => {
-                                            console.log('addclient')
-                                            console.log(doc)
-                                            this.updateCSmissionState(elementY._id,mission_id)
+                                            console.log("addclient");
+                                            console.log(doc);
+                                            this.updateCSmissionState(
+                                                elementY._id,
+                                                mission_id
+                                            );
                                         })
                                         .catch(err => {
-                                            console.log(err)
-                                        })
+                                            console.log(err);
+                                        });
                                 }
-                                
                             });
                         });
-                        if(addCSmissionNum != 0){
-                            this.errormsg = "添加了"+ addCSmissionNum + "条夜班退菜任务";
+                        if (addCSmissionNum != 0) {
+                            this.errormsg =
+                                "添加了" + addCSmissionNum + "条夜班退菜任务";
                             this.showTipDialog = true;
                             setTimeout(() => {
                                 this.showTipDialog = false;
                             }, 3000);
                         }
-                    }else{
-                        console.log('enter CSmission else')
-                        console.log(doc)
+                    } else {
+                        console.log("enter CSmission else");
+                        console.log(doc);
                     }
                 })
                 .catch(err => {
-                    console.log(err)
-                })
+                    console.log(err);
+                });
         },
+        //未知功能方法end
 
         saveMission() {
             this.$set(this.aLineInfo, "timesclientb", this.choiceClient);
@@ -2698,7 +3294,7 @@ export default {
                             image: item.image,
                             isNeedPic: item.isNeedPic,
                             note: item.note,
-                            noteEN:item.noteEN,
+                            noteEN: item.noteEN,
                             timeLimit: item.timeLimit
                         };
                         return obj;
@@ -2766,8 +3362,8 @@ export default {
             axios
                 .post(config.server + "/mission/create", query)
                 .then(res => {
-                    console.log(res)
-                    this.findCustomerServiceNightMission (query,res.data._id)
+                    console.log(res);
+                    this.findCustomerServiceNightMission(query, res.data._id);
                     this.missionDateModePacker = "";
                     if (this.missionDateModeButtonCSS2) {
                         this.errormsg = "明日任务已建立完成";
@@ -2801,6 +3397,147 @@ export default {
 #home {
     width: 80%;
     margin: 20px auto;
+}
+
+.samll_tips_for_phone{
+    z-index:30;
+    position: fixed;
+    background-color: #ffff00e3;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.phone_version_dialog {
+    background-color: #f7f7f7;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 24;
+}
+
+.phone_version_dialog_bottom_info_text_box{
+    width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.phone_version_dialog_title {
+    height: 40px;
+    background-color: #d74342;
+    font-size: 16px;
+    line-height: 40px;
+    color: #fff;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
+    position: fixed;
+    left: 0;
+    right: 0;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.phone_version_dialog_step_box {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-around;
+    height: 40px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    align-items: center;
+}
+
+.phone_version_dialog_step_box_item {
+    background-color: #fff;
+    border: 1px solid #eee;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.phone_version_dialog_change_mode_button_left {
+    border: 1px solid #eee;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.phone_version_dialog_change_mode_button_right {
+    border: 1px solid #eee;
+    width: 80px;
+    color:#eee;
+    height: 30px;
+    line-height: 30px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.phone_version_dialog_body {
+    margin-top: 8px;
+}
+
+.phone_version_dialog_body_step_1 {
+    background-color: #f7f7f7;
+}
+
+.phone_version_dialog_body_linebox {
+    background-color: #fff;
+    margin-left: 24px;
+    margin-right: 24px;
+    border-radius: 10px;
+}
+
+.phone_version_dialog_body_step_2 {
+    /* border: 1px solid #000; */
+}
+
+.phone_version_dialog_body_step_3 {
+    /* border: 1px solid #000; */
+}
+
+.phone_version_dialog_bottom {
+    background-color: #fff;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.add_mission_button_phone_version {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    transition: 0.2s;
+    border-radius: 10px;
+    margin: 0 auto;
+    display: none;
 }
 
 .topbutton {
@@ -3120,6 +3857,8 @@ export default {
 
 .third-body-leftbox {
     height: 404px;
+    margin: 0 8px;
+    padding-top: 4px;
 }
 
 .tab4-body {
@@ -3151,7 +3890,7 @@ export default {
     height: 400px;
 }
 
-.toptitle600{
+.toptitle600 {
     display: none;
 }
 @media screen and (min-width: 1025px) {
@@ -3230,7 +3969,7 @@ export default {
         margin: 0;
     }
 
-    .toptitle600{
+    .toptitle600 {
         display: inline;
         position: fixed;
         top: 10px;
@@ -3278,5 +4017,13 @@ export default {
         width: 100px;
         position: relative;
     } */
+
+    .pc_version_mission_button {
+        display: none;
+    }
+
+    .add_mission_button_phone_version {
+        display: block;
+    }
 }
 </style>

@@ -171,6 +171,7 @@
                                     <span v-else-if="userRole === 'maintain'">维修员</span>
                                     <span v-else-if="userRole === 'checker'">检查员</span>
                                     <span v-else-if="userRole === 'bill'">账单管理</span>
+                                    <span v-else-if="userRole === 'breakbox'">坏框申报</span>
                                     <span v-else style="color:#e0e0e0">点击选择角色</span>
                                 </div>
                             </div>
@@ -376,6 +377,9 @@
                          <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('bill')">
                              <span>账单管理</span>
                          </div>
+                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('breakbox')">
+                             <span>坏框申报</span>
+                         </div>
                      </div>
                      <div class="rolebox-front-box-footer" @click="showChoiseRoleBox = false">
                          <div class="rolebox-button">取消</div>
@@ -508,6 +512,8 @@ export default {
                 this.userRole = 'maintain'
             }else if( role === 'bill') {
                 this.userRole = 'bill'
+            }else if( role === 'breakbox'){
+                this.userRole = 'breakbox'
             }else{
                 this.userRole = 'checker'
             }
