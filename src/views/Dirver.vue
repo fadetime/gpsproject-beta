@@ -165,12 +165,14 @@
                             </md-field>
                             <div @click="choiseRoleMethod" class="choiseroleclass">
                                 <div style="border: 2px dashed #696969;text-align: center;height: 40px;line-height: 40px;">
-                                    <span v-if="userRole === 'user'">司 机</span>
+                                    <span v-if="userRole === 'leader'">主 管</span>
+                                    <span v-else-if="userRole === 'user'">司 机</span>
                                     <span v-else-if="userRole === 'dayshift'">白 班</span>
                                     <span v-else-if="userRole === 'dayshiftLeader'">白班主管</span>
                                     <span v-else-if="userRole === 'maintain'">维修员</span>
                                     <span v-else-if="userRole === 'checker'">检查员</span>
                                     <span v-else-if="userRole === 'bill'">账单管理</span>
+                                    <span v-else-if="userRole === 'countBox'">框数检查</span>
                                     <span v-else-if="userRole === 'breakbox'">坏框申报</span>
                                     <span v-else style="color:#e0e0e0">点击选择角色</span>
                                 </div>
@@ -359,6 +361,9 @@
                          <span>选择角色</span>
                      </div>
                      <div class="rolebox-front-box-body">
+                        <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('leader')">
+                            <span>主 管</span>
+                        </div> 
                          <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('d')">
                              <span>司 机</span>
                          </div>
@@ -376,6 +381,9 @@
                          </div>
                          <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('bill')">
                              <span>账单管理</span>
+                         </div>
+                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('countBox')">
+                             <span>框数检查</span>
                          </div>
                          <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('breakbox')">
                              <span>坏框申报</span>
@@ -504,6 +512,8 @@ export default {
             
             if(role === 'd') {
                 this.userRole = 'user'
+            }else if(role === 'leader'){
+                this.userRole = 'leader'
             }else if( role === 'b') {
                 this.userRole = 'dayshift'
             }else if( role === 'dLeader') {
@@ -514,6 +524,8 @@ export default {
                 this.userRole = 'bill'
             }else if( role === 'breakbox'){
                 this.userRole = 'breakbox'
+            }else if(role === 'countBox'){
+                this.userRole = 'countBox'
             }else{
                 this.userRole = 'checker'
             }

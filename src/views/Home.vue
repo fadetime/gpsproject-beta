@@ -3506,14 +3506,6 @@ export default {
     border-radius: 10px;
 }
 
-.phone_version_dialog_body_step_2 {
-    /* border: 1px solid #000; */
-}
-
-.phone_version_dialog_body_step_3 {
-    /* border: 1px solid #000; */
-}
-
 .phone_version_dialog_bottom {
     background-color: #fff;
     position: fixed;

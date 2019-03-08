@@ -33,6 +33,11 @@
                              style="color: aliceblue;">
                     <span class="titlefont">车辆管理</span>
                 </router-link>
+                <router-link to="/announcement"
+                             class="buttomarea-item"
+                             style="color: aliceblue;">
+                    <span class="titlefont">公告管理</span>
+                </router-link>
                 <router-link to="/table"
                              class="buttomarea-item"
                              style="color: aliceblue;">

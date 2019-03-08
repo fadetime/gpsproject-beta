@@ -11,6 +11,7 @@ import Log from './views/Log.vue'
 import AuthGuard from './auth-guard'
 import Staff from './views/Staff.vue'
 import Table from './views/table.vue'
+import Announcement from './views/announcement.vue'
 import SearchOrder from './views/SearchOrder.vue'
 
 Vue.use(Router)
@@ -77,7 +78,11 @@ export default new Router({
 			path: '/searchorder',
 			name: 'searchorder',
 			component: SearchOrder
+		},
+		{
+			path: '/announcement',
+			name: 'announcement',
+			component: Announcement
 		}
-
 	]
 })
