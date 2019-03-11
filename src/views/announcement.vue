@@ -203,7 +203,7 @@
                     <div class="first_page_body_other">
                         <!-- 通知开关 -->
                         <div class="onoffswitch">
-                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked v-model="value" @click="testMethod">
+                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked v-model="value">
                             <label class="onoffswitch-label" for="myonoffswitch">
                                 <span class="onoffswitch-inner"></span>
                                 <span class="onoffswitch-switch"></span>
@@ -252,18 +252,20 @@
                                 <span>姓名</span>
                             </div>
                         </div>
-                        <div v-for="(item,index) in allStaffArray" :key="index">
-                            <label :for="index" class="choise_staff_box_body_item selectarea" @click="checkAll">
-                                <div class="choise_staff_box_body_item_input">
-                                    <input :id="index" type="checkbox" :value="item.dirvername" v-model="choiseStaffArray">
-                                </div>
-                                <div class="choise_staff_box_body_item_index">
-                                    <span>{{index}}</span>
-                                </div>
-                                <div class="choise_staff_box_body_item_name">
-                                    <span>{{item.dirvername}}</span>
-                                </div>
-                            </label>
+                        <div style="height:500px;overflow-y:auto">
+                            <div v-for="(item,index) in allStaffArray" :key="index">
+                                <label :for="index" class="choise_staff_box_body_item selectarea" @click="checkAll">
+                                    <div class="choise_staff_box_body_item_input">
+                                        <input :id="index" type="checkbox" :value="item.dirvername" v-model="choiseStaffArray">
+                                    </div>
+                                    <div class="choise_staff_box_body_item_index">
+                                        <span>{{index}}</span>
+                                    </div>
+                                    <div class="choise_staff_box_body_item_name">
+                                        <span>{{item.dirvername}}</span>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="announcement_notice_front_box_bottom">
@@ -337,13 +339,6 @@ export default {
     },
 
     methods: {
-        testMethod(){
-            setTimeout(() => {
-                console.log(this.value)
-            }, 0);
-            
-        },
-
         uploadFile() {
             document.getElementById("notice_upload_file").click();
         },
@@ -428,13 +423,10 @@ export default {
             axios
                 .post(config.server + "/announcement/panelfind")
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.code === 0){
-                        console.log('111')
                         this.textValue = doc.data.doc.text
                         this.value = doc.data.doc.isShow
                         this.imageUrl = doc.data.doc.image
-                        console.log(this.imageUrl)
                     }else{
                         this.tipMsg = '获取首页公告失败'
                         this.showTipDialog = true
@@ -497,7 +489,7 @@ export default {
                 }else{
                     this.choiseStaffArray = []
                 }
-            }, 10);
+            }, 0);
         },
 
         checkAll(){
@@ -507,7 +499,7 @@ export default {
                 }else{
                     this.checkBoxFlag = false
                 }
-            }, 10);
+            }, 0);
         },
 
         choiseStaffButton(mode){
