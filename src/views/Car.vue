@@ -119,7 +119,7 @@
             <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:12px">
                 <span style="color:#fff">车辆管理</span>
             </md-dialog-title>
-            <md-dialog-content>
+            <md-dialog-content style="padding:0 24px">
                 <div style="border: 3px dashed #eee">
 
                     <div class="dialog-body">
@@ -259,6 +259,23 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="kelometerbox">
+                        <div class="kelometerbox_left">
+                            <span>车辆行驶公里数</span>
+                        </div>
+                        <div class="kelometerbox_right">
+                            <span>{{kelometer}}</span><span>Km</span>
+                        </div>
+                    </div>
+                    <div class="kelometerbox">
+                        <div class="kelometerbox_left">
+                            <span>上一次更换机油</span>
+                        </div>
+                        <div class="kelometerbox_right">
+                            <span v-if="lastOilKelometer">{{lastOilKelometer}}Km</span>
+                            <span v-else>未填写</span>
                         </div>
                     </div>
                 </div>
@@ -584,7 +601,9 @@ export default {
             showTipDialog: false,
             tipMsg: "",
             showCheckCarBox: false,
-            carLog: []
+            carLog: [],
+            kelometer:0,
+            lastOilKelometer:0
         };
     },
 
@@ -773,6 +792,8 @@ export default {
             this.carnote = item.carnote;
             this.carImage = item.image;
             this.newCarDialog = true;
+            this.kelometer = item.kelometer
+            this.lastOilKelometer = item.lastOilKelometer
         },
         removebutton(item) {
             this._id = item._id;
@@ -1348,6 +1369,29 @@ export default {
 .checkcar-front-box-body-center-item {
     width: 50px;
     text-align: right;
+}
+
+.kelometerbox{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    font-size: 18px;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 10px;
+}
+
+.kelometerbox_left{
+    margin-right: 10px;
+    color: rgba(0, 0, 0, 0.54)
+}
+
+.kelometerbox_right{
+    border: 1px solid #e0e0e0;
+    width: 200px;
+    text-align: center;
+    background-color: #eee;
+    border-radius: 4px;
 }
 
 @media screen and (min-width: 1025px) {

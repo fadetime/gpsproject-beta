@@ -9,7 +9,6 @@
         <div style="padding-bottom:10px">
             <span>{{softVersion}}</span>
         </div>
-
         <div class="itemflex">
             <div :class="boxborder1">
                 <div :class="titleclass1" style="text-align: left;">
@@ -42,6 +41,38 @@
                     <!-- 底部占位符 -->
                 </div>
 
+            </div>
+        </div>
+
+		<div class="itemflex" style="margin:10px 0 0 0">
+            <div :class="boxborder2">
+                <div :class="titleclass2" style="text-align: left;">
+                    <span>
+                        车辆检查
+                    </span>
+                </div>
+
+                <div class="item_carcheck" style="color:#696969;line-height:52px;flex-direction: column;">
+                    <div style="display:flex;justify-content:space-between;align-items: center;">
+                        <div style="text-align:left">
+                            <span style="font-size:16px;">机油报警值(Km)</span>
+                        </div>
+                        <div style="display:flex;justify-content:right;">
+                            <input type="number" class="engineOilValve" v-model="kilometer" @change="changeStatus()">
+                        </div>
+                    </div>
+					<div style="display:flex;justify-content:space-between;align-items: center;">
+                        <div style="text-align:left">
+                            <span style="font-size:16px;">新机油可运行(Km)</span>
+                        </div>
+                        <div style="display:flex;justify-content:right;">
+                            <input type="number" class="engineOilValve" v-model="oilProperty" @change="changeStatus()">
+                        </div>
+                    </div>
+                </div>
+                <div class="itemflex" style="height:20px">
+                    <!-- 底部占位符 -->
+                </div>
             </div>
         </div>
 
@@ -116,26 +147,6 @@
             </div>
         </div>
 
-        <!-- <div class="itemflex" style="margin:10px 0 0 0">
-            <div :class="boxborder2">
-                <div :class="titleclass2" style="text-align: left;">
-                    <span>
-                        人员设置
-                    </span>
-                </div>
-                <div class="itemflex" style="color:#696969;line-height:52px">
-                    <div style="width:400px;display:flex;justify-content:space-between">
-                        <div style="text-align:left">
-                            <span style="font-size:16px;">人员管理</span>
-                        </div>
-                        <div style="display:flex;justify-content:right;">
-                            <md-button class="md-raised" @click="goLogPage('staff')">开启</md-button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
         <div style="margin:10px 0 0 0">
             <md-button class="md-raised md-accent" @click="logout">
                 <span style="font-size:20px">退出登陆</span>
@@ -179,7 +190,10 @@ export default {
       softVersion: '',
       softText: '',
       errorMessage: '',
-      errorDialog: false
+	  errorDialog: false,
+	  kilometer:0,
+	  oilProperty:0,
+	  haveChangeCheckCar:false
     }
   },
   mounted() {
@@ -187,7 +201,8 @@ export default {
     this.softText = config.text
     if (localStorage.showLogo) {
       this.showLogo = false
-    }
+	}
+	this.findOilValve()
   },
   computed: {
     oldpasswordErrClass() {
@@ -207,8 +222,49 @@ export default {
     }
   },
   methods: {
+	changeStatus(){
+		this.disableButton = false
+		this.haveChangeCheckCar = true
+	},
+
+	findOilValve(){
+		axios
+			.get(config.server + '/setting/find')
+			.then(doc => {
+				if(doc.data.code === 0){
+					this.kilometer = doc.data.doc.engineOilValve
+					this.oilProperty = doc.data.doc.oilProperty
+				}else if(doc.data.code === 1){
+					console.log('请初始化软件')
+				}else{
+					console.log('error')
+				}
+			})
+			.catch(err => {
+				console.log(err)
+			})
+	},
+
+	settingOilValve(){
+		axios
+			.get(config.server + '/setting/create')
+			.then(doc => {
+				console.log(doc)
+				if(doc.data.code === 0){
+					console.log('临界值初始化成功')
+				}else if(doc.data.code === 1){
+					console.log('临界值已存在')
+				}else{
+					console.log('临界值出现错误')
+				}
+			})
+			.catch(err => {
+				console.log(err)
+			})
+	},
+
     setInitMethod() {
-      
+		this.settingOilValve()//初始化机油临界值	
       axios
         .get(config.server + '/admin/init1')
         .then(doc => {
@@ -340,7 +396,33 @@ export default {
               console.log(err)
             })
         }
-      } else {
+      }else if(this.haveChangeCheckCar){
+		  console.log('change kilometer')
+		  axios
+            .post(config.server + '/setting/update', {
+              engineOilValve: this.kilometer,
+              oilProperty: this.oilProperty
+			})
+			.then(doc => {
+				console.log(doc)
+				if(doc.data.code === 0){
+					this.errorMessage = '修改成功'
+					this.errorDialog = true
+					setTimeout(() => {
+						this.errorDialog = false
+					}, 2000)
+				}else{
+					this.errorMessage = '修改失败'
+					this.errorDialog = true
+					setTimeout(() => {
+						this.errorDialog = false
+					}, 2000)
+				}
+			})
+			.catch(err => {
+				console.log(err)
+			})
+	  } else {
         window.location.reload()
         console.log('not change psw')
       }
@@ -358,6 +440,9 @@ export default {
   justify-content: center;
 }
 
+.item_carcheck{
+	margin: 0 24px;
+}
 .item1 {
   border: 3px dashed #696969;
   width: 500px;
@@ -400,4 +485,20 @@ export default {
   top: 50px;
   right: 0px;
 }
+
+.engineOilValve{
+	text-align: center;
+	font-size: 18px;
+	height: 40px;
+	line-height: 40px;
+	border-radius: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+}
+
+
 </style>
