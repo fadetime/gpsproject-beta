@@ -615,8 +615,11 @@
 								</ul>
 							</div>
 						</div>-->
-                        <div>
-                            123
+                        <div class="noordertips_frame" v-if="noOrderArrayForAddMission.length != 0">
+                            <div class="noordertips_box" @click="openNoOrderForMissino">
+                                <div class="icon_problem"></div>
+                                <div><span style="color:#ff9800">今日含有多日未来单客户{{noOrderArrayForAddMission.length}}家</span></div>
+                            </div>
                         </div>
                         <div class="third-body-button"
                              style="text-align:center">
@@ -674,7 +677,7 @@
             <div class="phone_version_dialog_body" ref="addDialogPhoneVersion" style="overflow-y:auto">
                 <div class="phone_version_dialog_body_step_1" v-if="doNum === 0">
                     <div class="phone_version_dialog_body_linebox"
-                         style="padding:8px 0;margin-top:4px"
+                         style="padding:8px 0;margin-bottom:8px"
                          v-for="(item,index) in alltimesinfo"
                          :key="index"
                          @click="choseitemForPhone(item)">
@@ -683,6 +686,9 @@
                         </div>
                         <div style="height:30px;line-height:30px">
                             <span>{{item.timesnote}}</span>
+                        </div>
+                        <div style="position: absolute;right: 0;bottom: 0;" v-if="selectorTextForPhone === item.timesname">
+                            <img src="../../public/img/icons/check_circle.svg" style="width: 62px;height: 62px;">
                         </div>
                     </div>
                 </div>
@@ -835,7 +841,7 @@
 
                     <div v-if="isShowLineInfoMode">
                         <div class="third-body-leftbox"
-                                style="overflow-y:auto;overflow-x:hidden;margin-top:4px" ref="clientListForPhone">
+                                style="overflow-y:auto;overflow-x:hidden;margin-top:4px;position:relative" ref="clientListForPhone">
                             <div md-with-hover
                                 v-for="(item,index) in leftBoxArray"
                                 :key="index">
@@ -860,6 +866,17 @@
                                                     style="width:50px">info</md-icon>
                                     </div>
                                 </div>
+                            </div>
+                            <div style="position:absolute;bottom: 8px;left: 0;right: 0;">
+                                <div class="noordertips_frame" v-if="noOrderArrayForAddMission.length != 0">
+                                <div class="noordertips_box">
+                                    <div class="icon_problem" @click="openNoOrderForMissino"></div>
+                                    <div style="padding-right:8px" @click="openNoOrderForMissino"><span style="color:#ff9800">今日含有多日未来单客户{{noOrderArrayForAddMission.length}}家</span></div>
+                                    <div style="width: 30px;border-left: 1px solid #eee;" @click="noOrderArrayForAddMission = []">
+                                        <span>X</span>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -1087,8 +1104,8 @@
                     enter-active-class="animated slideInUp"
                     leave-active-class="animated slideOutRight">
             <div v-if="clientInfoWindow"
-                 class="clientInfoWindowclass">
-                <div style="border: 3px dashed #eee;margin:5px;padding:5px">
+                 class="clientInfoWindowclass" @click="clientInfoWindow = false">
+                <div style="border: 3px dashed #eee;margin:5px;padding:5px;border-radius:10px;">
                     <div style="display:flax;display: -webkit-flex;">
                         <div style="width:71px;text-align: right;">
                             <span>客户名：</span>
@@ -1810,7 +1827,8 @@ export default {
             isShowSmallTipsForPhone:false,
             smallTipsInfo:'未知错误',
             isShowNoOrderDialog:false,
-            noOrderArray:[]
+            noOrderArray:[],
+            noOrderArrayForAddMission:[]//针对添加任务时多日未来单客户的显示
         };
     },
     computed: {
@@ -1884,6 +1902,10 @@ export default {
     },
 
     methods: {
+        openNoOrderForMissino(){
+            this.noOrderArray = this.noOrderArrayForAddMission
+            this.isShowNoOrderDialog = true
+        },
 
         //打开未来订单客户窗口 start
         openNoOrderDialog(){
@@ -1901,8 +1923,18 @@ export default {
                     console.log(doc)
                     if(doc.data.code === 0){
                         this.noOrderArray = doc.data.doc
+                    }else if(doc.data.code === 1){
+                        this.errormsg = "今日无超过三天未来单客户"
+                        this.showTipDialog = true;
+                        setTimeout(() => {
+                            this.showTipDialog = false;
+                        }, 3000);
                     }else{
-                        console.log('1')
+                        this.errormsg = "查找未来单客户错误"
+                        this.showTipDialog = true;
+                        setTimeout(() => {
+                            this.showTipDialog = false;
+                        }, 3000);
                     }
                 })
                 .catch(err => {
@@ -1936,6 +1968,16 @@ export default {
                         this.isShowSmallTipsForPhone = false
                     }, 2000);
                 }else{
+                    //将多日未来单客户提取start
+                    this.noOrderArrayForAddMission = []
+                    console.log(this.aLineInfo.timesclientb)
+                    this.aLineInfo.timesclientb.forEach(item => {
+                        if(item.noOrderDay >=3 && item.basket >=1){
+                            this.noOrderArrayForAddMission.push(item)
+                        }
+                    })
+                    console.log(this.noOrderArrayForAddMission)
+                    //将多日未来单客户提取end
                     this.addMissionStepGuard1 = true
                     this.getalldirver();
                     this.getallcar();
@@ -2550,9 +2592,11 @@ export default {
         shippingTempData(item) {
             this.tempData = item;
         },
+
         closeListDialog() {
             this.choseListDialog = false;
         },
+
         openChoiceList(item) {
             if (item === "car") {
                 this.radioCar = this.selectorCar._id;
@@ -2567,6 +2611,7 @@ export default {
         removeChoseClient(item) {
             this.choiceClient.splice(item, 1);
         },
+
         clientInfoMethod(item) {
             clearTimeout(this.timeOutName);
             this.clientInfoWindow = true;
@@ -2676,6 +2721,7 @@ export default {
                     });
             }
         },
+
         //remove mission start
         removeMission() {
             this.confirmDialog = true;
@@ -3029,6 +3075,15 @@ export default {
                 ) {
                     this.firstStepError = "未选日期";
                 } else {
+                    //将多日未来单客户提取start
+                    this.noOrderArrayForAddMission = []
+                    console.log(this.aLineInfo.timesclientb)
+                    this.aLineInfo.timesclientb.forEach(item => {
+                        if(item.noOrderDay >=3 && item.basket >=1){
+                            this.noOrderArrayForAddMission.push(item)
+                        }
+                    })
+                    //将多日未来单客户提取end
                     this[id] = true;
                     if (!this.editMode) {
                         this.selectorDriver = {
@@ -3531,6 +3586,20 @@ export default {
     mask-position: center;
 }
 
+.icon_check_circle{
+    background: #ff9800;
+    mask-image: url(../../public/img/icons/check_circle.svg);
+    -webkit-mask-image: url(../../public/img/icons/check_circle.svg);
+    width: 42px;
+    height: 42px;
+    -webkit-mask-size: 42px 42px;
+    mask-size: 42px 42px;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+
 .samll_tips_for_phone{
     z-index:30;
     position: fixed;
@@ -3602,6 +3671,7 @@ export default {
 
 .phone_version_dialog_change_mode_button_left {
     border: 1px solid #eee;
+    background-color: #fff;
     width: 80px;
     height: 30px;
     line-height: 30px;
@@ -3613,6 +3683,7 @@ export default {
 
 .phone_version_dialog_change_mode_button_right {
     border: 1px solid #eee;
+    background-color: #fff;
     width: 80px;
     color:#eee;
     height: 30px;
@@ -3636,6 +3707,10 @@ export default {
     margin-left: 24px;
     margin-right: 24px;
     border-radius: 10px;
+    border: 1px solid #eee;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
 .phone_version_dialog_bottom {
@@ -3902,6 +3977,10 @@ export default {
     background-color: #fff;
     right: 0;
     bottom: 10px;
+    border-radius:10px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
 .tab4-title {
@@ -4108,6 +4187,26 @@ export default {
 .noorder_bottom{
     margin: 12px 0;
 }
+
+.noordertips_frame{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+.noordertips_box{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    height: 42px;
+    line-height: 42px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    display: flex;
+    display: -webkit-flex;
+    cursor: pointer;
+}
+
 @media screen and (min-width: 1025px) {
     #newmission {
         max-width: 878px;
