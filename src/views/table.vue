@@ -1081,6 +1081,14 @@
                                     <span>轮胎</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
+                                     style="min-width:80px">
+                                    <span>手推车</span>
+                                </div>
+                                <div class="checkditailbox-body-center-title-content"
+                                     style="min-width:80px">
+                                    <span>记录仪</span>
+                                </div>
+                                <div class="checkditailbox-body-center-title-content"
                                      style="min-width:110px">
                                     <span>检查日期</span>
                                 </div>
@@ -1089,7 +1097,7 @@
                                     <span>检查时间</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
-                                     style="min-width:300px">
+                                     style="width:300px">
                                     <span>备注</span>
                                 </div>
                             </div>
@@ -1129,6 +1137,20 @@
                                              style="color:red">cancel</md-icon>
                                 </div>
                                 <div class="checkditailbox-body-center-item-content"
+                                     style="min-width:80px">
+                                    <md-icon v-if="item.cart"
+                                             style="color:green">check_circle</md-icon>
+                                    <md-icon v-else
+                                             style="color:red">cancel</md-icon>
+                                </div>
+                                <div class="checkditailbox-body-center-item-content"
+                                     style="min-width:80px">
+                                    <md-icon v-if="item.drivingRecorder"
+                                             style="color:green">check_circle</md-icon>
+                                    <md-icon v-else
+                                             style="color:red">cancel</md-icon>
+                                </div>
+                                <div class="checkditailbox-body-center-item-content"
                                      style="min-width:110px">
                                     <span>{{item.checkDate | datefilter}}</span>
                                 </div>
@@ -1137,10 +1159,9 @@
                                     <span>{{item.checkDate | timefilter}}</span>
                                 </div>
                                 <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:300px">
+                                     style="width:300px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
                                     <span v-if="item.note === null">无备注</span>
                                     <span v-else>{{item.note}}</span>
-
                                 </div>
                             </div>
                         </div>

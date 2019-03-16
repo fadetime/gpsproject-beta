@@ -9,13 +9,22 @@
             </div>
             <div class="topbutton-right"
                  style="padding-top:5px">
-                <md-button class="md-raised md-primary pc_version_mission_button"
-                           @click="addMission"
-                           style="font-size:18px;width:100px;height:40px;">新建任务</md-button>
+                <div @click="openNoOrderDialog" class="home_top_button pc_version_mission_button" style="margin-right:10px">
+                    <span>客户提醒</span>
+                </div>
+                <div @click="addMission" class="home_top_button pc_version_mission_button">
+                    <span>新建任务</span>
+                </div>
                 <!-- add mission button for phone version -->
+                <div @click="openNoOrderDialog" class="add_mission_button_phone_version">
+                    <span>客户提醒</span>
+                </div>
                 <div class="add_mission_button_phone_version"
-                     @click="addMissionForPhoneVersionMethod">新建任务</div>
+                     @click="addMissionForPhoneVersionMethod" style="margin-left:8px">
+                    <span>新建任务</span> 
+                </div>
             </div>
+            
         </div>
         <div class="centertable"
              v-if="allmission.length != 0">
@@ -606,6 +615,9 @@
 								</ul>
 							</div>
 						</div>-->
+                        <div>
+                            123
+                        </div>
                         <div class="third-body-button"
                              style="text-align:center">
                             <md-button class="md-raised md-primary"
@@ -1621,6 +1633,67 @@
             </div>
         </transition>
         <!-- edit mission-date end -->
+
+        <!-- no order client dialog start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowNoOrderDialog"
+                 class="mapbox-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowNoOrderDialog"
+                 class="mapbox-front"
+                 @click.self.prevent="isShowNoOrderDialog = false">
+                <div class="noorder-front-box">
+                    <div class="noorder_title">
+                        <span>多日未来单客户</span>
+                    </div>
+                    <div class="noorder_body">
+                        <div class="noorder_body_box">
+                            <div class="noorder_body_box_title">
+                                <div class="noorder_body_box_title_item" style="width:40px">
+                                    <span>No.</span>
+                                </div>
+                                <div class="noorder_body_box_title_item" style="width:120px">
+                                    <span>客户名</span>
+                                </div>
+                                <div class="noorder_body_box_title_item">
+                                    <span>天数</span>
+                                </div>
+                                <div class="noorder_body_box_title_item" style="border:null">
+                                    <span>框数</span>
+                                </div>
+                            </div>
+                            <div class="noorder_body_box_body">
+                                <div class="noorder_body_box_body_frame" v-for="(item,index) in noOrderArray" :key="index">
+                                    <div class="noorder_body_box_body_frame_item" style="width:40px">
+                                        <span>{{index}}</span>
+                                    </div>
+                                    <div class="noorder_body_box_body_frame_item" style="width:120px">
+                                        <span>{{item.clientbname}}</span>
+                                    </div>
+                                    <div class="noorder_body_box_body_frame_item">
+                                        <span>{{item.noOrderDay}}</span>
+                                    </div>
+                                    <div class="noorder_body_box_body_frame_item">
+                                        <span>{{item.basket}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="noorder_bottom">
+                        <div class="noorder_bottom_button" @click="isShowNoOrderDialog = false">
+                            <span>取消</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- no order client dialog end -->
     </div>
 </template>
 
@@ -1735,7 +1808,9 @@ export default {
             addMissionStepGuard2:false,
             isShowLineInfoMode:true,
             isShowSmallTipsForPhone:false,
-            smallTipsInfo:'未知错误'
+            smallTipsInfo:'未知错误',
+            isShowNoOrderDialog:false,
+            noOrderArray:[]
         };
     },
     computed: {
@@ -1809,6 +1884,33 @@ export default {
     },
 
     methods: {
+
+        //打开未来订单客户窗口 start
+        openNoOrderDialog(){
+            this.getNoOrderDay()
+            this.isShowNoOrderDialog = true
+        },
+        //打开未来订单客户窗口end
+
+        //获取未来单客户start
+        
+        getNoOrderDay(){
+            axios
+                .get(config.server + "/clientb/noOrder")
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.noOrderArray = doc.data.doc
+                    }else{
+                        console.log('1')
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        //获取未来单客户end
+
         closeSmallTipsForPhone(){
             this.isShowSmallTipsForPhone = false
         },
@@ -3399,6 +3501,36 @@ export default {
     margin: 20px auto;
 }
 
+.home_top_button{
+    width: 100px;
+    border: 1px solid #eee;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
+.icon_problem{
+    background: #ff9800;
+    mask-image: url(../../public/img/icons/baseline-report_problem-24px.svg);
+    -webkit-mask-image: url(../../public/img/icons/baseline-report_problem-24px.svg);
+    width: 42px;
+    height: 42px;
+    -webkit-mask-size: 42px 42px;
+    mask-size: 42px 42px;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+
 .samll_tips_for_phone{
     z-index:30;
     position: fixed;
@@ -3550,6 +3682,9 @@ export default {
     margin: 0 auto;
     flex-basis: 50%;
     text-align: right;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: flex-end;
 }
 
 .centertable {
@@ -3884,6 +4019,94 @@ export default {
 
 .toptitle600 {
     display: none;
+}
+
+.noorder_title{
+    height: 40px;
+    line-height: 40px;
+    background-color: #d74342;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    color: #fff;
+    font-size: 16px;
+
+}
+
+.noorder_body_box{
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 10px;
+    background-color: #f7f7f7;
+    overflow: hidden;
+    border: 1px solid #eee;
+}
+
+.noorder_body_box_title{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+    background-color: #fff;
+}
+
+.noorder_body_box_title_item{
+    width: 60px;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.noorder_body_box_body{
+    height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.noorder_body_box_body_frame{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+    background-color: #fff;
+    margin: 4px 0;
+}
+
+.noorder_body_box_body_frame_item{
+    width: 60px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.noorder-front-box {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.noorder_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
+.noorder_bottom_button{
+    border: 1px solid #eee;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.noorder_bottom{
+    margin: 12px 0;
 }
 @media screen and (min-width: 1025px) {
     #newmission {
