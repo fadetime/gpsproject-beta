@@ -113,188 +113,207 @@
                 </div>
             </div>
         </div>
-        <!-- New car dialog start -->
-        <md-dialog :md-active.sync="newCarDialog"
-                   class="editdialog">
-            <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:12px">
-                <span style="color:#fff">车辆管理</span>
-            </md-dialog-title>
-            <md-dialog-content style="padding:0 24px">
-                <div style="border: 3px dashed #eee">
+        <input type="file"
+                style="display:none"
+                id="upload_file"
+                @change="fileChange($event)"
+                accept="image/*">
 
-                    <div class="dialog-body">
-                        <div class="dialog-body-item"
-                             style="padding-top:24px">
-                            <input type="file"
-                                   style="display:none"
-                                   id="upload_file"
-                                   @change="fileChange($event)"
-                                   accept="image/*">
-                            <div class="photoarea"
-                                 @click="uploadFile"
-                                 v-if="!carImage">
-                                <md-icon class="md-size-3x"
-                                         style="padding-top:110px"
-                                         v-if="!updateImagePreview">add_a_photo</md-icon>
-                                <img :src="updateImagePreview"
-                                     alt="newimg"
-                                     v-else>
+        <!-- car info dialog start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="checkcar-back"
+                 v-if="isOpenCarInfoDialog"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div class="checkcar-front"
+                 v-if="isOpenCarInfoDialog"
+                 @click.self.prevent="isOpenCarInfoDialog = false">
+                <div class="car-front-box" >
+                    <div class="checkcar-front-box-title">
+                        <span>车辆信息</span>
+                    </div>
+                    <div class="car_front_box_body">
+                        <div class="car_front_box_body_top">
+                            <div class="car_front_box_body_top_right">
+                                <div class="car_front_box_body_top_right_item">
+                                    <div class="car_front_box_body_top_right_item_left">
+                                        <span>车牌号码</span>
+                                    </div>
+                                    <div class="car_front_box_body_top_right_item_right">
+                                        <input type="text" v-model="carid">
+                                    </div>
+                                </div>
+                                <div class="car_front_box_body_top_right_item">
+                                    <div class="car_front_box_body_top_right_item_left">
+                                        <span>车辆型号</span>
+                                    </div>
+                                    <div class="car_front_box_body_top_right_item_right">
+                                        <div class="car_front_box_body_top_right_item_right_div" @click="isOpenCarTypeDialog = true">
+                                            <span v-if="!cartype" style="border-bottom: 1px solid #2c3e50;">请选择</span>
+                                            <span v-else>{{cartype}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="car_front_box_body_top_right_item" style="margin-top:12px;margin-bottom:0">
+                                    <div class="car_front_box_body_top_right_item_left">
+                                        <span>备注信息</span>
+                                    </div>
+                                    <div class="car_front_box_body_top_right_item_right">
+                                        <textarea v-model="carnote"></textarea>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="photoarea"
-                                 @click="uploadFile"
-                                 v-else>
-                                <img :src="carImage | imgurl"
-                                     alt="newimg">
+                            <div class="car_front_box_body_top_left">
+                                <div class="photoarea"
+                                    @click="uploadFile"
+                                    v-if="!carImage">
+                                    <md-icon class="md-size-3x"
+                                                style="padding-top:100px"
+                                                v-if="!updateImagePreview">add_a_photo</md-icon>
+                                    <img :src="updateImagePreview"
+                                            alt="newimg"
+                                            v-else>
+                                </div>
+                                <div class="photoarea"
+                                        @click="uploadFile"
+                                        v-else>
+                                    <img :src="carImage | imgurl"
+                                            alt="newimg">
+                                </div>
                             </div>
-
+                            
                         </div>
-                        <div class="dialog-body-item">
-                            <md-field style="margin:0 auto"
-                                      :class="idclass">
-                                <label style="font-size:20px">车牌号码</label>
-                                <md-input v-model="carid"
-                                          style="border-bottom: 1px solid #000;font-size:18px;height:50px;text-align:center"></md-input>
-                                <span class="md-error"
-                                      style="font-size:15px;margin: -2px auto">车辆标识信息，必填项目</span>
-                            </md-field>
-
-                            <!-- 下拉框 -->
-                            <div class="container">
-                                <div class="custom-selector">
-                                    <div class="selector-header"
-                                         style="position:relative"
-                                         @click="callCarType">
-                                        <div style="text-align:left;font-size:20px;color:rgba(0,0,0,0.54);position:absolute;padding-top:24px"
-                                             v-if="!cartype">车型</div>
-                                        <div style="border-bottom: 1px solid;padding:37px 0;text-align:left;font-size:18px;color:rgba(0,0,0,0.54);">{{cartype}}</div>
-                                        <div style="position:absolute;top:32px;right:0">
-                                            <img src="../../public/img/icons/arrowDown.png"
-                                                 alt=""
-                                                 style="width:40px"
-                                                 class="arrow"
-                                                 id="selector-arrow-type">
-                                        </div>
-                                    </div>
-                                    <div class="selector-body"
-                                         id="selector-body-type">
-                                        <div class="box"
-                                             id="selector-box-type"
-                                             v-for="(item,index) in allCarType"
-                                             :key="index"
-                                             @click="choseTypeItem(item)">
-                                            <span style="font-size:20px">{{item}}</span>
-                                        </div>
-                                    </div>
+                        <div class="car_front_box_body_center">
+                            <div class="car_front_box_body_center_item">
+                                <div class="car_front_box_body_center_name">
+                                    <span>尾门</span>
                                 </div>
-                            </div>
-                            <!-- 下拉框 -->
-                            <div class="dialog-body-item">
-                                <div style="margin:16px auto">
-                                    <span style="font-size:20px;color:rgba(0,0,0,0.54)">有无尾门</span>
-                                </div>
-                                <div class="dialog-body-radio">
+                                <div class="car_front_box_body_center_radio">
                                     <div class="dialog-body-radio-item">
-                                        <div>
+                                        <div class="car_front_box_body_center_radio_input">
                                             <input type="radio"
-                                                   name="cartailgate"
-                                                   v-model="tailgate"
-                                                   value="yes">
+                                                name="cartailgate"
+                                                v-model="tailgate"
+                                                value="yes">
                                         </div>
-                                        <div style="font-size:15px;color:#000;padding-top:3px">
+                                        <div class="car_front_box_body_center_radio_text">
                                             <span>有</span>
                                         </div>
-
                                     </div>
                                     <div class="dialog-body-radio-item">
-                                        <div>
+                                        <div class="car_front_box_body_center_radio_input">
                                             <input type="radio"
-                                                   name="cartailgate"
-                                                   v-model="tailgate"
-                                                   value="no">
+                                                name="cartailgate"
+                                                v-model="tailgate"
+                                                value="no">
                                         </div>
-                                        <div style="font-size:15px;color:#000;padding-top:3px">
+                                        <div class="car_front_box_body_center_radio_text">
                                             <span>无</span>
                                         </div>
-
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="car_front_box_body_center_item">
+                                <div class="car_front_box_body_center_name">
+                                    <span>冷藏</span>
+                                </div>
+                                <div class="car_front_box_body_center_radio">
+                                    <div class="dialog-body-radio-item">
+                                        <div class="car_front_box_body_center_radio_input">
+                                            <input type="radio"
+                                                name="carstore"
+                                                v-model="coolstore"
+                                                value="yes">
+                                        </div>
+                                        <div class="car_front_box_body_center_radio_text">
+                                            <span>有</span>
+                                        </div>
+                                    </div>
+                                    <div class="dialog-body-radio-item">
+                                        <div class="car_front_box_body_center_radio_input">
+                                            <input type="radio"
+                                                name="carstore"
+                                                v-model="coolstore"
+                                                value="no">
+                                        </div>
+                                        <div class="car_front_box_body_center_radio_text">
+                                            <span>无</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="dialog-body">
-                        <div class="dialog-body-item">
-                            <md-field style="margin:20px auto">
-                                <label style="font-size:20px">备注</label>
-                                <md-input v-model="carnote"
-                                          style="border-bottom: 1px solid #000;font-size:18px;height:55px;text-align:center"></md-input>
-                            </md-field>
-                        </div>
-
-                        <div class="dialog-body-item">
-                            <div style="margin:8px auto">
-                                <span style="font-size:20px;color:rgba(0,0,0,0.54)">有无冷藏</span>
-                            </div>
-                            <div class="dialog-body-radio">
-                                <div class="dialog-body-radio-item">
-                                    <div>
-                                        <input type="radio"
-                                               name="carstore"
-                                               v-model="coolstore"
-                                               value="yes">
-                                    </div>
-                                    <div style="font-size:15px;color:#000;padding-top:3px">
-                                        <span>有</span>
-                                    </div>
-
+                        <div class="car_front_box_body_bottom">
+                            <div class="kelometerbox">
+                                <div class="car_front_box_body_bottom_item_left">
+                                    <span>车辆行驶公里数</span>
                                 </div>
-                                <div class="dialog-body-radio-item">
-                                    <div>
-                                        <input type="radio"
-                                               name="carstore"
-                                               v-model="coolstore"
-                                               value="no">
-                                    </div>
-                                    <div style="font-size:15px;color:#000;padding-top:3px">
-                                        <span>无</span>
-                                    </div>
+                                <div class="kelometerbox_right">
+                                    <span>{{kelometer}}</span><span>Km</span>
+                                </div>
+                            </div>
+                            <div class="kelometerbox">
+                                <div class="car_front_box_body_bottom_item_left">
+                                    <span>上一次更换机油</span>
+                                </div>
+                                <div class="kelometerbox_right">
+                                    <span v-if="lastOilKelometer">{{lastOilKelometer}}Km</span>
+                                    <span v-else style="font-size:16px">未填写</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="kelometerbox">
-                        <div class="kelometerbox_left">
-                            <span>车辆行驶公里数</span>
+                    <div class="car_front_box_bottom">
+                        <div class="car_front_box_bottom_button" @click="isOpenCarInfoDialog = false">
+                            <span>取消</span>
                         </div>
-                        <div class="kelometerbox_right">
-                            <span>{{kelometer}}</span><span>Km</span>
+                        <div v-if="addmode" class="car_front_box_bottom_button" @click="addcar" style="margin-left:8px">
+                            <span>保存</span>
                         </div>
-                    </div>
-                    <div class="kelometerbox">
-                        <div class="kelometerbox_left">
-                            <span>上一次更换机油</span>
-                        </div>
-                        <div class="kelometerbox_right">
-                            <span v-if="lastOilKelometer">{{lastOilKelometer}}Km</span>
-                            <span v-else>未填写</span>
+                        <div v-else class="car_front_box_bottom_button" @click="confirmedit" style="margin-left:8px">
+                            <span>修改</span>
                         </div>
                     </div>
                 </div>
-            </md-dialog-content>
-            <div style="margin:8px auto 10px auto">
-                <md-button class="md-raised md-primary"
-                           @click="closeDialog"
-                           style="font-size:18px;width:80px;height:30px">取消</md-button>
-                <md-button class="md-raised md-primary"
-                           v-if="addmode"
-                           @click="addcar"
-                           style="font-size:18px;width:80px;height:30px">保存</md-button>
-                <md-button class="md-raised md-primary"
-                           v-else
-                           @click="confirmedit"
-                           style="font-size:18px;width:80px;height:30px">修改</md-button>
             </div>
-        </md-dialog>
-        <!-- New car dialog start -->
+        </transition>
+        <!-- car info dialog start -->
+
+        <!-- car type box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="checkcar-back" style="z-index:24"
+                 v-if="isOpenCarTypeDialog"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div class="checkcar-front" style="z-index:25"
+                 v-if="isOpenCarTypeDialog"
+                 @click.self.prevent="isOpenCarTypeDialog = false">
+                <div class="car-front-box" style="z-index:26">
+                    <div class="checkcar-front-box-title">
+                        <span>选择车辆型号</span>
+                    </div>
+                    <div class="car_type_front_box_body">
+                        <div class="car_type_front_box_body_item" v-for="(item,index) in allCarType" :key="index" @click="choseTypeItem(item)">
+                            <span>{{item}}</span>
+                        </div>
+                    </div>
+                    <div class="car_front_box_bottom">
+                        <div class="car_front_box_bottom_button" @click="isOpenCarTypeDialog = false">
+                            <span>取消</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- car type box end -->
 
         <!-- remove dialog start-->
         <md-dialog :md-active.sync="removeDialog"
@@ -578,7 +597,6 @@ export default {
             cardate: "",
             _id: "",
             removeDialog: false,
-            newCarDialog: false,
             selectedCar: "",
             tailgate: "no",
             coolstore: "no",
@@ -597,13 +615,15 @@ export default {
             carImage: "",
             callFlag: false,
             allCarType: ["Van", "10ft Lorry", "14ft Lorry", "24ft Lorry"],
+            isOpenCarTypeDialog:false,
             selectorCarType: "车型",
             showTipDialog: false,
             tipMsg: "",
             showCheckCarBox: false,
             carLog: [],
             kelometer:0,
-            lastOilKelometer:0
+            lastOilKelometer:0,
+            isOpenCarInfoDialog:false
         };
     },
 
@@ -638,18 +658,6 @@ export default {
             }
             return pag;
         },
-
-        idclass() {
-            return {
-                "md-invalid": this.idErr
-            };
-        },
-
-        typeclass() {
-            return {
-                "md-invalid": this.typeErr
-            };
-        }
     },
     methods: {
         openClickCarLog(item) {
@@ -711,6 +719,7 @@ export default {
         },
 
         choseTypeItem(item) {
+            this.isOpenCarTypeDialog = false
             this.selectorCarType = item;
             this.cartype = item;
             this.bodyHideCarType();
@@ -736,7 +745,6 @@ export default {
 
         closeDialog() {
             this.callFlag = false;
-            this.newCarDialog = false;
             this.updateImagePreview = null;
         },
 
@@ -746,7 +754,7 @@ export default {
             this.cartype = "";
             this.carnote = "";
             this.carImage = "";
-            this.newCarDialog = true;
+            this.isOpenCarInfoDialog = true
             this.tailgate = "no";
             this.coolstore = "no";
         },
@@ -791,7 +799,7 @@ export default {
             this.coolstore = item.coolstore;
             this.carnote = item.carnote;
             this.carImage = item.image;
-            this.newCarDialog = true;
+            this.isOpenCarInfoDialog = true
             this.kelometer = item.kelometer
             this.lastOilKelometer = item.lastOilKelometer
         },
@@ -1012,6 +1020,7 @@ export default {
                                     this.error = true;
                                     this.errormsg = response.data.msg;
                                     this.closeDialog();
+                                    this.isOpenCarInfoDialog = false
                                     this.carid = "";
                                     this.cartype = "";
                                     this.tailgate = "";
@@ -1250,9 +1259,10 @@ export default {
     margin: 0 auto;
     text-align: center;
     border: 3px dashed #696969;
-    width: 250px;
-    height: 250px;
+    width: 220px;
+    height: 220px;
     background-color: #eee;
+    border-radius: 10px;
 }
 
 .photoarea img {
@@ -1388,10 +1398,184 @@ export default {
 
 .kelometerbox_right{
     border: 1px solid #e0e0e0;
-    width: 200px;
+    width: 160px;
     text-align: center;
     background-color: #eee;
     border-radius: 4px;
+}
+
+.car-front-box{
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.checkcar-front-box-title{
+    background-color: #d74342;
+    color: #fff;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.car_front_box_body{
+    max-height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #fff;
+    margin: 12px 24px;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.car_front_box_body_top{
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.car_front_box_body_top_right{
+    margin-right: 24px;
+}
+
+.car_front_box_body_top_right_item{
+    display: flex;
+    display: -webkit-flex;
+    line-height: 30px;
+    margin: 12px 0;
+}
+
+.car_front_box_body_top_right_item_left{
+    font-size: 16px;
+    margin-right: 12px;
+}
+
+.car_front_box_body_top_right_item_right input{
+    height: 30px;
+    border-radius: 5px;
+    width: 160px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-size: 16px;
+}
+
+.car_front_box_body_top_right_item_right_div{
+    width:160px;
+    height:30px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.car_front_box_body_top_right_item_right textarea{
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    width: 160px;
+    height: 120px;
+    resize:none;
+    font-size: 16px;
+}
+
+.car_front_box_body_center{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.car_front_box_body_center_item{
+    display: flex;
+    display: -webkit-flex;
+    margin-top: 12px;
+}
+
+.car_front_box_body_center_name{
+    font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+    margin-right: 12px;
+}
+
+.car_front_box_body_center_radio{
+    display: flex;
+    display: -webkit-flex;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    height: 30px;
+    line-height: 30px;
+    border-radius: 5px;
+    padding: 0 12px;
+    width: 140px;
+}
+
+.car_front_box_body_center_radio_text{
+    font-size:16px;
+    color:#000;
+    height: 30px;
+    line-height: 30px;
+}
+
+.car_front_box_body_center_radio_input{
+    padding-top: 1px;
+}
+
+.car_front_box_body_center_radio_input input{
+    height: 20px;
+    width: 20px;
+}
+
+.car_front_box_body_bottom{
+    margin-top: 12px;
+}
+
+.car_front_box_body_bottom_item_left{
+    font-size: 16px;
+    margin-right: 24px;
+}
+
+.car_front_box_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.car_front_box_bottom_button{
+    border: 1px solid #eee;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.car_type_front_box_body{
+    margin: 12px 24px;
+    font-size: 16px;
+}
+
+.car_type_front_box_body_item{
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    height: 30px;
+    line-height: 30px;
+    width: 100px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border: 1px solid 1px #eee;
 }
 
 @media screen and (min-width: 1025px) {
