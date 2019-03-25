@@ -24,7 +24,7 @@
             <div :class="basketButtonStyle"
                  style="margin-left:10px;margin-right:10px"
                  @click="reportModeButtonMethod('basket')">
-                <span>框数统计</span>
+                <span>菜框统计</span>
             </div>
             <div :class="carWashButtonStyle"
                  style="margin-right:10px"
@@ -278,6 +278,10 @@
                      @click="openDetailBasketBox()">
                     <span>详细统计</span>
                 </div>
+                <div class="whiteButton" style="margin-left:10px"
+                     @click="breakBarketReport()">
+                    <span>坏框申报</span>
+                </div>
             </div>
 
                 <div v-if="isShowDetailBasketReport"
@@ -336,6 +340,28 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- 坏框申报 start -->
+                <div v-else-if="isShowBreakBasketReport" class="arraybasket_searchbar">
+                    <div style="margin-bottom:10px">
+                        <div style="border-top:1px solid #eee">
+                            <vue-datepicker-local v-model="startDate"
+                                                style="margin-top: 12px;"
+                                                placeholder="开始时间" />
+                            <span> ~ </span>
+                            <vue-datepicker-local v-model="endDate"
+                                                style="margin-top: 12px;"
+                                                placeholder="结束时间" />
+                        </div>
+                    </div>
+                    <div class="arraybasket_searchbar_frame_button">
+                        <div class="arraybasket_searchbar_button" @click="searchBreakBasketReportByDate">
+                            <span>搜索</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 坏框申报 end -->
+
                 <!-- 区域框数统计部分 start -->
                 <div v-else-if="isShowAreaBasketReport" class="arraybasket_searchbar">
                     <div style="margin-bottom:10px">
@@ -357,6 +383,77 @@
                 </div>
                 <!-- 区域框数统计部分 end -->
         </div>
+        <!-- 坏框申报 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="breakBasketArray.length != 0">
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="breakBasketArray=[]">
+                    <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
+                <div class="centerarea-head">
+                    <span>坏框申报审批统计</span>
+                </div>
+                <div class="centerarea-title" style="height:30px;line-height:30px;">
+                    <div style="flex-basis: 4%;text-align: center;">
+                        <span>No.</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>提交人</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>日期</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>提交数量</span>
+                    </div>
+                    <div style="flex-basis: 16%;text-align: center;">
+                        <span>描述图片</span>
+                    </div>
+                    <div style="flex-basis: 16%;text-align: center;">
+                        <span>描述文字</span>
+                    </div>
+                    <div style="flex-basis: 8%;text-align: center;">
+                        <span>审批人</span>
+                    </div>
+                    <div style="flex-basis: 16%;text-align: center;">
+                        <span>审批时间</span>
+                    </div>
+                </div>
+                <div class="centerarea-body">
+                    <div v-for="(item,index) in breakBasketArray" :key="index" class="centerarea-body-item" style="overflow: hidden;" @click="OpenDetailBreakBasket(item)">
+                        <div style="flex-basis: 4%;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.submitter}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.date | datefilter}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.basketNum}}</span>
+                        </div>
+                        <div class="areabasketimg" style="flex-basis: 16%;text-align: center;" @click.stop="openBigPic(item.image,'single')">
+                            <img :src="item.image | imgurl">
+                        </div>
+                        <div class="areabasketimg" style="flex-basis: 16%;text-align: center;">
+                            <span>{{item.note}}</span>
+                        </div>
+                        <div style="flex-basis: 8%;text-align: center;">
+                            <span v-if="item.approver">{{item.approver}}</span>
+                            <span v-else>未审批</span>
+                        </div>
+                        <div class="areabasketimg" style="flex-basis: 16%;text-align: center;">
+                            <span v-if="item.finishDate">{{item.finishDate | datefilter}}</span>
+                            <span v-else>未审批</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 坏框申报 end -->
+
         <!-- 区域框数统计部分 start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -461,6 +558,134 @@
                     </div>
         </transition>
         <!-- 区域框数统计部分-图片放大 end -->
+
+        <!-- 坏框申报-详细信息 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+                    <div v-if="isShowDetailBreakBasket" class="report_bigpic_back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+                    <div v-if="isShowDetailBreakBasket" class="report_bigpic_front" @click.self.prevent="isShowDetailBreakBasket = false">
+                        <div class="report_bigpic_box">
+                            <div class="report_bigpic_box_title">
+                                <span>坏框申报审批详细信息</span>
+                            </div>
+                            <div class="report_detial_box_body">
+                                <div class="report_detial_box_body_top">
+                                    <div class="report_detial_box_body_top_title">
+                                        <div class="report_detial_box_body_top_title_frame">
+                                            <span>详细信息</span>
+                                        </div>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item">
+                                        <div class="report_detial_box_body_top_item_left">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>申请人员</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.submitter}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="report_detial_box_body_top_item_right">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>申请日期</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.date | datefilter}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item">
+                                        <div class="report_detial_box_body_top_item_left">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>申请时间</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.date | timefilter}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="report_detial_box_body_top_item_right">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>申请数量</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.basketNum}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item">
+                                        <div class="report_detial_box_body_top_item_left">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>审批人员</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span v-if="tempInfo.approver">{{tempInfo.approver}}</span>
+                                                <span v-else>未审批</span>
+                                            </div>
+                                        </div>
+                                        <div class="report_detial_box_body_top_item_right">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>审批日期</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span v-if="tempInfo.finishDate">{{tempInfo.finishDate | datefilter}}</span>
+                                                <span v-else>未审批</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item">
+                                        <div class="report_detial_box_body_top_item_left">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>审批时间</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span v-if="tempInfo.finishDate">{{tempInfo.finishDate | timefilter}}</span>
+                                                <span v-else>未审批</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="report_detial_box_body_center">
+                                    <div class="report_detial_box_body_top_title">
+                                        <div class="report_detial_box_body_top_title_frame">
+                                            <span>描述图片</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="report_detial_box_body_center_pic">
+                                            <div class="report_detial_box_body_center_pic_frame">
+                                                <img :src="tempInfo.image | imgurl">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="report_detial_box_body_center">
+                                    <div class="report_detial_box_body_top_title">
+                                        <div class="report_detial_box_body_top_title_frame">
+                                            <span>描述文字</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="report_detial_box_body_center_pic">
+                                            <div class="report_detial_box_body_center_pic_frame">
+                                                <span>{{tempInfo.note}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="report_detial_box_foot">
+                                <div class="arraybasket_searchbar_button" @click="isShowDetailBreakBasket = false">
+                                    <span>关闭</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </transition>
+        <!-- 坏框申报-详细信息 end -->
 
         <!-- 区域框数统计部分-详细信息 start -->
         <transition name="custom-classes-transition"
@@ -2331,19 +2556,53 @@ export default {
             showMissionImg:false,
             isShowDetailBasketReport:false,
             isShowAreaBasketReport:false,
+            isShowBreakBasketReport:false,
             isOpenLineBox:false,
             isOpenClientBox:false,
             keyWord:null,
             tempInBasketNum:0,
             tempOutBasketNum:0,
             areaBasketArray:[],
+            breakBasketArray:[],
             isShowBigPic:false,
             picSrc:null,
-            isShowDetailAreaBasket:false
+            isShowDetailAreaBasket:false,
+            isShowDetailBreakBasket:false
         };
     },
 
     methods: {
+        OpenDetailBreakBasket(item){
+            this.tempInfo = item
+            console.log(item)
+            this.isShowDetailBreakBasket = true
+        },
+
+        searchBreakBasketReportByDate(){
+            axios
+                .post(config.server + "/report/breakBasket", {
+                    startDate:this.startDate,
+                    endDate:this.endDate,
+                })
+                .then(doc =>{
+                    if(doc.data.code === 0){
+                        this.breakBasketArray = doc.data.doc
+                    }else if(doc.data.code === 1){
+                        console.log('未找到符合条件的数据')
+                    }else{
+                        console.log('查询出错')
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        breakBarketReport(){
+            this.isShowDetailBasketReport = false
+            this.isShowBreakBasketReport = true
+        },
+
         OpenDetailAreaBasket(item){
             console.log(item)
             this.isShowDetailAreaBasket = true
