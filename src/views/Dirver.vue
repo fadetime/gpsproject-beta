@@ -138,6 +138,15 @@
                                       style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
                             </md-field>
 
+                            <md-field style="margin:10px auto 0 auto"
+                                      :class="nameclass">
+                                <label style="font-size:16px">英文姓名</label>
+                                <md-input v-model="name_en"
+                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
+                                <span class="md-error"
+                                      style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
+                            </md-field>
+
                             <md-field style="margin:20px auto"
                                       :class="cardclass">
                                 <label for="dirvercard"
@@ -267,7 +276,7 @@
                     </div>
                     <div class="rmDialog-center">
                         <div class="rmDialog-center-left">
-                            <span>车辆类型:</span>
+                            <span>准证号码:</span>
                         </div>
                         <div class="rmDialog-center-right">
                             <span>{{dirverid}}</span>
@@ -275,7 +284,7 @@
                     </div>
                     <div class="rmDialog-center">
                         <div class="rmDialog-center-left">
-                            <span>车辆尺寸:</span>
+                            <span>联系方式:</span>
                         </div>
                         <div class="rmDialog-center-right">
                             <span>{{dirverphone}}</span>
@@ -283,7 +292,7 @@
                     </div>
                     <div class="rmDialog-center">
                         <div class="rmDialog-center-left">
-                            <span>出车次数:</span>
+                            <span>驾照类型:</span>
                         </div>
                         <div class="rmDialog-center-right">
                             <span>{{dirvercard}}</span>
@@ -291,7 +300,7 @@
                     </div>
                     <div class="rmDialog-center">
                         <div class="rmDialog-center-left">
-                            <span>车辆备注:</span>
+                            <span>登录账户:</span>
                         </div>
                         <div class="rmDialog-center-right">
                             <span>{{dirverusername}}</span>
@@ -415,6 +424,7 @@ export default {
             deleteDialog: false,
             _id: "",
             dirvername: "",
+            name_en:null,
             dirverid: "",
             dirverphone: "",
             dirvercard: "",
@@ -600,6 +610,7 @@ export default {
             this.savemode = true;
             this._id = "";
             this.dirvername = "";
+            this.name_en = null
             this.dirverid = "";
             this.dirverphone = "";
             this.dirvercard = "";
@@ -651,6 +662,7 @@ export default {
             this.savemode = false;
             this._id = item._id;
             this.dirvername = item.dirvername;
+            this.name_en = item.name_en
             this.dirverid = item.dirverid;
             this.dirverphone = item.dirverphone;
             this.dirvercard = item.dirvercard;
@@ -776,6 +788,7 @@ export default {
                 }
                 payload.append("_id", this._id);
                 payload.append("dirvername", this.dirvername);
+                payload.append("name_en", this.name_en);
                 payload.append("dirverid", this.dirverid);
                 payload.append("dirverphone", this.dirverphone);
                 payload.append("dirvercard", this.dirvercard);
@@ -891,6 +904,7 @@ export default {
                         }
                         payload.append("image", this.updateImage);
                         payload.append("dirvername", this.dirvername);
+                        payload.append("name_en", this.name_en);
                         payload.append("dirverid", this.dirverid);
                         payload.append("dirverphone", this.dirverphone);
                         payload.append("dirvercard", this.dirvercard);
@@ -933,6 +947,7 @@ export default {
                     });
                 } else {
                     payload.append("dirvername", this.dirvername);
+                    payload.append("name_en", this.name_en);
                     payload.append("dirverid", this.dirverid);
                     payload.append("dirverphone", this.dirverphone);
                     payload.append("dirvercard", this.dirvercard);

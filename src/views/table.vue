@@ -264,21 +264,22 @@
 
 
         <div v-else
-             class="toparea" style="overflow: hidden;" ref="basketbox">
+             class="toparea" ref="basketbox">
             <div style="height: 58px;position: relative;z-index:23;display: flex;display:-webkit-flex;justify-content: center;;background:#fff">
                 <div class="whiteButton"
                      @click="basketTopMethod()">
                     <span>总统计</span>
                 </div>
                 <div class="whiteButton" style="margin-left:10px"
-                     @click="openDetailBasketBox">
+                     @click="basketArrayReport()">
+                    <span>区域框数</span>
+                </div>
+                <div class="whiteButton" style="margin-left:10px"
+                     @click="openDetailBasketBox()">
                     <span>详细统计</span>
                 </div>
             </div>
 
-            <transition name="custom-classes-transition"
-                        enter-active-class="animated slideInDown faster"
-                        leave-active-class="animated slideOutUp faster">
                 <div v-if="isShowDetailBasketReport"
                      style="padding-bottom:10px;justify-content: flex-end;">
                      <div style="border-top:1px solid #eee">
@@ -334,10 +335,295 @@
                             <span>开始查询</span>
                         </div>
                     </div>
-
                 </div>
-            </transition>
+                <!-- 区域框数统计部分 start -->
+                <div v-else-if="isShowAreaBasketReport" class="arraybasket_searchbar">
+                    <div style="margin-bottom:10px">
+                        <div style="border-top:1px solid #eee">
+                            <vue-datepicker-local v-model="startDate"
+                                                style="margin-top: 12px;"
+                                                placeholder="开始时间" />
+                            <span> ~ </span>
+                            <vue-datepicker-local v-model="endDate"
+                                                style="margin-top: 12px;"
+                                                placeholder="结束时间" />
+                        </div>
+                    </div>
+                    <div class="arraybasket_searchbar_frame_button">
+                        <div class="arraybasket_searchbar_button" @click="searchAreaBasketReportByDate">
+                            <span>搜索</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 区域框数统计部分 end -->
         </div>
+        <!-- 区域框数统计部分 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="areaBasketArray.length != 0">
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="areaBasketArray=[]">
+                    <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
+                <div class="centerarea-head">
+                    <span>区域框数情况统计</span>
+                </div>
+                <div class="centerarea-title" style="height:30px;line-height:30px;">
+                    <div style="flex-basis: 4%;text-align: center;">
+                        <span>No.</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>提交人</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>日期</span>
+                    </div>
+                    <div style="flex-basis: 8%;text-align: center;">
+                        <span>卸货区</span>
+                    </div>
+                    <div style="flex-basis: 16%;text-align: center;">
+                        <span>卸货区图片</span>
+                    </div>
+                    <div style="flex-basis: 8%;text-align: center;">
+                        <span>冷房区</span>
+                    </div>
+                    <div style="flex-basis: 16%;text-align: center;">
+                        <span>冷房区图片</span>
+                    </div>
+                    <div style="flex-basis: 8%;text-align: center;">
+                        <span>配货区</span>
+                    </div>
+                    <div style="flex-basis: 16%;text-align: center;">
+                        <span>配货区图片</span>
+                    </div>
+                </div>
+                <div class="centerarea-body">
+                    <div v-for="(item,index) in areaBasketArray" :key="index" class="centerarea-body-item" style="overflow: hidden;" @click="OpenDetailAreaBasket(item)">
+                        <div style="flex-basis: 4%;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.submitter}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.date | datefilter}}</span>
+                        </div>
+                        <div style="flex-basis: 8%;text-align: center;">
+                            <span>{{item.area1number}}</span>
+                        </div>
+                        <div v-if="item.area1imageArray != 0" class="areabasketimg_array" style="flex-basis: 16%;text-align: center;">
+                            <div v-for="(pics , picIndex) in item.area1imageArray" :key="picIndex" v-show="picIndex < 4" class="areabasketimg_array_div" @click.stop="openBigPic(pics,'array')">
+                                <img :src="'uploads/countBox/'+ pics| imgurl">
+                            </div>
+                        </div>
+                        <div v-else class="areabasketimg" style="flex-basis: 16%;text-align: center;" @click.stop="openBigPic(item.area1image,'single')">
+                            <img :src="item.area1image| imgurl">
+                        </div>
+                        <div style="flex-basis: 8%;text-align: center;">
+                            <span>{{item.area2number}}</span>
+                        </div>
+                        <div v-if="item.area2imageArray != 0" class="areabasketimg_array" style="flex-basis: 16%;text-align: center;">
+                            <div v-for="(pics , picIndex) in item.area2imageArray" :key="picIndex" v-show="picIndex < 4" class="areabasketimg_array_div" @click.stop="openBigPic(pics,'array')">
+                                <img :src="'uploads/countBox/'+ pics | imgurl">
+                            </div>
+                        </div>
+                        <div v-else class="areabasketimg" style="flex-basis: 16%;text-align: center;" @click.stop="openBigPic(item.area2image,'single')">
+                            <img :src="item.area2image| imgurl">
+                        </div>
+                        <div style="flex-basis: 8%;text-align: center;">
+                            <span>{{item.area3number}}</span>
+                        </div>
+                        <div v-if="item.area3imageArray != 0" class="areabasketimg_array" style="flex-basis: 16%;text-align: center;">
+                            <div v-for="(pics , picIndex) in item.area3imageArray" :key="picIndex" v-show="picIndex < 4" class="areabasketimg_array_div" @click.stop="openBigPic(pics,'array')">
+                                <img :src="'uploads/countBox/'+ pics| imgurl">
+                            </div>
+                        </div>
+                        <div v-else class="areabasketimg" style="flex-basis: 16%;text-align: center;" @click.stop="openBigPic(item.area3image,'single')">
+                            <img :src="item.area3image| imgurl">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 区域框数统计部分 end -->
+
+        <!-- 区域框数统计部分-图片放大 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+                    <div v-if="isShowBigPic" class="report_bigpic_back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+                    <div v-if="isShowBigPic" class="report_bigpic_front" @click="isShowBigPic = false">
+                        <img :src="picSrc | imgurl">
+                    </div>
+        </transition>
+        <!-- 区域框数统计部分-图片放大 end -->
+
+        <!-- 区域框数统计部分-详细信息 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+                    <div v-if="isShowDetailAreaBasket" class="report_bigpic_back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+                    <div v-if="isShowDetailAreaBasket" class="report_bigpic_front" @click.self.prevent="isShowDetailAreaBasket = false">
+                        <div class="report_bigpic_box">
+                            <div class="report_bigpic_box_title">
+                                <span>区域框数统计详细信息</span>
+                            </div>
+                            <div class="report_detial_box_body">
+                                <div class="report_detial_box_body_top">
+                                    <div class="report_detial_box_body_top_title">
+                                        <div class="report_detial_box_body_top_title_frame">
+                                            <span>详细信息</span>
+                                        </div>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item">
+                                        <div class="report_detial_box_body_top_item_left">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>创建人员</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.submitter}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="report_detial_box_body_top_item_right">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>创建日期</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.date | datefilter}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item">
+                                        <div class="report_detial_box_body_top_item_left">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>创建时间</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.date | timefilter}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="report_detial_box_body_top_item_right">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>结束日期</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.finishDate | datefilter}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item">
+                                        <div class="report_detial_box_body_top_item_left">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>结束时间</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.finishDate | timefilter}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="report_detial_box_body_top_item_right">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>装卸区域</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.area1number}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item">
+                                        <div class="report_detial_box_body_top_item_left">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>冷库区域</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.area2number}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="report_detial_box_body_top_item_right">
+                                            <div class="report_detial_box_body_top_item_left_name">
+                                                <span>配货区域</span>
+                                            </div>
+                                            <div class="report_detial_box_body_top_item_left_content">
+                                                <span>{{tempInfo.area3number}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="report_detial_box_body_center">
+                                    <div class="report_detial_box_body_top_title">
+                                        <div class="report_detial_box_body_top_title_frame">
+                                            <span>装卸区图片</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div v-if="tempInfo.area1imageArray != 0" class="report_detial_box_body_center_pic">
+                                            <div v-for="(item,index) in tempInfo.area1imageArray" :key="index" class="report_detial_box_body_center_pic_frame">
+                                                <img :src="'uploads/countBox/'+item | imgurl">
+                                            </div>
+                                        </div>
+                                        <div v-else class="report_detial_box_body_center_pic">
+                                            <div class="report_detial_box_body_center_pic_frame">
+                                                <img :src="tempInfo.area1image | imgurl">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="report_detial_box_body_center">
+                                    <div class="report_detial_box_body_top_title">
+                                        <div class="report_detial_box_body_top_title_frame">
+                                            <span>冷库区图片</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div v-if="tempInfo.area1imageArray != 0" class="report_detial_box_body_center_pic">
+                                            <div v-for="(item,index) in tempInfo.area2imageArray" :key="index" class="report_detial_box_body_center_pic_frame">
+                                                <img :src="'uploads/countBox/'+item | imgurl">
+                                            </div>
+                                        </div>
+                                        <div v-else class="report_detial_box_body_center_pic">
+                                            <div class="report_detial_box_body_center_pic_frame">
+                                                <img :src="tempInfo.area2image | imgurl">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="report_detial_box_body_center">
+                                    <div class="report_detial_box_body_top_title">
+                                        <div class="report_detial_box_body_top_title_frame">
+                                            <span>配货区图片</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div v-if="tempInfo.area1imageArray.length != 0" class="report_detial_box_body_center_pic">
+                                            <div v-for="(item,index) in tempInfo.area3imageArray" :key="index" class="report_detial_box_body_center_pic_frame">
+                                                <img :src="'uploads/countBox/'+item | imgurl">
+                                            </div>
+                                        </div>
+                                        <div v-else class="report_detial_box_body_center_pic">
+                                            <div class="report_detial_box_body_center_pic_frame">
+                                                <img :src="tempInfo.area3image | imgurl">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="report_detial_box_foot">
+                                <div class="arraybasket_searchbar_button" @click="isShowDetailAreaBasket = false">
+                                    <span>关闭</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </transition>
+        <!-- 区域框数统计部分-详细信息 end -->
+
         <!-- check car report start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -733,6 +1019,9 @@
                         <span>获取数量</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
+                        <span>发出数量</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
                         <span>剩余数量</span>
                     </div>
                     <div style="flex-basis: 20%;text-align: center;">
@@ -754,6 +1043,10 @@
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
                             <span>{{item.startNum}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span v-if="item.endNum">{{item.startNum - item.endNum}}</span>
+                            <span v-else>未完成</span>
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
                             <span v-if="item.endNum">{{item.endNum}}</span>
@@ -2037,15 +2330,55 @@ export default {
             missionImgSrc:null,
             showMissionImg:false,
             isShowDetailBasketReport:false,
+            isShowAreaBasketReport:false,
             isOpenLineBox:false,
             isOpenClientBox:false,
             keyWord:null,
             tempInBasketNum:0,
-            tempOutBasketNum:0
+            tempOutBasketNum:0,
+            areaBasketArray:[],
+            isShowBigPic:false,
+            picSrc:null,
+            isShowDetailAreaBasket:false
         };
     },
 
     methods: {
+        OpenDetailAreaBasket(item){
+            console.log(item)
+            this.isShowDetailAreaBasket = true
+            this.tempInfo = item
+        },
+
+        openBigPic(src,mode){
+            if(mode === 'array'){
+                this.picSrc = 'uploads/countBox/'+ src
+            }else{
+                this.picSrc = src
+            }
+            this.isShowBigPic = true
+        },
+
+        searchAreaBasketReportByDate(){
+            axios
+                .post(config.server + "/report/areaBasket", {
+                    startDate:this.startDate,
+                    endDate:this.endDate,
+                })
+                .then(doc => {
+                    console.log(doc)
+                    this.areaBasketArray = doc.data.doc
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        basketArrayReport(){
+            this.isShowAreaBasketReport = !this.isShowAreaBasketReport
+            this.isShowDetailBasketReport = false
+        },
+
         driverCarWashMethod(){
             if(!this.startDate || !this.endDate){
                 this.tipsMsg = "请填写开始结束时间";
@@ -2178,13 +2511,14 @@ export default {
         },
 
         openDetailBasketBox(){
+            this.isShowAreaBasketReport = false
             if(this.isShowDetailBasketReport){
-                this.$refs.basketbox.style.overflow='hidden'
+                // this.$refs.basketbox.style.overflow='hidden'
                 this.isShowDetailBasketReport = false
             }else{
-                setTimeout(() => {
-                    this.$refs.basketbox.style.overflow='unset'
-                }, 1000);
+                // setTimeout(() => {
+                //     this.$refs.basketbox.style.overflow='unset'
+                // }, 1000);
                 this.isShowDetailBasketReport = true
             }
         },
@@ -3909,5 +4243,187 @@ export default {
     outline: none;
     border-radius: 10px;
     border: 1px solid #e0e0e0;
+}
+
+.arraybasket_searchbar{
+    padding-bottom: 1px;
+}
+
+.arraybasket_searchbar_frame_button{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.arraybasket_searchbar_button{
+    width: 100px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.areabasketimg{
+    height: 30;
+    overflow: hidden;
+}
+
+.areabasketimg img{
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
+.areabasketimg_array{
+    height: 30px;
+    overflow: hidden;
+    display: flex;
+    display: -webkit-flex;
+}
+
+.areabasketimg_array_div{
+    flex-basis: 25%;
+}
+
+.areabasketimg_array_div img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.report_bigpic_back{
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.12);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 24;
+}
+
+.report_bigpic_front{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 25;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.report_bigpic_box{
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.report_bigpic_box_title{
+    height: 30px;
+    line-height: 30px;
+    background-color: #d74342;
+    color: #fff;
+    font-size: 16px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.report_detial_box_body_top{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    background-color: #fff;
+    margin: 24px 24px 12px 24px;
+    padding: 14px 10px 4px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.report_detial_box_body_top_title{
+    position: absolute;
+    top: -15px;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
+.report_detial_box_body_top_title_frame{
+    border-radius: 10px;
+    border: 1px solid #eee;
+    background-color: #fff;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.report_detial_box_body_top_item{
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+    display: -webkit-flex;
+}
+
+.report_detial_box_body_center{
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    margin: 24px 24px 12px 24px;
+    padding: 14px 10px 4px;
+    position: relative;
+}
+
+.report_detial_box_body_center_pic{
+    margin-top: 8px;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: row;
+    width: 400px;
+    overflow-y: hidden;
+    overflow-x: scroll;
+}
+
+.report_detial_box_body_center_pic_frame{
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 10px;
+    min-width: 100px;
+}
+
+.report_detial_box_body_center_pic_frame img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.report_detial_box_body_top_item_left{
+    display: flex;
+    display: -webkit-flex;
+    flex-basis: 50%
+}
+
+.report_detial_box_body_top_item_left_content{
+    margin-left: 10px;
+}
+
+.report_detial_box_body_top_item_right{
+    flex-basis: 50%;
+    display: flex;
+    display: -webkit-flex;
+}
+
+.report_detial_box_foot{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
 }
 </style>

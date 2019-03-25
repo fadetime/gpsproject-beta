@@ -1464,6 +1464,7 @@ export default {
     border: 1px solid rgba(0, 0, 0, 0.2);
     text-align: center;
     font-size: 16px;
+    color: #2c3e50;
 }
 
 .car_front_box_body_top_right_item_right_div{
@@ -1483,6 +1484,7 @@ export default {
     height: 120px;
     resize:none;
     font-size: 16px;
+    color: #2c3e50;
 }
 
 .car_front_box_body_center{
