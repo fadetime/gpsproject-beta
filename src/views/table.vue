@@ -642,7 +642,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="report_detial_box_body_center_pic">
+                                        <div class="report_detial_box_body_center_pic" style="width:340px;overflow:hidden;justify-content: center;">
                                             <div class="report_detial_box_body_center_pic_frame">
                                                 <img :src="tempInfo.image | imgurl">
                                             </div>
@@ -656,10 +656,8 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="report_detial_box_body_center_pic">
-                                            <div class="report_detial_box_body_center_pic_frame">
-                                                <span>{{tempInfo.note}}</span>
-                                            </div>
+                                        <div style="padding:18px 12px 12px;height:120px;overflow:auto;width: 340px;text-align:left">
+                                            <span>{{tempInfo.note}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -4567,6 +4565,8 @@ export default {
     background-color: #f7f7f7;
     border-radius: 10px;
     overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
 .report_bigpic_box_title{
