@@ -746,6 +746,7 @@ export default {
         closeDialog() {
             this.callFlag = false;
             this.updateImagePreview = null;
+            this.isOpenCarInfoDialog = false
         },
 
         newCar() {

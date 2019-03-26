@@ -192,11 +192,21 @@
                         <div class="first_page_body_right">
                             <div class="first_page_body_right_title">
                                 <div>
-                                    <span>公告文字</span>
+                                    <span>公告文字(CH)</span>
                                 </div>
                             </div>
                             <div>
-                                <textarea name="" id="" style="width:228px;height:160px" v-model="textValue"></textarea>
+                                <textarea style="width:228px;height:160px" v-model="textValue"></textarea>
+                            </div>
+                        </div>
+                        <div class="first_page_body_right">
+                            <div class="first_page_body_right_title">
+                                <div>
+                                    <span>公告文字(EN)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <textarea style="width:228px;height:160px" v-model="textValueEN"></textarea>
                             </div>
                         </div>
                     </div>
@@ -330,6 +340,7 @@ export default {
             showFirstPageDialog:false,
             value:false,
             textValue:null,
+            textValueEN:null,
             updateImagePreview:null,
             updateImage:null,
             imageUrl:null,
@@ -359,7 +370,7 @@ export default {
 
         firstPageButtonMethod(mode){
             if(mode === 'submit'){
-                if(!this.updateImagePreview && !this.textValue){
+                if(!this.updateImagePreview && !this.textValue && !this.textValueEN){
                     this.tipMsg = '图片与文字请输入其中一项'
                     this.showTipDialog = true
                     setTimeout(() => {
@@ -385,6 +396,9 @@ export default {
                     }
                     if(this.textValue){
                         payload.append("text", this.textValue);
+                    }
+                    if(this.textValueEN){
+                        payload.append("textEN", this.textValueEN);
                     }
                     payload.append("date", tempDate);
                     payload.append("isShow", this.value);
@@ -415,6 +429,7 @@ export default {
             }else{
                 this.showFirstPageDialog = false
                 this.textValue = null
+                this.textValueEN = null
                 this.updateImagePreview = null
             }
         },
@@ -423,8 +438,10 @@ export default {
             axios
                 .post(config.server + "/announcement/panelfind")
                 .then(doc => {
+                    console.log(doc)
                     if(doc.data.code === 0){
                         this.textValue = doc.data.doc.text
+                        this.textValueEN = doc.data.doc.textEN
                         this.value = doc.data.doc.isShow
                         this.imageUrl = doc.data.doc.image
                     }else{

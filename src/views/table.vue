@@ -404,9 +404,6 @@
                     <div style="flex-basis: 12%;text-align: center;">
                         <span>日期</span>
                     </div>
-                    <div style="flex-basis: 12%;text-align: center;">
-                        <span>提交数量</span>
-                    </div>
                     <div style="flex-basis: 16%;text-align: center;">
                         <span>描述图片</span>
                     </div>
@@ -430,9 +427,6 @@
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
                             <span>{{item.date | datefilter}}</span>
-                        </div>
-                        <div style="flex-basis: 12%;text-align: center;">
-                            <span>{{item.basketNum}}</span>
                         </div>
                         <div class="areabasketimg" style="flex-basis: 16%;text-align: center;" @click.stop="openBigPic(item.image,'single')">
                             <img :src="item.image | imgurl">
@@ -609,16 +603,6 @@
                                         </div>
                                         <div class="report_detial_box_body_top_item_right">
                                             <div class="report_detial_box_body_top_item_left_name">
-                                                <span>申请数量</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.basketNum}}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="report_detial_box_body_top_item">
-                                        <div class="report_detial_box_body_top_item_left">
-                                            <div class="report_detial_box_body_top_item_left_name">
                                                 <span>审批人员</span>
                                             </div>
                                             <div class="report_detial_box_body_top_item_left_content">
@@ -626,7 +610,9 @@
                                                 <span v-else>未审批</span>
                                             </div>
                                         </div>
-                                        <div class="report_detial_box_body_top_item_right">
+                                    </div>
+                                    <div class="report_detial_box_body_top_item">
+                                        <div class="report_detial_box_body_top_item_left">
                                             <div class="report_detial_box_body_top_item_left_name">
                                                 <span>审批日期</span>
                                             </div>
@@ -635,9 +621,8 @@
                                                 <span v-else>未审批</span>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="report_detial_box_body_top_item">
-                                        <div class="report_detial_box_body_top_item_left">
+                                        
+                                        <div class="report_detial_box_body_top_item_right">
                                             <div class="report_detial_box_body_top_item_left_name">
                                                 <span>审批时间</span>
                                             </div>
@@ -646,6 +631,8 @@
                                                 <span v-else>未审批</span>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item">
                                     </div>
                                 </div>
                                 <div class="report_detial_box_body_center">
