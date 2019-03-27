@@ -26,6 +26,11 @@
                  @click="reportModeButtonMethod('checkCar')">
                 <span>车辆检查</span>
             </div>
+            <div :class="repairCarButtonStyle"
+                 style="margin-left:10px;"
+                 @click="reportModeButtonMethod('repairCar')">
+                <span>车辆维修</span>
+            </div>
             <div :class="basketButtonStyle"
                  style="margin-left:10px;margin-right:10px"
                  @click="reportModeButtonMethod('basket')">
@@ -76,7 +81,7 @@
             </transition>
         </div>
         <!-- 车次统计部分 start -->
-        <div v-if="showWindow === 'trips'" class="new_toparea">
+        <div v-else-if="showWindow === 'trips'" class="new_toparea">
             <div style="height: 58px;position: relative;z-index:23;padding-left:6px;">
                 <vue-datepicker-local v-model="startDate"
                                       style="margin-top: 12px;"
@@ -196,7 +201,6 @@
                         <span>检查记录</span>
                     </div>
                 </div>
-
             </div>
             <transition name="custom-classes-transition"
                         enter-active-class="animated slideInDown faster"
@@ -229,6 +233,26 @@
             </transition>
         </div>
 
+        <div v-else-if="showWindow === 'repairCar'" class="toparea">
+            <div style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff;display: flex;display:-webkit-flex;justify-content: space-around;">
+                <div>
+                    <vue-datepicker-local v-model="startDate"
+                                          style="margin-top: 12px;"
+                                          placeholder="开始时间" />
+                    <span> ~ </span>
+                    <vue-datepicker-local v-model="endDate"
+                                          style="margin-top: 12px;"
+                                          placeholder="结束时间" />
+                </div>
+                <div style="display: flex;display:-webkit-flex;justify-content: space-around;">
+                    <div class="whiteButton"
+                         @click="repairCarMethod('find')"
+                         style="margin-top: 12px;margin-left: 10px;width:80px">
+                        <span>维修记录</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div v-else-if="showWindow === 'carWash'"
              class="toparea">
             <div style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff;display: flex;display:-webkit-flex;justify-content: space-around;">
@@ -537,6 +561,82 @@
             </div>
         </transition>
         <!-- 车次框数一天报表 end -->
+
+        <!-- 车辆维修 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="repairCarArray.length != 0">
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="repairCarArray=[]">
+                    <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
+                <div class="centerarea-head">
+                    <span>车辆维修记录</span>
+                </div>
+                <div class="centerarea-title" style="height:30px;line-height:30px;">
+                    <div style="flex-basis: 4%;text-align: center;">
+                        <span>No.</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>提交人</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>提交日期</span>
+                    </div>
+                    <div style="flex-basis: 25%;text-align: center;">
+                        <span>包含问题</span>
+                    </div>
+                    <div style="flex-basis: 16%;text-align: center;">
+                        <span>描述照片</span>
+                    </div>
+                    <div style="flex-basis: 16%;text-align: center;">
+                        <span>描述文字</span>
+                    </div>
+                    <div style="flex-basis: 8%;text-align: center;">
+                        <span>维修员</span>
+                    </div>
+                </div>
+                <div class="centerarea-body">
+                    <div v-for="(item,index) in repairCarArray" :key="index" class="centerarea-body-item" style="overflow: hidden;">
+                        <div style="flex-basis: 4%;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.driver}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.logStartTime | datefilter}}</span>
+                        </div>
+                        <div class="areabasketimg" style="flex-basis: 25%;text-align: center;">
+                            <span v-if="item.wiper === 1">'雨刷'</span>
+                            <span v-if="item.headlight === 1">'大灯'</span>
+                            <span v-if="item.mirror === 1">'倒车镜'</span>
+                            <span v-if="item.tyre === 1">'车胎'</span>
+                            <span v-if="item.backup === 1">'备胎'</span>
+                            <span v-if="item.brake === 1">'刹车'</span>
+                            <span v-if="item.other === 1">'其他'</span>
+                        </div>
+                        <div v-if="item.image" class="areabasketimg" style="flex-basis: 16%;text-align: center;" @click.stop="openBigPic(item.image,'single')">
+                            <img :src="item.image | imgurl">
+                        </div>
+                        <div v-else class="areabasketimg" style="flex-basis: 16%;text-align: center;">
+                            <span>无</span>
+                        </div>
+                        <div v-if="item.note" class="areabasketimg" style="flex-basis: 16%;text-align: center;">
+                            <span>{{item.note}}</span>
+                        </div>
+                        <div v-else class="areabasketimg" style="flex-basis: 16%;text-align: center;">
+                            <span>无</span>
+                        </div>
+                        <div style="flex-basis: 8%;text-align: center;">
+                            <span v-if="item.worker">{{item.worker}}</span>
+                            <span v-else>未处理</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 车辆维修 end -->
 
         <!-- 坏框申报 start -->
         <transition name="custom-classes-transition"
@@ -2655,6 +2755,7 @@ export default {
             tripsButtonStyle:"topbuttonarea-item",
             centerButtonStyle: "topbuttonarea-item",
             checkCarButtonStyle: "topbuttonarea-item",
+            repairCarButtonStyle: "topbuttonarea-item",
             missionButtonStyle: "topbuttonarea-item",
             basketButtonStyle: "topbuttonarea-item",
             carWashButtonStyle: "topbuttonarea-item",
@@ -2694,6 +2795,7 @@ export default {
             tempOutBasketNum:0,
             areaBasketArray:[],
             breakBasketArray:[],
+            repairCarArray:[],
             tripsByDay:null,
             isShowBigPic:false,
             picSrc:null,
@@ -2703,6 +2805,21 @@ export default {
     },
 
     methods: {
+        repairCarMethod(){
+            axios
+                .post(config.server + "/report/repairCar", {
+                    startDate:this.startDate,
+                    endDate:this.endDate,
+                })
+                .then(doc => {
+                    console.log(doc)
+                    this.repairCarArray = doc.data.doc
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
         findTripsReportByOneDayMethod(){
             let tempDate = new Date(this.startDate).toDateString()
             tempDate = new Date(tempDate).toISOString()
@@ -3985,6 +4102,7 @@ export default {
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.carWashButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
+                this.repairCarButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
             } else if (mode === "bill") {
                 this.showWindow = "bill";
@@ -3995,6 +4113,7 @@ export default {
                 this.checkCarButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.carWashButtonStyle = "topbuttonarea-item";
+                this.repairCarButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item-blue";
             }else if (mode === "trips") {
                 this.showWindow = "trips";
@@ -4005,6 +4124,7 @@ export default {
                 this.checkCarButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.carWashButtonStyle = "topbuttonarea-item";
+                this.repairCarButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
             } else if (mode === "mission") {
                 this.showWindow = "mission";
@@ -4015,6 +4135,7 @@ export default {
                 this.checkCarButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.carWashButtonStyle = "topbuttonarea-item";
+                this.repairCarButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
             } else if (mode === "day") {
                 this.showWindow = "day";
@@ -4025,6 +4146,7 @@ export default {
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
                 this.carWashButtonStyle = "topbuttonarea-item";
+                this.repairCarButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
             } else if (mode === "basket") {
                 this.showWindow = "basket";
@@ -4035,6 +4157,7 @@ export default {
                 this.basketButtonStyle = "topbuttonarea-item-blue";
                 this.rightButtonStyle = "topbuttonarea-item";
                 this.carWashButtonStyle = "topbuttonarea-item";
+                this.repairCarButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
             } else if (mode === "carWash") {
                 this.showWindow = "carWash";
@@ -4044,7 +4167,19 @@ export default {
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
+                this.repairCarButtonStyle = "topbuttonarea-item";
                 this.carWashButtonStyle = "topbuttonarea-item-blue";
+                this.checkCarButtonStyle = "topbuttonarea-item";
+            }else if (mode === "repairCar") {
+                this.showWindow = "repairCar";
+                this.leftButtonStyle = "topbuttonarea-item";
+                this.tripsButtonStyle = "topbuttonarea-item";
+                this.centerButtonStyle = "topbuttonarea-item";
+                this.missionButtonStyle = "topbuttonarea-item";
+                this.basketButtonStyle = "topbuttonarea-item";
+                this.rightButtonStyle = "topbuttonarea-item";
+                this.carWashButtonStyle = "topbuttonarea-item";
+                this.repairCarButtonStyle = "topbuttonarea-item-blue";
                 this.checkCarButtonStyle = "topbuttonarea-item";
             }else {
                 this.showWindow = "checkCar";
@@ -4055,6 +4190,7 @@ export default {
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
                 this.carWashButtonStyle = "topbuttonarea-item";
+                this.repairCarButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item-blue";
             }
         },
