@@ -315,90 +315,92 @@
         </transition>
         <!-- car type box end -->
 
-        <!-- remove dialog start-->
-        <md-dialog :md-active.sync="removeDialog"
-                   class="removedialog">
-            <md-dialog-title style="font-size:18px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
-                <span style="color:#fff">删除车辆</span>
-            </md-dialog-title>
-            <div style="margin:0 20px 20px 20px;box-shadow: 2px 2px 5px #636363;overflow-x:hidden;overflow-y:auto">
-                <div class="deldialog">
-                    <div class="deldialog-left">
-                        <div class="photoarea">
-                            <img src="../../public/img/ebuyLogo.png"
-                                 alt="ebuylogo"
-                                 style="object-fit:unset;padding:50px 0"
-                                 v-if="!carImage">
-                            <img :src="carImage | imgurl"
-                                 alt="newimg"
-                                 v-else>
+        <!-- new remove dialog start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="checkcar-back" style="z-index:24"
+                 v-if="removeDialog"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div class="checkcar-front" style="z-index:25"
+                 v-if="removeDialog"
+                 @click.self.prevent="removeDialog = false">
+                <div class="car-front-box" style="z-index:26">
+                    <div class="checkcar-front-box-title">
+                        <span>删除车辆</span>
+                    </div>
+                    <div class="car_type_front_box_body">
+                        <div class="carpage_new_remove_item">
+                            <div class="carpage_new_remove_item_left">
+                                <div class="carpage_new_remove_item_left_frame">
+                                    <div class="carpage_new_remove_item_left_frame_left">
+                                        <span>车牌号码</span>
+                                    </div>
+                                    <div class="carpage_new_remove_item_left_frame_right">
+                                        <span>{{carid}}</span>
+                                    </div>
+                                </div>
+                                <div class="carpage_new_remove_item_left_frame">
+                                    <div class="carpage_new_remove_item_left_frame_left">
+                                        <span>车辆类型</span>
+                                    </div>
+                                    <div class="carpage_new_remove_item_left_frame_right">
+                                        <span>{{cartype}}</span>
+                                    </div>
+                                </div>
+                                <div class="carpage_new_remove_item_left_frame">
+                                    <div class="carpage_new_remove_item_left_frame_left">
+                                        <span>有无尾门</span>
+                                    </div>
+                                    <div class="carpage_new_remove_item_left_frame_right">
+                                        <span>{{tailgate}}</span>
+                                    </div>
+                                </div>
+                                <div class="carpage_new_remove_item_left_frame">
+                                    <div class="carpage_new_remove_item_left_frame_left">
+                                        <span>出车次数</span>
+                                    </div>
+                                    <div class="carpage_new_remove_item_left_frame_right">
+                                        <span>{{cartimes}}</span>
+                                    </div>
+                                </div>
+                                <div class="carpage_new_remove_item_left_frame">
+                                    <div class="carpage_new_remove_item_left_frame_left">
+                                        <span>车辆备注</span>
+                                    </div>
+                                    <div class="carpage_new_remove_item_left_frame_right" style="height:80px">
+                                        <span>{{carnote}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="photoarea">
+                                    <img src="../../public/img/ebuyLogo.png"
+                                        alt="ebuylogo"
+                                        style="object-fit:unset;padding:50px 0"
+                                        v-if="!carImage">
+                                    <img :src="carImage | imgurl"
+                                        alt="newimg"
+                                        v-else>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="deldialog-right">
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>车牌号码:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{carid}}</span>
-                            </div>
+                    <div class="car_front_box_bottom">
+                        <div class="car_front_box_bottom_button" @click="removeDialog = false">
+                            <span>取消</span>
                         </div>
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>车辆类型:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{cartype}}</span>
-                            </div>
-                        </div>
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>有无尾门:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{tailgate}}</span>
-                            </div>
-                        </div>
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>出车次数:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{cartimes}}</span>
-                            </div>
-                        </div>
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>车辆备注:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{carnote}}</span>
-                            </div>
-                        </div>
-                        <div class="rmDialog-center">
-                            <div class="rmDialog-center-left">
-                                <span>加入时间:</span>
-                            </div>
-                            <div class="rmDialog-center-right">
-                                <span>{{cardate | datefilter}}</span>
-                            </div>
+                        <div class="car_front_box_bottom_button" @click="confirmremove" style="margin-left:8px;">
+                            <span>确定</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
-                <md-dialog-actions style="margin:5px auto">
-                    <md-button class="md-raised md-primary"
-                               @click="removeDialog = false"
-                               style="font-size:18px;width:80px;height:30px">取消</md-button>
-                    <md-button class="md-raised md-accent"
-                               @click="confirmremove"
-                               style="font-size:18px;width:80px;height:30px">删除</md-button>
-                </md-dialog-actions>
-            </div>
-
-        </md-dialog>
-        <!-- remove dialog end-->
+        </transition>
+        <!-- new remove dialog end -->
 
         <!-- error start -->
         <md-dialog-alert :md-active.sync="error"
@@ -1195,34 +1197,6 @@ export default {
     flex-flow: row;
 }
 
-.removedialog{
-	display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row;
-    flex-flow: row;
-	width: 600px;
-	height: 426px;
-}
-.rmDialog-center {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row;
-    flex-flow: row;
-    margin: 20px;
-    font-size: 20px;
-    width: 100%;
-}
-
-.rmDialog-center-left {
-    flex-basis: 35%;
-    text-align: left;
-}
-
-.rmDialog-center-right {
-    flex-basis: 65%;
-    text-align: left;
-}
-
 .dialog-body-radio {
     display: -webkit-flex;
     display: flex;
@@ -1270,22 +1244,6 @@ export default {
     width: 100%;
     height: 100%;
     object-fit: cover;
-}
-
-.deldialog {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
-}
-
-.deldialog-left {
-    flex-basis: 50%;
-    padding: 12px 0;
-}
-
-.deldialog-right {
-    flex-basis: 50%;
 }
 
 .selector-body {
@@ -1581,6 +1539,37 @@ export default {
     border: 1px solid 1px #eee;
 }
 
+.carpage_new_remove_item{
+    display: flex;
+    display: -webkit-flex;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    padding: 10px 12px;
+}
+
+.carpage_new_remove_item_left{
+    margin-right: 12px;
+}
+
+.carpage_new_remove_item_left_frame{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 4px;
+}
+
+.carpage_new_remove_item_left_frame_left{
+    margin-right: 8px;
+}
+
+.carpage_new_remove_item_left_frame_right{
+    width: 160px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+}
 @media screen and (min-width: 1025px) {
 	.editdialog{
 		width: 600px;

@@ -6,6 +6,11 @@
                  @click="reportModeButtonMethod('night')">
                 <span>夜班统计</span>
             </div>
+            <div :class="tripsButtonStyle"
+                 style="margin-left:10px"
+                 @click="reportModeButtonMethod('trips')">
+                <span>车次统计</span>
+            </div>
             <div :class="centerButtonStyle"
                  style="margin-left:10px"
                  @click="reportModeButtonMethod('day')">
@@ -70,6 +75,19 @@
                 </div>
             </transition>
         </div>
+        <!-- 车次统计部分 start -->
+        <div v-if="showWindow === 'trips'" class="new_toparea">
+            <div style="height: 58px;position: relative;z-index:23;padding-left:6px;">
+                <vue-datepicker-local v-model="startDate"
+                                      style="margin-top: 12px;"
+                                      placeholder="开始时间" />
+                <md-button class="md-raised md-primary"
+                           @click="findTripsReportByOneDayMethod"
+                           style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
+            </div>
+        </div>
+        <!-- 车次统计部分 end -->
+
         <div v-else-if="showWindow === 'day'"
              class="toparea">
 
@@ -383,6 +401,143 @@
                 </div>
                 <!-- 区域框数统计部分 end -->
         </div>
+
+        <!-- 车次框数一天报表 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="tripsByDay">
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="tripsByDay=null">
+                    <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
+                <div class="centerarea-head">
+                    <span>车次数据报表</span>
+                </div>
+                <div class="tripday_infos">
+                    <div class="tripday_info">
+                        <div class="tripday_info_left">
+                            <span>任务日期</span>
+                        </div>
+                        <div class="tripday_info_right">
+                            <span>{{tripsByDay.missionDate | datefilter}}</span>
+                        </div>
+                    </div>
+                    <div class="tripday_info">
+                        <div class="tripday_info_left">
+                            <span>生成人员</span>
+                        </div>
+                        <div class="tripday_info_right">
+                            <span>{{tripsByDay.creater}}</span>
+                        </div>
+                    </div>
+                    <div class="tripday_info">
+                        <div class="tripday_info_left">
+                            <span>生成日期</span>
+                        </div>
+                        <div class="tripday_info_right">
+                            <span>{{tripsByDay.createDate | datefilter}}</span>
+                        </div>
+                    </div>
+                    <div class="tripday_info">
+                        <div class="tripday_info_left">
+                            <span>生成时间</span>
+                        </div>
+                        <div class="tripday_info_right">
+                            <span>{{tripsByDay.createDate | timefilter}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="centerarea-title" style="height:30px;line-height:30px;">
+                    <div style="flex-basis: 4%;text-align: center;">
+                        <span>No.</span>
+                    </div>
+                    <div style="flex-basis: 6%;text-align: center;">
+                        <span>车次</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>车牌号码</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>司机姓名</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>带走框数</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>起始里程</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>带回框数</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
+                        <span>结束里程</span>
+                    </div>
+                    <div style="flex-basis: 18%;text-align: center;">
+                        <span>最后修改时间</span>
+                    </div>
+                </div>
+                <div class="centerarea-body">
+                    <div v-for="(item,index) in tripsByDay.missionArray" :key="index" class="centerarea-body-item" style="overflow: hidden;">
+                        <div style="flex-basis: 4%;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="flex-basis: 6%;text-align: center;">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span v-if="item.carNo">{{item.carNo}}</span>
+                            <span v-else>未选择</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span v-if="item.driverNameCh">{{item.driverNameCh}}</span>
+                            <span v-else>未选择</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span v-if="item.out">{{item.out}}</span>
+                            <span v-else>未填写</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span v-if="item.outKm">{{item.outKm}}</span>
+                            <span v-else>未填写</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span v-if="item.in">{{item.in}}</span>
+                            <span v-else>未填写</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span v-if="item.inKm">{{item.inKm}}</span>
+                            <span v-else>未填写</span>
+                        </div>
+                        <div style="flex-basis: 18%;text-align: center;">
+                            <span v-if="item.lastEditDate">{{item.lastEditDate | timefilter}}</span>
+                            <span v-else>未修改</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tripday_bottom">
+                    <div class="tripday_info">
+                        <div class="tripday_info_left">
+                            <span>完成日期</span>
+                        </div>
+                        <div class="tripday_info_right">
+                            <span v-if="tripsByDay.finishDate">{{tripsByDay.finishDate | timefilter}}</span>
+                            <span v-else>未完成</span>
+                        </div>
+                    </div>
+                    <div class="tripday_info">
+                        <div class="tripday_info_left">
+                            <span>完成时间</span>
+                        </div>
+                        <div class="tripday_info_right">
+                            <span v-if="tripsByDay.finishDate">{{tripsByDay.finishDate | timefilter}}</span>
+                            <span v-else>未完成</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 车次框数一天报表 end -->
+
         <!-- 坏框申报 start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -1145,25 +1300,25 @@
                     <span>白班任务情况统计</span>
                 </div>
                 <div class="centerarea-title">
-                    <div style="flex-basis: 3%;text-align: center;">
+                    <div style="flex-basis: 5%;text-align: center;">
                         <span>No.</span>
                     </div>
-                    <div style="flex-basis: 8%;text-align: center;">
+                    <div style="flex-basis: 10%;text-align: center;">
                         <span>司机</span>
                     </div>
-                    <div style="flex-basis: 14%;text-align: center;">
+                    <div style="flex-basis: 20%;text-align: center;">
                         <span>客户</span>
                     </div>
-                    <div style="flex-basis: 8%;text-align: center;">
+                    <div style="flex-basis: 10%;text-align: center;">
                         <span>类型</span>
                     </div>
-                    <div style="flex-basis: 12%;text-align: center;">
+                    <div style="flex-basis: 15%;text-align: center;">
                         <span>任务日期</span>
                     </div>
-                    <div style="flex-basis: 12%;text-align: center;">
+                    <div style="flex-basis: 20%;text-align: center;">
                         <span>出车时间</span>
                     </div>
-                    <div style="flex-basis: 12%;text-align: center;">
+                    <div style="flex-basis: 20%;text-align: center;">
                         <span>收车时间</span>
                     </div>
                 </div>
@@ -1171,27 +1326,27 @@
                     <div v-for="(item,index) in dayShiftInfo"
                          :key="index"
                          class="centerarea-body-item">
-                        <div style="flex-basis: 3%;text-align: center;">
+                        <div style="flex-basis: 5%;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
-                        <div style="flex-basis: 8%;text-align: center;">
+                        <div style="flex-basis: 10%;text-align: center;">
                             <span>{{item.driverName}}</span>
                         </div>
-                        <div style="flex-basis: 14%;text-align: center;">
+                        <div style="flex-basis: 20%;text-align: center;overflow:hidden">
                             <span>{{item.clientName}}</span>
                         </div>
-                        <div style="flex-basis: 8%;text-align: center;">
+                        <div style="flex-basis: 10%;text-align: center;">
                             <span v-if="item.isIncreaseOrder">加单</span>
                             <span v-else>补单</span>
                         </div>
-                        <div style="flex-basis: 12%;text-align: center;">
+                        <div style="flex-basis: 15%;text-align: center;">
                             <span>{{item.orderDate | datefilter}}</span>
                         </div>
-                        <div style="flex-basis: 12%;text-align: center;">
+                        <div style="flex-basis: 20%;text-align: center;">
                             <span v-if="item.goTime">{{item.goTime | timefilter}}</span>
                             <span v-else>未送达</span>
                         </div>
-                        <div style="flex-basis: 12%;text-align: center;">
+                        <div style="flex-basis: 20%;text-align: center;">
                             <span v-if="item.backTime">{{item.backTime | timefilter}}</span>
                             <span v-else>未送达</span>
                         </div>
@@ -1420,10 +1575,12 @@
                             <span style="padding-left:16px;padding-right:12px">{{item.createDate | timefilter}}</span>
                         </div>
                         <div style="min-width: 140px;text-align: left;">
-                            <span style="padding-left:16px;padding-right:12px">{{item.finishDate | datefilter}}</span>
+                            <span v-if="item.finishDate" style="padding-left:16px;padding-right:12px">{{item.finishDate | datefilter}}</span>
+                            <span v-else style="padding-left:16px;padding-right:12px">未完成</span>
                         </div>
                         <div style="min-width: 140px;text-align: left;">
-                            <span style="padding-left:16px;padding-right:12px">{{item.finishDate | timefilter}}</span>
+                            <span v-if="item.finishDate" style="padding-left:16px;padding-right:12px">{{item.finishDate | timefilter}}</span>
+                            <span v-else style="padding-left:16px;padding-right:12px">未完成</span>
                         </div>
                         <div style="min-width: 70px;text-align: left;">
                             <span style="padding-left:16px;padding-right:12px">{{item.missionList.length}}辆</span>
@@ -1568,36 +1725,16 @@
                                     <span>车牌</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
-                                     style="min-width:80px">
-                                    <span>刹车灯</span>
+                                     style="min-width:378px">
+                                    <span>检查结果</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
                                      style="min-width:80px">
-                                    <span>大灯</span>
+                                    <span>是否检查</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
-                                     style="min-width:80px">
-                                    <span>油卡</span>
-                                </div>
-                                <div class="checkditailbox-body-center-title-content"
-                                     style="min-width:80px">
-                                    <span>轮胎</span>
-                                </div>
-                                <div class="checkditailbox-body-center-title-content"
-                                     style="min-width:80px">
-                                    <span>手推车</span>
-                                </div>
-                                <div class="checkditailbox-body-center-title-content"
-                                     style="min-width:80px">
-                                    <span>记录仪</span>
-                                </div>
-                                <div class="checkditailbox-body-center-title-content"
-                                     style="min-width:110px">
+                                     style="min-width:170px">
                                     <span>检查日期</span>
-                                </div>
-                                <div class="checkditailbox-body-center-title-content"
-                                     style="min-width:110px">
-                                    <span>检查时间</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
                                      style="width:300px">
@@ -1612,54 +1749,61 @@
                                     <span>{{item.carPlate}}</span>
                                 </div>
                                 <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:80px;">
-                                    <md-icon v-if="item.brakeLight"
-                                             style="color:green">check_circle</md-icon>
-                                    <md-icon v-else
-                                             style="color:red">cancel</md-icon>
+                                     title="刹车灯">
+                                    <div v-if="item.brakeLight" class="brakeLights_icon"></div>
+                                    <div v-else class="brakeLights_icon_red"></div>
                                 </div>
                                 <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:80px">
-                                    <md-icon v-if="item.headlight"
-                                             style="color:green">check_circle</md-icon>
-                                    <md-icon v-else
-                                             style="color:red">cancel</md-icon>
+                                     title="前大灯"> 
+                                    <div v-if="item.headlight" class="light_icon"></div>
+                                    <div v-else class="light_icon_red"></div>
                                 </div>
                                 <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:80px">
-                                    <md-icon v-if="item.petrolCard"
-                                             style="color:green">check_circle</md-icon>
-                                    <md-icon v-else
-                                             style="color:red">cancel</md-icon>
+                                     title="油卡">
+                                    <div v-if="item.petrolCard" class="card_icon"></div>
+                                    <div v-else class="card_icon_red"></div>
                                 </div>
                                 <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:80px">
-                                    <md-icon v-if="item.tyre"
-                                             style="color:green">check_circle</md-icon>
-                                    <md-icon v-else
-                                             style="color:red">cancel</md-icon>
+                                     title="轮胎">
+                                    <div v-if="item.tyre" class="tyre_icon"></div>
+                                    <div v-else class="tyre_icon_red"></div>
                                 </div>
                                 <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:80px">
-                                    <md-icon v-if="item.cart"
-                                             style="color:green">check_circle</md-icon>
-                                    <md-icon v-else
-                                             style="color:red">cancel</md-icon>
+                                     title="手推车">
+                                    <div v-if="item.cart" class="cart_icon"></div>
+                                    <div v-else class="cart_icon_red"></div>
                                 </div>
                                 <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:80px">
-                                    <md-icon v-if="item.drivingRecorder"
-                                             style="color:green">check_circle</md-icon>
-                                    <md-icon v-else
-                                             style="color:red">cancel</md-icon>
+                                     title="记录仪">
+                                    <div v-if="item.drivingRecorder" class="drivingRecorder"></div>
+                                    <div v-else class="drivingRecorder_red"></div>
                                 </div>
                                 <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:110px">
-                                    <span>{{item.checkDate | datefilter}}</span>
+                                     title="车窗">
+                                    <div v-if="item.carWindow" class="carWindow"></div>
+                                    <div v-else class="carWindow_red"></div>
                                 </div>
                                 <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:110px">
-                                    <span>{{item.checkDate | timefilter}}</span>
+                                     title="尾灯">
+                                    <div v-if="item.taillight" class="headlight"></div>
+                                    <div v-else class="headlight_red"></div>
+                                </div>
+                                <div class="checkditailbox-body-center-item-content"
+                                     title="后视镜">
+                                    <div v-if="item.sideMirror" class="side_mirror"></div>
+                                    <div v-else class="side_mirror_red"></div>
+                                </div>
+                                <div class="checkditailbox-body-center-item-content"
+                                     style="min-width:93px">
+                                    <span v-if="item.isFinish && item.checkDate === null">已跳过</span> 
+                                    <span v-else-if="item.isFinish">已检查</span>
+                                    <span v-else>未检查</span>
+                                </div>
+                                <div class="checkditailbox-body-center-item-content"
+                                     style="min-width:170px">
+                                     <span v-if="item.isFinish && item.checkDate === null">未记录</span> 
+                                    <span v-else-if="item.checkDate">{{item.checkDate | datefilter}}{{item.checkDate | timefilter}}</span>
+                                    <span v-else>未提交</span>
                                 </div>
                                 <div class="checkditailbox-body-center-item-content"
                                      style="width:300px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
@@ -2508,6 +2652,7 @@ export default {
             isOpenCheckCarDriverMode: false,
             isOpenCarWashDriverMode:false,
             leftButtonStyle: "topbuttonarea-item-blue",
+            tripsButtonStyle:"topbuttonarea-item",
             centerButtonStyle: "topbuttonarea-item",
             checkCarButtonStyle: "topbuttonarea-item",
             missionButtonStyle: "topbuttonarea-item",
@@ -2549,6 +2694,7 @@ export default {
             tempOutBasketNum:0,
             areaBasketArray:[],
             breakBasketArray:[],
+            tripsByDay:null,
             isShowBigPic:false,
             picSrc:null,
             isShowDetailAreaBasket:false,
@@ -2557,6 +2703,28 @@ export default {
     },
 
     methods: {
+        findTripsReportByOneDayMethod(){
+            let tempDate = new Date(this.startDate).toDateString()
+            tempDate = new Date(tempDate).toISOString()
+            axios
+                .post(config.server + "/report/tripByDay", {
+                    findDate:tempDate
+                })
+                .then(doc =>{
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.tripsByDay = doc.data.doc
+                    }else if(doc.data.code === 1){
+                        console.log('未找到符合条件的数据')
+                    }else{
+                        console.log('查询出错')
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
         OpenDetailBreakBasket(item){
             this.tempInfo = item
             console.log(item)
@@ -3812,6 +3980,7 @@ export default {
                 this.showWindow = "night";
                 this.leftButtonStyle = "topbuttonarea-item-blue";
                 this.centerButtonStyle = "topbuttonarea-item";
+                this.tripsButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.carWashButtonStyle = "topbuttonarea-item";
@@ -3820,15 +3989,27 @@ export default {
             } else if (mode === "bill") {
                 this.showWindow = "bill";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.checkCarButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
                 this.carWashButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item-blue";
+            }else if (mode === "trips") {
+                this.showWindow = "trips";
+                this.leftButtonStyle = "topbuttonarea-item";
+                this.tripsButtonStyle = "topbuttonarea-item-blue";
+                this.centerButtonStyle = "topbuttonarea-item";
+                this.missionButtonStyle = "topbuttonarea-item";
+                this.checkCarButtonStyle = "topbuttonarea-item";
+                this.basketButtonStyle = "topbuttonarea-item";
+                this.carWashButtonStyle = "topbuttonarea-item";
+                this.rightButtonStyle = "topbuttonarea-item";
             } else if (mode === "mission") {
                 this.showWindow = "mission";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item-blue";
                 this.checkCarButtonStyle = "topbuttonarea-item";
@@ -3838,6 +4019,7 @@ export default {
             } else if (mode === "day") {
                 this.showWindow = "day";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item-blue";
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
@@ -3847,6 +4029,7 @@ export default {
             } else if (mode === "basket") {
                 this.showWindow = "basket";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item-blue";
@@ -3856,6 +4039,7 @@ export default {
             } else if (mode === "carWash") {
                 this.showWindow = "carWash";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
@@ -3865,6 +4049,7 @@ export default {
             }else {
                 this.showWindow = "checkCar";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
                 this.basketButtonStyle = "topbuttonarea-item";
@@ -4174,6 +4359,15 @@ export default {
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
+.new_toparea{
+    width: 660px;
+    margin: 0 auto;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
 .centerarea {
     margin-top: 10px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
@@ -4433,8 +4627,8 @@ export default {
 .checkditailbox-body-center-item {
     display: flex;
     display: -webkit-flex;
-    height: 30px;
-    line-height: 30px;
+    height: 36px;
+    line-height: 36px;
 }
 
 .checkditailbox-body-center-item-content {
@@ -4671,5 +4865,210 @@ export default {
     display: -webkit-flex;
     justify-content: space-around;
     margin-bottom: 10px;
+}
+
+.tripday_infos{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
+.tripday_info{
+    display: flex;
+    display: -webkit-flex;
+    margin-right: 24px;
+}
+
+.tripday_info_left{
+    color: #6a6a6a;
+}
+
+.tripday_info_right{
+    margin-left: 8px;
+}
+
+.tripday_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    padding: 12px 0;
+}
+
+.brakeLights_icon {
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/brakeLights.svg);
+    -webkit-mask-image: url(../../public/img/icons/brakeLights.svg);
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+}
+
+.brakeLights_icon_red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/brakeLights.svg);
+    -webkit-mask-image: url(../../public/img/icons/brakeLights.svg);
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+}
+
+.light_icon {
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/light.svg);
+    -webkit-mask-image: url(../../public/img/icons/light.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.light_icon_red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/light.svg);
+    -webkit-mask-image: url(../../public/img/icons/light.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.card_icon {
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/card.svg);
+    -webkit-mask-image: url(../../public/img/icons/card.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.card_icon_red{
+    background: #d74342;
+    mask-image: url(../../public/img/icons/card.svg);
+    -webkit-mask-image: url(../../public/img/icons/card.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.tyre_icon {
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/tyre.svg);
+    -webkit-mask-image: url(../../public/img/icons/tyre.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.tyre_icon_red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/tyre.svg);
+    -webkit-mask-image: url(../../public/img/icons/tyre.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.cart_icon {
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/cart.svg);
+    -webkit-mask-image: url(../../public/img/icons/cart.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.cart_icon-red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/cart.svg);
+    -webkit-mask-image: url(../../public/img/icons/cart.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.drivingRecorder {
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/drivingRecorder.svg);
+    -webkit-mask-image: url(../../public/img/icons/drivingRecorder.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.drivingRecorder_red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/drivingRecorder.svg);
+    -webkit-mask-image: url(../../public/img/icons/drivingRecorder.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.carWindow {
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/carWindow.svg);
+    -webkit-mask-image: url(../../public/img/icons/carWindow.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.carWindow_red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/carWindow.svg);
+    -webkit-mask-image: url(../../public/img/icons/carWindow.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.headlight {
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/headlight.svg);
+    -webkit-mask-image: url(../../public/img/icons/headlight.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.headlight_red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/headlight.svg);
+    -webkit-mask-image: url(../../public/img/icons/headlight.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.side_mirror {
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/side_mirror.svg);
+    -webkit-mask-image: url(../../public/img/icons/side_mirror.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.side_mirror-red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/side_mirror.svg);
+    -webkit-mask-image: url(../../public/img/icons/side_mirror.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
 }
 </style>
