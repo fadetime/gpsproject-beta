@@ -82,12 +82,34 @@
         </div>
         <!-- 车次统计部分 start -->
         <div v-else-if="showWindow === 'trips'" class="new_toparea">
-            <div style="height: 58px;position: relative;z-index:23;padding-left:6px;">
+            <div style="height: 58px;position: relative;z-index:23;padding-left:6px;display:flex;display: -webkit-flex;justify-content: center;">
+                <div class="whiteButton" style="margin-right:12px" @click="isShowRepairCarSingleDay = !isShowRepairCarSingleDay,isShowRepairCarMoreDay = false">
+                    <span>单日查询</span>
+                </div>
+                <div class="whiteButton" @click="isShowRepairCarMoreDay = !isShowRepairCarMoreDay,isShowRepairCarSingleDay = false">
+                    <span>多日查询</span>
+                </div>
+            </div>
+            <div v-if="isShowRepairCarSingleDay"
+                     style="display:flex;display:-webkit-flex;justify-content: center;padding-bottom:10px">
                 <vue-datepicker-local v-model="startDate"
                                       style="margin-top: 12px;"
                                       placeholder="开始时间" />
                 <md-button class="md-raised md-primary"
                            @click="findTripsReportByOneDayMethod"
+                           style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
+            </div>
+            <div v-if="isShowRepairCarMoreDay"
+                     style="display:flex;display:-webkit-flex;justify-content: center;padding-bottom:10px">
+                <vue-datepicker-local v-model="startDate"
+                                      style="margin-top: 12px;"
+                                      placeholder="开始时间" />
+                <span style="line-height:56px"> ~ </span>
+                <vue-datepicker-local v-model="endDate"
+                                      style="margin-top: 12px;"
+                                      placeholder="结束时间" />
+                <md-button class="md-raised md-primary"
+                           @click="findTripsReportByMoreDayMethod"
                            style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
             </div>
         </div>
@@ -561,6 +583,96 @@
             </div>
         </transition>
         <!-- 车次框数一天报表 end -->
+
+        <!-- 车次框数多天报表 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="moreDayTripsArray.length != 0">
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="moreDayTripsArray = []">
+                    <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
+                <div class="centerarea-head">
+                    <span>车次数据报表</span>
+                </div>
+                <div class="moredaytrips_body">
+                    <div style="margin-right: 4px;">
+                        <div class="moredaytrips_body_index_name">
+                            <span>车次</span>
+                        </div>
+                        <div class="moredaytrips_body_index_item" v-for="(item,index) in tripsNum" :key="index">
+                            <span>{{index + 1}}</span>
+                        </div>
+                    </div>
+                    <div class="moredaytrips_body_frame">
+                        <div class="moredaytrips_body_frame_item" v-for="(item,index) in moreDayTripsArray" :key="index">
+                            <div class="moredaytrips_body_frame_date">
+                                <span>{{item.missionDate | dayFilter}}日</span>
+                            </div>
+                            <div class="moredaytrips_body_frame_title">
+                                <div class="moredaytrips_body_frame_box">
+                                    <span>CarNo.</span>
+                                </div>
+                                <div class="moredaytrips_body_frame_box">
+                                    <span>Out</span>
+                                </div>
+                                <div class="moredaytrips_body_frame_box">
+                                    <span>In</span>
+                                </div>
+                                <div class="moredaytrips_body_frame_box">
+                                    <span>Km/Trip</span>
+                                </div>
+                            </div>
+                            <div class="moredaytrips_body_frame_content" v-for="(trips,index) in item.missionArray" :key="index">
+                                <div class="moredaytrips_body_frame_box">
+                                    <span v-if="trips.carNo">{{trips.carNo}}</span>
+                                    <span v-else>Null</span>
+                                </div>
+                                <div class="moredaytrips_body_frame_box">
+                                    <span v-if="trips.out">{{trips.out}}</span>
+                                    <span v-else>Null</span>
+                                </div>
+                                <div class="moredaytrips_body_frame_box">
+                                    <span v-if="trips.in">{{trips.in}}</span>
+                                    <span v-else>Null</span>
+                                </div>
+                                <div class="moredaytrips_body_frame_box">
+                                    <span v-if="trips.inKm && trips.outKm">{{trips.inKm - trips.outKm}}</span>
+                                    <span v-else>Null</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="moredaytrips_rightbody">
+                        <div class="moredaytrips_rightbody_title">
+                            <div class="moredaytrips_rightbody_title_top">
+                                <span>平均值</span>
+                            </div>
+                            <div class="moredaytrips_rightbody_title_bottom">
+                                <div class="moredaytrips_rightbody_title_bottom_item">
+                                    <span>Basket</span>
+                                </div>
+                                <div class="moredaytrips_rightbody_title_bottom_item">
+                                    <span>Km</span>
+                                </div>
+                            </div>
+                            <div v-for="(item,index) in averageValue" :key="index" class="averagevalue_box">
+                                <div class="averagevalue_box_item">
+                                    <span>{{item.num/item.count}}</span>
+                                </div>
+                                <div class="averagevalue_box_item">
+                                    <span>{{item.km/item.indexKm}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                
+            </div>
+        </transition>
+        <!-- 车次框数多天报表 end -->
 
         <!-- 车辆维修 start -->
         <transition name="custom-classes-transition"
@@ -2796,11 +2908,16 @@ export default {
             areaBasketArray:[],
             breakBasketArray:[],
             repairCarArray:[],
+            moreDayTripsArray:[],
             tripsByDay:null,
             isShowBigPic:false,
             picSrc:null,
             isShowDetailAreaBasket:false,
-            isShowDetailBreakBasket:false
+            isShowDetailBreakBasket:false,
+            isShowRepairCarSingleDay:false,
+            isShowRepairCarMoreDay:false,
+            tripsNum:0,
+            averageValue:[]
         };
     },
 
@@ -2814,6 +2931,89 @@ export default {
                 .then(doc => {
                     console.log(doc)
                     this.repairCarArray = doc.data.doc
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        findTripsReportByMoreDayMethod(){
+            axios
+                .post(config.server + "/report/tripByMoreDay", {
+                    startDate:this.startDate,
+                    endDate:this.endDate,
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.moreDayTripsArray = doc.data.doc
+                        this.tripsNum = doc.data.tripsNum
+                        let tempBasketNum = 0
+                        let tempBasketArrary = []
+                        let tempBasketCount = 1
+                        let tempKmCount = 0
+                        doc.data.doc.forEach(element => {
+                            let index = -1
+                            let indexKm = -1
+                            element.missionArray.forEach(item => {
+                                tempBasketNum = 0
+                                index ++
+                                if(item.out && item.in){
+                                    if(tempBasketArrary[index]){
+                                        tempBasketArrary[index].count ++
+                                        tempBasketNum = item.in - item.out + tempBasketArrary[index].num
+                                    }else{
+                                        tempBasketNum = item.in - item.out
+                                        tempBasketArrary[index]={
+                                            count: 1
+                                        }
+                                    }
+                                    tempBasketArrary[index].num = tempBasketNum
+                                    this.averageValue = tempBasketArrary
+                                    console.log(tempBasketArrary)
+                                }else{
+                                    if(tempBasketArrary[index]){
+                                        console.log('pass')
+                                    }else{
+                                        tempBasketArrary[index] = {
+                                            num :0,
+                                            count:1
+                                        }
+                                    }
+                                    
+                                }
+                                indexKm ++
+                                if(item.outKm && item.inKm){
+                                    console.log('have km both')
+                                    if(this.averageValue[indexKm].km){
+                                        this.averageValue[indexKm].km = item.inKm - item.outKm + this.averageValue[indexKm].km
+                                        this.averageValue[indexKm].indexKm ++
+                                    }else{
+                                        console.log('new km')
+                                        this.averageValue[indexKm].km = item.inKm - item.outKm
+                                        this.averageValue[indexKm].indexKm= 1
+                                    }
+                                }else{
+                                    if(this.averageValue[indexKm]){
+                                        console.log('pass')
+                                    }else{
+                                        this.averageValue[indexKm] = {
+                                            km:0,
+                                            indexKm:1,
+                                            num :0,
+                                            count:1
+                                        }
+                                    }
+                                }
+                            });
+                            
+                        });
+                        
+                    }else if(doc.data.code === 1){
+                        console.log('未找到符合条件的数据')
+                    }else{
+                        console.log('error')
+                    }
                 })
                 .catch(err => {
                     console.log(err)
@@ -5206,5 +5406,111 @@ export default {
     height: 30px;
     mask-size: 30px 30px;
     -webkit-mask-size: 30px 30px;
+}
+
+.moredaytrips_body{
+    display: flex;
+    display: -webkit-flex;
+    padding: 24px 12px;
+}
+
+.moredaytrips_body_index_name{
+    height: 60px;
+    line-height: 60px;
+    width: 60px;
+    font-size: 18px;
+    background-color: #eee;
+    border-radius: 5px;
+}
+
+.moredaytrips_body_index_item{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.moredaytrips_body_frame{
+    overflow: auto;
+    display: flex;
+    display: -webkit-flex;
+}
+
+.moredaytrips_body_frame_item{
+    margin: 0 4px;
+}
+.moredaytrips_body_frame_date{
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    border-bottom: 2px solid #e31d65;
+    border-top-left-radius: 5px;
+    background-color: #eee;
+    border-top-right-radius: 5px;
+}
+
+.moredaytrips_body_frame_title{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    background-color: #eee;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.moredaytrips_body_frame_box{
+    width: 80px;
+}
+
+.moredaytrips_body_frame_content{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.moredaytrips_rightbody{
+    margin-left: 8px;
+}
+
+.moredaytrips_rightbody_title_top{
+    height: 30px;
+    line-height: 30px;
+    background-color: #eee;
+    border-bottom: 2px solid #e31d65;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.moredaytrips_rightbody_title_bottom{
+    height: 30px;
+    line-height: 30px;
+    background-color: #eee;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    display: flex;
+    display: -webkit-flex;
+    font-size: 16px;
+}
+
+.moredaytrips_rightbody_title_bottom_item{
+    width: 60px;
+}
+
+.averagevalue_box{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.averagevalue_box_item{
+    width: 60px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 </style>
