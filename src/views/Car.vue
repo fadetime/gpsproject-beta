@@ -252,7 +252,7 @@
                                 <div class="car_front_box_body_bottom_item_left">
                                     <span>车辆行驶公里数</span>
                                 </div>
-                                <div class="kelometerbox_right">
+                                <div class="kelometerbox_right" @click="changeKmMethod('km')">
                                     <span>{{kelometer}}</span><span>Km</span>
                                 </div>
                             </div>
@@ -260,7 +260,7 @@
                                 <div class="car_front_box_body_bottom_item_left">
                                     <span>上一次更换机油</span>
                                 </div>
-                                <div class="kelometerbox_right">
+                                <div class="kelometerbox_right" @click="changeKmMethod('oil')">
                                     <span v-if="lastOilKelometer">{{lastOilKelometer}}Km</span>
                                     <span v-else style="font-size:16px">未填写</span>
                                 </div>
@@ -574,6 +574,58 @@
             </div>
         </transition>
         <!-- check car log box end -->
+
+        <!-- tips yes or no box start -->
+        <secondConfirmDialog  v-on:secondBottonValue="secondBottonValue" :msg="childDialogMsg" :isShowChild="isShowChildValue"></secondConfirmDialog>
+        <!-- tips yes or no box end -->
+        
+        <!-- 修改公里数输入窗口 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowKmInput" class="checkcar-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowKmInput" class="checkcar-front">
+                <div class="car_inputKm_box">
+                    <div class="car_inputKm_title">
+                        <span v-if="changeKmMode === 'km'">修改汽车公里数</span>
+                        <span v-else>修改最后更新机油数</span>
+                    </div>
+                    <div class="car_inputKm_body">
+                        <div class="car_inputKm_body_carno">
+                            <div class="car_inputKm_body_carno_box">
+                                <span>{{carid}}</span>
+                            </div>
+                        </div>
+                        <div class="car_inputKm_body_item">
+                            <div class="car_inputKm_body_item_left">
+                                <span>原有数值</span>
+                            </div>
+                            <div class="car_inputKm_body_item_right_div">
+                                <span v-if="changeKmMode === 'km'">{{kelometer}}</span>
+                                <span v-else>{{lastOilKelometer}}</span>
+                            </div>
+                        </div>
+                        <div class="car_inputKm_body_item">
+                            <div class="car_inputKm_body_item_left">
+                                <span>现有数值</span>
+                            </div>
+                            <div class="car_inputKm_body_item_right">
+                                <input type="text" v-model="changeNumber">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="car_inputKm_bottom">
+                        <div class="white_button" @click="isShowKmInput = false">取消</div>
+                        <div class="white_button" style="margin-left:8px" @click="changeCarKmMethod()">确定</div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 修改公里数输入窗口 end -->
     </div>
 </template>
 
@@ -581,9 +633,14 @@
 import axios from "axios";
 import config from "../../public/js/config.js";
 import lrz from "lrz";
+import secondConfirmDialog from "@/components/secondConfirmDialog.vue"
 
 export default {
     name: "Car",
+    components:{
+        secondConfirmDialog
+    },
+
     data() {
         return {
             addmode: true,
@@ -625,7 +682,12 @@ export default {
             carLog: [],
             kelometer:0,
             lastOilKelometer:0,
-            isOpenCarInfoDialog:false
+            isOpenCarInfoDialog:false,
+            isShowChildValue:false,
+            childDialogMsg:null,
+            isShowKmInput:false,
+            changeKmMode:null,
+            changeNumber:0
         };
     },
 
@@ -662,6 +724,75 @@ export default {
         },
     },
     methods: {
+        changeCarKmMethod(){
+            if(this.changeKmMode === 'km'){
+                axios
+                    .post(config.server + "/car/admChangeOil", {
+                        car_id: this._id,
+                        changeNumber:this.changeNumber,
+                        changeKmMode:this.changeKmMode
+                    })
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            this.isShowKmInput = false
+                            this.kelometer = this.changeNumber
+                            this.getallcar();
+                        }else{
+                            this.showTipDialog = true
+                            this.tipMsg = '修改时出现问题'
+                            setTimeout(() => {
+                                this.showTipDialog = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err =>{
+                        console.log(err)
+                    })
+            }else{
+                axios
+                    .post(config.server + "/car/admChangeOil", {
+                        car_id: this._id,
+                        changeNumber:this.changeNumber,
+                        changeKmMode:this.changeKmMode
+                    })
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            this.isShowKmInput = false
+                            this.lastOilKelometer = this.changeNumber
+                            this.getallcar();
+                        }else{
+                            this.showTipDialog = true
+                            this.tipMsg = '修改时出现问题'
+                            setTimeout(() => {
+                                this.showTipDialog = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err =>{
+                        console.log(err)
+                    })
+            }
+        },
+
+        changeKmMethod(mode){
+            this.changeKmMode = mode
+            if(mode === 'km'){
+                this.childDialogMsg = '确认更改本车辆的公里数？'
+            }else{
+                this.childDialogMsg = '确认更改本车辆最后更换机油公里数？'
+            }
+            this.isShowChildValue = true
+        },
+
+        secondBottonValue(secondBottonValue) {
+            if(!secondBottonValue){
+                this.isShowChildValue = false
+            }else{
+                this.isShowKmInput = true
+                this.isShowChildValue = false
+            }
+        },
+        
         openClickCarLog(item) {
             axios
                 .post(config.server + "/checkcar/getlastone", {
@@ -1279,7 +1410,7 @@ export default {
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 23;
+    z-index: 24;
 }
 
 .checkcar-front {
@@ -1361,6 +1492,7 @@ export default {
     text-align: center;
     background-color: #eee;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .car-front-box{
@@ -1570,6 +1702,85 @@ export default {
     border: 1px solid #eee;
     border-radius: 10px;
 }
+
+.car_inputKm_box{
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.car_inputKm_title{
+    height: 30px;
+    line-height: 30px;
+    background-color: #d74342;
+    color: #fff;
+    font-size: 16px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.car_inputKm_body_carno{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
+.car_inputKm_body_carno_box{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+    width: 100px;
+}
+
+.car_inputKm_body_item{
+    display: flex;
+    display: -webkit-flex;
+    padding: 8px 12px;
+}
+
+.car_inputKm_body_item_left{
+    height: 30px;
+    line-height: 30px;
+    width: 100px;
+}
+
+.car_inputKm_body_item_right_div{
+    height: 30px;
+    line-height: 30px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    width: 120px;
+    background-color: #eee;
+}
+
+.car_inputKm_body_item_right input{
+    height: 30px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    width: 120px;
+    text-align: center;
+}
+
+.car_inputKm_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    padding-bottom: 12px;
+    cursor: pointer;
+}
+
+.white_button{
+    width: 100px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    height: 30px;
+    line-height: 30px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
 @media screen and (min-width: 1025px) {
 	.editdialog{
 		width: 600px;

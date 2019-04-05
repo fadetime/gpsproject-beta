@@ -16,6 +16,11 @@
                  @click="reportModeButtonMethod('day')">
                 <span>白班统计</span>
             </div>
+            <div :class="backButtonStyle"
+                 style="margin-left:10px"
+                 @click="reportModeButtonMethod('backMission')">
+                <span>退还统计</span>
+            </div>
             <div :class="missionButtonStyle"
                  style="margin-left:10px;"
                  @click="reportModeButtonMethod('mission')">
@@ -115,10 +120,19 @@
         </div>
         <!-- 车次统计部分 end -->
 
+        <!-- 白班统计部分 start -->
         <div v-else-if="showWindow === 'day'"
              class="toparea">
-
-            <div style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff">
+            <div class="table_toparea_button_area">
+                <div class="whiteButton" style="margin-right:12px" @click="isShowDayShiftMission = !isShowDayShiftMission,isShowDayShiftCheckCar = false">
+                    <span>任务统计</span>
+                </div>
+                <div class="whiteButton" @click="isShowDayShiftCheckCar = !isShowDayShiftCheckCar,isShowDayShiftMission = false">
+                    <span>车辆检查</span>
+                </div>
+            </div>
+            
+            <div v-if="isShowDayShiftMission" style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff">
                 <vue-datepicker-local v-model="startDate"
                                       style="margin-top: 12px;"
                                       placeholder="开始时间" />
@@ -130,7 +144,63 @@
                            @click="findDayReport"
                            style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
             </div>
+            <div v-else-if="isShowDayShiftCheckCar" style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff" class="table_toparea_button_area">
+                <div>
+                    <vue-datepicker-local v-model="startDate"
+                                      style="margin-top: 12px;"
+                                      placeholder="开始时间" />
+                    <span> ~ </span>
+                    <vue-datepicker-local v-model="endDate"
+                                        style="margin-top: 12px;"
+                                        placeholder="结束时间" />
+                </div>
+                <div class="white_button" @click="findDayShiftCheckCarMethod" style="margin-top: 10px;margin-left: 10px;">
+                    <span>查询</span>
+                </div>
+            </div>
         </div>
+        <!-- 白班统计部分 end -->
+        
+        <!-- 退还统计部分 start -->
+        <div v-else-if="showWindow === 'backMission'"
+             class="toparea">
+            <div class="table_toparea_button_area" style="border-bottom: 1px solid #eee;">
+                <div class="whiteButton" style="margin-right:12px" @click="isShowBackMission = !isShowBackMission">
+                    <span>退菜统计</span>
+                </div>
+                <!-- <div class="whiteButton" @click="isShowDayShiftCheckCar = !isShowDayShiftCheckCar,isShowDayShiftMission = false">
+                    <span>车辆检查</span>
+                </div> -->
+            </div>
+            
+            <div v-if="isShowBackMission" style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff">
+                <vue-datepicker-local v-model="startDate"
+                                      style="margin-top: 12px;"
+                                      placeholder="开始时间" />
+                <span> ~ </span>
+                <vue-datepicker-local v-model="endDate"
+                                      style="margin-top: 12px;"
+                                      placeholder="结束时间" />
+                <md-button class="md-raised md-primary"
+                           @click="findBackMissionReport"
+                           style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
+            </div>
+            <!-- <div v-else-if="isShowDayShiftCheckCar" style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff" class="table_toparea_button_area">
+                <div>
+                    <vue-datepicker-local v-model="startDate"
+                                      style="margin-top: 12px;"
+                                      placeholder="开始时间" />
+                    <span> ~ </span>
+                    <vue-datepicker-local v-model="endDate"
+                                        style="margin-top: 12px;"
+                                        placeholder="结束时间" />
+                </div>
+                <div class="white_button" @click="findDayShiftCheckCarMethod" style="margin-top: 10px;margin-left: 10px;">
+                    <span>查询</span>
+                </div>
+            </div> -->
+        </div>
+        <!-- 退还统计部分 end -->
 
         <div v-else-if="showWindow === 'bill'"
              class="toparea">
@@ -523,7 +593,7 @@
                     </div>
                 </div>
                 <div class="centerarea-body">
-                    <div v-for="(item,index) in tripsByDay.missionArray" :key="index" class="centerarea-body-item" style="overflow: hidden;">
+                    <div v-for="(item,index) in tripsByDay.missionArray" :key="index" class="centerarea-body-item" style="overflow: hidden;" @click="openTripsDetailBoxMethod(item)">
                         <div style="flex-basis: 4%;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
@@ -583,6 +653,113 @@
             </div>
         </transition>
         <!-- 车次框数一天报表 end -->
+
+        <!-- 一天详细数据窗口 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="report_bigpic_back" v-if="isShowTripsDetail"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="report_bigpic_front" v-if="isShowTripsDetail" @click.self.prevent="isShowTripsDetail = false">
+                <div class="report_bigpic_box">
+                    <div class="report_bigpic_box_title">
+                        <span>车次检查</span>
+                    </div>
+                    <div class="report_trips_detial_box_body">
+                        <div class="report_trips_detial_box_body_item">
+                            <div class="report_trips_detial_box_body_item_left">
+                                <span>车牌</span>
+                            </div>
+                            <div class="report_trips_detial_box_body_item_right" @click="getAllCarInfoMethod()">
+                                <span v-if="tripsDate.carNo">{{tripsDate.carNo}}</span>
+                                <span v-else>请选择</span>
+                            </div>
+                        </div>
+                        <div class="report_trips_detial_box_body_item">
+                            <div class="report_trips_detial_box_body_item_left">
+                                <span>司机</span>
+                            </div>
+                            <div class="report_trips_detial_box_body_item_right" @click="getAllDriverInfoMethod()">
+                                <span v-if="tripsDate.driverNameCh">{{tripsDate.driverNameCh}}</span>
+                                <span v-else>请选择</span>
+                            </div>
+                        </div>
+                        <div class="report_trips_detial_box_body_item">
+                            <div class="report_trips_detial_box_body_item_left">
+                                <span>Out</span>
+                            </div>
+                            <input type="number" class="report_trips_detial_box_body_item_right" v-model="tripsDate.out" placeholder="未填写">
+                        </div>
+                        <div class="report_trips_detial_box_body_item">
+                            <div class="report_trips_detial_box_body_item_left">
+                                <span>OutKm</span>
+                            </div>
+                            <input type="number" class="report_trips_detial_box_body_item_right" v-model="tripsDate.outKm" placeholder="未填写">
+                        </div>
+                        <div class="report_trips_detial_box_body_item">
+                            <div class="report_trips_detial_box_body_item_left">
+                                <span>In</span>
+                            </div>
+                            <input type="number" class="report_trips_detial_box_body_item_right" v-model="tripsDate.in" placeholder="未填写">
+                        </div>
+                        <div class="report_trips_detial_box_body_item">
+                            <div class="report_trips_detial_box_body_item_left">
+                                <span>InKm</span>
+                            </div>
+                            <input type="number" class="report_trips_detial_box_body_item_right" v-model="tripsDate.inKm" placeholder="未填写">
+                        </div>
+                    </div>
+                    <div class="report_detial_box_foot">
+                        <div class="white_button" @click="isShowTripsDetail = false">取消</div>
+                        <div class="white_button" @click="editTripsInfo">确认</div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 一天详细数据窗口 end -->
+
+        <!-- 车辆、司机选择窗口 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="report_bigpic_back" style="z-index:26" v-if="isShowCarDriverChoiseBox"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="report_bigpic_front" style="z-index:27" v-if="isShowCarDriverChoiseBox">
+                <div class="report_bigpic_box">
+                    <div class="report_bigpic_box_title">
+                        <span v-if="isShowCarDriverChoiseBox">车辆选择</span>
+                        <span v-else>司机选择</span>
+                    </div>
+                    <div v-if="carList.length != 0" class="report_car_driver_frame">
+                        <div v-for="(item,index) in carList" :key="index" @click="tripsChoiseCarOrDriverMethod(item)">
+                            <div class="report_car_driver_body">
+                                <span>{{item.carid}}</span>
+                                <div v-if="tripsChoiseData === item" class="icon_check_circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="dirverList.length != 0" class="report_car_driver_frame">
+                        <div v-for="(item,index) in dirverList" :key="index" @click="tripsChoiseCarOrDriverMethod(item)">
+                            <div class="report_car_driver_body">
+                                <span>{{item.dirvername}}</span>
+                                <div v-if="tripsChoiseData === item" class="icon_check_circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="report_detial_box_foot" style="margin:8px 8px;">
+                        <div class="white_button" @click="isShowCarDriverChoiseBox = false">取消</div>
+                        <div class="white_button" style="margin-left:8px" @click="confirmCarDriverChoiseMethod()">确认</div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 车辆、司机选择窗口 end -->
 
         <!-- 车次框数多天报表 start -->
         <transition name="custom-classes-transition"
@@ -673,6 +850,78 @@
             </div>
         </transition>
         <!-- 车次框数多天报表 end -->
+        
+        <!-- 退菜统计报表 start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="backMissionArray.length != 0" style="max-width: 886px;">
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="backMissionArray = []">
+                    <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
+                </div>
+                <div class="centerarea-head">
+                    <span>退菜数据报表</span>
+                </div>
+                <div style="padding: 24px;">
+                    <div class="report_backmission_title">
+                        <div class="report_backmission_title_frame" style="width:50px">
+                            <div class="report_backmission_title_frame_box" >
+                                <span>序号</span>
+                            </div>
+                        </div>
+                        <div class="report_backmission_title_frame" >
+                            <div class="report_backmission_title_frame_box" style="width:120px;text-align: left;">
+                                <span>客户名称</span>
+                            </div>
+                        </div>
+                        <div class="report_backmission_title_frame">
+                            <div class="report_backmission_title_frame_box">
+                                <span>创建日期</span>
+                            </div>
+                        </div>
+                        <div class="report_backmission_title_frame">
+                            <div class="report_backmission_title_frame_box" style="width:360px;text-align: left;">
+                                <span>客服留言</span>
+                            </div>
+                        </div>
+                        <div class="report_backmission_title_frame">
+                            <div class="report_backmission_title_frame_box">
+                                <span>完成日期</span>
+                            </div>
+                        </div>
+                        <div class="report_backmission_title_frame">
+                            <div class="report_backmission_title_frame_box">
+                                <span>任务状态</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="report_backmission_body" v-for="(item,index) in backMissionArray" :key="index" @click="openBackMissionDetail(item)">
+                        <div class="report_backmission_body_item" style="text-align:center;width:50px">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div class="report_backmission_body_item" style="width:130px">
+                            <span style="padding:0 4px">{{item.clientName}}</span>
+                        </div>
+                        <div class="report_backmission_body_item" style="width:82px">
+                            <span>{{item.createDate | datefilter}}</span>
+                        </div>
+                        <div class="report_backmission_body_item" style="width:368px">
+                            <span>{{item.note}}</span>
+                        </div>
+                        <div class="report_backmission_body_item" style="width:80px">
+                            <span v-if="item.finishiDate">{{item.finishiDate | datefilter}}</span>
+                            <span v-else>Null</span>
+                        </div>   
+                        <div class="report_backmission_body_item" >
+                            <span v-if="!item.isFinish">未完成</span>
+                            <span v-else-if="item.isFinish && !item.finishiDate">未取回</span>
+                            <span v-else>已完成</span>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 退菜统计报表 end -->
 
         <!-- 车辆维修 start -->
         <transition name="custom-classes-transition"
@@ -1364,7 +1613,7 @@
                         <span>司机选择</span>
                     </div>
                     <div class="driver-front-box-body"
-                         style="width:300px">
+                         style="width:260px">
                         <div class="driver-front-box-body-title">
                             <div class="driver-front-box-body-left">
                                 <span>No.</span>
@@ -1387,12 +1636,10 @@
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <md-button class="md-raised md-primary"
-                                   @click="moreSearchInfo = !moreSearchInfo"
-                                   style="font-size:18px;width:80px;height:30px;margin-top:13px">
+                    <div class="driver-front-box-bottom">
+                        <div class="white_button" @click="isOpenDriverBox = false">
                             <span>关闭</span>
-                        </md-button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2509,7 +2756,7 @@
                     <div class="checkditailbox-front-box-top">
                         <span>详细信息</span>
                     </div>
-                    <div>
+                    <div class="checkditailbox-front-box-center">
                         <div class="checkditailbox-body-title">
                             <span>{{tempInfo.car_id.carid}}</span>
                         </div>
@@ -2782,6 +3029,93 @@
         </transition>
         <!-- view pic start -->
 
+        <!-- back mission detail report box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowBackMissionDetail"
+                 class="checkditailbox-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowBackMissionDetail"
+                 class="checkditailbox-front"
+                 @click.self.prevent="isShowBackMissionDetail = false">
+                <div class="report_backdetail_front_box">
+                    <div class="report_backdetail_front_box_title">
+                        <span>退菜详细信息</span>
+                    </div>
+                    <div class="report_backdetail_front_box_body">
+                        <div class="report_backdetail_front_box_body_item">
+                            <div class="report_backdetail_front_box_body_item_left">
+                                <span>客户姓名</span>
+                            </div>
+                            <div class="report_backdetail_front_box_body_item_right">
+                                <span>{{shippingMission.clientName}}</span>
+                            </div>
+                        </div>
+                        <div class="report_backdetail_front_box_body_item">
+                            <div class="report_backdetail_front_box_body_item_left">
+                                <span>创建日期</span>
+                            </div>
+                            <div class="report_backdetail_front_box_body_item_right">
+                                <span>{{shippingMission.createDate | datefilter}}</span>
+                            </div>
+                        </div>
+                        <div class="report_backdetail_front_box_body_item">
+                            <div class="report_backdetail_front_box_body_item_left">
+                                <span>创建时间</span>
+                            </div>
+                            <div class="report_backdetail_front_box_body_item_right">
+                                <span>{{shippingMission.createDate | timefilter}}</span>
+                            </div>
+                        </div>
+                        <div class="report_backdetail_front_box_body_item" v-if="shippingMission.finishiDate">
+                            <div class="report_backdetail_front_box_body_item_left">
+                                <span>取回日期</span>
+                            </div>
+                            <div class="report_backdetail_front_box_body_item_right">
+                                <span>{{shippingMission.finishiDate | datefilter}}</span>
+                            </div>
+                        </div>
+                        <div class="report_backdetail_front_box_body_item" v-if="shippingMission.finishiDate">
+                            <div class="report_backdetail_front_box_body_item_left">
+                                <span>取回时间</span>
+                            </div>
+                            <div class="report_backdetail_front_box_body_item_right">
+                                <span>{{shippingMission.finishiDate | timefilter}}</span>
+                            </div>
+                        </div>
+                        <div class="report_backdetail_front_box_body_item">
+                            <div class="report_backdetail_front_box_body_item_left">
+                                <span>取回司机</span>
+                            </div>
+                            <div class="report_backdetail_front_box_body_item_right">
+                                <span>{{shippingMission.driver}}</span>
+                            </div>
+                        </div>
+                        <div class="report_backdetail_front_box_body_item">
+                            <div class="report_backdetail_front_box_body_item_left">
+                                <span>任务状态</span>
+                            </div>
+                            <div class="report_backdetail_front_box_body_item_right">
+                                <span v-if="shippingMission.isFinish && !shippingMission.finishiDate" style="color:#d74342">未取回</span>
+                                <span v-else-if="shippingMission.isFinish" style="color:green">已完成</span>
+                                <span v-else style="color:#ff9800">未完成</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="report_backdetail_front_box_bottom">
+                        <div class="white_button" @click="isShowBackMissionDetail = false">
+                            <span>取消</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- back mission detail report box start -->
+
         <!-- tips box start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated bounceIn"
@@ -2842,6 +3176,7 @@ export default {
             tableInfo: [],
             missionInfo: [],
             dayShiftInfo: [],
+            backMissionArray: [],
             billInfo: [],
             basketInfo: [],
             startBox: 0,
@@ -2917,11 +3252,153 @@ export default {
             isShowRepairCarSingleDay:false,
             isShowRepairCarMoreDay:false,
             tripsNum:0,
-            averageValue:[]
+            averageValue:[],
+            isShowCarDriverChoiseBox:false,
+            carList:[],
+            dirverList:[],
+            isShowTripsDetail:false,
+            tripsDate:null,
+            tripsChoiseData:null,
+            isShowDayShiftMission:false,
+            isShowDayShiftCheckCar:false,
+            backButtonStyle : "topbuttonarea-item",
+            isShowBackMission:false,
+            isShowBackMissionDetail:false
         };
     },
 
     methods: {
+        openBackMissionDetail(item){
+            this.shippingMission = item
+            axios
+                .post(config.server + "/report/backFindDriver",{
+                    mission_id:item.mission_id
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.shippingMission.driver = doc.data.doc.missiondirver
+                    }else if(doc.data.code === 1){
+                        this.shippingMission.driver = '数据丢失'
+                    }else{
+                        this.shippingMission.driver = '数据错误'
+                    }
+                    this.isShowBackMissionDetail = true
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        editTripsInfo(){
+            axios
+                .post(config.server + "/report/editTripByDay",{
+                    mission_id:this.tripsByDay._id,
+                    array_id:this.tripsDate._id,
+                    carNo:this.tripsDate.carNo,
+                    driverNameCh:this.tripsDate.driverNameCh,
+                    driverNameEn:this.tripsDate.driverNameEn,
+                    out:this.tripsDate.out,
+                    outKm:this.tripsDate.outKm,
+                    in:this.tripsDate.out,
+                    inKm:this.tripsDate.outKm,
+                    lastEditDate:new Date().toISOString()
+                })
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.tipsMsg = '修改成功'
+                        this.isOpenTipBox = true
+                        this.isShowTripsDetail = false
+                        setTimeout(() => {
+                            this.isOpenTipBox = false
+                        }, 2000);
+                    }else{
+                        this.tipsMsg = '修改数据时出现错误'
+                        this.isOpenTipBox = true
+                        setTimeout(() => {
+                            this.isOpenTipBox = false
+                        }, 2000);
+                    }
+                    
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        confirmCarDriverChoiseMethod(){
+            if(this.tripsChoiseData.carid){
+                this.tripsDate.carNo = this.tripsChoiseData.carid
+            }else{
+                this.tripsDate.driverNameCh = this.tripsChoiseData.dirvername
+                this.tripsDate.driverNameEn = this.tripsChoiseData.name_en
+            }
+            this.isShowCarDriverChoiseBox = false
+        },
+
+        tripsChoiseCarOrDriverMethod(item){
+            this.tripsChoiseData = item
+        },
+
+        openTripsDetailBoxMethod(item){
+            this.tripsDate = item
+            this.isShowTripsDetail = true
+        },
+
+        getAllDriverInfoMethod(){
+            this.carList = []
+            axios
+                .post(config.server + "/dirver/name")
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.isShowCarDriverChoiseBox = true
+                        this.dirverList = doc.data.doc
+                    }else{
+                        this.tipsMsg = '获取数据时出现错误'
+                        this.isOpenTipBox = true
+                        setTimeout(() => {
+                            this.isOpenTipBox = false
+                        }, 2000);
+                    }
+                    
+                })
+                .catch(err => {
+                    console.log(err)
+                    this.tipsMsg = '获取司机信息时出现错误'
+                    this.isOpenTipBox = true
+                    setTimeout(() => {
+                        this.isOpenTipBox = false
+                    }, 2000);
+                })
+        },
+
+        getAllCarInfoMethod(){
+            this.dirverList = []
+            axios
+                .get(config.server + "/car/allplate")
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.isShowCarDriverChoiseBox = true
+                        this.carList = doc.data.doc
+                    }else{
+                        this.tipsMsg = '获取数据时出现错误'
+                        this.isOpenTipBox = true
+                        setTimeout(() => {
+                            this.isOpenTipBox = false
+                        }, 2000);
+                    }
+                    
+                })
+                .catch(err => {
+                    console.log(err)
+                    this.tipsMsg = '获取车辆信息时出现错误'
+                    this.isOpenTipBox = true
+                    setTimeout(() => {
+                        this.isOpenTipBox = false
+                    }, 2000);
+                })
+        },
+
         repairCarMethod(){
             axios
                 .post(config.server + "/report/repairCar", {
@@ -2930,10 +3407,30 @@ export default {
                 })
                 .then(doc => {
                     console.log(doc)
-                    this.repairCarArray = doc.data.doc
+                    if(doc.data.code === 0){
+                        this.repairCarArray = doc.data.doc
+                    }else if(doc.data.code === 1){
+                        this.tipsMsg = '未找到符合条件的数据'
+                        this.isOpenTipBox = true
+                        setTimeout(() => {
+                            this.isOpenTipBox = false
+                        }, 2000);
+                    }else{
+                        this.tipsMsg = '获取维修信息时出现错误'
+                        this.isOpenTipBox = true
+                        setTimeout(() => {
+                            this.isOpenTipBox = false
+                        }, 2000);
+                    }
+                    
                 })
                 .catch(err => {
                     console.log(err)
+                    this.tipsMsg = '获取维修信息时出现错误'
+                    this.isOpenTipBox = true
+                    setTimeout(() => {
+                        this.isOpenTipBox = false
+                    }, 2000);
                 })
         },
 
@@ -3010,14 +3507,211 @@ export default {
                         });
                         
                     }else if(doc.data.code === 1){
-                        console.log('未找到符合条件的数据')
+                        this.isOpenTipBox = true
+                        this.tipsMsg = '未找到符合条件的数据'
+                        setTimeout(() => {
+                            this.isOpenTipBox = false
+                        }, 2000);
+                    }else if(doc.data.code === 3){
+                        this.isOpenTipBox = true
+                        this.tipsMsg = '查找时间范围过大'
+                        setTimeout(() => {
+                            this.isOpenTipBox = false
+                        }, 2000);
                     }else{
-                        console.log('error')
+                        this.isOpenTipBox = true
+                        this.tipsMsg = '出现未知错误'
+                        setTimeout(() => {
+                            this.isOpenTipBox = false
+                        }, 2000);
                     }
                 })
                 .catch(err => {
                     console.log(err)
                 })
+        },
+
+        findDayShiftCheckCarMethod(){
+            this.isOpenCheckCarDriverMode = false;
+            axios
+                .post(config.server + "/checkWorkerDayShift/find", {
+                    startDate: this.startDate,
+                    endDate: this.endDate
+                })
+                .then(doc => {
+                    let errPartNum = []; //统计错误部件数量
+                    if (doc.data.code === 0) {
+                        this.checkerArray = doc.data.doc;
+                        let brakeLightErrNum = 0;
+                        let headlightErrNum = 0;
+                        let petrolCardErrNum = 0;
+                        let tyreErrNum = 0;
+                        let otherErrNum = 0;
+                        this.checkerArray.forEach(element => {
+                            let tempWrongNum = 0;
+                            element.missionList.forEach(element2 => {
+                                let tempCarInfo = {
+                                    carPlate: null,
+                                    wrongNum: 0
+                                };
+                                let thisCarErrNum = 0;
+                                //记录当天检查错误总数 start
+                                if (!element2.brakeLight) {
+                                    tempWrongNum++;
+                                    thisCarErrNum++;
+                                    brakeLightErrNum++;
+                                }
+                                if (!element2.headlight) {
+                                    tempWrongNum++;
+                                    thisCarErrNum++;
+                                    headlightErrNum++;
+                                }
+                                if (!element2.petrolCard) {
+                                    tempWrongNum++;
+                                    thisCarErrNum++;
+                                    petrolCardErrNum++;
+                                }
+                                if (!element2.tyre) {
+                                    tempWrongNum++;
+                                    thisCarErrNum++;
+                                    tyreErrNum++;
+                                }
+                                if (element2.note) {
+                                    tempWrongNum++;
+                                    thisCarErrNum++;
+                                    otherErrNum++;
+                                }
+                                //记录当天检查错误总数 end
+                                tempCarInfo.carPlate =
+                                    element2.carPlate;
+                                tempCarInfo.wrongNum = thisCarErrNum;
+                                this.tempCar.push(tempCarInfo);
+                            });
+                            this.wrongNumArray.push(tempWrongNum);
+                        });
+                        let newArray = combination(this.tempCar);
+                        let newTitle = [];
+                        let newContent = [];
+                        newArray.forEach(element => {
+                            newTitle.push(element.carPlate);
+                            newContent.push(element.wrongNum);
+                        });
+                        errPartNum.push(brakeLightErrNum);
+                        errPartNum.push(headlightErrNum);
+                        errPartNum.push(petrolCardErrNum);
+                        errPartNum.push(tyreErrNum);
+                        errPartNum.push(otherErrNum);
+                        //show chart method start
+                        setTimeout(() => {
+                            let checkertleft = document.getElementById(
+                                "checkertleft"
+                            );
+                            let myChart2 = new Chart(checkertleft, {
+                                type: "doughnut",
+                                data: {
+                                    labels: newTitle,
+                                    datasets: [
+                                        {
+                                            label: "carErrorNum",
+                                            backgroundColor:
+                                                "rgba(225,10,10,0.3)",
+                                            borderColor:
+                                                "rgba(225,103,110,1)",
+                                            borderWidth: 1,
+                                            pointStrokeColor: "#fff",
+                                            pointStyle: "crossRot",
+                                            data: newContent,
+                                            cubicInterpolationMode:
+                                                "monotone",
+                                            spanGaps: "false",
+                                            fill: "false",
+                                            backgroundColor: [
+                                                "aqua",
+                                                "#36a2eb",
+                                                "fuchsia",
+                                                "rgb(255, 99, 132)",
+                                                "rgb(255, 205, 86)",
+                                                "lime",
+                                                "#393939",
+                                                "#f5b031",
+                                                "#fad797",
+                                                "#59ccf7",
+                                                "#c3b4df"
+                                            ],
+                                            borderColor: ["#fff"],
+                                            borderWidth: 2
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    legend: {
+                                        display: true,
+                                        labels: {
+                                            fontColor:
+                                                "rgb(255, 99, 132)"
+                                        }
+                                    }
+                                }
+                            });
+                        }, 100);
+
+                        setTimeout(() => {
+                            let checkertRight = document.getElementById(
+                                "checkertright"
+                            );
+                            let myChart2 = new Chart(checkertRight, {
+                                type: "bar",
+                                data: {
+                                    labels: [
+                                        "刹车灯",
+                                        "大灯",
+                                        "油卡",
+                                        "轮胎",
+                                        "其他"
+                                    ],
+                                    datasets: [
+                                        {
+                                            label: "损坏部件统计",
+                                            backgroundColor:
+                                                "rgba(225,10,10,0.3)",
+                                            borderColor:
+                                                "rgba(225,103,110,1)",
+                                            borderWidth: 1,
+                                            pointStrokeColor: "#fff",
+                                            pointStyle: "crossRot",
+                                            data: errPartNum,
+                                            cubicInterpolationMode:
+                                                "monotone",
+                                            spanGaps: "false",
+                                            fill: "false",
+                                            backgroundColor: [
+                                                "aqua",
+                                                "#36a2eb",
+                                                "fuchsia",
+                                                "rgb(255, 99, 132)",
+                                                "rgb(255, 205, 86)",
+                                                "lime"
+                                            ],
+                                            borderColor: ["#fff"],
+                                            borderWidth: 2
+                                        }
+                                    ]
+                                },
+                                options: {}
+                            });
+                        }, 200);
+                        //show chart method end
+                    } else {
+                        this.tipsMsg = "查询数据出现错误";
+                        this.isOpenTipBox = true;
+                        setTimeout(() => {
+                            this.isOpenTipBox = false;
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
 
         findTripsReportByOneDayMethod(){
@@ -3458,12 +4152,12 @@ export default {
                                     let myChartLeft = new Chart(
                                         driverCheckLeft,
                                         {
-                                            type: "doughnut",
+                                            type: "bar",
                                             data: {
                                                 labels: tempLabels,
                                                 datasets: [
                                                     {
-                                                        label: "carErrorNum",
+                                                        label: "车次客户数量统计",
                                                         backgroundColor:
                                                             "rgba(225,10,10,0.3)",
                                                         borderColor:
@@ -3997,8 +4691,7 @@ export default {
                 }, 3000);
             } else {
                 if (mode === "driver") {
-                    this.isOpenCheckCarDriverMode = !this
-                        .isOpenCheckCarDriverMode;
+                    this.isOpenCheckCarDriverMode = !this.isOpenCheckCarDriverMode;
                 } else {
                     this.isOpenCheckCarDriverMode = false;
                     axios
@@ -4296,6 +4989,7 @@ export default {
             if (mode === "night") {
                 this.showWindow = "night";
                 this.leftButtonStyle = "topbuttonarea-item-blue";
+                this.backButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.tripsButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
@@ -4307,6 +5001,7 @@ export default {
             } else if (mode === "bill") {
                 this.showWindow = "bill";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.backButtonStyle = "topbuttonarea-item";
                 this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
@@ -4318,6 +5013,7 @@ export default {
             }else if (mode === "trips") {
                 this.showWindow = "trips";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.backButtonStyle = "topbuttonarea-item";
                 this.tripsButtonStyle = "topbuttonarea-item-blue";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
@@ -4329,6 +5025,7 @@ export default {
             } else if (mode === "mission") {
                 this.showWindow = "mission";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.backButtonStyle = "topbuttonarea-item";
                 this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item-blue";
@@ -4337,9 +5034,22 @@ export default {
                 this.carWashButtonStyle = "topbuttonarea-item";
                 this.repairCarButtonStyle = "topbuttonarea-item";
                 this.rightButtonStyle = "topbuttonarea-item";
+            } else if (mode === "backMission") {
+                this.showWindow = "backMission";
+                this.leftButtonStyle = "topbuttonarea-item";
+                this.backButtonStyle = "topbuttonarea-item-blue";
+                this.tripsButtonStyle = "topbuttonarea-item";
+                this.centerButtonStyle = "topbuttonarea-item";
+                this.missionButtonStyle = "topbuttonarea-item";
+                this.checkCarButtonStyle = "topbuttonarea-item";
+                this.basketButtonStyle = "topbuttonarea-item";
+                this.carWashButtonStyle = "topbuttonarea-item";
+                this.repairCarButtonStyle = "topbuttonarea-item";
+                this.rightButtonStyle = "topbuttonarea-item";
             } else if (mode === "day") {
                 this.showWindow = "day";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.backButtonStyle = "topbuttonarea-item";
                 this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item-blue";
                 this.missionButtonStyle = "topbuttonarea-item";
@@ -4351,6 +5061,7 @@ export default {
             } else if (mode === "basket") {
                 this.showWindow = "basket";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.backButtonStyle = "topbuttonarea-item";
                 this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
@@ -4362,6 +5073,7 @@ export default {
             } else if (mode === "carWash") {
                 this.showWindow = "carWash";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.backButtonStyle = "topbuttonarea-item";
                 this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
@@ -4373,6 +5085,7 @@ export default {
             }else if (mode === "repairCar") {
                 this.showWindow = "repairCar";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.backButtonStyle = "topbuttonarea-item";
                 this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
@@ -4384,6 +5097,7 @@ export default {
             }else {
                 this.showWindow = "checkCar";
                 this.leftButtonStyle = "topbuttonarea-item";
+                this.backButtonStyle = "topbuttonarea-item";
                 this.tripsButtonStyle = "topbuttonarea-item";
                 this.centerButtonStyle = "topbuttonarea-item";
                 this.missionButtonStyle = "topbuttonarea-item";
@@ -4484,6 +5198,48 @@ export default {
                     });
             }
         },
+
+        findBackMissionReport(){
+            if (!this.startDate || !this.endDate) {
+                this.tipsMsg = "请选择开始时间和结束时间！！！";
+                this.isOpenTipBox = true;
+                setTimeout(() => {
+                    this.isOpenTipBox = false;
+                }, 3000);
+            } else {
+                let start = new Date(this.startDate).toDateString();
+                start = new Date(start).getTime();
+                let end = new Date(this.endDate).toDateString();
+                end = new Date(end).getTime();
+                axios
+                    .post(config.server + "/report/backMission", {
+                        startDate: start,
+                        endDate: end
+                    })
+                    .then(doc => {
+                        console.log(doc)
+                        if(doc.data.code === 0){
+                            this.backMissionArray = doc.data.doc
+                        }else if(doc.data.code === 1){
+                            this.tipsMsg = "为找到符合条件的数据";
+                            this.isOpenTipBox = true;
+                            setTimeout(() => {
+                                this.isOpenTipBox = false;
+                            }, 3000);
+                        }else{
+                            this.tipsMsg = "查找时出现错误";
+                            this.isOpenTipBox = true;
+                            setTimeout(() => {
+                                this.isOpenTipBox = false;
+                            }, 3000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+        },
+
         findDayReport() {
             if (!this.startDate || !this.endDate) {
                 this.tipsMsg = "请选择开始时间和结束时间！！！";
@@ -4524,6 +5280,7 @@ export default {
                     });
             }
         },
+
         findReport() {
             if (!this.startDate || !this.endDate) {
                 this.tipsMsg = "请选择开始时间和结束时间！！！";
@@ -4813,6 +5570,8 @@ export default {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
     background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .tip-front-box {
@@ -4820,20 +5579,25 @@ export default {
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
     background: #fff;
     border-top: 1px solid #ffab40;
+    padding: 0 8px;
 }
 
 .driver-front-box-title {
-    height: 40px;
+    height: 30px;
     color: #fff;
     background: #ff5252;
-    font-size: 18px;
-    line-height: 40px;
+    font-size: 16px;
+    line-height: 30px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
 .driver-front-box-body {
-    padding-top: 10px;
+    margin: 8px 12px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 10px;
+    border: 1px solid #eee;
 }
 
 .driver-front-box-body-title {
@@ -4842,16 +5606,16 @@ export default {
     font-size: 16px;
     color: #6a6a6a;
     border-bottom: 1px solid #e0e0e0;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
 }
 
 .driver-front-box-body-center {
     display: flex;
     display: -webkit-flex;
     font-size: 16px;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     cursor: pointer;
 }
 
@@ -4864,6 +5628,13 @@ export default {
 
 .driver-front-box-body-right {
     flex-basis: 80%;
+}
+
+.driver-front-box-bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    padding-bottom: 8px;
 }
 
 .whiteButton {
@@ -4917,16 +5688,27 @@ export default {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
     background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .checkditailbox-front-box-top {
-    height: 35px;
-    font-size: 18px;
-    line-height: 35px;
-    background: #d44950;
+    height: 30px;
+    font-size: 16px;
+    line-height: 30px;
+    background: #d74342;
     color: #fff;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.checkditailbox-front-box-center{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    margin: 8px 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 4px 8px;
 }
 
 .checkditailbox-body-title {
@@ -5278,7 +6060,7 @@ export default {
     -webkit-mask-size: 30px 30px;
 }
 
-.card_icon_red{
+.card_icon_red {
     background: #d74342;
     mask-image: url(../../public/img/icons/card.svg);
     -webkit-mask-image: url(../../public/img/icons/card.svg);
@@ -5408,6 +6190,19 @@ export default {
     -webkit-mask-size: 30px 30px;
 }
 
+.icon_check_circle{
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/baseline-check_circle_outline-24px.svg);
+    -webkit-mask-image: url(../../public/img/icons/baseline-check_circle_outline-24px.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+    position: absolute;
+    top: 0;
+    right: 4px;
+}
+
 .moredaytrips_body{
     display: flex;
     display: -webkit-flex;
@@ -5512,5 +6307,173 @@ export default {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+.report_trips_detial_box_body{
+    background-color: #fff;
+    margin: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    padding: 8px 12px;
+}
+
+.report_trips_detial_box_body_item{
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+    display: -webkit-flex;
+    margin-top: 4px;
+}
+
+.report_trips_detial_box_body_item_left{
+    width: 60px;
+    text-align: right;
+}
+
+.report_trips_detial_box_body_item_right{
+    width: 120px;
+    text-align: left;
+    margin-left: 8px;
+    padding-left: 8px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    cursor: pointer;
+}
+
+.white_button{
+    border-radius: 10px;
+    border: 1px solid #eee;
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    cursor: pointer;
+}
+
+.report_car_driver_frame{
+    height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.report_car_driver_body{
+    line-height: 30px;
+    height: 30px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 10px;
+    margin: 8px 12px;
+    position: relative;
+}
+
+.table_toparea_button_area{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.report_backmission_title{
+    display: flex;
+    display: -webkit-flex;    
+}
+
+.report_backmission_title_frame{
+    height: 40px;
+    background-color: #eee;
+    border-radius: 10px;
+    padding: 0 4px;
+    margin: 0 4px;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+}
+
+.report_backmission_title_frame_box{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 2px solid #e31d65;
+    font-size: 16px;
+    padding: 0 4px;
+}
+
+.report_backmission_body{
+    display: flex;
+    display: -webkit-flex;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.report_backmission_body:hover{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.report_backmission_body_item{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    margin: 0 4px;
+    padding: 0 4px;
+    cursor: pointer;
+}
+
+.report_backdetail_front_box{
+    background: #f7f7f7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.report_backdetail_front_box_title{
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    background-color: #d74342;
+    font-size: 16px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.report_backdetail_front_box_body{
+    margin: 8px 12px;
+    padding: 8px 12px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 10px;
+}
+
+.report_backdetail_front_box_body_item{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+}
+
+.report_backdetail_front_box_body_item_left{
+    width: 60px;
+    text-align: right;
+}
+
+.report_backdetail_front_box_body_item_right{
+    margin-left: 8px;
+    width: 86px;
+    text-align: left;
+}
+
+.report_backdetail_front_box_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    padding-bottom: 8px;
 }
 </style>

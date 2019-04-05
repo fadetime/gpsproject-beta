@@ -89,7 +89,8 @@
                         </li>
                         <li>
                             <span>共
-                                <i>{{pageCount}}</i>页</span>
+                                <i>{{pageCount}}</i>页
+                            </span>
                         </li>
                     </ul>
                 </div>
@@ -183,6 +184,8 @@
                                     <span v-else-if="userRole === 'bill'">账单管理</span>
                                     <span v-else-if="userRole === 'countBox'">框数检查</span>
                                     <span v-else-if="userRole === 'breakbox'">坏框申报</span>
+                                    <span v-else-if="userRole === 'dayShiftChecker'">白班检查员</span>
+                                    
                                     <span v-else style="color:#e0e0e0">点击选择角色</span>
                                 </div>
                             </div>
@@ -370,33 +373,44 @@
                          <span>选择角色</span>
                      </div>
                      <div class="rolebox-front-box-body">
-                        <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('leader')">
-                            <span>主 管</span>
-                        </div> 
-                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('d')">
-                             <span>司 机</span>
-                         </div>
-                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('b')">
-                             <span>白 班</span>
-                         </div>
-                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('dLeader')">
-                             <span>白班主管</span>
-                         </div>
-                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('w')">
-                             <span>维修员</span>
-                         </div>
-                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('c')">
-                             <span>检察员</span>
-                         </div>
-                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('bill')">
-                             <span>账单管理</span>
-                         </div>
-                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('countBox')">
-                             <span>框数检查</span>
-                         </div>
-                         <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('breakbox')">
-                             <span>坏框申报</span>
-                         </div>
+                        <div class="rolebox-front-box-body-item_frame">
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('leader')">
+                                <span>主 管</span>
+                            </div> 
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('d')">
+                                <span>司 机</span>
+                            </div>
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('b')">
+                                <span>白 班</span>
+                            </div>
+                        </div>
+                        <div class="rolebox-front-box-body-item_frame">
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('dLeader')">
+                                <span>白班主管</span>
+                            </div>
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('w')">
+                                <span>维修员</span>
+                            </div>
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('c')">
+                                <span>检察员</span>
+                            </div>
+                        </div>
+                        <div class="rolebox-front-box-body-item_frame">
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('bill')">
+                                <span>账单管理</span>
+                            </div>
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('countBox')">
+                                <span>框数检查</span>
+                            </div>
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('breakbox')">
+                                <span>坏框申报</span>
+                            </div>
+                        </div>
+                        <div class="rolebox-front-box-body-item_frame">
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('dayShiftChecker')">
+                                <span>白班检察员</span>
+                            </div>
+                        </div>
                      </div>
                      <div class="rolebox-front-box-footer" @click="showChoiseRoleBox = false">
                          <div class="rolebox-button">取消</div>
@@ -536,6 +550,8 @@ export default {
                 this.userRole = 'breakbox'
             }else if(role === 'countBox'){
                 this.userRole = 'countBox'
+            }else if(role === 'dayShiftChecker'){
+                this.userRole = 'dayShiftChecker'
             }else{
                 this.userRole = 'checker'
             }
@@ -1171,13 +1187,15 @@ export default {
 .rolebox-front-box {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
-    background: #fff;
+    background: #f7f7f7;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .rolebox-front-box-title {
-    height: 35px;
-    font-size: 18px;
-    line-height: 35px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
     background: #d44950;
     color: #fff;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
@@ -1185,7 +1203,18 @@ export default {
 }
 
 .rolebox-front-box-body{
-    padding: 10px 10px;
+    margin: 10px 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 10px;
+    padding: 4px 8px;
+    border: 1px solid #eee;
+    background-color: #fff;
+}
+
+.rolebox-front-box-body-item_frame{
+    display: flex;
+    display: -webkit-flex;
 }
 
 .rolebox-front-box-body-item{
@@ -1193,10 +1222,11 @@ export default {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
     padding:5px 0;
-    margin: 5px 0;
+    margin: 5px 4px;
     border-radius: 5px;
     cursor: pointer;
     transition: 0.2s;
+    width: 80px;
 }
 
 .rolebox-front-box-body-item:active{
@@ -1213,7 +1243,7 @@ export default {
 .rolebox-button{
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
-    width: 120px;
+    width: 100px;
     margin: 0 auto;
     border-radius: 5px;
     background: #448aff;

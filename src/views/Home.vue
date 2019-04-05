@@ -3327,7 +3327,7 @@ export default {
                 });
         },
 
-        //未知功能方法start
+        //查找夜班退菜任务池start
         findCustomerServiceNightMission(item, mission_id) {
             console.log("item");
             console.log(item);
@@ -3337,7 +3337,9 @@ export default {
             axios
                 .post(config.server + "/customerService/find", factor)
                 .then(doc => {
+                    console.log('1111111111111111111111111')
                     console.log(doc);
+                    console.log('1111111111111111111111111')
                     if (doc.data.code === 0) {
                         let addCSmissionNum = 0;
                         let ClientPositionNum = -2;
@@ -3377,11 +3379,7 @@ export default {
                                         ]
                                     };
                                     axios
-                                        .post(
-                                            config.server +
-                                                "/mission/addclientSort",
-                                            shippingDate
-                                        )
+                                        .post(config.server +"/mission/addclientSort",shippingDate)
                                         .then(doc => {
                                             console.log("addclient");
                                             console.log(doc);
@@ -3413,7 +3411,7 @@ export default {
                     console.log(err);
                 });
         },
-        //未知功能方法end
+        //查找夜班退菜任务池end
 
         saveMission() {
             this.$set(this.aLineInfo, "timesclientb", this.choiceClient);
