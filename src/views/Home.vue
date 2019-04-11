@@ -2578,7 +2578,12 @@ export default {
                             usedDriver: this.tempData._id
                         })
                         .then(doc => {
-                            console.log("添加常用成功");
+                            this.errormsg = "添加常用成功";
+                            this.showTipDialog = true;
+                            this.clientTablePageButton(this.clientTablePageNow);
+                            setTimeout(() => {
+                                this.showTipDialog = false;
+                            }, 2000);
                         })
                         .catch(err => {
                             console.log(err);
@@ -2606,7 +2611,6 @@ export default {
                 this.isCarList = false;
             }
             this.choseListDialog = true;
-            //   this.radioCar = this.selectorCar._id
         },
         removeChoseClient(item) {
             this.choiceClient.splice(item, 1);
@@ -2954,7 +2958,6 @@ export default {
                 .then(res => {
                     if (item === "nameFindDriver") {
                         //如果需要司机反查
-                        console.log("enter find driver");
                         this.alldirverinfo = res.data;
                         this.alldirverinfo.forEach(element => {
                             if (
@@ -3077,7 +3080,6 @@ export default {
                 } else {
                     //将多日未来单客户提取start
                     this.noOrderArrayForAddMission = []
-                    console.log(this.aLineInfo.timesclientb)
                     this.aLineInfo.timesclientb.forEach(item => {
                         if(item.noOrderDay >=3 && item.basket >=1){
                             this.noOrderArrayForAddMission.push(item)
@@ -3180,7 +3182,6 @@ export default {
                                     }
                                 );
                             } else {
-                                console.log("enter else");
                                 this.choiceClient = this.aLineInfo.timesclientb;
                                 this.showTipDialog = true;
                                 this.errormsg = "获取ebuy后台数据失败";
@@ -3241,7 +3242,6 @@ export default {
                 .get(config.server + "/car")
                 .then(res => {
                     if (item === "idFindCar") {
-                        console.log(res.data);
                         res.data.forEach(element => {
                             if (element._id === this.missionShipping.Car_id) {
                                 this.selectorCar = element;
@@ -3329,17 +3329,12 @@ export default {
 
         //查找夜班退菜任务池start
         findCustomerServiceNightMission(item, mission_id) {
-            console.log("item");
-            console.log(item);
             let factor = {
                 missionDate: item.missiondate
             };
             axios
                 .post(config.server + "/customerService/find", factor)
                 .then(doc => {
-                    console.log('1111111111111111111111111')
-                    console.log(doc);
-                    console.log('1111111111111111111111111')
                     if (doc.data.code === 0) {
                         let addCSmissionNum = 0;
                         let ClientPositionNum = -2;
@@ -3350,8 +3345,6 @@ export default {
                                     elementY.clientName === elementX.clientbname
                                 ) {
                                     addCSmissionNum++;
-                                    console.log("ClientPositionNum");
-                                    console.log(ClientPositionNum);
                                     let shippingDate = {
                                         mission_id: mission_id,
                                         ClientPositionNum: ClientPositionNum,
@@ -3374,15 +3367,14 @@ export default {
                                                 isNeedPic: elementX.isNeedPic,
                                                 timeLimit: elementX.timeLimit,
                                                 note: elementY.note,
-                                                isReturn: true
+                                                isReturn: true,
+                                                returnPool_id: elementY._id
                                             }
                                         ]
                                     };
                                     axios
                                         .post(config.server +"/mission/addclientSort",shippingDate)
                                         .then(doc => {
-                                            console.log("addclient");
-                                            console.log(doc);
                                             this.updateCSmissionState(
                                                 elementY._id,
                                                 mission_id
@@ -3517,7 +3509,6 @@ export default {
             axios
                 .post(config.server + "/mission/create", query)
                 .then(res => {
-                    console.log(res);
                     this.findCustomerServiceNightMission(query, res.data._id);
                     this.missionDateModePacker = "";
                     if (this.missionDateModeButtonCSS2) {

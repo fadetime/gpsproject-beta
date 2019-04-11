@@ -8,6 +8,7 @@
                        placeholder="搜索司机信息">
             </div>
             <div class="topbutton-right">
+                <button @click="isShowStaffInfo = true">testbutton</button>
                 <md-button class="md-raised md-primary"
                            @click="adddirverbutton"
                            style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
@@ -100,7 +101,7 @@
         <md-dialog :md-active.sync="showDialog"
                    class="driverdialog">
             <md-dialog-title style="font-size:18px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:12px;line-height: 20px;">
-                <span style="color:#fff">司机管理</span>
+                <span style="color:#fff">人员管理</span>
             </md-dialog-title>
             <md-dialog-content style="padding: 0 24px;">
                 <div style="border: 3px dashed #eee">
@@ -248,7 +249,145 @@
             </md-dialog-actions>
         </md-dialog>
         <!-- Dialog end-->
-
+        <!-- staff info dialog start -->
+        <transition name="show-choise-role-box-back"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowStaffInfo" class="rolebox-back"></div>
+        </transition>
+        <transition name="show-choise-role-box-back"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowStaffInfo" class="rolebox-front" @click.self.prevent="isShowStaffInfo = false">
+                <div class="rolebox-front-box">
+                    <div class="rolebox-front-box-title">
+                        <span>人员管理</span>
+                    </div>
+                    <div class="staffinfo_body">
+                        <div class="staffinfo_body_top">
+                            <div class="staffinfo_body_top_left">
+                                <div class="staffinfo_body_top_left_item">
+                                    <div class="staffinfo_body_top_left_item_left">
+                                        <span>人员姓名</span>
+                                    </div>
+                                    <div class="staffinfo_body_top_left_item_right">
+                                        <input type="text">
+                                    </div>
+                                </div>
+                                <div class="staffinfo_body_top_left_item">
+                                    <div class="staffinfo_body_top_left_item_left">
+                                        <span>英文姓名</span>
+                                    </div>
+                                    <div class="staffinfo_body_top_left_item_right">
+                                        <input type="text">
+                                    </div>
+                                </div>
+                                <div class="staffinfo_body_top_left_item">
+                                    <div class="staffinfo_body_top_left_item_left">
+                                        <span>驾照类型</span>
+                                    </div>
+                                    <div class="staffinfo_body_top_left_item_right">
+                                        <div>
+                                            <span style="border-bottom: 1px solid rgb(44, 62, 80);">点击获取</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="staffinfo_body_top_left_item">
+                                    <div class="staffinfo_body_top_left_item_left">
+                                        <span>联系方式</span>
+                                    </div>
+                                    <div class="staffinfo_body_top_left_item_right">
+                                        <input type="text">
+                                    </div>
+                                </div>
+                                <div class="staffinfo_body_top_left_item">
+                                    <div class="staffinfo_body_top_left_item_left">
+                                        <span>所属权限</span>
+                                    </div>
+                                    <div class="staffinfo_body_top_left_item_right">
+                                        <div>
+                                            <span style="border-bottom: 1px solid rgb(44, 62, 80);">点击获取</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="staffinfo_body_top_right">
+                                <div class="dialog-body-item">
+                                    <input type="file"
+                                        style="display:none"
+                                        id="upload_file"
+                                        @change="fileChange($event)"
+                                        accept="image/*">
+                                    <div class="staffinfo_photoarea"
+                                        @click="uploadFile"
+                                        v-if="!driverImage">
+                                        <md-icon class="md-size-3x"
+                                                style="padding-top:110px"
+                                                v-if="!updateImagePreview">add_a_photo</md-icon>
+                                        <img :src="updateImagePreview"
+                                            alt="newimg"
+                                            v-else>
+                                    </div>
+                                    <div class="photoarea"
+                                        @click="uploadFile"
+                                        v-else>
+                                        <img :src="driverImage | imgurl"
+                                            alt="newimg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="staffinfo_body_bottom">
+                            <div class="staffinfo_body_bottom_item" >
+                                <div class="staffinfo_body_bottom_item_frame" style="margin-right: 24px;">
+                                    <div class="staffinfo_body_bottom_item_frame_title">
+                                        <span>用户名</span>
+                                    </div>
+                                    <div class="staffinfo_body_bottom_item_frame_content">
+                                        <input type="text">
+                                    </div>
+                                </div>
+                                <div class="staffinfo_body_bottom_item_frame">
+                                    <div class="staffinfo_body_bottom_item_frame_title">
+                                        <span>准证号码</span>
+                                    </div>
+                                    <div class="staffinfo_body_bottom_item_frame_content">
+                                        <input type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="staffinfo_body_bottom_item">
+                                <div class="staffinfo_body_bottom_item_frame" style="margin-right: 24px;">
+                                    <div class="staffinfo_body_bottom_item_frame_title">
+                                        <span>登录密码</span>
+                                    </div>
+                                    <div class="staffinfo_body_bottom_item_frame_content">
+                                        <input type="password">
+                                    </div>
+                                </div>
+                                <div class="staffinfo_body_bottom_item_frame">
+                                    <div class="staffinfo_body_bottom_item_frame_title">
+                                        <span>人员备注</span>
+                                    </div>
+                                    <div class="staffinfo_body_bottom_item_frame_content">
+                                        <input type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="staffinfo_body_bottom_footer" >
+                        <div class="white_button" @click="isShowStaffInfo = false">
+                            <span>取消</span>
+                        </div>
+                        <div class="white_button" style="margin-left:12px">
+                            <span>确定</span>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </transition>
+        <!-- staff info dialog end -->
         <!-- deleteDialog start-->
         <md-dialog :md-active.sync="deleteDialog"
                    class="editdialog">
@@ -467,7 +606,8 @@ export default {
             showTipDialog: false,
             tipMsg: "",
             userRole:null,
-            showChoiseRoleBox:false
+            showChoiseRoleBox:false,
+            isShowStaffInfo:false
         };
     },
     mounted() {
@@ -1256,6 +1396,135 @@ export default {
 }
 
 .rolebox-button:active{
+    box-shadow:none;
+    transition: 0.2s;
+}
+
+
+
+.staffinfo_body{
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #fff;
+    margin: 12px 24px;
+    padding: 12px;
+    border-radius: 10px;
+    -webkit-box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.staffinfo_body_top{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.staffinfo_body_top_left{
+    margin-right: 24px;
+}
+
+.staffinfo_body_top_left_item{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+    margin: 12px 0;
+}
+
+.staffinfo_body_top_left_item_left{
+    font-size: 16px;
+    margin-right: 12px;
+    width: 66px;
+}
+
+.staffinfo_body_top_left_item_right input{
+    height: 30px;
+    border-radius: 5px;
+    width: 160px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-size: 16px;
+    color: #2c3e50;
+}
+
+.staffinfo_body_top_left_item_right div{
+    height: 30px;
+    border-radius: 5px;
+    width: 160px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-size: 16px;
+    color: #2c3e50;
+    cursor: pointer;
+}
+
+.staffinfo_photoarea{
+    margin: 0 auto;
+    text-align: center;
+    border: 3px dashed #696969;
+    border-radius: 10px;
+    width: 234px;
+    height: 234px;
+    background-color: #eee;
+}
+
+.staffinfo_photoarea img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.staffinfo_body_bottom_item{
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+    display: -webkit-flex;
+    margin: 12px 0;
+}
+
+.staffinfo_body_bottom_item_frame{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.staffinfo_body_bottom_item_frame_title{
+    font-size: 16px;
+    margin-right: 12px;
+    width: 66px;
+    text-align: right;
+}
+
+.staffinfo_body_bottom_item_frame_content input{
+    height: 30px;
+    border-radius: 5px;
+    width: 160px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-size: 16px;
+    color: #2c3e50;
+}
+
+.staffinfo_body_bottom_footer{
+    display: flex;
+    display: -webkit-flex;
+    margin-bottom: 12px;
+    justify-content: center;
+}
+
+.white_button{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    width: 100px;
+    border-radius: 10px;
+    height: 30px;
+    line-height: 30px;
+    transition: 0.2s;
+    cursor: pointer;
+    font-size: 16px;
+    border: 1px solid #eee;
+    background-color: #fff;
+}
+
+.white_button:active{
     box-shadow:none;
     transition: 0.2s;
 }
