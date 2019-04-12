@@ -8,7 +8,6 @@
                        placeholder="搜索司机信息">
             </div>
             <div class="topbutton-right">
-                <button @click="isShowStaffInfo = true">testbutton</button>
                 <md-button class="md-raised md-primary"
                            @click="adddirverbutton"
                            style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
@@ -97,158 +96,6 @@
                 </div>
             </div>
         </div>
-        <!-- Dialog start-->
-        <md-dialog :md-active.sync="showDialog"
-                   class="driverdialog">
-            <md-dialog-title style="font-size:18px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:12px;line-height: 20px;">
-                <span style="color:#fff">人员管理</span>
-            </md-dialog-title>
-            <md-dialog-content style="padding: 0 24px;">
-                <div style="border: 3px dashed #eee">
-                    <div class="dialog-body">
-                        <div class="dialog-body-item"
-                             style="padding-top:24px">
-                            <input type="file"
-                                   style="display:none"
-                                   id="upload_file"
-                                   @change="fileChange($event)"
-                                   accept="image/*">
-                            <div class="photoarea"
-                                 @click="uploadFile"
-                                 v-if="!driverImage">
-                                <md-icon class="md-size-3x"
-                                         style="padding-top:110px"
-                                         v-if="!updateImagePreview">add_a_photo</md-icon>
-                                <img :src="updateImagePreview"
-                                     alt="newimg"
-                                     v-else>
-                            </div>
-                            <div class="photoarea"
-                                 @click="uploadFile"
-                                 v-else>
-                                <img :src="driverImage | imgurl"
-                                     alt="newimg">
-                            </div>
-                        </div>
-                        <div class="dialog-body-item">
-                            <md-field style="margin:0 auto"
-                                      :class="nameclass">
-                                <label style="font-size:16px">司机姓名</label>
-                                <md-input v-model="dirvername"
-                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
-                                <span class="md-error"
-                                      style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
-                            </md-field>
-
-                            <md-field style="margin:10px auto 0 auto"
-                                      :class="nameclass">
-                                <label style="font-size:16px">英文姓名</label>
-                                <md-input v-model="name_en"
-                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
-                                <span class="md-error"
-                                      style="font-size:15px;margin: -10px auto;">标识人员姓名</span>
-                            </md-field>
-
-                            <md-field style="margin:20px auto"
-                                      :class="cardclass">
-                                <label for="dirvercard"
-                                       style="font-size:16px">驾照类型</label>
-                                <md-select v-model="dirvercard"
-                                           name="dirvercard"
-                                           id="dirvercard"
-                                           style="border-bottom: 1px solid #000;font-size:16px;height:33px;max-width: 500px;text-align: center;">
-                                    <md-option value="Class 3A">Class 3A</md-option>
-                                    <md-option value="Class 3">Class 3</md-option>
-                                    <md-option value="Class 4A">Class 4A</md-option>
-                                    <md-option value="Class 4">Class 4</md-option>
-                                    <md-option value="Class 5">Class 5</md-option>
-                                </md-select>
-                            </md-field>
-
-                            <md-field style="margin:30px auto"
-                                      :class="phonclass">
-                                <label style="font-size:16px">联系方式</label>
-                                <md-input v-model="dirverphone"
-                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"
-                                          @change="check_phone($event)"></md-input>
-                                <span class="md-error"
-                                      style="font-size:15px;margin: -10px auto;">请输入8位整数</span>
-                            </md-field>
-                            <div @click="choiseRoleMethod" class="choiseroleclass">
-                                <div style="border: 2px dashed #696969;text-align: center;height: 40px;line-height: 40px;">
-                                    <span v-if="userRole === 'leader'">主 管</span>
-                                    <span v-else-if="userRole === 'user'">司 机</span>
-                                    <span v-else-if="userRole === 'dayshift'">白 班</span>
-                                    <span v-else-if="userRole === 'dayshiftLeader'">白班主管</span>
-                                    <span v-else-if="userRole === 'maintain'">维修员</span>
-                                    <span v-else-if="userRole === 'checker'">检查员</span>
-                                    <span v-else-if="userRole === 'bill'">账单管理</span>
-                                    <span v-else-if="userRole === 'countBox'">框数检查</span>
-                                    <span v-else-if="userRole === 'breakbox'">坏框申报</span>
-                                    <span v-else-if="userRole === 'dayShiftChecker'">白班检查员</span>
-                                    
-                                    <span v-else style="color:#e0e0e0">点击选择角色</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="dialog-body">
-                        <div class="dialog-body-item">
-                            <md-field style="margin:0 auto"
-                                      :class="userclass">
-                                <label style="font-size:16px">用户名</label>
-                                <md-input v-model="dirverusername"
-                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
-                                <span class="md-error"
-                                      style="font-size:15px;margin: -10px auto;">登陆用户名</span>
-                            </md-field>
-
-                            <md-field style="margin:20px auto"
-                                      :class="pswclass">
-                                <label style="font-size:16px">密码</label>
-                                <md-input v-model="dirverpsw"
-                                          type="password"
-                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
-                                <span class="md-error"
-                                      style="font-size:15px;margin: -10px auto;">标识密码</span>
-                            </md-field>
-                        </div>
-
-                        <div class="dialog-body-item">
-                            <md-field style="margin:0 auto"
-                                      :class="passclass">
-                                <label style="font-size:16px">准证号码</label>
-                                <md-input v-model="dirverid"
-                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
-                                <span class="md-error"
-                                      style="font-size:15px;margin: -10px auto;">人员标识信息，必填项目</span>
-                            </md-field>
-
-                            <md-field style="margin:20px auto">
-                                <label style="font-size:16px">备注</label>
-                                <md-input v-model="dirvernote"
-                                          style="border-bottom: 1px solid #000;font-size:16px;height:32px;text-align:center"></md-input>
-                            </md-field>
-                        </div>
-                    </div>
-
-                </div>
-            </md-dialog-content>
-            <md-dialog-actions style="margin:0 auto 10px auto">
-                <md-button class="md-raised md-primary"
-                           @click="showDialog = false"
-                           style="font-size:16px;width:100px;height:30px;width:80">取消</md-button>
-                <md-button class="md-raised md-primary"
-                           v-if="savemode"
-                           @click="adddirver"
-                           style="font-size:16px;width:100px;height:30px;width:80">保存</md-button>
-                <md-button class="md-raised md-primary"
-                           v-else
-                           @click="confirmedit"
-                           style="font-size:16px;width:100px;height:30px;width:80">修改</md-button>
-            </md-dialog-actions>
-        </md-dialog>
-        <!-- Dialog end-->
         <!-- staff info dialog start -->
         <transition name="show-choise-role-box-back"
                     enter-active-class="animated fadeIn faster"
@@ -271,7 +118,7 @@
                                         <span>人员姓名</span>
                                     </div>
                                     <div class="staffinfo_body_top_left_item_right">
-                                        <input type="text">
+                                        <input type="text" v-model="dirvername">
                                     </div>
                                 </div>
                                 <div class="staffinfo_body_top_left_item">
@@ -279,7 +126,7 @@
                                         <span>英文姓名</span>
                                     </div>
                                     <div class="staffinfo_body_top_left_item_right">
-                                        <input type="text">
+                                        <input type="text" v-model="name_en">
                                     </div>
                                 </div>
                                 <div class="staffinfo_body_top_left_item">
@@ -287,8 +134,9 @@
                                         <span>驾照类型</span>
                                     </div>
                                     <div class="staffinfo_body_top_left_item_right">
-                                        <div>
-                                            <span style="border-bottom: 1px solid rgb(44, 62, 80);">点击获取</span>
+                                        <div @click="choiseRoleOrDriverID('driverId')">
+                                            <span v-if="dirvercard">{{dirvercard}}</span>
+                                            <span v-else style="border-bottom: 1px solid rgb(44, 62, 80);">点击获取</span>
                                         </div>
                                     </div>
                                 </div>
@@ -297,7 +145,7 @@
                                         <span>联系方式</span>
                                     </div>
                                     <div class="staffinfo_body_top_left_item_right">
-                                        <input type="text">
+                                        <input type="text" v-model="dirverphone">
                                     </div>
                                 </div>
                                 <div class="staffinfo_body_top_left_item">
@@ -305,8 +153,18 @@
                                         <span>所属权限</span>
                                     </div>
                                     <div class="staffinfo_body_top_left_item_right">
-                                        <div>
-                                            <span style="border-bottom: 1px solid rgb(44, 62, 80);">点击获取</span>
+                                        <div @click="choiseRoleOrDriverID('role')">
+                                            <span v-if="userRole === 'leader'">主 管</span>
+                                            <span v-else-if="userRole === 'user'">司 机</span>
+                                            <span v-else-if="userRole === 'dayshift'">白 班</span>
+                                            <span v-else-if="userRole === 'dayshiftLeader'">白班主管</span>
+                                            <span v-else-if="userRole === 'maintain'">维修员</span>
+                                            <span v-else-if="userRole === 'checker'">检查员</span>
+                                            <span v-else-if="userRole === 'bill'">账单管理</span>
+                                            <span v-else-if="userRole === 'countBox'">框数检查</span>
+                                            <span v-else-if="userRole === 'breakbox'">坏框申报</span>
+                                            <span v-else-if="userRole === 'dayShiftChecker'">白班检查员</span>
+                                            <span v-else style="border-bottom: 1px solid rgb(44, 62, 80);">点击获取</span>
                                         </div>
                                     </div>
                                 </div>
@@ -344,7 +202,7 @@
                                         <span>用户名</span>
                                     </div>
                                     <div class="staffinfo_body_bottom_item_frame_content">
-                                        <input type="text">
+                                        <input type="text" v-model="dirverusername">
                                     </div>
                                 </div>
                                 <div class="staffinfo_body_bottom_item_frame">
@@ -352,7 +210,7 @@
                                         <span>准证号码</span>
                                     </div>
                                     <div class="staffinfo_body_bottom_item_frame_content">
-                                        <input type="text">
+                                        <input type="text" v-model="dirverid">
                                     </div>
                                 </div>
                             </div>
@@ -362,7 +220,7 @@
                                         <span>登录密码</span>
                                     </div>
                                     <div class="staffinfo_body_bottom_item_frame_content">
-                                        <input type="password">
+                                        <input type="password" v-model="dirverpsw">
                                     </div>
                                 </div>
                                 <div class="staffinfo_body_bottom_item_frame">
@@ -370,7 +228,7 @@
                                         <span>人员备注</span>
                                     </div>
                                     <div class="staffinfo_body_bottom_item_frame_content">
-                                        <input type="text">
+                                        <input type="text" v-model="dirvernote">
                                     </div>
                                 </div>
                             </div>
@@ -380,7 +238,10 @@
                         <div class="white_button" @click="isShowStaffInfo = false">
                             <span>取消</span>
                         </div>
-                        <div class="white_button" style="margin-left:12px">
+                        <div v-if="savemode" class="white_button" style="margin-left:12px" @click="adddirver">
+                            <span>保存</span>
+                        </div>
+                        <div v-else class="white_button" style="margin-left:12px" @click="confirmedit">
                             <span>确定</span>
                         </div>
                      </div>
@@ -471,16 +332,6 @@
             </div>
         </md-dialog>
         <!-- deleteDialog end-->
-        <!-- successd mesage start -->
-        <md-dialog-alert :md-active.sync="successdmsg"
-                         md-content="操作成功"
-                         md-confirm-text="关闭" />
-        <!-- successd mesage end -->
-        <!-- error start -->
-        <md-dialog-alert :md-active.sync="error"
-                         :md-content="errormsg"
-                         md-confirm-text="关闭" />
-        <!-- error end -->
         <!-- tip box start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated slideInUp"
@@ -507,11 +358,36 @@
             <div v-if="showChoiseRoleBox"
                  class="rolebox-front"
                  @click.self.prevent="showChoiseRoleBox = false">
-                 <div class="rolebox-front-box">
-                     <div class="rolebox-front-box-title">
-                         <span>选择角色</span>
-                     </div>
-                     <div class="rolebox-front-box-body">
+                <div v-if="isShowDriverId" class="rolebox-front-box">
+                    <div class="rolebox-front-box-title">
+                        <span>驾照类型</span>
+                    </div>
+                    <div class="rolebox-front-box-body">
+                        <div class="rolebox-front-box-body-item" style="width:100px" @click="choiseDriverId('Class 3A')">
+                            <span>Class 3A</span>
+                        </div>
+                        <div class="rolebox-front-box-body-item" style="width:100px" @click="choiseDriverId('Class 3')">
+                            <span>Class 3</span>
+                        </div>
+                        <div class="rolebox-front-box-body-item" style="width:100px" @click="choiseDriverId('Class 4A')">
+                            <span>Class 4A</span>
+                        </div>
+                        <div class="rolebox-front-box-body-item" style="width:100px" @click="choiseDriverId('Class 4')">
+                            <span>Class 4</span>
+                        </div>
+                        <div class="rolebox-front-box-body-item" style="width:100px" @click="choiseDriverId('Class 5')">
+                            <span>Class 5</span>
+                        </div>
+                    </div>
+                    <div class="rolebox-front-box-footer" @click="showChoiseRoleBox = false">
+                        <div class="rolebox-button">取消</div>
+                    </div>
+                </div>
+                <div v-else class="rolebox-front-box">
+                    <div class="rolebox-front-box-title">
+                        <span>选择角色</span>
+                    </div>
+                    <div class="rolebox-front-box-body">
                         <div class="rolebox-front-box-body-item_frame">
                             <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('leader')">
                                 <span>主 管</span>
@@ -550,14 +426,15 @@
                                 <span>白班检察员</span>
                             </div>
                         </div>
-                     </div>
-                     <div class="rolebox-front-box-footer" @click="showChoiseRoleBox = false">
-                         <div class="rolebox-button">取消</div>
-                     </div>
-                 </div>
+                    </div>
+                    <div class="rolebox-front-box-footer" @click="showChoiseRoleBox = false">
+                        <div class="rolebox-button">取消</div>
+                    </div>
+                </div>
             </div>
         </transition>
         <!-- choise role box end -->
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
     </div>
 </template>
 
@@ -565,15 +442,18 @@
 import axios from "axios";
 import config from "../../public/js/config.js";
 import lrz from "lrz";
+import tipsBox from "@/components/tipsBox.vue"
 
 export default {
+    components:{
+        tipsBox
+    },
     data() {
         return {
             selecteddirver: "",
             searchDirver: "",
             searchedDriver: [],
             dirvers: [],
-            showDialog: false,
             deleteDialog: false,
             _id: "",
             dirvername: "",
@@ -585,16 +465,7 @@ export default {
             dirverpsw: "",
             dirvernote: "",
             alldirverinfo: [],
-            successdmsg: false,
-            error: false,
-            errormsg: "发生未知错误",
             savemode: true,
-            nameErr: false,
-            passErr: false,
-            phonErr: false,
-            cardErr: false,
-            userdErr: false,
-            pswdErr: false,
             pageCount: 0, // 总页码
             pageNow: 1, // 当前页码
             pageSize: 15, //每页显示条数
@@ -607,7 +478,11 @@ export default {
             tipMsg: "",
             userRole:null,
             showChoiseRoleBox:false,
-            isShowStaffInfo:false
+            isShowStaffInfo:false,
+            isShowDriverId:true,
+            isShowTipsBox:false,
+            tipsInfo:null,
+            tipsShowColor:null
         };
     },
     mounted() {
@@ -640,38 +515,21 @@ export default {
             }
             return pag;
         },
-        nameclass() {
-            return {
-                "md-invalid": this.nameErr
-            };
-        },
-        passclass() {
-            return {
-                "md-invalid": this.passErr
-            };
-        },
-        phonclass() {
-            return {
-                "md-invalid": this.phonErr
-            };
-        },
-        cardclass() {
-            return {
-                "md-invalid": this.cardErr
-            };
-        },
-        userclass() {
-            return {
-                "md-invalid": this.userdErr
-            };
-        },
-        pswclass() {
-            return {
-                "md-invalid": this.pswdErr
-            };
-        }
     },
     methods: {
+        choiseDriverId(mode){
+            this.dirvercard = mode
+            this.showChoiseRoleBox = false
+        },
+
+        choiseRoleOrDriverID(mode){
+            if(mode === 'driverId'){
+                this.isShowDriverId = true
+            }else{
+                this.isShowDriverId = false
+            }
+            this.showChoiseRoleBox = true
+        },
         choiseRoleEventMethod(role){
             
             if(role === 'd') {
@@ -702,14 +560,6 @@ export default {
             this.showChoiseRoleBox = true
         },
 
-        check_phone(event) {
-            let value = event.target.value;
-            if (!/^[0-9]{8}$/.test(value)) {
-                this.phonErr = true;
-            } else {
-                this.phonErr = false;
-            }
-        },
         fileChange(el) {
             if (typeof FileReader === "undefined") {
                 return alert("浏览器不支持上传图片");
@@ -762,7 +612,7 @@ export default {
         },
         adddirverbutton() {
             this.updateImagePreview = "";
-            this.showDialog = true;
+            this.isShowStaffInfo = true;
             this.savemode = true;
             this._id = "";
             this.dirvername = "";
@@ -794,21 +644,30 @@ export default {
                     logOperator: localStorage.getItem("name")
                 })
                 .then(res => {
-                    this.errormsg = res.data.msg;
-                    this.error = true;
-                    setTimeout(() => {
-                        this.error = false;
-                    }, 3000);
                     if (res.data.code == 0) {
                         this.getalldirver();
                         this.deleteDialog = false;
+                        this.tipsInfo = error;
+                        this.tipsShowColor = 'green'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 3000);
+                    }else{
+                        this.tipsInfo = error;
+                        this.tipsShowColor = 'yellow'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 3000);
                     }
                 })
-                .catch(err => {
-                    this.error = true;
-                    this.errormsg = err;
+                .catch(error => {
+                    this.tipsInfo = error;
+                    this.tipsShowColor = 'yellow'
+                    this.isShowTipsBox = true
                     setTimeout(() => {
-                        this.error = false;
+                        this.isShowTipsBox = false
                     }, 3000);
                 });
         },
@@ -826,7 +685,7 @@ export default {
             this.dirverpsw = "";
             this.dirvernote = item.dirvernote;
             this.driverImage = item.image;
-            this.showDialog = true;
+            this.isShowStaffInfo = true
             this.userRole = item.role
         },
 
@@ -882,33 +741,22 @@ export default {
                 !this.dirverid ||
                 !this.dirverusername ||
                 !this.dirverphone ||
-                !this.dirvercard ||
-                this.phonErr ||
-                !this.dirverusername
+                !this.dirvercard 
             ) {
                 if (!this.dirvername) {
-                    this.nameErr = true;
-                } else {
-                    this.nameErr = false;
+                    this.tipsInfo = '请输入用户名'
+                } else if (!this.dirverid) {
+                    this.tipsInfo = '请输入准证号码'
+                } else if (!this.dirverphone) {
+                    this.tipsInfo = '请输入联系方式'
+                }else {
+                    this.tipsInfo = '请选择驾照类型'
                 }
-                if (!this.dirverid) {
-                    this.passErr = true;
-                } else {
-                    this.passErr = false;
-                }
-                if (!this.dirverphone) {
-                    this.phonErr = true;
-                }
-                if (!this.dirvercard) {
-                    this.cardErr = true;
-                } else {
-                    this.cardErr = false;
-                }
-                if (!this.dirverusername) {
-                    this.userdErr = true;
-                } else {
-                    this.userdErr = false;
-                }
+                this.tipsShowColor = 'yellow'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 3000);
             } else {
                 let payload = new FormData();
                 let maxSize = 200 * 1024; //200KB
@@ -963,30 +811,42 @@ export default {
                 })
                     .then(response => {
                         if (response.data.code == 1) {
-                            this.error = true;
-                            this.errormsg = response.data.msg;
+                            this.tipsInfo = response.data.msg;
+                            this.tipsShowColor = 'yellow'
+                            this.isShowTipsBox = true
                             setTimeout(() => {
-                                this.error = false;
+                                this.isShowTipsBox = false
                             }, 3000);
-                        } else {
-                            this.successdmsg = true;
-                            this.showDialog = false;
+                        } else if(response.data.code == 0){
+                            this.isShowStaffInfo = false
                             this.getalldirver();
+                            this.tipsInfo = '更新成功'
+                            this.tipsShowColor = 'green'
+                            this.isShowTipsBox = true
                             setTimeout(() => {
-                                this.successdmsg = false;
+                                this.isShowTipsBox = false
+                            }, 3000);
+                        }else{
+                            this.tipsInfo = '更新时发生错误'
+                            this.tipsShowColor = 'yellow'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
                             }, 3000);
                         }
                     })
                     .catch(error => {
                         console.log(error);
-                        this.error = true;
-                        this.errormsg = response.data.msg;
+                        this.tipsInfo = error;
+                        this.tipsShowColor = 'yellow'
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.error = false;
+                            this.isShowTipsBox = false
                         }, 3000);
                     });
             }
         },
+
         getalldirver() {
             axios
                 .post(config.server + "/dirver/get", {
@@ -1008,45 +868,27 @@ export default {
                 !this.dirverusername ||
                 !this.dirverpsw ||
                 !this.dirverphone ||
-                this.phonErr ||
-                !this.dirvercard ||
-                !this.dirverusername
+                !this.dirvercard
             ) {
                 if (!this.dirvername) {
-                    this.nameErr = true;
+                    this.tipsInfo = '请输入用户名'
+                } else if (!this.dirverid) {
+                    this.tipsInfo = '请输入准证号码'
+                } else if (!this.dirverphone) {
+                    this.tipsInfo = '请输入联系方式'
+                }else if (!this.dirvercard) {
+                    this.tipsInfo = '请选择驾照类型'
+                } else if (!this.dirverusername) {
+                    this.tipsInfo = '请输用户名'
                 } else {
-                    this.nameErr = false;
+                    this.tipsInfo = '请输用户密码'
                 }
-                if (!this.dirverid) {
-                    this.passErr = true;
-                } else {
-                    this.passErr = false;
-                }
-                if (!this.dirverphone) {
-                    this.phonErr = true;
-                }
-                if (!this.dirvercard) {
-                    this.cardErr = true;
-                } else {
-                    this.cardErr = false;
-                }
-                if (!this.dirverusername) {
-                    this.userdErr = true;
-                } else {
-                    this.userdErr = false;
-                }
-                if (!this.dirverpsw) {
-                    this.pswdErr = true;
-                } else {
-                    this.pswdErr = false;
-                }
+                this.tipsShowColor = 'yellow'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 3000);
             } else {
-                this.nameErr = false;
-                this.passErr = false;
-                this.phonErr = false;
-                this.cardErr = false;
-                this.userdErr = false;
-                this.pswdErr = false;
                 let payload = new FormData();
                 let maxSize = 200 * 1024; //200KB
                 payload.append("logOperator", localStorage.getItem("name"));
@@ -1078,26 +920,37 @@ export default {
                         })
                             .then(response => {
                                 if (response.data.code == 1) {
-                                    this.error = true;
-                                    this.errormsg = response.data.msg;
+                                    this.tipsInfo = '查找原始数据错误'
+                                    this.tipsShowColor = 'yellow'
+                                    this.isShowTipsBox = true
                                     setTimeout(() => {
-                                        this.error = false;
+                                        this.isShowTipsBox = false
                                     }, 3000);
-                                } else {
-                                    this.successdmsg = true;
-                                    this.showDialog = false;
+                                } else if(response.data.code == 0){
+                                    this.isShowStaffInfo = false;
                                     this.getalldirver();
+                                    this.tipsInfo = '新增人员成功'
+                                    this.tipsShowColor = 'green'
+                                    this.isShowTipsBox = true
                                     setTimeout(() => {
-                                        this.successdmsg = false;
+                                        this.isShowTipsBox = false
+                                    }, 3000);
+                                }else{
+                                    this.tipsInfo = '存储时服务器错误'
+                                    this.tipsShowColor = 'yellow'
+                                    this.isShowTipsBox = true
+                                    setTimeout(() => {
+                                        this.isShowTipsBox = false
                                     }, 3000);
                                 }
                             })
                             .catch(error => {
                                 console.log(error);
-                                this.error = true;
-                                this.errormsg = response.data.msg;
+                                this.tipsInfo = response.data.msg;
+                                this.tipsShowColor = 'yellow'
+                                this.isShowTipsBox = true
                                 setTimeout(() => {
-                                    this.error = false;
+                                    this.isShowTipsBox = false
                                 }, 3000);
                             });
                     });
@@ -1121,26 +974,37 @@ export default {
                     })
                         .then(response => {
                             if (response.data.code == 1) {
-                                this.error = true;
-                                this.errormsg = response.data.msg;
+                                this.tipsInfo = response.data.msg;
+                                this.tipsShowColor = 'yellow'
+                                this.isShowTipsBox = true
                                 setTimeout(() => {
-                                    this.error = false;
+                                    this.isShowTipsBox = false
                                 }, 3000);
-                            } else {
-                                this.successdmsg = true;
-                                this.showDialog = false;
+                            } else if(response.data.code == 0){
+                                this.isShowStaffInfo = false;
                                 this.getalldirver();
+                                this.tipsInfo = '新增人员成功'
+                                this.tipsShowColor = 'green'
+                                this.isShowTipsBox = true
                                 setTimeout(() => {
-                                    this.successdmsg = false;
+                                    this.isShowTipsBox = false
+                                }, 3000);
+                            }else{
+                                this.tipsInfo = response.data.msg;
+                                this.tipsShowColor = 'yellow'
+                                this.isShowTipsBox = true
+                                setTimeout(() => {
+                                    this.isShowTipsBox = false
                                 }, 3000);
                             }
                         })
                         .catch(error => {
                             console.log(error);
-                            this.error = true;
-                            this.errormsg = response.data.msg;
+                            this.tipsInfo = error;
+                            this.tipsShowColor = 'yellow'
+                            this.isShowTipsBox = true
                             setTimeout(() => {
-                                this.error = false;
+                                this.isShowTipsBox = false
                             }, 3000);
                         });
                 }
@@ -1297,10 +1161,6 @@ export default {
     flex-basis: 50%;
 }
 
-.choiseroleclass{
-    cursor: pointer;
-}
-
 .rolebox-back {
     position: fixed;
     top: 0;
@@ -1308,7 +1168,7 @@ export default {
     left: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.12);
-    z-index: 23;
+    z-index: 24;
 }
 
 .rolebox-front {

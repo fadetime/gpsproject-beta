@@ -913,9 +913,9 @@
                             <span v-else>Null</span>
                         </div>   
                         <div class="report_backmission_body_item" >
-                            <span v-if="!item.isFinish">未完成</span>
-                            <span v-else-if="item.isFinish && !item.finishiDate">未取回</span>
-                            <span v-else>已完成</span>
+                            <span v-if="!item.isFinish" style="color: rgb(255, 152, 0);">未完成</span>
+                            <span v-else-if="item.isFinish && !item.finishiDate" style="color: green;">未取回</span>
+                            <span v-else style="color: green;">已完成</span>
                         </div>  
                     </div>
                 </div>
