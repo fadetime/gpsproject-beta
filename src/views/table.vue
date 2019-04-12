@@ -2399,19 +2399,15 @@
                     </div>
                     <div class="centerarea-title-item"
                          style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
-                        <span>创建时间</span>
-                    </div>
-                    <div class="centerarea-title-item"
-                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
-                        <span>结束时间</span>
-                    </div>
-                    <div class="centerarea-title-item"
-                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
                         <span>车牌号码</span>
                     </div>
                     <div class="centerarea-title-item"
-                         style="flex-basis: 300px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
-                        <span>错误数</span>
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>损坏位置</span>
+                    </div>
+                    <div class="centerarea-title-item"
+                         style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
+                        <span>其他信息</span>
                     </div>
                 </div>
                 <div class="centerarea-body">
@@ -2429,16 +2425,23 @@
                             <span style="padding-left:16px;padding-right:12px">{{item.date | datefilter}}</span>
                         </div>
                         <div style="min-width: 140px;text-align: left;">
-                            <span style="padding-left:16px;padding-right:12px">{{item.date | timefilter}}</span>
-                        </div>
-                        <div style="min-width: 140px;text-align: left;">
-                            <span style="padding-left:16px;padding-right:12px">{{item.finishDate | timefilter}}</span>
-                        </div>
-                        <div style="min-width: 140px;text-align: left;">
                             <span style="padding-left:16px;padding-right:12px">{{item.car_id.carid}}</span>
                         </div>
-                        <div style="flex-basis: 100%;text-align: left;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">
-                            <span style="padding-left:16px;padding-right:12px">{{tempAllDriverCheckCarInfo[index]}}</span>
+                        <div style="min-width: 140px;text-align: left;padding-left: 4px;">
+                            <span style="display: -webkit-flex;display: flex;">
+                                <p v-if="!item.brake" style="margin-left: 4px;"> 刹车 </p>
+                                <p v-if="!item.clean" style="margin-left: 4px;"> 清洁 </p>
+                                <p v-if="!item.headlight" style="margin-left: 4px;"> 大灯 </p>
+                                <p v-if="!item.mirror" style="margin-left: 4px;"> 车镜 </p>
+                                <p v-if="!item.petrolCard" style="margin-left: 4px;"> 油卡 </p>
+                                <p v-if="!item.tyre" style="margin-left: 4px;"> 轮胎 </p>
+                                <p v-if="!item.wiper" style="margin-left: 4px;"> 雨刷 </p>
+                                <p v-if="!item.backup" style="margin-left: 4px;"> 备胎 </p>
+                            </span>
+                        </div>
+                        <div style="min-width: 140px;text-align: left;">
+                            <span v-if="item.text" style="padding-left:16px;padding-right:12px">{{item.text}}</span>
+                            <span v-else style="padding-left:16px;padding-right:12px">无</span>
                         </div>
                     </div>
                 </div>
@@ -4297,6 +4300,7 @@ export default {
         },
 
         openDriverCheckCarInfoDetailMethod(checkInfo) {
+            console.log(checkInfo)
             this.showDriverCheckCarDetailInfo = true;
             this.tempInfo = checkInfo;
         },
