@@ -1828,7 +1828,8 @@ export default {
             smallTipsInfo:'未知错误',
             isShowNoOrderDialog:false,
             noOrderArray:[],
-            noOrderArrayForAddMission:[]//针对添加任务时多日未来单客户的显示
+            noOrderArrayForAddMission:[],//针对添加任务时多日未来单客户的显示
+            tempTripsArray:[]
         };
     },
     computed: {
@@ -2871,6 +2872,8 @@ export default {
         },
 
         choseitem(item) {
+            console.log(item)
+            this.tempTripsArray = item.timesclientb
             this._id = item._id;
             this.usedDriverInfo = [];
             this.alldirverinfo.forEach(element => {
@@ -3338,7 +3341,7 @@ export default {
                     if (doc.data.code === 0) {
                         let addCSmissionNum = 0;
                         let ClientPositionNum = -2;
-                        item.missionclient.forEach(elementX => {
+                        this.tempTripsArray.forEach(elementX => {
                             ClientPositionNum += 2;
                             doc.data.doc.forEach(elementY => {
                                 if (
