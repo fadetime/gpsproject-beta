@@ -3084,7 +3084,7 @@ export default {
                     //将多日未来单客户提取start
                     this.noOrderArrayForAddMission = []
                     this.aLineInfo.timesclientb.forEach(item => {
-                        if(item.noOrderDay >=3 && item.basket >=1){
+                        if(item.noOrderDay >=1 && item.basket >=1){
                             this.noOrderArrayForAddMission.push(item)
                         }
                     })

@@ -2184,15 +2184,15 @@
                                     <span>车牌</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
-                                     style="min-width:378px">
+                                     style="width:220px">
                                     <span>检查结果</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
-                                     style="min-width:80px">
+                                     style="width:100px">
                                     <span>是否检查</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
-                                     style="min-width:170px">
+                                     style="width:120px">
                                     <span>检查日期</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
@@ -2200,76 +2200,103 @@
                                     <span>备注</span>
                                 </div>
                             </div>
-                            <div v-for="(item,index) in tempInfo.missionList "
-                                 class="checkditailbox-body-center-item"
-                                 :key="index">
-                                <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:120px;margin-left:4px">
-                                    <span>{{item.carPlate}}</span>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     title="刹车灯">
-                                    <div v-if="item.brakeLight" class="brakeLights_icon"></div>
-                                    <div v-else class="brakeLights_icon_red"></div>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     title="前大灯"> 
-                                    <div v-if="item.headlight" class="light_icon"></div>
-                                    <div v-else class="light_icon_red"></div>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     title="油卡">
-                                    <div v-if="item.petrolCard" class="card_icon"></div>
-                                    <div v-else class="card_icon_red"></div>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     title="轮胎">
-                                    <div v-if="item.tyre" class="tyre_icon"></div>
-                                    <div v-else class="tyre_icon_red"></div>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     title="手推车">
-                                    <div v-if="item.cart" class="cart_icon"></div>
-                                    <div v-else class="cart_icon_red"></div>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     title="记录仪">
-                                    <div v-if="item.drivingRecorder" class="drivingRecorder"></div>
-                                    <div v-else class="drivingRecorder_red"></div>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     title="车窗">
-                                    <div v-if="item.carWindow" class="carWindow"></div>
-                                    <div v-else class="carWindow_red"></div>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     title="尾灯">
-                                    <div v-if="item.taillight" class="headlight"></div>
-                                    <div v-else class="headlight_red"></div>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     title="后视镜">
-                                    <div v-if="item.sideMirror" class="side_mirror"></div>
-                                    <div v-else class="side_mirror_red"></div>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:93px">
-                                    <span v-if="item.isFinish && item.checkDate === null">已跳过</span> 
-                                    <span v-else-if="item.isFinish">已检查</span>
-                                    <span v-else>未检查</span>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     style="min-width:170px">
-                                     <span v-if="item.isFinish && item.checkDate === null">未记录</span> 
-                                    <span v-else-if="item.checkDate">{{item.checkDate | datefilter}}{{item.checkDate | timefilter}}</span>
-                                    <span v-else>未提交</span>
-                                </div>
-                                <div class="checkditailbox-body-center-item-content"
-                                     style="width:300px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
-                                    <span v-if="item.note === null">无备注</span>
-                                    <span v-else>{{item.note}}</span>
+                            <div style="overflow:auto;height:500px">
+                                <div v-for="(item,index) in tempInfo.missionList "
+                                    class="checkditailbox-body-center-item"
+                                    :key="index">
+                                    <div class="checkditailbox-body-center-item-carid"
+                                        style="min-width:120px;margin-left:4px">
+                                        <span>{{item.carPlate}}</span>
+                                    </div>
+                                    <div class="checkditailbox-body-center-item-check_res">
+                                        <div class="checkditailbox-body-center-item-check_res_frame">
+                                            <div class="checkditailbox-body-center-item-check_res_frame_item"
+                                                title="刹车灯">
+                                                <div v-if="item.brakeLight" class="brakeLights_icon"></div>
+                                                <div v-else class="brakeLights_icon_red"></div>
+                                            </div>
+                                            <div class="checkditailbox-body-center-item-check_res_frame_item"
+                                                title="前大灯"> 
+                                                <div v-if="item.headlight" class="light_icon"></div>
+                                                <div v-else class="light_icon_red"></div>
+                                            </div>
+                                            <div class="checkditailbox-body-center-item-check_res_frame_item"
+                                                title="油卡">
+                                                <div v-if="item.petrolCard" class="card_icon"></div>
+                                                <div v-else class="card_icon_red"></div>
+                                            </div>
+                                            <div class="checkditailbox-body-center-item-check_res_frame_item"
+                                                title="轮胎">
+                                                <div v-if="item.tyre" class="tyre_icon"></div>
+                                                <div v-else class="tyre_icon_red"></div>
+                                            </div>
+                                            <div class="checkditailbox-body-center-item-check_res_frame_item"
+                                                title="手推车">
+                                                <div v-if="item.cart" class="cart_icon"></div>
+                                                <div v-else class="cart_icon_red"></div>
+                                            </div>
+                                        </div>
+                                        <div class="checkditailbox-body-center-item-check_res_frame">
+                                            <div class="checkditailbox-body-center-item-check_res_frame_item"
+                                                title="记录仪">
+                                                <div v-if="item.drivingRecorder" class="drivingRecorder"></div>
+                                                <div v-else class="drivingRecorder_red"></div>
+                                            </div>
+                                            <div class="checkditailbox-body-center-item-check_res_frame_item"
+                                                title="车窗">
+                                                <div v-if="item.carWindow" class="carWindow"></div>
+                                                <div v-else class="carWindow_red"></div>
+                                            </div>
+                                            <div class="checkditailbox-body-center-item-check_res_frame_item"
+                                                title="尾灯">
+                                                <div v-if="item.taillight" class="headlight"></div>
+                                                <div v-else class="headlight_red"></div>
+                                            </div>
+                                            <div class="checkditailbox-body-center-item-check_res_frame_item"
+                                                title="后视镜">
+                                                <div v-if="item.sideMirror" class="side_mirror"></div>
+                                                <div v-else class="side_mirror-red"></div>
+                                            </div>
+                                            <div class="checkditailbox-body-center-item-check_res_frame_item"
+                                                title="内存卡">
+                                                <div v-if="item.sideMirror" class="SD_card"></div>
+                                                <div v-else class="SD_card-red"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="checkditailbox-body-center-state"
+                                        style="min-width:93px">
+                                        <span v-if="item.isFinish && item.checkDate === null" style="color:#ff9800">已跳过</span> 
+                                        <span v-else-if="item.isFinish" style="color:#2f9514">已检查</span>
+                                        <span v-else>未检查</span>
+                                    </div>
+                                    <div class="checkditailbox-body-center-item-content"
+                                        style="width:120px;line-height: 30px;text-align: left;padding-left:12px">
+                                        <div v-if="item.isFinish && item.checkDate === null" style="line-height: 60px;">
+                                            <span>未记录</span> 
+                                        </div> 
+                                        <div v-else-if="item.checkDate" >
+                                            <div style="height:30px">
+                                                <span>{{item.checkDate | datefilter}}</span>
+                                            </div>
+                                            <div style="height:30px">
+                                                <span>{{item.checkDate | timefilter}}</span>
+                                            </div>
+                                            
+                                        </div> 
+                                        <div v-else style="line-height: 60px;">
+                                            <span>未提交</span>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="checkditailbox-body-center-item-content"
+                                        style="width:300px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+                                        <span v-if="item.note === null">无备注</span>
+                                        <span v-else>{{item.note}}</span>
+                                    </div>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                     <div>
@@ -5734,9 +5761,13 @@ export default {
 .checkditailbox-body-center-title {
     display: flex;
     display: -webkit-flex;
-    border-bottom: 1px solid #e0e0e0;
-    height: 30px;
+    border: 1px solid #eee;
+    height: 42px;
     line-height: 30px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    padding: 6px 12px;
+    border-radius: 10px;
 }
 
 .checkditailbox-body-center-title-content {
@@ -5749,13 +5780,43 @@ export default {
 .checkditailbox-body-center-item {
     display: flex;
     display: -webkit-flex;
-    height: 36px;
-    line-height: 36px;
+    height: 68px;
+    line-height: 60px;
+    padding: 4px 12px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 5px;
+    margin: 6px 0;
+    border: 1px solid #eee;
 }
 
-.checkditailbox-body-center-item-content {
-    padding-left: 12px;
+.checkditailbox-body-center-item-carid{
+    width: 120px;
+    line-height: 60px;
     text-align: left;
+    padding-left: 12px;
+}
+
+.checkditailbox-body-center-item-check_res{
+    width: 220px;
+    padding-left: 12px;
+}
+
+.checkditailbox-body-center-item-check_res_frame{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+}
+
+.checkditailbox-body-center-item-check_res_frame_item{
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.checkditailbox-body-center-state{
+    width: 100px;
+    text-align: left;
+    padding-left: 12px;
 }
 
 .checkdetail-left {
@@ -6188,6 +6249,26 @@ export default {
     background: #d74342;
     mask-image: url(../../public/img/icons/side_mirror.svg);
     -webkit-mask-image: url(../../public/img/icons/side_mirror.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.SD_card {
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/SD_card.svg);
+    -webkit-mask-image: url(../../public/img/icons/SD_card.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.SD_card-red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/SD_card.svg);
+    -webkit-mask-image: url(../../public/img/icons/SD_card.svg);
     width: 30px;
     height: 30px;
     mask-size: 30px 30px;
