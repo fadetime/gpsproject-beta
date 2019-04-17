@@ -913,8 +913,9 @@
                             <span v-else>Null</span>
                         </div>   
                         <div class="report_backmission_body_item" >
-                            <span v-if="!item.isFinish" style="color: rgb(255, 152, 0);">未完成</span>
-                            <span v-else-if="item.isFinish && !item.finishiDate" style="color: green;">未取回</span>
+                            <span v-if="!item.isFinish" style="color: rgb(255, 152, 0);">未发送</span>
+                            <span v-else-if="item.isFinish && !item.finishiDate" style="color: rgb(255, 152, 0);">未完成</span>
+                            <span v-else-if="item.isFinish && item.isReturnDone === 'false'" style="color: green;">未取回</span>
                             <span v-else style="color: green;">已完成</span>
                         </div>  
                     </div>
@@ -3130,7 +3131,7 @@
                                 <span>任务状态</span>
                             </div>
                             <div class="report_backdetail_front_box_body_item_right">
-                                <span v-if="shippingMission.isFinish && !shippingMission.finishiDate" style="color:#d74342">未取回</span>
+                                <span v-if="shippingMission.isFinish && shippingMission.isReturnDone === 'false'" style="color:#d74342">未取回</span>
                                 <span v-else-if="shippingMission.isFinish" style="color:green">已完成</span>
                                 <span v-else style="color:#ff9800">未完成</span>
                             </div>
@@ -4081,6 +4082,7 @@ export default {
                         }, 3000);
                     }
                     this.shippingMission = item
+                    console.log(item)
                     this.showMissionDetailInfo = true
                 })
                 .catch(err => {
@@ -6551,7 +6553,7 @@ export default {
 
 .report_backdetail_front_box_body_item_right{
     margin-left: 8px;
-    width: 86px;
+    width: 136px;
     text-align: left;
 }
 
