@@ -1431,31 +1431,71 @@
                     enter-active-class="animated zoomIn faster"
                     leave-active-class="animated zoomOut faster">
             <div v-if="showEditMissionBox"
-                 class="mapbox-front"
+                 class="home_change_mission_front"
                  @click.self.prevent="showEditMissionBox = false">
-                <div class="mapbox-front-box">
-                    <div class="mapbox-front-box-top">
+                <div class="home_change_mission_front_box">
+                    <div class="home_change_mission_front_box_title">
                         <span>修改任务</span>
                     </div>
-                    <div>
-                        <md-button class="md-raised"
-                                   @click="editMissionClientMethod"
-                                   style="font-size:18px;width:80px;height:30px">修改客户</md-button>
+                    <div class="home_change_mission_front_box_body">
+                        <div class="home_white_button" @click="editMissionDriverMethod">
+                            <span>修改司机</span>
+                        </div>
+                        <div class="home_white_button" @click="editMissionClientMethod">
+                            <span>修改客户</span>
+                        </div>
+                        <div class="home_white_button" @click="editMissionDateMethod">
+                            <span>修改时间</span>
+                        </div>
                     </div>
-                    <div>
-                        <md-button class="md-raised"
-                                   @click="editMissionDateMethod"
-                                   style="font-size:18px;width:80px;height:30px">修改时间</md-button>
-                    </div>
-                    <div>
-                        <md-button class="md-raised md-primary"
-                                   @click="showEditMissionBox = false"
-                                   style="font-size:18px;width:80px;height:30px">关闭</md-button>
+                    <div class="home_change_mission_front_box_bottom">
+                        <div class="home_white_button" @click="showEditMissionBox = false">
+                            <span>关闭</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </transition>
         <!-- edit mission end -->
+
+        <!-- edit mission-driver start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowEditDriverBox"
+                 class="mapbox-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowEditDriverBox"
+                 class="home_change_mission_front"
+                 @click.self.prevent="isShowEditDriverBox = false">
+                <div class="home_change_mission_front_box">
+                    <div class="home_change_mission_front_box_title">
+                        <span>修改司机</span>
+                    </div>
+                    <div class="home_change_mission_driver_front_box_body">
+                        <div class="home_change_mission_driver_front_box_body_item" v-for="(item,index) in dirverNameArray" :key="index" @click="choiseEditDriverMethod(item)">
+                            <div>
+                                <span>{{item.dirvername}}</span>
+                            </div>
+                            <div v-if="choiseEditDriver === item.dirvername" class="icon_check"></div>
+                        </div>
+                    </div>
+                    <div class="home_change_mission_front_box_bottom">
+                        <div class="home_white_button" @click="isShowEditDriverBox = false">
+                            <span>关闭</span>
+                        </div>
+                        <div class="home_white_button" @click="confirmEditDriverMethod()" style="margin-left:8px">
+                            <span>确定</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- edit mission-driver end -->
+
         <!-- edit mission-client start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -1711,6 +1751,7 @@
             </div>
         </transition>
         <!-- no order client dialog end -->
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
     </div>
 </template>
 
@@ -1720,12 +1761,14 @@ import config from "../../public/js/config.js";
 import _ from "lodash";
 import draggable from "vuedraggable";
 import VueDatepickerLocal from "vue-datepicker-local"; //时间选择组件
+import tipsBox from "@/components/tipsBox.vue"
 
 export default {
     name: "home",
     components: {
         draggable,
-        VueDatepickerLocal
+        VueDatepickerLocal,
+        tipsBox
     },
     data() {
         return {
@@ -1829,7 +1872,13 @@ export default {
             isShowNoOrderDialog:false,
             noOrderArray:[],
             noOrderArrayForAddMission:[],//针对添加任务时多日未来单客户的显示
-            tempTripsArray:[]
+            tempTripsArray:[],
+            isShowEditDriverBox:false,
+            dirverNameArray:[],
+            tipsShowColor:null,
+            tipsInfo:null,
+            isShowTipsBox:false,
+            choiseEditDriver:null
         };
     },
     computed: {
@@ -1903,6 +1952,63 @@ export default {
     },
 
     methods: {
+        confirmEditDriverMethod(){
+            axios
+                .post(config.server + "/mission/editDriver",{
+                    driver:this.choiseEditDriver,
+                    _id:this.missionid
+                })
+                .then(doc =>{
+                    if(doc.data.code === 0){
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = '修改任务司机成功'
+                        this.isShowTipsBox = true
+                        this.isShowEditDriverBox = false
+                        this.showEditMissionBox = false
+                        this.getMission();
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '修改任务司机失败'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        choiseEditDriverMethod(info){
+            this.choiseEditDriver = info.dirvername
+        },
+
+        editMissionDriverMethod(){
+            this.choiseEditDriver = this.missiondriver
+            axios
+                .post(config.server + "/dirver/driverName")
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.dirverNameArray = doc.data.doc
+                        this.isShowEditDriverBox = true
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '获取司机数据失败'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
         openNoOrderForMissino(){
             this.noOrderArray = this.noOrderArrayForAddMission
             this.isShowNoOrderDialog = true
@@ -4020,6 +4126,84 @@ export default {
     z-index: 23;
 }
 
+.home_change_mission_front{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 24;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home_change_mission_front_box {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #f7f7f7;
+}
+
+.home_change_mission_front_box_title{
+    height: 30px;
+    font-size: 16px;
+    line-height: 30px;
+    background: #d44950;
+    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.home_change_mission_front_box_body{
+    margin: 8px 12px;
+}
+
+.home_change_mission_front_box_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-bottom: 8px;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.home_change_mission_driver_front_box_body{
+    margin: 8px 12px;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.home_change_mission_driver_front_box_body_item{
+    border-bottom: 1px solid #eee;
+    margin-bottom: 4px;
+    height: 30px;
+    line-height: 30px;
+    position: relative;
+    cursor: pointer;
+}
+
+.icon_check {
+    background: green;
+    mask-image: url(../../public/img/icons/baseline-check_circle_outline-24px.svg);
+    -webkit-mask-image: url(../../public/img/icons/baseline-check_circle_outline-24px.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
 .mapbox-front {
     position: fixed;
     top: 0;
@@ -4196,6 +4380,20 @@ export default {
     border-radius: 10px;
     display: flex;
     display: -webkit-flex;
+    cursor: pointer;
+}
+
+.home_white_button{
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 5px;
+    margin-top: 12px;
+    border: 1px solid #eee;
+    background-color: #fff;
     cursor: pointer;
 }
 

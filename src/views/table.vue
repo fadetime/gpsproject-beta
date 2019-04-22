@@ -3131,7 +3131,8 @@
                                 <span>任务状态</span>
                             </div>
                             <div class="report_backdetail_front_box_body_item_right">
-                                <span v-if="shippingMission.isFinish && shippingMission.isReturnDone === 'false'" style="color:#d74342">未取回</span>
+                                <span v-if="!shippingMission.isFinish" style="color: rgb(255, 152, 0);">未发送</span>
+                                <span v-else-if="shippingMission.isFinish && shippingMission.isReturnDone === 'false'" style="color:#d74342">未取回</span>
                                 <span v-else-if="shippingMission.isFinish" style="color:green">已完成</span>
                                 <span v-else style="color:#ff9800">未完成</span>
                             </div>
