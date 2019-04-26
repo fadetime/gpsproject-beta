@@ -1193,8 +1193,8 @@ export default {
 }
 
 .rolebox-front-box-title {
-    height: 30px;
-    line-height: 30px;
+    height: 40px;
+    line-height: 40px;
     font-size: 16px;
     background: #d44950;
     color: #fff;

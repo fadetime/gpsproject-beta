@@ -51,7 +51,9 @@
                  @click="reportModeButtonMethod('bill')">
                 <span>账单统计</span>
             </div>
+            <button>test</button>
         </div>
+        
         <div v-if="showWindow === 'night'"
              class="toparea">
 
@@ -162,44 +164,8 @@
         <!-- 白班统计部分 end -->
         
         <!-- 退还统计部分 start -->
-        <div v-else-if="showWindow === 'backMission'"
-             class="toparea">
-            <div class="table_toparea_button_area" style="border-bottom: 1px solid #eee;">
-                <div class="whiteButton" style="margin-right:12px" @click="isShowBackMission = !isShowBackMission">
-                    <span>退菜统计</span>
-                </div>
-                <!-- <div class="whiteButton" @click="isShowDayShiftCheckCar = !isShowDayShiftCheckCar,isShowDayShiftMission = false">
-                    <span>车辆检查</span>
-                </div> -->
-            </div>
-            
-            <div v-if="isShowBackMission" style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff">
-                <vue-datepicker-local v-model="startDate"
-                                      style="margin-top: 12px;"
-                                      placeholder="开始时间" />
-                <span> ~ </span>
-                <vue-datepicker-local v-model="endDate"
-                                      style="margin-top: 12px;"
-                                      placeholder="结束时间" />
-                <md-button class="md-raised md-primary"
-                           @click="findBackMissionReport"
-                           style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
-            </div>
-            <!-- <div v-else-if="isShowDayShiftCheckCar" style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff" class="table_toparea_button_area">
-                <div>
-                    <vue-datepicker-local v-model="startDate"
-                                      style="margin-top: 12px;"
-                                      placeholder="开始时间" />
-                    <span> ~ </span>
-                    <vue-datepicker-local v-model="endDate"
-                                        style="margin-top: 12px;"
-                                        placeholder="结束时间" />
-                </div>
-                <div class="white_button" @click="findDayShiftCheckCarMethod" style="margin-top: 10px;margin-left: 10px;">
-                    <span>查询</span>
-                </div>
-            </div> -->
-        </div>
+        <backItem v-else-if="showWindow === 'backMission'"></backItem>
+        
         <!-- 退还统计部分 end -->
 
         <div v-else-if="showWindow === 'bill'"
@@ -850,79 +816,6 @@
             </div>
         </transition>
         <!-- 车次框数多天报表 end -->
-        
-        <!-- 退菜统计报表 start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div class="centerarea" v-if="backMissionArray.length != 0" style="max-width: 886px;">
-                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="backMissionArray = []">
-                    <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
-                </div>
-                <div class="centerarea-head">
-                    <span>退菜数据报表</span>
-                </div>
-                <div style="padding: 24px;">
-                    <div class="report_backmission_title">
-                        <div class="report_backmission_title_frame" style="width:50px">
-                            <div class="report_backmission_title_frame_box" >
-                                <span>序号</span>
-                            </div>
-                        </div>
-                        <div class="report_backmission_title_frame" >
-                            <div class="report_backmission_title_frame_box" style="width:120px;text-align: left;">
-                                <span>客户名称</span>
-                            </div>
-                        </div>
-                        <div class="report_backmission_title_frame">
-                            <div class="report_backmission_title_frame_box">
-                                <span>创建日期</span>
-                            </div>
-                        </div>
-                        <div class="report_backmission_title_frame">
-                            <div class="report_backmission_title_frame_box" style="width:360px;text-align: left;">
-                                <span>客服留言</span>
-                            </div>
-                        </div>
-                        <div class="report_backmission_title_frame">
-                            <div class="report_backmission_title_frame_box">
-                                <span>完成日期</span>
-                            </div>
-                        </div>
-                        <div class="report_backmission_title_frame">
-                            <div class="report_backmission_title_frame_box">
-                                <span>任务状态</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="report_backmission_body" v-for="(item,index) in backMissionArray" :key="index" @click="openBackMissionDetail(item)">
-                        <div class="report_backmission_body_item" style="text-align:center;width:50px">
-                            <span>{{index + 1}}</span>
-                        </div>
-                        <div class="report_backmission_body_item" style="width:130px">
-                            <span style="padding:0 4px">{{item.clientName}}</span>
-                        </div>
-                        <div class="report_backmission_body_item" style="width:82px">
-                            <span>{{item.createDate | datefilter}}</span>
-                        </div>
-                        <div class="report_backmission_body_item" style="width:368px">
-                            <span>{{item.note}}</span>
-                        </div>
-                        <div class="report_backmission_body_item" style="width:80px">
-                            <span v-if="item.finishiDate">{{item.finishiDate | datefilter}}</span>
-                            <span v-else>Null</span>
-                        </div>   
-                        <div class="report_backmission_body_item" >
-                            <span v-if="!item.isFinish" style="color: rgb(255, 152, 0);">未发送</span>
-                            <span v-else-if="item.isFinish && !item.finishiDate" style="color: rgb(255, 152, 0);">未完成</span>
-                            <span v-else-if="item.isFinish && item.isReturnDone === 'false'" style="color: green;">未取回</span>
-                            <span v-else style="color: green;">已完成</span>
-                        </div>  
-                    </div>
-                </div>
-            </div>
-        </transition>
-        <!-- 退菜统计报表 end -->
 
         <!-- 车辆维修 start -->
         <transition name="custom-classes-transition"
@@ -3060,94 +2953,6 @@
         </transition>
         <!-- view pic start -->
 
-        <!-- back mission detail report box start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div v-if="isShowBackMissionDetail"
-                 class="checkditailbox-back"></div>
-        </transition>
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated zoomIn faster"
-                    leave-active-class="animated zoomOut faster">
-            <div v-if="isShowBackMissionDetail"
-                 class="checkditailbox-front"
-                 @click.self.prevent="isShowBackMissionDetail = false">
-                <div class="report_backdetail_front_box">
-                    <div class="report_backdetail_front_box_title">
-                        <span>退菜详细信息</span>
-                    </div>
-                    <div class="report_backdetail_front_box_body">
-                        <div class="report_backdetail_front_box_body_item">
-                            <div class="report_backdetail_front_box_body_item_left">
-                                <span>客户姓名</span>
-                            </div>
-                            <div class="report_backdetail_front_box_body_item_right">
-                                <span>{{shippingMission.clientName}}</span>
-                            </div>
-                        </div>
-                        <div class="report_backdetail_front_box_body_item">
-                            <div class="report_backdetail_front_box_body_item_left">
-                                <span>创建日期</span>
-                            </div>
-                            <div class="report_backdetail_front_box_body_item_right">
-                                <span>{{shippingMission.createDate | datefilter}}</span>
-                            </div>
-                        </div>
-                        <div class="report_backdetail_front_box_body_item">
-                            <div class="report_backdetail_front_box_body_item_left">
-                                <span>创建时间</span>
-                            </div>
-                            <div class="report_backdetail_front_box_body_item_right">
-                                <span>{{shippingMission.createDate | timefilter}}</span>
-                            </div>
-                        </div>
-                        <div class="report_backdetail_front_box_body_item" v-if="shippingMission.finishiDate">
-                            <div class="report_backdetail_front_box_body_item_left">
-                                <span>取回日期</span>
-                            </div>
-                            <div class="report_backdetail_front_box_body_item_right">
-                                <span>{{shippingMission.finishiDate | datefilter}}</span>
-                            </div>
-                        </div>
-                        <div class="report_backdetail_front_box_body_item" v-if="shippingMission.finishiDate">
-                            <div class="report_backdetail_front_box_body_item_left">
-                                <span>取回时间</span>
-                            </div>
-                            <div class="report_backdetail_front_box_body_item_right">
-                                <span>{{shippingMission.finishiDate | timefilter}}</span>
-                            </div>
-                        </div>
-                        <div class="report_backdetail_front_box_body_item">
-                            <div class="report_backdetail_front_box_body_item_left">
-                                <span>取回司机</span>
-                            </div>
-                            <div class="report_backdetail_front_box_body_item_right">
-                                <span>{{shippingMission.driver}}</span>
-                            </div>
-                        </div>
-                        <div class="report_backdetail_front_box_body_item">
-                            <div class="report_backdetail_front_box_body_item_left">
-                                <span>任务状态</span>
-                            </div>
-                            <div class="report_backdetail_front_box_body_item_right">
-                                <span v-if="!shippingMission.isFinish" style="color: rgb(255, 152, 0);">未发送</span>
-                                <span v-else-if="shippingMission.isFinish && shippingMission.isReturnDone === 'false'" style="color:#d74342">未取回</span>
-                                <span v-else-if="shippingMission.isFinish" style="color:green">已完成</span>
-                                <span v-else style="color:#ff9800">未完成</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="report_backdetail_front_box_bottom">
-                        <div class="white_button" @click="isShowBackMissionDetail = false">
-                            <span>取消</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </transition>
-        <!-- back mission detail report box start -->
-
         <!-- tips box start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated bounceIn"
@@ -3176,6 +2981,7 @@ import VueDatepickerLocal from "vue-datepicker-local"; //时间选择组件
 import axios from "axios";
 import config from "../../public/js/config.js";
 import Chart from "chart.js";
+import backItem from "@/components/report/backItem.vue"
 
 function combination(arr) {
     let obj = {};
@@ -3199,7 +3005,8 @@ function combination(arr) {
 export default {
     name: "tablePage",
     components: {
-        VueDatepickerLocal
+        VueDatepickerLocal,
+        backItem
     },
     data() {
         return {
@@ -3300,28 +3107,6 @@ export default {
     },
 
     methods: {
-        openBackMissionDetail(item){
-            this.shippingMission = item
-            axios
-                .post(config.server + "/report/backFindDriver",{
-                    mission_id:item.mission_id
-                })
-                .then(doc => {
-                    console.log(doc)
-                    if(doc.data.code === 0){
-                        this.shippingMission.driver = doc.data.doc.missiondirver
-                    }else if(doc.data.code === 1){
-                        this.shippingMission.driver = '数据丢失'
-                    }else{
-                        this.shippingMission.driver = '数据错误'
-                    }
-                    this.isShowBackMissionDetail = true
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        },
-
         editTripsInfo(){
             axios
                 .post(config.server + "/report/editTripByDay",{
@@ -5233,47 +5018,6 @@ export default {
             }
         },
 
-        findBackMissionReport(){
-            if (!this.startDate || !this.endDate) {
-                this.tipsMsg = "请选择开始时间和结束时间！！！";
-                this.isOpenTipBox = true;
-                setTimeout(() => {
-                    this.isOpenTipBox = false;
-                }, 3000);
-            } else {
-                let start = new Date(this.startDate).toDateString();
-                start = new Date(start).getTime();
-                let end = new Date(this.endDate).toDateString();
-                end = new Date(end).getTime();
-                axios
-                    .post(config.server + "/report/backMission", {
-                        startDate: start,
-                        endDate: end
-                    })
-                    .then(doc => {
-                        console.log(doc)
-                        if(doc.data.code === 0){
-                            this.backMissionArray = doc.data.doc
-                        }else if(doc.data.code === 1){
-                            this.tipsMsg = "为找到符合条件的数据";
-                            this.isOpenTipBox = true;
-                            setTimeout(() => {
-                                this.isOpenTipBox = false;
-                            }, 3000);
-                        }else{
-                            this.tipsMsg = "查找时出现错误";
-                            this.isOpenTipBox = true;
-                            setTimeout(() => {
-                                this.isOpenTipBox = false;
-                            }, 3000);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-            }
-        },
-
         findDayReport() {
             if (!this.startDate || !this.endDate) {
                 this.tipsMsg = "请选择开始时间和结束时间！！！";
@@ -6512,56 +6256,5 @@ export default {
     margin: 0 4px;
     padding: 0 4px;
     cursor: pointer;
-}
-
-.report_backdetail_front_box{
-    background: #f7f7f7;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
-        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
-}
-
-.report_backdetail_front_box_title{
-    height: 30px;
-    line-height: 30px;
-    color: #fff;
-    background-color: #d74342;
-    font-size: 16px;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
-        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
-}
-
-.report_backdetail_front_box_body{
-    margin: 8px 12px;
-    padding: 8px 12px;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
-        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
-    border-radius: 10px;
-}
-
-.report_backdetail_front_box_body_item{
-    display: flex;
-    display: -webkit-flex;
-    height: 30px;
-    line-height: 30px;
-}
-
-.report_backdetail_front_box_body_item_left{
-    width: 60px;
-    text-align: right;
-}
-
-.report_backdetail_front_box_body_item_right{
-    margin-left: 8px;
-    width: 136px;
-    text-align: left;
-}
-
-.report_backdetail_front_box_bottom{
-    display: flex;
-    display: -webkit-flex;
-    justify-content: center;
-    padding-bottom: 8px;
 }
 </style>

@@ -175,7 +175,7 @@
                             </div>
                             <div class="tabletitle-item"
                                  style="flex-basis:150px">
-                                <span>{{item.clientatime|datefilter}}</span>
+                                <span>{{item.clientatime | datefilter}}</span>
                             </div>
                             <div class="tabletitle-item"
                                  style="flex-basis:100px">
@@ -200,7 +200,7 @@
 
         <!-- page bar start-->
         <!-- 合作商页码 -->
-        <div v-if="clientpage">
+        <div>
             <div style="display:flex;justify-content: center;"
                  v-if="pageCountA > 1">
                 <div class="page-bar">
@@ -210,23 +210,23 @@
                         </li>
                         <li v-for="(item,index) in pagesA"
                             :key="index"
-                            @click="pageButtonA(item)"
-                            :class="{'active':pageNow == item}">
-                            <span>{{item}}</span>
+                            @click="pageButtonA(item)">
+                            <span v-if="pageNow === item" class="activeblue">{{item}}</span>
+                            <span v-else>{{item}}</span>
                         </li>
                         <li @click="pageButtonA('B')">
                             <span>下一页</span>
                         </li>
                         <li>
-                            <span>共
-                                <i>{{pageCountA}}</i>页</span>
+                            <span>
+                                共<i>{{pageCountA}}</i>页
+                            </span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-        <!-- 客户页码 -->
-        <div v-else>
+        <div><!-- 客户页码 -->
             <div style="display:flex;justify-content: center;"
                  v-if="pageCount > 1">
                 <div class="page-bar">
@@ -236,9 +236,9 @@
                         </li>
                         <li v-for="(item,index) in pages"
                             :key="index"
-                            @click="pageButtonB(item)"
-                            :class="{'active':pageNow == item}">
-                            <span>{{item}}</span>
+                            @click="pageButtonB(item)">
+                            <span v-if="pageNow === item" class="activeblue">{{item}}</span>
+                            <span v-else>{{item}}</span>
                         </li>
                         <li @click="pageButtonB('B')">
                             <span>下一页</span>
@@ -251,6 +251,304 @@
             </div>
         </div>
         <!-- page bar end-->
+
+        <!-- client dialog start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowClientDialog" class="client_dialog_back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowClientDialog" class="client_dialog_front" @click.self.prevent="isShowClientDialog = false">
+                <div class="client_dialog_box">
+                    <div class="client_dialog_box_title">
+                        <span>客户管理</span>
+                    </div>
+                    <div class="client_dialog_box_body">
+                        <div class="client_dialog_box_body_top">
+                            <div class="client_dialog_box_body_left">
+                                <div class="client_dialog_box_body_left_item">
+                                    <div class="client_dialog_box_body_left_item_text">
+                                        <span>客户名称</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_left_item_content">
+                                        <input type="text" v-model="clientbname" style="text-align:center">
+                                    </div>
+                                </div>
+                                <div class="client_dialog_box_body_left_item">
+                                    <div class="client_dialog_box_body_left_item_text">
+                                        <span>英文名称</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_left_item_content">
+                                        <input type="text" v-model="clientbnameEN" style="text-align:center">
+                                    </div>
+                                </div>
+                                <div class="client_dialog_box_body_left_item">
+                                    <div class="client_dialog_box_body_left_item_text">
+                                        <span>所属地区</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_left_item_content"  style="display:flex;display:-webkit-flex">
+                                        <div class="client_dialog_choosebox">
+                                            <div style="width:100px;display:flex;display:-webkit-flex;justify-content: center;" @click="openChoiseAreaBoxMethod()">
+                                                <div v-if="!choseArea" class="client_dialog_choosebox_line" style="width: 60px;">
+                                                    <span>请选择</span>
+                                                </div>
+                                                <div v-else>
+                                                    <span>{{choseArea.areaName}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="client_dialog_white_button" style="width:60px;height:28px;line-height:28px;" @click="openAreaWindow">
+                                                <span>区域</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="client_dialog_box_body_left_item">
+                                    <div class="client_dialog_box_body_left_item_text">
+                                        <span>备注信息</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_left_item_content" style="height: 100px">
+                                        <textarea style="width: 160px;border-radius: 5px;height:100px;" v-model="clientNote"></textarea>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="client_dialog_box_body_right">
+                                <input type="file"
+                                    style="display:none"
+                                    id="upload_file"
+                                    @change="fileChange($event)"
+                                    accept="image/*">
+                                <div class="photoarea"
+                                    @click="uploadFile"
+                                    v-if="!clientImage">
+                                    <md-icon class="md-size-3x"
+                                            style="padding-top:110px"
+                                            v-if="!updateImagePreview">add_a_photo</md-icon>
+                                    <img :src="updateImagePreview"
+                                        alt="newimg"
+                                        v-else
+                                        style="height:100%">
+                                </div>
+                                <div class="photoarea"
+                                    @click="uploadFile"
+                                    v-else>
+                                    <img :src="clientImage | imgurl"
+                                        alt="newimg"
+                                        style="height:100%">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client_dialog_box_body_center">
+                            <div class="client_dialog_box_body_bottom_left">
+                                <div class="client_dialog_box_body_left_item" style="margin-top:0">
+                                    <div class="client_dialog_box_body_left_item_text">
+                                        <span>客户地址</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_left_item_content">
+                                        <input type="text" v-model="clientbaddress" style="text-align:center">
+                                    </div>
+                                </div>
+                                <div class="client_dialog_box_body_left_item">
+                                    <div class="client_dialog_box_body_left_item_text">
+                                        <span>客户电话</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_left_item_content">
+                                        <input type="number" v-model="clientbphone" style="text-align:center">
+                                    </div>
+                                </div>
+                                <div class="client_dialog_box_body_left_item">
+                                    <div class="client_dialog_box_body_left_item_text">
+                                        <span>服务商</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_left_item_content">
+                                        <div class="client_dialog_choosebox" @click="isShowChoisePartnerBox = true">
+                                            <div v-if="choseaname">
+                                                <span>{{choseaname.clientaname}}</span>
+                                            </div>
+                                            <div v-else class="client_dialog_choosebox_line">
+                                                <span>请选择</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="client_dialog_box_body_left_item">
+                                    <div class="client_dialog_box_body_left_item_text">
+                                        <span>必要拍照</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_left_item_content">
+                                        <div class="client_dialog_choosebox" style="justify-content:space-around">
+                                            <div style="display:flex;display:-webkit-flex;height:30px">
+                                                <div>
+                                                    <input id="radio_need_pic_true" type="radio" style="height:20px;width: 20px;margin-top: 6px;" value="true" v-model="isNeedPic">
+                                                </div>
+                                                <label for="radio_need_pic_true">
+                                                    <div>
+                                                        <span>是</span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div style="display:flex;display:-webkit-flex;height:30px">
+                                                <div>
+                                                    <input id="radio_need_pic_false" type="radio" style="height:20px;width: 20px;margin-top: 6px;" value="false" v-model="isNeedPic">
+                                                </div>
+                                                <label for="radio_need_pic_false">
+                                                    <div>
+                                                        <span>否</span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="client_dialog_box_body_bottom_right">
+                                <div class="client_dialog_box_body_left_item" style="margin-top:0">
+                                    <div class="client_dialog_box_body_left_item_text">
+                                        <span>要求时间</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_left_item_content"  @click="showTimePick = true">
+                                        <div class="client_dialog_choosebox">
+                                            <div v-if="!timeLimit" class="client_dialog_choosebox_line">
+                                                <span>请选择</span>
+                                            </div>
+                                            <div v-else>
+                                                <span>{{timeLimit}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="client_dialog_box_body_left_item">
+                                    <div class="client_dialog_box_body_left_item_text">
+                                        <span>客户邮编</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_left_item_content">
+                                        <input type="text" v-model="clientbpostcode" style="text-align:center">
+                                    </div>
+                                </div>
+                                <div class="client_dialog_box_body_left_item">
+                                    <div class="client_dialog_box_body_left_item_text">
+                                        <span>客户状态</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_left_item_content">
+                                        <div class="client_dialog_choosebox">
+                                            <div style="display:flex;display:-webkit-flex;height:30px">
+                                                <div>
+                                                    <input id="radio_need_pic_true" type="radio" style="height:20px;width: 20px;margin-top: 6px;" v-model="clientbstatus" value="active">
+                                                </div>
+                                                <label for="radio_need_pic_true">
+                                                    <div>
+                                                        <span>Active</span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <div style="display:flex;display:-webkit-flex;height:30px">
+                                                <div>
+                                                    <input id="radio_need_pic_false" type="radio" style="height:20px;width: 20px;margin-top: 6px;" value="inactive" v-model="clientbstatus">
+                                                </div>
+                                                <label for="radio_need_pic_false">
+                                                    <div>
+                                                        <span>Inactive</span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="client_dialog_box_body_bottom_basketframe">
+                                    <div class="client_dialog_box_body_bottom_basketframe_text">
+                                        <span>拖欠框数</span>
+                                    </div>
+                                    <div class="client_dialog_box_body_bottom_basketframe_content">
+                                        <div style="width:100px">
+                                            <span v-if="basketNumber">{{basketNumber}}</span>
+                                            <span v-else>未输入</span>
+                                        </div>
+                                        <div class="client_dialog_white_button" style="width:60px;height:26px;font-size:14px;line-height:26px;border: 1px solid #eee;border-radius: 5px;" @click="openEditBasketNumMethod">
+                                            <span>修改</span>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="client_dialog_box_bottom">
+                        <div class="client_dialog_white_button" @click="isShowClientDialog = false">
+                            <span>取消</span>
+                        </div>
+                        <div v-if="savemodeb" class="client_dialog_white_button" style="margin-left:12px" @click="addclientb">
+                            <span>保存</span>
+                        </div>
+                        <div v-else class="client_dialog_white_button" style="margin-left:12px" @click="confirmEditClientB">
+                            <span>修改</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- client dialog end -->
+
+        <!-- choise area box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChoiseAreaBox" class="client_dialog_back" style="z-index:25"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChoiseAreaBox" class="client_dialog_front" style="z-index:26" @click.self.prevent="isShowChoiseAreaBox = false">
+                <div class="client_dialog_box">
+                    <div class="client_dialog_box_title">
+                        <span>区域选择</span>
+                    </div>
+                    <div style="margin:12px;">
+                        <div class="client_dialog_white_button" style="margin-bottom:8px" v-for="(item,index) in allAreaArray" :key="index" @click="choiseAreaMethod(item)">
+                            <span>{{item.areaName}}</span>
+                        </div>
+                    </div>
+                    <div class="client_dialog_box_bottom">
+                        <div class="client_dialog_white_button" @click="isShowChoiseAreaBox = false">
+                            <span>取消</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- choise area box end -->
+
+        <!-- choise area box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChoisePartnerBox" class="client_dialog_back" style="z-index:25"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChoisePartnerBox" class="client_dialog_front" style="z-index:26" @click.self.prevent="isShowChoisePartnerBox = false">
+                <div class="client_dialog_box">
+                    <div class="client_dialog_box_title">
+                        <span>服务商选择</span>
+                    </div>
+                    <div style="margin:12px;">
+                        <div class="client_dialog_white_button" style="margin-bottom:8px" v-for="(item,index) in allclientainfo" :key="index" @click="choisePartnerMethod(item)">
+                            <span>{{item.clientaname}}</span>
+                        </div>
+                    </div>
+                    <div class="client_dialog_box_bottom">
+                        <div class="client_dialog_white_button" @click="isShowChoisePartnerBox = false">
+                            <span>取消</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- choise area box end -->
+
         <!-- Dialog b start-->
         <md-dialog :md-active.sync="showDialogb"
                    class="showDialogbclass">
@@ -842,7 +1140,7 @@
         <transition name="custom-classes-transition"
                     enter-active-class="animated slideInLeft"
                     leave-active-class="animated slideOutLeft">
-            <div style="position:fixed;top:0;bottom:0;left:0;background-color:#fff;z-index:12;width:300px;box-shadow:1px 1px 5px"
+            <div style="position:fixed;top:0;bottom:0;left:0;background-color:#fff;z-index:25;width:300px;box-shadow:1px 1px 5px"
                  v-if="areaWindow">
                 <div class="areawindow-title"
                      style="background-color:#ff5252;height:30px;line-height:30px;box-shadow:1px 1px 5px">
@@ -1006,11 +1304,6 @@
                          md-content="操作成功"
                          md-confirm-text="关闭" />
         <!-- successd mesage end -->
-        <!-- error window start -->
-        <md-dialog-alert :md-active.sync="error"
-                         :md-content="erromsg"
-                         md-confirm-text="关闭" />
-        <!-- error window end -->
         <!-- error2 window start -->
         <md-dialog-confirm :md-active.sync="SMSErr"
                            md-title="确认关闭?"
@@ -1097,18 +1390,18 @@
                                 <div v-for="(hour,hourindex) in 24"
                                      :key="hourindex+100"
                                      class="timepickerlist-box-item"
-                                     @click="choiceHMethod(hour)">
-                                    <span v-if="hour<10">{{'0'+hour}}</span>
-                                    <span v-else>{{hour}}</span>
+                                     @click="choiceHMethod(hour-1)">
+                                    <span v-if="hour - 1 <10">{{'0'+ (hour-1)}}</span>
+                                    <span v-else>{{hour-1}}</span>
                                 </div>
                             </div>
                             <div class="timepickerlist-box">
                                 <div v-for="(min, minindex) in 60"
                                      :key="minindex"
                                      class="timepickerlist-box-item"
-                                     @click="choiceMMethod(min)">
-                                    <span v-if="min<10">{{'0'+min}}</span>
-                                    <span v-else>{{min}}</span>
+                                     @click="choiceMMethod(min-1)">
+                                    <span v-if="min - 1 < 10">{{'0'+ (min - 1)}}</span>
+                                    <span v-else>{{min-1}}</span>
                                 </div>
                             </div>
                         </div>
@@ -1125,6 +1418,7 @@
             </div>
         </transition>
         <!-- pick time box end -->
+
         <!-- edit basket number start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -1159,23 +1453,27 @@
                             </div>
                             <div style="padding-left:10px">
                                 <input v-model="tempBasketNumber"
-                                       style="width:60px;text-align:center;font-size:18px;height:30px;border:1px solid #e0e0e0"
+                                       style="width:60px;text-align:center;font-size:18px;height:30px;border:1px solid #e0e0e0;border-radius: 5px;"
                                        type="text">
                             </div>
                         </div>
                     </div>
-                    <div class="confirmRemove-front-box-bottom">
-                        <md-button class="md-raised md-primary"
-                                   @click="showEditBasketNumBox = false"
-                                   style="font-size:18px;min-width:80px;height:30px">关闭</md-button>
-                        <md-button class="md-raised md-accent"
-                                   @click="confirmEditBasketNumMethod"
-                                   style="font-size:18px;min-width:80px;height:30px">修改</md-button>
+                    <div class="confirmRemove-front-box-bottom" style="display:flex;display:-webkit-flex;justify-content: center;">
+                        <div class="client_dialog_white_button" @click="showEditBasketNumBox = false">
+                            <span>关闭</span>
+                        </div>
+                        <div class="client_dialog_white_button" @click="confirmEditBasketNumMethod" style="margin-left:8px;margin-bottom:8px">
+                            <span>修改</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </transition>
         <!-- edit basket number end -->
+        
+        <!-- tips box start -->
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
+        <!-- tips box end -->
     </div>
 </template>
 
@@ -1183,8 +1481,13 @@
 import axios from "axios";
 import config from "../../public/js/config.js";
 import lrz from "lrz";
+import tipsBox from "@/components/tipsBox.vue"
 
 export default {
+    components:{
+        tipsBox
+    },
+
     data() {
         return {
             selectedclient: "",
@@ -1209,7 +1512,6 @@ export default {
             successdmsg: false,
             error1: false,
             error2: false,
-            error: false,
             erromsg: "发生未知错误",
             clientaname: "",
             clientaaddress: "",
@@ -1222,7 +1524,7 @@ export default {
             clientatime: "",
             clientamail: "",
             choseaname: "",
-            choseArea: "",
+            choseArea: null,
             _id: "",
             savemodeb: true,
             deleteDialoga: false,
@@ -1276,7 +1578,13 @@ export default {
             clientNoteEN: null,
             basketNumber: null,
             tempBasketNumber: null,
-            showEditBasketNumBox: false
+            showEditBasketNumBox: false,
+            isShowClientDialog:false,
+            isShowChoiseAreaBox:false,
+            isShowChoisePartnerBox:false,
+            tipsShowColor:null,
+            tipsInfo:null,
+            isShowTipsBox:null,
         };
     },
     mounted() {
@@ -1402,6 +1710,21 @@ export default {
         }
     },
     methods: {
+        choisePartnerMethod(item){
+            this.choseaname = item
+            this.isShowChoisePartnerBox = false
+        },
+
+        choiseAreaMethod(item){
+            console.log(item)
+            this.choseArea = item
+            this.isShowChoiseAreaBox = false
+        },
+
+        openChoiseAreaBoxMethod(){
+            this.isShowChoiseAreaBox = true
+        },
+
         confirmEditBasketNumMethod() {
             axios
                 .post(config.server + "/clientb/basket", {
@@ -1831,10 +2154,11 @@ export default {
             this.searchclientb = "";
             this.getallclientb();
         },
+
         showDialog() {
             if (!this.clientpage) {
                 this.savemodeb = true;
-                this.showDialogb = true;
+                this.isShowClientDialog = true;
                 this.clientbname = "";
                 this.clientbnameEN = "";
                 this.clientbaddress = "";
@@ -1989,16 +2313,18 @@ export default {
                         })
                         .then(response => {
                             if (response.data.code == 1) {
-                                this.error = true;
-                                this.erromsg = response.data.msg;
+                                this.tipsShowColor = 'green'
+                                this.tipsInfo = response.data.msg
+                                this.isShowTipsBox = true
                                 setTimeout(() => {
-                                    this.error = false;
+                                    this.isShowTipsBox = false;
                                 }, 3000);
                             } else if (response.data.code == 2) {
-                                this.error = true;
-                                this.erromsg = response.data.msg;
+                                this.tipsShowColor = 'green'
+                                this.tipsInfo = response.data.msg
+                                this.isShowTipsBox = true
                                 setTimeout(() => {
-                                    this.error = false;
+                                    this.isShowTipsBox = false;
                                 }, 3000);
                             } else {
                                 this.successdmsg = true;
@@ -2021,11 +2347,6 @@ export default {
                         })
                         .catch(error => {
                             console.log(error);
-                            error = true;
-                            this.erromsg = response.data.msg;
-                            setTimeout(() => {
-                                this.error = false;
-                            }, 3000);
                         });
                 }
             } else {
@@ -2110,16 +2431,18 @@ export default {
                         })
                         .then(response => {
                             if (response.data.code == 1) {
-                                this.error = true;
-                                this.erromsg = response.data.msg;
+                                this.tipsShowColor = 'yellow'
+                                this.tipsInfo = response.data.msg
+                                this.isShowTipsBox = true
                                 setTimeout(() => {
-                                    this.error = false;
+                                    this.isShowTipsBox = false;
                                 }, 3000);
                             } else if (response.data.code == 2) {
-                                this.error = true;
-                                this.erromsg = response.data.msg;
+                                this.tipsShowColor = 'yellow'
+                                this.tipsInfo = response.data.msg
+                                this.isShowTipsBox = true
                                 setTimeout(() => {
-                                    this.error = false;
+                                    this.isShowTipsBox = false;
                                 }, 3000);
                             } else {
                                 this.successdmsg = true;
@@ -2142,11 +2465,6 @@ export default {
                         })
                         .catch(error => {
                             console.log(error);
-                            error = true;
-                            this.erromsg = response.data.msg;
-                            setTimeout(() => {
-                                this.error = false;
-                            }, 3000);
                         });
                 }
             }
@@ -2162,27 +2480,49 @@ export default {
                 this.errpho
             ) {
                 if (!this.clientbname) {
-                    this.errname = true;
-                } else {
-                    this.errname = false;
+                    // this.errname = true;
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '请填写客户名'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false;
+                    }, 3000);
                 }
                 if (!this.clientbaddress) {
-                    this.erradd = true;
-                } else {
-                    this.erradd = false;
+                    // this.erradd = true;
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '请填写客户地址'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false;
+                    }, 3000);
                 }
                 if (!this.clientbphone) {
-                    this.errpho = true;
+                    // this.errpho = true;
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '请填写电话号码'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false;
+                    }, 3000);
                 }
                 if (!this.clientbpostcode) {
-                    this.errpos = true;
-                } else {
-                    this.errpos = false;
+                    // this.errpos = true;
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '请填写邮政编码'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false;
+                    }, 3000);
                 }
                 if (!this.choseaname) {
-                    this.errser = true;
-                } else {
-                    this.errser = false;
+                    // this.errser = true;
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '请填服务商'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false;
+                    }, 3000);
                 }
             } else {
                 let payload = new FormData();
@@ -2205,8 +2545,8 @@ export default {
                 payload.append("clientbstatus", this.clientbstatus);
                 payload.append("clientbpostcode", this.clientbpostcode);
                 payload.append("timeLimit", this.timeLimit);
-                payload.append("clientbserve", this.choseaname);
-                payload.append("clientbarea", this.choseArea);
+                payload.append("clientbserve", this.choseaname._id);
+                payload.append("clientbarea", this.choseArea._id);
                 payload.append("isNeedPic", this.isNeedPic);
                 payload.append("note", this.clientNote);
                 payload.append("noteEN", this.clientNoteEN);
@@ -2220,21 +2560,11 @@ export default {
                     }
                 })
                     .then(response => {
-                        if (response.data.code == 1) {
-                            this.error = true;
-                            this.erromsg = response.data.msg;
-                            setTimeout(() => {
-                                this.error = false;
-                            }, 3000);
-                        } else if (response.data.code == 2) {
-                            this.error = true;
-                            this.erromsg = response.data.msg;
-                            setTimeout(() => {
-                                this.error = false;
-                            }, 3000);
-                        } else {
-                            this.successdmsg = true;
-                            this.showDialogb = false;
+                        if (response.data.code == 0) {
+                            this.tipsShowColor = 'green'
+                            this.tipsInfo = '添加成功'
+                            this.isShowTipsBox = true
+                            this.isShowClientDialog = false
                             this.isNeedPic = false;
                             this.clientbname = "";
                             this.clientbaddress = "";
@@ -2244,25 +2574,28 @@ export default {
                             this.timeLimit = "";
                             this.getallclientb();
                             setTimeout(() => {
-                                this.successdmsg = false;
+                                this.isShowTipsBox = false;
+                            }, 2000);
+                        } else{
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = response.data.msg
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false;
                             }, 3000);
                         }
                     })
                     .catch(error => {
                         console.log(error);
-                        error = true;
-                        this.erromsg = response.data.msg;
-                        setTimeout(() => {
-                            this.error = false;
-                        }, 3000);
                     });
             }
         },
+
         editClientB(item) {
             this.clientImage = "";
             this.updateImagePreview = "";
             this.savemodeb = false;
-            this.showDialogb = true;
+            this.isShowClientDialog = true
             this._id = item._id;
             this.clientbname = item.clientbname;
             this.clientbnameEN = item.clientbnameEN;
@@ -2278,25 +2611,28 @@ export default {
             this.basketNumber = item.basket;
             if (item.clientbserve == null) {
                 this.choseaname = "";
-                this.error = true;
-                this.erromsg = "找不到此供应商信息，请重新选择";
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = "找不到此供应商信息，请重新选择"
+                this.isShowTipsBox = true
                 setTimeout(() => {
-                    this.error = false;
-                }, 4000);
+                    this.isShowTipsBox = false;
+                }, 3000);
             } else {
-                this.choseaname = item.clientbserve._id;
+                this.choseaname = item.clientbserve;
             }
             if (item.clientbarea == null) {
                 this.choseArea = "";
-                this.error = true;
-                this.erromsg = "找不到此地区信息，请重新选择";
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = "找不到此供应商信息，请重新选择"
+                this.isShowTipsBox = true
                 setTimeout(() => {
-                    this.error = false;
-                }, 4000);
+                    this.isShowTipsBox = false;
+                }, 3000);
             } else {
-                this.choseArea = item.clientbarea._id;
+                this.choseArea = item.clientbarea;
             }
         },
+
         confirmEditClientB() {
             if (
                 !this.clientbname ||
@@ -2307,27 +2643,49 @@ export default {
                 this.errpho
             ) {
                 if (!this.clientbname) {
-                    this.errname = true;
-                } else {
-                    this.errname = false;
+                    // this.errname = true;
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '请填写客户名'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false;
+                    }, 3000);
                 }
                 if (!this.clientbaddress) {
-                    this.erradd = true;
-                } else {
-                    this.erradd = false;
+                    // this.erradd = true;
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '请填写客户地址'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false;
+                    }, 3000);
                 }
                 if (!this.clientbphone) {
-                    this.errpho = true;
+                    // this.errpho = true;
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '请填写电话号码'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false;
+                    }, 3000);
                 }
                 if (!this.clientbpostcode) {
-                    this.errpos = true;
-                } else {
-                    this.errpos = false;
+                    // this.errpos = true;
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '请填写邮政编码'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false;
+                    }, 3000);
                 }
                 if (!this.choseaname) {
-                    this.errser = true;
-                } else {
-                    this.errser = false;
+                    // this.errser = true;
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '请填写服务商'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false;
+                    }, 3000);
                 }
             } else {
                 if (this.updateImagePreview) {
@@ -2367,35 +2725,39 @@ export default {
                         clientbstatus: this.clientbstatus,
                         clientbpostcode: this.clientbpostcode,
                         timeLimit: this.timeLimit,
-                        clientbserve: this.choseaname,
-                        clientbarea: this.choseArea,
+                        clientbserve: this.choseaname._id,
+                        clientbarea: this.choseArea._id,
                         isNeedPic: this.isNeedPic,
                         note: this.clientNote,
                         noteEN: this.clientNoteEN,
                         logOperator: localStorage.getItem("name")
                     })
                     .then(doc => {
-                        this.error = true;
-                        this.erromsg = doc.data.msg;
-                        setTimeout(() => {
-                            this.error = false;
-                        }, 3000);
                         if (doc.data.code == 0) {
-                            this.showDialogb = false;
+                            this.tipsShowColor = 'green'
+                            this.tipsInfo = doc.data.msg
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false;
+                            }, 3000);
+                            this.isShowClientDialog = false
                             this.isNeedPic = false;
                             this.getallclientb();
+                        }else{
+                            this.tipsShowColor = 'green'
+                            this.tipsInfo = '修改时出现错误'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false;
+                            }, 3000);
                         }
                     })
                     .catch(err => {
-                        console.log(err);
-                        this.error = true;
-                        this.erromsg = err;
-                        setTimeout(() => {
-                            this.error = false;
-                        }, 3000);
+                        console.log(err)
                     });
             }
         },
+
         removeClientB(item) {
             this.deleteDialogb = true;
             this._id = item._id;
@@ -2413,17 +2775,17 @@ export default {
         },
 
         trueConfirmRemoveClient() {
-            console.log(this.clientbname);
             axios
                 .post(config.server + "/clientb/remove", {
                     _id: this._id,
                     logOperator: localStorage.getItem("name")
                 })
                 .then(doc => {
-                    this.error = true;
-                    this.erromsg = doc.data.msg;
+                    this.tipsShowColor = 'green'
+                    this.tipsInfo = doc.data.msg
+                    this.isShowTipsBox = true
                     setTimeout(() => {
-                        this.error = false;
+                        this.isShowTipsBox = false;
                     }, 3000);
                     if (doc.data.code == 0) {
                         this.showConfirmRemoveClient = false;
@@ -2431,11 +2793,7 @@ export default {
                     }
                 })
                 .catch(err => {
-                    this.error = true;
-                    this.erromsg = err;
-                    setTimeout(() => {
-                        this.error = false;
-                    }, 3000);
+                    console.log(err)
                 });
         },
         editClientA(item) {
@@ -2445,7 +2803,6 @@ export default {
             this.conErr = false;
             this.phoErr = false;
             this.savemodeb = false;
-
             this._id = item._id;
             this.clientaname = item.clientaname;
             this.clientaaddress = item.clientaaddress;
@@ -2586,10 +2943,11 @@ export default {
                 axios
                     .post(config.server + "/clienta/edit", editInfo)
                     .then(doc => {
-                        this.error = true;
-                        this.erromsg = doc.data.msg;
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = doc.data.msg
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.error = false;
+                            this.isShowTipsBox = false;
                         }, 3000);
                         if (doc.data.code == 0) {
                             this.showDialoga = false;
@@ -2598,11 +2956,6 @@ export default {
                     })
                     .catch(err => {
                         console.log(err);
-                        this.error = true;
-                        this.erromsg = err;
-                        setTimeout(() => {
-                            this.error = false;
-                        }, 3000);
                     });
             }
         },
@@ -2613,10 +2966,11 @@ export default {
                     logOperator: localStorage.getItem("name")
                 })
                 .then(doc => {
-                    this.error = true;
-                    this.erromsg = doc.data.msg;
+                    this.tipsShowColor = 'green'
+                    this.tipsInfo = doc.data.msg
+                    this.isShowTipsBox = true
                     setTimeout(() => {
-                        this.error = false;
+                        this.isShowTipsBox = false;
                     }, 3000);
                     if (doc.data.code == 0) {
                         this.deleteDialoga = false;
@@ -2625,11 +2979,6 @@ export default {
                 })
                 .catch(err => {
                     console.log(err);
-                    this.error = true;
-                    this.erromsg = err;
-                    setTimeout(() => {
-                        this.error = false;
-                    }, 3000);
                 });
         }
     }
@@ -2803,15 +3152,22 @@ export default {
     padding: 6px 12px;
     margin-left: -1px;
     line-height: 1.42857143;
-    color: #337ab7;
+    /* color: #337ab7; */
     cursor: pointer;
 }
 
-.page-bar span:hover {
+/* .page-bar span:hover {
     background-color: #eee;
-}
+} */
 
 .page-bar .active span {
+    color: #fff;
+    cursor: default;
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+
+.activeblue {
     color: #fff;
     cursor: default;
     background-color: #337ab7;
@@ -2826,12 +3182,14 @@ export default {
 }
 
 .photoarea {
-    margin: 0 auto;
+    margin-top: 12px;
+    margin-left: 10px;
     text-align: center;
     border: 3px dashed #696969;
-    width: 250px;
-    height: 250px;
+    width: 226px;
+    height: 226px;
     background-color: #eee;
+    border-radius: 5px;
 }
 
 .photoarea img {
@@ -2893,10 +3251,12 @@ export default {
     background: #fff;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .confirmRemove-front-box-top {
-    font-size: 18px;
+    font-size: 16px;
     height: 35px;
     background: #d44950;
     color: #fff;
@@ -2906,7 +3266,12 @@ export default {
 }
 
 .confirmRemove-front-box-center {
-    padding: 24px;
+    margin: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
 .timepick-back {
@@ -3011,6 +3376,169 @@ export default {
 .whiteButton:active {
     box-shadow: none;
     transition: 0.2s;
+}
+
+.client_dialog_back{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 23;
+    background-color: rgba(0, 0, 0, 0.12)
+}
+
+.client_dialog_front{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 24;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.client_dialog_box{
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.client_dialog_box_title{
+    background-color: #d74342;
+    color: #fff;
+    font-size: 16px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    height: 40px;
+    line-height: 40px;
+}
+
+.client_dialog_box_body{
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    margin: 12px 24px;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.client_dialog_box_body_top{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.client_dialog_box_body_left_item{
+    display: flex;
+    display: -webkit-flex;
+    font-size: 16px;
+    line-height: 30px;
+    margin: 12px 0;
+}
+
+.client_dialog_box_body_left_item input{
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    height: 30px;
+    width: 160px;
+}
+
+.client_dialog_box_body_left_item_text{
+    width: 70px;
+    text-align: right;
+}
+
+.client_dialog_box_body_left_item_content{
+    margin-left: 10px;
+    text-align: center;
+}
+
+.client_dialog_choosebox{
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: 160px;
+    height: 30px;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.client_dialog_choosebox_line{
+    height: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    line-height: 20px;
+}
+
+.client_dialog_box_body_right{
+    margin-left: 12px;
+}
+
+.client_dialog_box_bottom{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.client_dialog_box_body_center{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.client_dialog_box_body_bottom_right{
+    margin-left: 12px;
+}
+
+.client_dialog_box_body_bottom{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.client_dialog_box_body_bottom_basketframe{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.client_dialog_box_body_bottom_basketframe_text{
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    width: 70px;
+    text-align: right
+}
+
+.client_dialog_box_body_bottom_basketframe_content{
+    width: 160px;
+    display: flex;
+    display: -webkit-flex;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    margin-left: 10px;
+    align-items: center;
+}
+.client_dialog_box_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.client_dialog_white_button{
+    width: 100px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    height: 30px;
+    font-size: 16px;
+    line-height: 30px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    background-color: #fff;
+    cursor: pointer;
 }
 
 @media screen and (min-width: 1025px) {
