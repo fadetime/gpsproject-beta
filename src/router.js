@@ -11,6 +11,7 @@ import Log from './views/Log.vue'
 import AuthGuard from './auth-guard'
 import Staff from './views/Staff.vue'
 import Table from './views/table.vue'
+import customerService from './views/customerService.vue'
 import Announcement from './views/announcement.vue'
 import SearchOrder from './views/SearchOrder.vue'
 
@@ -83,6 +84,11 @@ export default new Router({
 			path: '/announcement',
 			name: 'announcement',
 			component: Announcement
+		},
+		{
+			path: '/customerService',
+			name: 'customerService',
+			component: customerService
 		}
 	]
 })

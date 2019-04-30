@@ -51,7 +51,6 @@
                  @click="reportModeButtonMethod('bill')">
                 <span>账单统计</span>
             </div>
-            <button>test</button>
         </div>
         
         <div v-if="showWindow === 'night'"

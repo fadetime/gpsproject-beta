@@ -61,7 +61,13 @@ export default {
 						let item = this.email
 						this.$store.dispatch('setToken', item)
 						console.log(this.$store.state.token)
-						this.$router.push('/')
+						if(doc.data.userName === 'admin'){
+							localStorage.removeItem("showLogo");
+							this.$router.push('/')
+						}else{
+							localStorage.showLogo = false
+							this.$router.push('/customerService')
+						}
 					}
 				})
 				.catch(err => {

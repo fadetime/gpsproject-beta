@@ -1940,6 +1940,12 @@ export default {
             }
         }
     },
+    beforeMount(){
+         if(localStorage.name != 'admin'){
+            this.$router.push('/customerService')
+        }
+    },
+
     mounted() {
         this.getLineInfo();
         this.getallclienta();
