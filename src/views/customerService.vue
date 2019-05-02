@@ -53,7 +53,9 @@
                             <span v-else>未分配</span>
                         </div>
                         <div class="customer_center_body_frame_item">
-                            <span v-if="!item.driverName">未分配</span>
+                            <span v-if="item.isFinish" style="color:green">已完成</span>
+                            <span v-else-if="driverName === null">未分配</span>
+                            <span v-else>未完成</span>
                         </div>
                     </div>
                 </div>

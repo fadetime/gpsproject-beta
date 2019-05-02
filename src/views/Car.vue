@@ -129,9 +129,7 @@
         <transition name="custom-classes-transition"
                     enter-active-class="animated zoomIn faster"
                     leave-active-class="animated zoomOut faster">
-            <div class="checkcar-front"
-                 v-if="isOpenCarInfoDialog"
-                 @click.self.prevent="isOpenCarInfoDialog = false">
+            <div class="checkcar-front" v-if="isOpenCarInfoDialog" @click.self.prevent="isOpenCarInfoDialog = false">
                 <div class="car-front-box" >
                     <div class="checkcar-front-box-title">
                         <span>车辆信息</span>
@@ -168,9 +166,7 @@
                                 </div>
                             </div>
                             <div class="car_front_box_body_top_left">
-                                <div class="photoarea"
-                                    @click="uploadFile"
-                                    v-if="!carImage">
+                                <div class="photoarea" @click="uploadFile" v-if="!carImage">
                                     <md-icon class="md-size-3x"
                                                 style="padding-top:100px"
                                                 v-if="!updateImagePreview">add_a_photo</md-icon>
