@@ -835,6 +835,9 @@
                         <span>提交人</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
+                        <span>车牌号码</span>
+                    </div>
+                    <div style="flex-basis: 12%;text-align: center;">
                         <span>提交日期</span>
                     </div>
                     <div style="flex-basis: 25%;text-align: center;">
@@ -857,6 +860,9 @@
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
                             <span>{{item.driver}}</span>
+                        </div>
+                        <div style="flex-basis: 12%;text-align: center;">
+                            <span>{{item.car_id.carid}}</span>
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
                             <span>{{item.logStartTime | datefilter}}</span>
