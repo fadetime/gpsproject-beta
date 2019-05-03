@@ -505,8 +505,8 @@
                     <div class="client_dialog_box_title">
                         <span>区域选择</span>
                     </div>
-                    <div style="margin:12px;">
-                        <div class="client_dialog_white_button" style="margin-bottom:8px" v-for="(item,index) in allAreaArray" :key="index" @click="choiseAreaMethod(item)">
+                    <div class="client_dialog_body">
+                        <div class="client_dialog_white_button" style="margin-bottom:8px;margin-left:4px;margin-right:4px;" v-for="(item,index) in allAreaArray" :key="index" @click="choiseAreaMethod(item)">
                             <span>{{item.areaName}}</span>
                         </div>
                     </div>
@@ -3417,6 +3417,18 @@ export default {
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
     height: 40px;
     line-height: 40px;
+}
+
+.client_dialog_body{
+    margin:12px;
+    display: flex;
+    display: -webkit-flex;
+    width: 342px;
+    flex-shrink: 1;
+    flex-wrap: wrap;
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .client_dialog_box_body{

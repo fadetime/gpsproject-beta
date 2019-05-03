@@ -13,54 +13,104 @@
                 <span>通知公告</span>
             </div>
         </div>
-        <div class="announcement_center">
-            <div class="announcement_center_title">
-                <div class="announcement_center_title_item_index">
-                    <span>序号</span>
+        <div class="announcement_boxframe">
+            <div class="announcement_secondbox">
+                <div class="announcement_title">
+                    <span>首页公告记录</span>
                 </div>
-                <div class="announcement_center_title_item">
-                    <span>公告时间</span>
+                <div class="announcement_center">
+                    <div class="announcement_center_title">
+                        <div class="announcement_center_title_item_index">
+                            <span>序号</span>
+                        </div>
+                        <div class="announcement_center_title_item">
+                            <span>公告时间</span>
+                        </div>
+                        <div class="announcement_center_title_item" style="width:250px;padding-left:24px;text-align:left;">
+                            <span>中文内容</span>
+                        </div>
+                        <div class="announcement_center_title_item_content" style="width:250px">
+                            <span>英文内容</span>
+                        </div>
+                        <div class="announcement_center_title_item_allstaff">
+                            <span>公告图片</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="announcement_center_title_item">
-                    <span>公告标题</span>
-                </div>
-                <div class="announcement_center_title_item_content">
-                    <span>公告内容</span>
-                </div>
-                <div class="announcement_center_title_item_allstaff">
-                    <span>包含员工</span>
-                </div>
-                <div class="announcement_center_title_item_leftstaff">
-                    <span>未读员工</span>
-                </div>
-                <div class="announcement_center_title_item_state">
-                    <span>公告状态</span>
+                <div class="announcement_content">
+                    <div class="announcement_content_item" v-for="(item,index) in firstPageList" :key="index">
+                        <div class="announcement_content_item_index">
+                            <span>{{index}}</span>
+                        </div>
+                        <div class="announcement_content_item_date">
+                            <span>{{item.date | datefilter}}</span>
+                        </div>
+                        <div class="announcement_content_item_title" style="width:250px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                            <span>{{item.text}}</span>
+                        </div>
+                        <div class="announcement_content_item_content" style="width:250px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                            <span>{{item.textEN}}</span>
+                        </div>
+                        <div class="announcement_content_item_image" @click="openImageMethod(item.image)">
+                            <img :src="item.image | imgurl">
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="announcement_content">
-            <div class="announcement_content_item" v-for="(item,index) in noticeList" :key="index">
-                <div class="announcement_content_item_index">
-                    <span>{{index}}</span>
+            <div class="announcement_secondbox">
+                <div class="announcement_title">
+                    <span>通知公告记录</span>
                 </div>
-                <div class="announcement_content_item_date">
-                    <span>{{item.date | datefilter}}</span>
+                <div class="announcement_center">
+                    <div class="announcement_center_title">
+                        <div class="announcement_center_title_item_index">
+                            <span>序号</span>
+                        </div>
+                        <div class="announcement_center_title_item">
+                            <span>公告时间</span>
+                        </div>
+                        <div class="announcement_center_title_item">
+                            <span>公告标题</span>
+                        </div>
+                        <div class="announcement_center_title_item_content">
+                            <span>公告内容</span>
+                        </div>
+                        <div class="announcement_center_title_item_allstaff">
+                            <span>包含员工</span>
+                        </div>
+                        <div class="announcement_center_title_item_leftstaff">
+                            <span>未读员工</span>
+                        </div>
+                        <div class="announcement_center_title_item_state">
+                            <span>公告状态</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="announcement_content_item_title">
-                    <span>{{item.title}}</span>
-                </div>
-                <div class="announcement_content_item_content">
-                    <span>{{item.content}}</span>
-                </div>
-                <div class="announcement_content_item_allstaff">
-                    <span>{{item.allStaff.length}}</span>
-                </div>
-                <div class="announcement_content_item_leftstaff">
-                    <span>{{item.leftStaff.length}}</span>
-                </div>
-                <div class="announcement_content_item_state">
-                    <span v-if="item.isFinish" style="color:rgb(100, 221, 23)">已完成</span>
-                    <span v-else style="color:rgb(255, 152, 0)">执行中</span>
+                <div class="announcement_content">
+                    <div class="announcement_content_item" v-for="(item,index) in noticeList" :key="index">
+                        <div class="announcement_content_item_index">
+                            <span>{{index}}</span>
+                        </div>
+                        <div class="announcement_content_item_date">
+                            <span>{{item.date | datefilter}}</span>
+                        </div>
+                        <div class="announcement_content_item_title">
+                            <span>{{item.title}}</span>
+                        </div>
+                        <div class="announcement_content_item_content">
+                            <span>{{item.content}}</span>
+                        </div>
+                        <div class="announcement_content_item_allstaff">
+                            <span>{{item.allStaff.length}}</span>
+                        </div>
+                        <div class="announcement_content_item_leftstaff">
+                            <span>{{item.leftStaff.length}}</span>
+                        </div>
+                        <div class="announcement_content_item_state">
+                            <span v-if="item.isFinish" style="color:rgb(100, 221, 23)">已完成</span>
+                            <span v-else style="color:rgb(255, 152, 0)">执行中</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -291,18 +341,27 @@
         </transition>
         <!-- choise staff box end -->
 
-        <!-- tips box start -->
+        <!-- show image dialog start -->
         <transition name="custom-classes-transition"
-                    enter-active-class="animated slideInUp"
-                    leave-active-class="animated slideOutLeft">
-            <div class="tipDialog"
-                 v-if="showTipDialog">
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowImageDialog" class="announcement_notice_back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowImageDialog" class="announcement_notice_front" @click="isShowImageDialog = false">
                 <div>
-                    <span>{{tipMsg}}</span>
+                    <img :src="shippingData | imgurl">
                 </div>
             </div>
         </transition>
-        <!-- tips box end -->
+        <!-- show image dialog end -->
+
+        <!-- new tips box start -->
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
+        <!-- new tips box end -->
+
         <input type="file"
                 style="display:none"
                 id="notice_upload_file"
@@ -314,11 +373,17 @@
 <script>
 import axios from "axios";
 import config from "../../public/js/config.js";
+import tipsBox from "@/components/tipsBox.vue"
 
 export default {
+    components: {
+        tipsBox
+    },
+
     mounted() {
         this.getScreemHeightAndChangeDOM();
         this.getNoticeInfoMethod()
+        this.getFirstPageNoticeMethod()
         this.getFirstPageNoticeInfoMethod()
     },
 
@@ -334,9 +399,8 @@ export default {
             checkBoxFlag:false,
             noticeTitle:null,
             noticeContent:null,
-            showTipDialog:false,
-            tipMsg:null,
             noticeList:[],
+            firstPageList:[],
             showFirstPageDialog:false,
             value:false,
             textValue:null,
@@ -345,11 +409,21 @@ export default {
             updateImage:null,
             imageUrl:null,
             isShowClearButton:false,
-            isOldPic:true
+            isOldPic:true,
+            shippingData:null,
+            isShowImageDialog:false,
+            tipsShowColor: null,
+            tipsInfo: null,
+            isShowTipsBox: null
         }
     },
 
     methods: {
+        openImageMethod(imgUrl){
+            this.shippingData = imgUrl
+            this.isShowImageDialog = true
+        },
+
         uploadFile() {
             document.getElementById("notice_upload_file").click();
         },
@@ -371,11 +445,12 @@ export default {
         firstPageButtonMethod(mode){
             if(mode === 'submit'){
                 if(!this.updateImagePreview && !this.textValue && !this.textValueEN){
-                    this.tipMsg = '图片与文字请输入其中一项'
-                    this.showTipDialog = true
+                    this.tipsInfo = '图片与文字请输入其中一项'
+                    this.tipsShowColor = 'yellow'
+                    this.isShowTipsBox = true
                     setTimeout(() => {
-                        this.showTipDialog = false
-                    }, 2000);
+                        this.isShowTipsBox = true
+                    }, 3000);
                 }else{
                     let payload = new FormData();
                     let tempDate = new Date().toISOString()
@@ -413,11 +488,12 @@ export default {
                         .then(doc => {
                             if(doc.data.code === 0){
                                 this.showFirstPageDialog = false
-                                this.tipMsg = '更新首页公告成功'
-                                this.showTipDialog = true
+                                this.tipsInfo = '更新首页公告成功'
                                 this.getFirstPageNoticeInfoMethod()
+                                this.tipsShowColor = 'green'
+                                this.isShowTipsBox = true
                                 setTimeout(() => {
-                                    this.showTipDialog = false
+                                    this.isShowTipsBox = false
                                 }, 2000);
                             }
                         })
@@ -445,19 +521,39 @@ export default {
                         this.value = doc.data.doc.isShow
                         this.imageUrl = doc.data.doc.image
                     }else{
-                        this.tipMsg = '获取首页公告失败'
-                        this.showTipDialog = true
+                        this.tipsInfo = '获取首页公告失败'
+                        this.tipsShowColor = 'yellow'
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.showTipDialog = false            
-                        }, 2000);
+                            this.isShowTipsBox = false
+                        }, 3000);
                     }
-                    
                 })
                 .catch(err => {
                     console.log(err)
                 })
         },
 
+        getFirstPageNoticeMethod(){
+            axios
+                .get(config.server + "/announcement/findFirstPageLog")
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.firstPageList = doc.data.doc
+                    }else{
+                        this.tipsInfo = '获取首页通知失败'
+                        this.tipsShowColor = 'yellow'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        
         getNoticeInfoMethod(){
             axios
                 .post(config.server + "/notice/panelget")
@@ -465,11 +561,12 @@ export default {
                     if(doc.data.code === 0){
                         this.noticeList = doc.data.doc
                     }else{
-                        this.tipMsg = '获取公告失败'
-                        this.showTipDialog = true
+                        this.tipsInfo = '获取公告失败'
+                        this.tipsShowColor = 'yellow'
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.showTipDialog = false            
-                        }, 2000);
+                            this.isShowTipsBox = false
+                        }, 3000);
                     }
                     
                 })
@@ -489,12 +586,16 @@ export default {
                             return item.dirvername
                         })
                     }else{
-                        console.log('获取数据失败')
+                        this.tipsInfo = '获取数据失败'
+                        this.tipsShowColor = 'yellow'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 3000);
                     }
                     
                 })
                 .catch(err => {
-                    console.log("获取数据失败");
                     console.log(err);
                 });
         },
@@ -540,20 +641,21 @@ export default {
                         allStaff:this.inputStaffArray
                     })
                     .then(doc => {
-                        console.log(doc)
                         if(doc.data.code === 0){
                             this.showNoticeDialog = false
-                            this.tipMsg = '添加成功'
-                            this.showTipDialog = true
+                            this.tipsInfo = '添加成功'
+                            this.tipsShowColor = 'green'
+                            this.isShowTipsBox = true
                             setTimeout(() => {
-                                this.showTipDialog = false            
+                                this.isShowTipsBox = false
                             }, 2000);
                         }else{
-                            this.tipMsg = '添加失败'
-                            this.showTipDialog = true
+                            this.tipsInfo = '添加失败'
+                            this.tipsShowColor = 'yellow'
+                            this.isShowTipsBox = true
                             setTimeout(() => {
-                                this.showTipDialog = false            
-                            }, 2000);
+                                this.isShowTipsBox = false
+                            }, 3000);
                         }
                     })
                     .catch(err => {
@@ -626,6 +728,30 @@ export default {
     top: 5px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.announcement_boxframe{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.announcement_secondbox{
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    padding: 12px;
+    margin: 12px 0;
+    border: 1px solid #eee;
+}
+
+.announcement_title{
+    font-size: 18px;
+    border-bottom: 1px solid #d74342;
+    height: 34px;
+    line-height: 34px;
 }
 
 .announcement_center {
@@ -900,18 +1026,6 @@ export default {
     margin-left: 12px;
 }
 
-.tipDialog {
-    position: fixed;
-    left: 0;
-    bottom: 40px;
-    background-color: rgba(192, 230, 22, 0.6);
-    width: 200px;
-    height: 40px;
-    line-height: 40px;
-    box-shadow: 1px 1px 5px;
-    z-index: 20;
-}
-
 .announcement_content_item{
     display: flex;
     display: -webkit-flex;
@@ -963,6 +1077,15 @@ export default {
     width: 80px;
     text-align: center;
     background-color: #fff;
+}
+
+.announcement_content_item_image{
+    width: 80px;
+}
+.announcement_content_item_image img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 .announcement_content_item_state{
