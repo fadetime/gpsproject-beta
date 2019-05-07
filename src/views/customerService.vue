@@ -54,7 +54,7 @@
                         </div>
                         <div class="customer_center_body_frame_item">
                             <span v-if="item.isFinish" style="color:green">已完成</span>
-                            <span v-else-if="driverName === null">未分配</span>
+                            <span v-else-if="item.driverName === null">未分配</span>
                             <span v-else>未完成</span>
                         </div>
                     </div>
@@ -335,7 +335,31 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="customer_detail_box_body_center">
+                        <div class="customer_detail_box_body_center" style="margin-top: 0;">
+                            <div class="customer_detail_box_body_center_left">
+                                <div class="customer_detail_box_body_center_left_item">
+                                    <div class="customer_detail_box_body_center_left_item_text">
+                                        <span>司机姓名</span>
+                                    </div>
+                                    <div class="customer_detail_box_body_center_left_item_content">
+                                        <span v-if="tempShipping.driverName">{{tempShipping.driverName}}</span>
+                                        <span v-else>未分配</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="customer_detail_box_body_center_right">
+                                <div class="customer_detail_box_body_center_left_item">
+                                    <div class="customer_detail_box_body_center_left_item_text">
+                                        <span>完成时间</span>
+                                    </div>
+                                    <div class="customer_detail_box_body_center_left_item_content">
+                                        <span v-if="tempShipping.finishDate">{{tempShipping.finishDate | timefilter}}</span>
+                                        <span v-else>未完成</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="customer_detail_box_body_center" style="margin-top: 0;">
                             <div class="customer_detail_box_body_center_left_item" style="height:unset">
                                 <div class="customer_detail_box_body_center_left_item_text">
                                     <span>订单信息</span>
@@ -414,7 +438,6 @@ export default {
 
     methods:{
         openMissionDetailMethod(item){
-            console.log(item)
             this.tempShipping = item
             this.isShowDetailDialog = true
         },
@@ -515,11 +538,20 @@ export default {
         },
 
         confirmChoiseClientMethod(){
-            this.isShowClientChoiseDialog = false
-            this.client_id = this.choiseClient._id
-            this.clientImage = this.choiseClient.image
-            this.clientName = this.choiseClient.clientbname
-            this.clientNameEN = this.choiseClient.clientbnameEN
+            if(this.choiseClient === null){
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请选择客户'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 3000);
+            }else{
+                this.isShowClientChoiseDialog = false
+                this.client_id = this.choiseClient._id
+                this.clientImage = this.choiseClient.image
+                this.clientName = this.choiseClient.clientbname
+                this.clientNameEN = this.choiseClient.clientbnameEN
+            }
         },
 
         choiseClientMethod(item){
@@ -569,6 +601,7 @@ export default {
         openChoiseClientDialogMethod(){
             this.keyWord = null
             this.isShowClientChoiseDialog = true
+            this.choiseClient = null
         },
 
         openAddDialogMethod(){
