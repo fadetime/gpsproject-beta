@@ -832,9 +832,6 @@
                         <span>No.</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
-                        <span>提交人</span>
-                    </div>
-                    <div style="flex-basis: 12%;text-align: center;">
                         <span>车牌号码</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
@@ -857,9 +854,6 @@
                     <div v-for="(item,index) in repairCarArray" :key="index" class="centerarea-body-item" style="overflow: hidden;">
                         <div style="flex-basis: 4%;text-align: center;">
                             <span>{{index + 1}}</span>
-                        </div>
-                        <div style="flex-basis: 12%;text-align: center;">
-                            <span>{{item.driver}}</span>
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
                             <span>{{item.car_id.carid}}</span>

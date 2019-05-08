@@ -200,7 +200,7 @@
 
         <!-- page bar start-->
         <!-- 合作商页码 -->
-        <div>
+        <div v-if="clientpage">
             <div style="display:flex;justify-content: center;"
                  v-if="pageCountA > 1">
                 <div class="page-bar">
@@ -226,7 +226,7 @@
                 </div>
             </div>
         </div>
-        <div><!-- 客户页码 -->
+        <div v-else><!-- 客户页码 -->
             <div style="display:flex;justify-content: center;"
                  v-if="pageCount > 1">
                 <div class="page-bar">
