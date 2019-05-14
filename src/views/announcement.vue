@@ -26,11 +26,8 @@
                         <div class="announcement_center_title_item">
                             <span>公告时间</span>
                         </div>
-                        <div class="announcement_center_title_item" style="width:250px;padding-left:24px;text-align:left;">
-                            <span>中文内容</span>
-                        </div>
-                        <div class="announcement_center_title_item_content" style="width:250px">
-                            <span>英文内容</span>
+                        <div class="announcement_center_title_item" style="width:500px;padding-left:24px;text-align:left;">
+                            <span>公告内容</span>
                         </div>
                         <div class="announcement_center_title_item_allstaff">
                             <span>公告图片</span>
@@ -45,11 +42,8 @@
                         <div class="announcement_content_item_date">
                             <span>{{item.date | datefilter}}</span>
                         </div>
-                        <div class="announcement_content_item_title" style="width:250px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                        <div class="announcement_content_item_title" style="width:500px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
                             <span>{{item.text}}</span>
-                        </div>
-                        <div class="announcement_content_item_content" style="width:250px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-                            <span>{{item.textEN}}</span>
                         </div>
                         <div class="announcement_content_item_image" @click="openImageMethod(item.image)">
                             <img :src="item.image | imgurl">
@@ -212,71 +206,113 @@
                 <div class="announcement_notice_front_box">
                     <div class="announcement_notice_front_box_title">
                         <span>首页公告</span>
-                    </div>
-                    <div class="first_page_tips">
-                        <span>tips:图片或文字必须包含其中一项否则无法发送</span>
-                    </div>
-                    <div class="first_page_body">
-                        <div class="first_page_body_left">
-                            <div class="first_page_body_left_title">
-                                <div>
-                                    <span>公告图片</span>
-                                </div>
-                            </div>
-                            <div class="first_page_body_left_frame" @mouseenter="isShowClearButton = true" @mouseleave="isShowClearButton = false">
-                                <div v-show="isShowClearButton" v-if="updateImagePreview || imageUrl" class="first_page_body_left_frame_clear" @click="updateImagePreview = null,imageUrl = null,isOldPic = false">
-                                    <span>x</span>
-                                </div>
-                                <div v-if="updateImagePreview" class="first_page_body_left_frame_div" @click="uploadFile">
-                                    <img :src="updateImagePreview"
-                                        alt="newimg">
-                                </div>
-                                <div v-else-if="imageUrl" class="first_page_body_left_frame_div" @click="uploadFile">
-                                    <img :src="imageUrl | imgurl" alt="first_page_pic">
-                                </div>
-                                <div v-else style="display:flex;display:-webkit-flex;align-items:center" @click="uploadFile">
-                                    <div class="icon_add"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="first_page_body_right">
-                            <div class="first_page_body_right_title">
-                                <div>
-                                    <span>公告文字(CH)</span>
-                                </div>
-                            </div>
-                            <div>
-                                <textarea style="width:228px;height:160px" v-model="textValue"></textarea>
-                            </div>
-                        </div>
-                        <div class="first_page_body_right">
-                            <div class="first_page_body_right_title">
-                                <div>
-                                    <span>公告文字(EN)</span>
-                                </div>
-                            </div>
-                            <div>
-                                <textarea style="width:228px;height:160px" v-model="textValueEN"></textarea>
+                        <div class="notice_first_swich">
+                            <div class="onoffswitch">
+                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked v-model="value">
+                                <label class="onoffswitch-label" for="myonoffswitch">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
                             </div>
                         </div>
                     </div>
-                    <div class="first_page_body_other">
-                        <!-- 通知开关 -->
-                        <div class="onoffswitch">
-                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked v-model="value">
-                            <label class="onoffswitch-label" for="myonoffswitch">
-                                <span class="onoffswitch-inner"></span>
-                                <span class="onoffswitch-switch"></span>
-                            </label>
+                    <div class="first_page_topswich">
+                        <div class="first_page_topswich_left" @click="changeToEn()">
+                            <span>英文公告</span>
                         </div>
-                        <!-- 通知开关 -->
+                        <div class="first_page_topswich_right" @click="changeToCn()">
+                            <span>中文公告</span>
+                        </div>
                     </div>
-                    <div class="announcement_notice_front_box_bottom">
-                        <div class="announcement_notice_front_box_bottom_button" @click="firstPageButtonMethod('cancel')">
-                            <span>取消</span>
+                    <div v-if="isShowChNotice">
+                        <div class="first_page_body">
+                            <div class="first_page_body_top">
+                                <div class="first_page_body_left">
+                                    <div class="first_page_body_left_title">
+                                        <div>
+                                            <span>公告图片(CH)</span>
+                                        </div>
+                                    </div>
+                                    <div class="first_page_body_left_frame" @mouseenter="isShowClearButton = true" @mouseleave="isShowClearButton = false">
+                                        <div v-show="isShowClearButton" v-if="updateImagePreview || imageUrl" class="first_page_body_left_frame_clear" @click="updateImagePreview = null,imageUrl = null,isOldPic = false">
+                                            <span>x</span>
+                                        </div>
+                                        <div v-if="updateImagePreview" class="first_page_body_left_frame_div" @click="uploadFile">
+                                            <img :src="updateImagePreview" alt="newimg">
+                                        </div>
+                                        <div v-else-if="imageUrl" class="first_page_body_left_frame_div" @click="uploadFile">
+                                            <img :src="imageUrl | imgurl" alt="first_page_pic">
+                                        </div>
+                                        <div v-else style="display:flex;display:-webkit-flex;align-items:center" @click="uploadFile">
+                                            <div class="icon_add"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="first_page_body_right">
+                                    <div class="first_page_body_right_title">
+                                        <div>
+                                            <span>公告文字(CH)</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <textarea style="width:228px;height:160px" v-model="textValue"></textarea>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="announcement_notice_front_box_bottom_button" @click="firstPageButtonMethod('submit')">
-                            <span>确定</span>
+                        <div class="announcement_notice_front_box_bottom">
+                            <div class="announcement_notice_front_box_bottom_button" @click="firstPageButtonMethod('cancel')">
+                                <span>取消</span>
+                            </div>
+                            <div class="announcement_notice_front_box_bottom_button" @click="firstPageButtonMethod('submit')" style="margin-left:8px;">
+                                <span>确定</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <div class="first_page_body">
+                            <div class="first_page_body_top">
+                                <div class="first_page_body_left">
+                                    <div class="first_page_body_left_title">
+                                        <div>
+                                            <span>公告图片(EN)</span>
+                                        </div>
+                                    </div>
+                                    <div class="first_page_body_left_frame" @mouseenter="isShowClearButtonEN = true" @mouseleave="isShowClearButtonEN = false">
+                                        <div v-show="isShowClearButtonEN" v-if="updateImagePreviewEN || imageUrl" class="first_page_body_left_frame_clear" @click="updateImagePreviewEN = null,imageUrl = null,isOldPic = false">
+                                            <span>x</span>
+                                        </div>
+                                        <div v-if="updateImagePreviewEN" class="first_page_body_left_frame_div" @click="uploadImgForEN()">
+                                            <img :src="updateImagePreviewEN" alt="newimg">
+                                        </div>
+                                        <div v-else-if="imageUrlEN" class="first_page_body_left_frame_div" @click="uploadImgForEN()">
+                                            <img :src="imageUrlEN | imgurl" alt="first_page_pic">
+                                        </div>
+                                        <div v-else style="display:flex;display:-webkit-flex;align-items:center" @click="uploadImgForEN()">
+                                            <div class="icon_add"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="first_page_body_right">
+                                    <div class="first_page_body_right_title">
+                                        <div>
+                                            <span>公告文字(EN)</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <textarea style="width:228px;height:160px" v-model="textValueEN"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="announcement_notice_front_box_bottom">
+                            <div class="announcement_notice_front_box_bottom_button" @click="firstPageButtonMethod('cancel')">
+                                <span>取消</span>
+                            </div>
+                            <div class="announcement_notice_front_box_bottom_button" @click="firstPageButtonMethodEN('submit')" style="margin-left:8px;">
+                                <span>确定</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -362,11 +398,8 @@
         <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
         <!-- new tips box end -->
 
-        <input type="file"
-                style="display:none"
-                id="notice_upload_file"
-                @change="fileChange($event)"
-                accept="image/*">
+        <input type="file" style="display:none" id="notice_upload_file" @change="fileChange($event)" accept="image/*">
+        <input type="file" style="display:none" id="notice_upload_img_en" @change="fileChangeEN($event)" accept="image/*">
     </div>
 </template>
 
@@ -406,19 +439,32 @@ export default {
             textValue:null,
             textValueEN:null,
             updateImagePreview:null,
+            updateImagePreviewEN:null,
             updateImage:null,
+            updateImageEN:null,
             imageUrl:null,
+            imageUrlEN:null,
             isShowClearButton:false,
+            isShowClearButtonEN:false,
             isOldPic:true,
             shippingData:null,
             isShowImageDialog:false,
             tipsShowColor: null,
             tipsInfo: null,
-            isShowTipsBox: null
+            isShowTipsBox: null,
+            isShowChNotice:true
         }
     },
 
     methods: {
+        changeToEn(){
+            this.isShowChNotice = false
+        },
+
+        changeToCn(){
+            this.isShowChNotice = true
+        },
+
         openImageMethod(imgUrl){
             this.shippingData = imgUrl
             this.isShowImageDialog = true
@@ -426,6 +472,21 @@ export default {
 
         uploadFile() {
             document.getElementById("notice_upload_file").click();
+        },
+
+        uploadImgForEN(){
+            document.getElementById("notice_upload_img_en").click();
+        },
+
+        fileChangeEN(el) {
+            if (typeof FileReader === "undefined") {
+                return alert("浏览器不支持上传图片");
+            }
+            if (!el.target.files[0].size) return; //判断是否有文件数量
+            this.updateImagePreviewEN = window.URL.createObjectURL(el.target.files[0]);
+            this.updateImageEN = el.target.files[0];
+            el.target.value = "";
+            this.isOldPic = false
         },
 
         fileChange(el) {
@@ -437,15 +498,85 @@ export default {
                 el.target.files[0]
             );
             this.updateImage = el.target.files[0];
-            this.driverImage = "";
             el.target.value = "";
             this.isOldPic = false
         },
 
+        firstPageButtonMethodEN(mode){
+            console.log('enter en method')
+            if(mode === 'submit'){
+                if(!this.updateImagePreviewEN || !this.textValueEN){
+                    this.tipsInfo = '请输入必要信息'
+                    this.tipsShowColor = 'yellow'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = true
+                    }, 3000);
+                }else{
+                    console.log('enter else')
+                    let payload = new FormData();
+                    let tempDate = new Date().toISOString()
+                    if(this.isOldPic){
+                        payload.append("imageEN", 'oldPic')
+                    }else{
+                        let maxSize = 200 * 1024; //200KB
+                        if (this.updateImagePreviewEN != null) {
+                            lrz(this.updateImageEN, {
+                                quality: 0.5
+                            })
+                            .then(res => {
+                                if (this.updateImageEN.size > maxSize) {
+                                    this.updateImageEN = res.file;
+                                }
+                            })
+                        }
+                        payload.append("image", this.updateImageEN)
+                    }
+                        payload.append("textEN", this.textValueEN);
+                    payload.append("date", tempDate);
+                    payload.append("isShow", this.value);
+                    axios({
+                            method: "post",
+                            url: config.server + "/announcement/editEN",
+                            data: payload,
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        })
+                        .then(doc => {
+                            if(doc.data.code === 0){
+                                this.showFirstPageDialog = false
+                                this.tipsInfo = '更新首页英文公告成功'
+                                this.getFirstPageNoticeInfoMethod()
+                                this.tipsShowColor = 'green'
+                                this.isShowTipsBox = true
+                                setTimeout(() => {
+                                    this.isShowTipsBox = false
+                                }, 2000);
+                            }else{
+                                this.tipsInfo = '更新首页英文公告失败'
+                                this.tipsShowColor = 'yellow'
+                                this.isShowTipsBox = true
+                                setTimeout(() => {
+                                    this.isShowTipsBox = false
+                                }, 2000);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }
+            }else{
+                this.showFirstPageDialog = false
+                this.textValueEN = null
+                this.updateImagePreviewEN = null
+            }
+        },
+
         firstPageButtonMethod(mode){
             if(mode === 'submit'){
-                if(!this.updateImagePreview && !this.textValue && !this.textValueEN){
-                    this.tipsInfo = '图片与文字请输入其中一项'
+                if(!this.updateImagePreview || !this.textValue){
+                    this.tipsInfo = '请输入必要信息'
                     this.tipsShowColor = 'yellow'
                     this.isShowTipsBox = true
                     setTimeout(() => {
@@ -472,9 +603,6 @@ export default {
                     if(this.textValue){
                         payload.append("text", this.textValue);
                     }
-                    if(this.textValueEN){
-                        payload.append("textEN", this.textValueEN);
-                    }
                     payload.append("date", tempDate);
                     payload.append("isShow", this.value);
                     axios({
@@ -488,7 +616,7 @@ export default {
                         .then(doc => {
                             if(doc.data.code === 0){
                                 this.showFirstPageDialog = false
-                                this.tipsInfo = '更新首页公告成功'
+                                this.tipsInfo = '更新首页中文公告成功'
                                 this.getFirstPageNoticeInfoMethod()
                                 this.tipsShowColor = 'green'
                                 this.isShowTipsBox = true
@@ -501,11 +629,9 @@ export default {
                             console.log(err)
                         })
                 }
-                
             }else{
                 this.showFirstPageDialog = false
                 this.textValue = null
-                this.textValueEN = null
                 this.updateImagePreview = null
             }
         },
@@ -514,12 +640,12 @@ export default {
             axios
                 .post(config.server + "/announcement/panelfind")
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.code === 0){
                         this.textValue = doc.data.doc.text
                         this.textValueEN = doc.data.doc.textEN
                         this.value = doc.data.doc.isShow
                         this.imageUrl = doc.data.doc.image
+                        this.imageUrlEN = doc.data.doc.imageEN
                     }else{
                         this.tipsInfo = '获取首页公告失败'
                         this.tipsShowColor = 'yellow'
@@ -845,13 +971,49 @@ export default {
 }
 
 .announcement_notice_front_box_title{
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     font-size: 16px;
-    background-color: #ff5252;
+    background-color: #d74342;
     color: #fff;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    position: relative;
+}
+
+.first_page_topswich{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.first_page_topswich_left{
+    border:1px solid #eee;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    height: 30px;
+    line-height: 30px;
+    width: 80px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.first_page_topswich_right{
+    border:1px solid #eee;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    height: 30px;
+    line-height: 30px;
+    width: 80px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .announcement_notice_front_box_body{
@@ -918,7 +1080,7 @@ export default {
     display: flex;
     display: -webkit-flex;
     margin-top: 10px;
-    justify-content: space-around;
+    justify-content: center;
     margin-bottom: 10px;
 }
 
@@ -1094,31 +1256,38 @@ export default {
     background-color: #fff;
 }
 
-.first_page_tips{
-    height: 30px;
-    line-height: 30px;
-    margin-top: 3px;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
-        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
-}
-
 .first_page_body{
     display: flex;
     display: -webkit-flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     margin-top: 24px;
     margin-left: 24px;
     margin-right: 24px;
 }
 
+.first_page_body_top{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    padding-bottom: 24px
+}
+
+.first_page_body_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
 .first_page_body_left{
-    border: 1px solid #eee;
     padding: 18px 14px 14px 12px;
     border-radius: 5px;
     position: relative;
     background-color: #fff;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    margin-right: 8px;
 }
 
 .first_page_body_left_title{
@@ -1142,14 +1311,12 @@ export default {
 }
 
 .first_page_body_right{
-    border: 1px solid #eee;
     padding: 18px 14px 14px 12px;
     border-radius: 5px;
     position: relative;
     background-color: #fff;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
-    margin-left: 8px;
 }
 
 .first_page_body_right_title{
@@ -1183,7 +1350,7 @@ export default {
     background-color: #e0e0e0;
     border: 1px solid #9a9a9a;
     height: 160px;
-    width: 120px;
+    width: 228px;
     display: flex;
     display: -webkit-flex;
     justify-content: center;
@@ -1220,6 +1387,7 @@ export default {
     -webkit-mask-image: url(../../public/img/icons/baseline-add_circle_outline-24px.svg);
     width: 54px;
     height: 54px;
+    mask-size: 54px 54px;
     -webkit-mask-size: 54px 54px;
 }
 
@@ -1242,6 +1410,7 @@ export default {
     cursor: pointer;
     border: 2px solid #999999;
     border-radius: 20px;
+    height: 28px;
 }
 
 .onoffswitch-inner {
@@ -1256,10 +1425,10 @@ export default {
     display: block;
     float: left;
     width: 50%;
-    height: 30px;
+    height: 28px;
     padding: 0;
-    line-height: 30px;
-    font-size: 19px;
+    line-height: 28px;
+    font-size: 16px;
     color: white;
     font-family: Trebuchet, Arial, sans-serif;
     font-weight: bold;
@@ -1301,6 +1470,12 @@ export default {
 
 .onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-switch {
     right: 0px;
+}
+
+.notice_first_swich{
+    position: absolute;
+    right: 2px;
+    top: 1px;
 }
 </style>
 

@@ -250,76 +250,100 @@
         </transition>
         <!-- staff info dialog end -->
         <!-- deleteDialog start-->
-        <md-dialog :md-active.sync="deleteDialog"
+        <transition name="show-choise-role-box-back"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="deleteDialog" class="rolebox-back"></div>
+        </transition>
+        <transition name="show-choise-role-box-back"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="deleteDialog" class="staff_delbox_front" @click.self.prevent="deleteDialog = false">
+                <div class="staff_delbox_front_box">
+                    <div class="rolebox-front-box-title">
+                        <span>是否删除该人员</span>
+                    </div>
+                    <div class="staff_delbox_front_box_body">
+                        <div class="staff_delbox_front_box_body_left">
+                            <div class="photoarea" style="width:200px;height:200px">
+                                <img src="../../public/img/ebuyLogo.png"
+                                    alt="ebuylogo"
+                                    style="object-fit:unset;padding:50px 0"
+                                    v-if="!driverImage">
+                                <img :src="driverImage | imgurl"
+                                    alt="newimg"
+                                    v-else>
+                            </div>
+                        </div>
+                        <div class="staff_delbox_front_box_body_right">
+                            <div class="staff_delbox_front_box_body_right_item">
+                                <div class="staff_delbox_front_box_body_right_item_left">
+                                    <span>司机姓名</span>
+                                </div>
+                                <div class="staff_delbox_front_box_body_right_item_right">
+                                    <span>{{dirvername}}</span>
+                                </div>
+                            </div>
+                            <div class="staff_delbox_front_box_body_right_item">
+                                <div class="staff_delbox_front_box_body_right_item_left">
+                                    <span>准证号码</span>
+                                </div>
+                                <div class="staff_delbox_front_box_body_right_item_right">
+                                    <span>{{dirverid}}</span>
+                                </div>
+                            </div>
+                            <div class="staff_delbox_front_box_body_right_item">
+                                <div class="staff_delbox_front_box_body_right_item_left">
+                                    <span>联系方式</span>
+                                </div>
+                                <div class="staff_delbox_front_box_body_right_item_right">
+                                    <span>{{dirverphone}}</span>
+                                </div>
+                            </div>
+                            <div class="staff_delbox_front_box_body_right_item">
+                                <div class="staff_delbox_front_box_body_right_item_left">
+                                    <span>驾照类型</span>
+                                </div>
+                                <div class="staff_delbox_front_box_body_right_item_right">
+                                    <span>{{dirvercard}}</span>
+                                </div>
+                            </div>
+                            <div class="staff_delbox_front_box_body_right_item">
+                                <div class="staff_delbox_front_box_body_right_item_left">
+                                    <span>登录账户</span>
+                                </div>
+                                <div class="staff_delbox_front_box_body_right_item_right">
+                                    <span>{{dirverusername}}</span>
+                                </div>
+                            </div>
+                            <div class="staff_delbox_front_box_body_right_item">
+                                <div class="staff_delbox_front_box_body_right_item_left">
+                                    <span>司机备注</span>
+                                </div>
+                                <div class="staff_delbox_front_box_body_right_item_right">
+                                    <span>{{dirvernote}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="staff_delbox_front_box_bottom">
+                        <div @click="deleteDialog = false" class="staff_white_button">
+                            <span>取消</span>
+                        </div>
+                        <div  @click="confirmdelete" class="staff_white_button" style="margin-left:8px;">
+                            <span>确定</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        
+        <!-- <md-dialog :md-active.sync="deleteDialog"
                    class="editdialog">
             <md-dialog-title style="font-size:18px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px">
                 <span style="color:#fff">删除司机</span>
             </md-dialog-title>
-            <div style="padding:0 10px;box-shadow: 2px 2px 5px #636363;overflow-x:hidden;overflow-y:auto;margin:0 20px 20px"
-                 class="deldialog">
-                <div class="deldialog-left">
-                    <div class="photoarea">
-                        <img src="../../public/img/ebuyLogo.png"
-                             alt="ebuylogo"
-                             style="object-fit:unset;padding:50px 0"
-                             v-if="!driverImage">
-                        <img :src="driverImage | imgurl"
-                             alt="newimg"
-                             v-else>
-                    </div>
-                </div>
-                <div class="deldialog-right">
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>司机姓名:</span>
-                        </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{dirvername}}</span>
-                        </div>
-                    </div>
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>准证号码:</span>
-                        </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{dirverid}}</span>
-                        </div>
-                    </div>
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>联系方式:</span>
-                        </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{dirverphone}}</span>
-                        </div>
-                    </div>
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>驾照类型:</span>
-                        </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{dirvercard}}</span>
-                        </div>
-                    </div>
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>登录账户:</span>
-                        </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{dirverusername}}</span>
-                        </div>
-                    </div>
-                    <div class="rmDialog-center">
-                        <div class="rmDialog-center-left">
-                            <span>司机备注:</span>
-                        </div>
-                        <div class="rmDialog-center-right">
-                            <span>{{dirvernote}}</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            
             <div style="justify-content: center;display: flex;box-shadow:0 -1px 5px #000">
                 <md-dialog-actions style="margin:5px auto">
                     <md-button class="md-raised md-primary"
@@ -330,7 +354,7 @@
                                style="font-size:18px;width:80px;height:30px">删除</md-button>
                 </md-dialog-actions>
             </div>
-        </md-dialog>
+        </md-dialog> -->
         <!-- deleteDialog end-->
         <!-- tip box start -->
         <transition name="custom-classes-transition"
@@ -647,7 +671,7 @@ export default {
                     if (res.data.code == 0) {
                         this.getalldirver();
                         this.deleteDialog = false;
-                        this.tipsInfo = error;
+                        this.tipsInfo = '删除成功';
                         this.tipsShowColor = 'green'
                         this.isShowTipsBox = true
                         setTimeout(() => {
@@ -1389,6 +1413,77 @@ export default {
     transition: 0.2s;
 }
 
+.staff_delbox_front{
+    display: flex;
+    display: -webkit-flex;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 25;
+    justify-content: center;
+    align-items: center;
+}
+
+.staff_delbox_front_box{
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    overflow: hidden;
+}
+
+.staff_delbox_front_box_body{
+    margin: 10px 12px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border: 1px solid #eee;
+    display: flex;
+    display: -webkit-flex;
+    padding: 8px;
+}
+
+.staff_delbox_front_box_body_right_item{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+    margin: 4px 0;
+}
+
+.staff_delbox_front_box_body_right_item_left{
+    width: 80px;
+    text-align: right;
+    padding-right: 8px;
+}
+
+.staff_delbox_front_box_body_right_item_right{
+    width: 120px;
+    border: 1px solid #eee;
+    text-align: left;
+    padding-left: 8px;
+    border-radius: 5px;
+}
+
+.staff_white_button{
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    cursor: pointer;
+}
+
+.staff_delbox_front_box_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-bottom: 8px;
+}
 @media screen and (min-width: 1025px) {
     .driverdialog {
         width: 700px;
