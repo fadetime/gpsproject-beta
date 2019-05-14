@@ -2077,7 +2077,7 @@
                                     <span>车牌</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
-                                     style="width:220px">
+                                     style="width:240px">
                                     <span>检查结果</span>
                                 </div>
                                 <div class="checkditailbox-body-center-title-content"
@@ -2128,13 +2128,13 @@
                                                 <div v-if="item.cart" class="cart_icon"></div>
                                                 <div v-else class="cart_icon_red"></div>
                                             </div>
-                                        </div>
-                                        <div class="checkditailbox-body-center-item-check_res_frame">
                                             <div class="checkditailbox-body-center-item-check_res_frame_item"
                                                 title="记录仪">
                                                 <div v-if="item.drivingRecorder" class="drivingRecorder"></div>
                                                 <div v-else class="drivingRecorder_red"></div>
                                             </div>
+                                        </div>
+                                        <div class="checkditailbox-body-center-item-check_res_frame">
                                             <div class="checkditailbox-body-center-item-check_res_frame_item"
                                                 title="车窗">
                                                 <div v-if="item.carWindow" class="carWindow"></div>
@@ -2152,8 +2152,13 @@
                                             </div>
                                             <div class="checkditailbox-body-center-item-check_res_frame_item"
                                                 title="内存卡">
-                                                <div v-if="item.sideMirror" class="SD_card"></div>
+                                                <div v-if="item.SD_card" class="SD_card"></div>
                                                 <div v-else class="SD_card-red"></div>
+                                            </div>
+                                            <div class="checkditailbox-body-center-item-check_res_frame_item"
+                                                title="手电筒">
+                                                <div v-if="item.flashLight" class="flash_light"></div>
+                                                <div v-else class="flash_light-red"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -4526,6 +4531,8 @@ export default {
                                 let petrolCardErrNum = 0;
                                 let tyreErrNum = 0;
                                 let otherErrNum = 0;
+                                let SD_cardNum = 0
+                                let flashLightNum = 0
                                 this.checkerArray.forEach(element => {
                                     let tempWrongNum = 0;
                                     element.missionList.forEach(element2 => {
@@ -4560,6 +4567,16 @@ export default {
                                             thisCarErrNum++;
                                             otherErrNum++;
                                         }
+                                        if (!element2.SD_card) {
+                                            tempWrongNum++;
+                                            thisCarErrNum++;
+                                            SD_cardNum++;
+                                        }
+                                        if (!element2.flashLight) {
+                                            tempWrongNum++;
+                                            thisCarErrNum++;
+                                            flashLightNum++;
+                                        }
                                         //记录当天检查错误总数 end
                                         tempCarInfo.carPlate =
                                             element2.carPlate;
@@ -4580,6 +4597,8 @@ export default {
                                 errPartNum.push(petrolCardErrNum);
                                 errPartNum.push(tyreErrNum);
                                 errPartNum.push(otherErrNum);
+                                errPartNum.push(SD_cardNum);
+                                errPartNum.push(flashLightNum);
                                 //show chart method start
                                 setTimeout(() => {
                                     let checkertleft = document.getElementById(
@@ -4646,7 +4665,9 @@ export default {
                                                 "大灯",
                                                 "油卡",
                                                 "轮胎",
-                                                "其他"
+                                                "其他",
+                                                "SD卡",
+                                                "手电筒"
                                             ],
                                             datasets: [
                                                 {
@@ -5544,7 +5565,7 @@ export default {
 }
 
 .checkditailbox-body-center-item-check_res{
-    width: 220px;
+    width: 240px;
     padding-left: 12px;
 }
 
@@ -6015,6 +6036,26 @@ export default {
     background: #d74342;
     mask-image: url(../../public/img/icons/SD_card.svg);
     -webkit-mask-image: url(../../public/img/icons/SD_card.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.flash_light {
+    background: #2f9514;
+    mask-image: url(../../public/img/icons/icon_flashLight.svg);
+    -webkit-mask-image: url(../../public/img/icons/icon_flashLight.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    -webkit-mask-size: 30px 30px;
+}
+
+.flash_light-red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/icon_flashLight.svg);
+    -webkit-mask-image: url(../../public/img/icons/icon_flashLight.svg);
     width: 30px;
     height: 30px;
     mask-size: 30px 30px;
