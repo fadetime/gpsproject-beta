@@ -137,6 +137,22 @@
                                         <span>退单</span>
                                     </div>
                                 </div>
+                                <div v-if="choiseMode === 'delivery'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('delivery')">
+                                    <div>
+                                        <div class="increaseorderimg5-red"></div>
+                                    </div>
+                                    <div>
+                                        <span>运输</span>
+                                    </div>
+                                </div>
+                                <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('delivery')">
+                                    <div>
+                                        <div class="increaseorderimg5"></div>
+                                    </div>
+                                    <div style="color:#e0e0e0">
+                                        <span>运输</span>
+                                    </div>
+                                </div>
                                 <div v-if="choiseMode === 'other'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('other')">
                                     <div>
                                         <div class="increaseorderimg4-red"></div>
@@ -828,12 +844,13 @@ export default {
 .customer_addDialog_box_body_right_item_text{
     font-size: 16px;
     line-height: 30px;
+    width: 88px;
 }
 
 .customer_addDialog_box_body_right_item_textarea{
     border-radius: 10px;
     border: 1px solid rgba(0, 0, 0, 0.2);
-    width: 202px;
+    width: 250px;
     height: 80px;
     margin-left: 8px;
 }
@@ -846,7 +863,7 @@ export default {
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     font-size: 16px;
-    width: 202px;
+    width: 250px;
     margin-left: 8px;
     height: 30px;
     display: flex;
@@ -957,6 +974,40 @@ export default {
     -webkit-mask-position: center;
     margin: 0 auto;
     margin-top: 10px;
+    transition: 0.2s;
+}
+
+.increaseorderimg5 {
+    background: #e0e0e0;
+    mask-image: url(../../public/img/icons/icon_transport.svg);
+    -webkit-mask-image: url(../../public/img/icons/icon_transport.svg);
+    width: 36px;
+    height: 36px;
+    mask-size: 42px;
+    -webkit-mask-size: 42px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    margin-top: 6px;
+    transition: 0.2s;
+}
+
+.increaseorderimg5-red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/icon_transport.svg);
+    -webkit-mask-image: url(../../public/img/icons/icon_transport.svg);
+    width: 36px;
+    height: 36px;
+    mask-size: 42px;
+    -webkit-mask-size: 42px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    margin-top: 6px;
     transition: 0.2s;
 }
 

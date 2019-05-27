@@ -122,44 +122,7 @@
         <!-- 车次统计部分 end -->
 
         <!-- 白班统计部分 start -->
-        <div v-else-if="showWindow === 'day'"
-             class="toparea">
-            <div class="table_toparea_button_area">
-                <div class="whiteButton" style="margin-right:12px" @click="isShowDayShiftMission = !isShowDayShiftMission,isShowDayShiftCheckCar = false">
-                    <span>任务统计</span>
-                </div>
-                <div class="whiteButton" @click="isShowDayShiftCheckCar = !isShowDayShiftCheckCar,isShowDayShiftMission = false">
-                    <span>车辆检查</span>
-                </div>
-            </div>
-            
-            <div v-if="isShowDayShiftMission" style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff">
-                <vue-datepicker-local v-model="startDate"
-                                      style="margin-top: 12px;"
-                                      placeholder="开始时间" />
-                <span> ~ </span>
-                <vue-datepicker-local v-model="endDate"
-                                      style="margin-top: 12px;"
-                                      placeholder="结束时间" />
-                <md-button class="md-raised md-primary"
-                           @click="findDayReport"
-                           style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
-            </div>
-            <div v-else-if="isShowDayShiftCheckCar" style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff" class="table_toparea_button_area">
-                <div>
-                    <vue-datepicker-local v-model="startDate"
-                                      style="margin-top: 12px;"
-                                      placeholder="开始时间" />
-                    <span> ~ </span>
-                    <vue-datepicker-local v-model="endDate"
-                                        style="margin-top: 12px;"
-                                        placeholder="结束时间" />
-                </div>
-                <div class="white_button" @click="findDayShiftCheckCarMethod" style="margin-top: 10px;margin-left: 10px;">
-                    <span>查询</span>
-                </div>
-            </div>
-        </div>
+        <dayShift v-else-if="showWindow === 'day'"></dayShift>
         <!-- 白班统计部分 end -->
         
         <!-- 退还统计部分 start -->
@@ -1639,79 +1602,7 @@
         </transition>
         <!-- client choise box end -->
 
-        <!-- dayShift report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div class="centerarea"
-                 v-if="dayShiftInfo.length != 0">
-                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="dayShiftInfo=[]">
-                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
-                </div>
-                <div class="centerarea-head">
-                    <span>白班任务情况统计</span>
-                </div>
-                <div class="centerarea-title">
-                    <div style="flex-basis: 5%;text-align: center;">
-                        <span>No.</span>
-                    </div>
-                    <div style="flex-basis: 10%;text-align: center;">
-                        <span>司机</span>
-                    </div>
-                    <div style="flex-basis: 20%;text-align: center;">
-                        <span>客户</span>
-                    </div>
-                    <div style="flex-basis: 10%;text-align: center;">
-                        <span>类型</span>
-                    </div>
-                    <div style="flex-basis: 15%;text-align: center;">
-                        <span>任务日期</span>
-                    </div>
-                    <div style="flex-basis: 20%;text-align: center;">
-                        <span>出车时间</span>
-                    </div>
-                    <div style="flex-basis: 20%;text-align: center;">
-                        <span>收车时间</span>
-                    </div>
-                </div>
-                <div class="centerarea-body">
-                    <div v-for="(item,index) in dayShiftInfo"
-                         :key="index"
-                         class="centerarea-body-item">
-                        <div style="flex-basis: 5%;text-align: center;">
-                            <span>{{index + 1}}</span>
-                        </div>
-                        <div style="flex-basis: 10%;text-align: center;">
-                            <span>{{item.driverName}}</span>
-                        </div>
-                        <div style="flex-basis: 20%;text-align: center;overflow:hidden">
-                            <span>{{item.clientName}}</span>
-                        </div>
-                        <div style="flex-basis: 10%;text-align: center;">
-                            <span v-if="item.isIncreaseOrder">加单</span>
-                            <span v-else>补单</span>
-                        </div>
-                        <div style="flex-basis: 15%;text-align: center;">
-                            <span>{{item.orderDate | datefilter}}</span>
-                        </div>
-                        <div style="flex-basis: 20%;text-align: center;">
-                            <span v-if="item.goTime">{{item.goTime | timefilter}}</span>
-                            <span v-else>未送达</span>
-                        </div>
-                        <div style="flex-basis: 20%;text-align: center;">
-                            <span v-if="item.backTime">{{item.backTime | timefilter}}</span>
-                            <span v-else>未送达</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="centerarea-bottom">
-                    <span>共</span>
-                    <span>{{dayShiftInfo.length}}</span>
-                    <span>条数据</span>
-                </div>
-            </div>
-        </transition>
-        <!-- dayShift report end -->
+        
 
         <!-- bill report start -->
         <transition name="custom-classes-transition"
@@ -2986,6 +2877,7 @@ import axios from "axios";
 import config from "../../public/js/config.js";
 import Chart from "chart.js";
 import backItem from "@/components/report/backItem.vue"
+import dayShift from "@/components/report/dayShift.vue"
 
 function combination(arr) {
     let obj = {};
@@ -3010,7 +2902,8 @@ export default {
     name: "tablePage",
     components: {
         VueDatepickerLocal,
-        backItem
+        backItem,
+        dayShift
     },
     data() {
         return {
@@ -3352,188 +3245,7 @@ export default {
                 })
         },
 
-        findDayShiftCheckCarMethod(){
-            this.isOpenCheckCarDriverMode = false;
-            axios
-                .post(config.server + "/checkWorkerDayShift/find", {
-                    startDate: this.startDate,
-                    endDate: this.endDate
-                })
-                .then(doc => {
-                    let errPartNum = []; //统计错误部件数量
-                    if (doc.data.code === 0) {
-                        this.checkerArray = doc.data.doc;
-                        let brakeLightErrNum = 0;
-                        let headlightErrNum = 0;
-                        let petrolCardErrNum = 0;
-                        let tyreErrNum = 0;
-                        let otherErrNum = 0;
-                        this.checkerArray.forEach(element => {
-                            let tempWrongNum = 0;
-                            element.missionList.forEach(element2 => {
-                                let tempCarInfo = {
-                                    carPlate: null,
-                                    wrongNum: 0
-                                };
-                                let thisCarErrNum = 0;
-                                //记录当天检查错误总数 start
-                                if (!element2.brakeLight) {
-                                    tempWrongNum++;
-                                    thisCarErrNum++;
-                                    brakeLightErrNum++;
-                                }
-                                if (!element2.headlight) {
-                                    tempWrongNum++;
-                                    thisCarErrNum++;
-                                    headlightErrNum++;
-                                }
-                                if (!element2.petrolCard) {
-                                    tempWrongNum++;
-                                    thisCarErrNum++;
-                                    petrolCardErrNum++;
-                                }
-                                if (!element2.tyre) {
-                                    tempWrongNum++;
-                                    thisCarErrNum++;
-                                    tyreErrNum++;
-                                }
-                                if (element2.note) {
-                                    tempWrongNum++;
-                                    thisCarErrNum++;
-                                    otherErrNum++;
-                                }
-                                //记录当天检查错误总数 end
-                                tempCarInfo.carPlate =
-                                    element2.carPlate;
-                                tempCarInfo.wrongNum = thisCarErrNum;
-                                this.tempCar.push(tempCarInfo);
-                            });
-                            this.wrongNumArray.push(tempWrongNum);
-                        });
-                        let newArray = combination(this.tempCar);
-                        let newTitle = [];
-                        let newContent = [];
-                        newArray.forEach(element => {
-                            newTitle.push(element.carPlate);
-                            newContent.push(element.wrongNum);
-                        });
-                        errPartNum.push(brakeLightErrNum);
-                        errPartNum.push(headlightErrNum);
-                        errPartNum.push(petrolCardErrNum);
-                        errPartNum.push(tyreErrNum);
-                        errPartNum.push(otherErrNum);
-                        //show chart method start
-                        setTimeout(() => {
-                            let checkertleft = document.getElementById(
-                                "checkertleft"
-                            );
-                            let myChart2 = new Chart(checkertleft, {
-                                type: "doughnut",
-                                data: {
-                                    labels: newTitle,
-                                    datasets: [
-                                        {
-                                            label: "carErrorNum",
-                                            backgroundColor:
-                                                "rgba(225,10,10,0.3)",
-                                            borderColor:
-                                                "rgba(225,103,110,1)",
-                                            borderWidth: 1,
-                                            pointStrokeColor: "#fff",
-                                            pointStyle: "crossRot",
-                                            data: newContent,
-                                            cubicInterpolationMode:
-                                                "monotone",
-                                            spanGaps: "false",
-                                            fill: "false",
-                                            backgroundColor: [
-                                                "aqua",
-                                                "#36a2eb",
-                                                "fuchsia",
-                                                "rgb(255, 99, 132)",
-                                                "rgb(255, 205, 86)",
-                                                "lime",
-                                                "#393939",
-                                                "#f5b031",
-                                                "#fad797",
-                                                "#59ccf7",
-                                                "#c3b4df"
-                                            ],
-                                            borderColor: ["#fff"],
-                                            borderWidth: 2
-                                        }
-                                    ]
-                                },
-                                options: {
-                                    legend: {
-                                        display: true,
-                                        labels: {
-                                            fontColor:
-                                                "rgb(255, 99, 132)"
-                                        }
-                                    }
-                                }
-                            });
-                        }, 100);
-
-                        setTimeout(() => {
-                            let checkertRight = document.getElementById(
-                                "checkertright"
-                            );
-                            let myChart2 = new Chart(checkertRight, {
-                                type: "bar",
-                                data: {
-                                    labels: [
-                                        "刹车灯",
-                                        "大灯",
-                                        "油卡",
-                                        "轮胎",
-                                        "其他"
-                                    ],
-                                    datasets: [
-                                        {
-                                            label: "损坏部件统计",
-                                            backgroundColor:
-                                                "rgba(225,10,10,0.3)",
-                                            borderColor:
-                                                "rgba(225,103,110,1)",
-                                            borderWidth: 1,
-                                            pointStrokeColor: "#fff",
-                                            pointStyle: "crossRot",
-                                            data: errPartNum,
-                                            cubicInterpolationMode:
-                                                "monotone",
-                                            spanGaps: "false",
-                                            fill: "false",
-                                            backgroundColor: [
-                                                "aqua",
-                                                "#36a2eb",
-                                                "fuchsia",
-                                                "rgb(255, 99, 132)",
-                                                "rgb(255, 205, 86)",
-                                                "lime"
-                                            ],
-                                            borderColor: ["#fff"],
-                                            borderWidth: 2
-                                        }
-                                    ]
-                                },
-                                options: {}
-                            });
-                        }, 200);
-                        //show chart method end
-                    } else {
-                        this.tipsMsg = "查询数据出现错误";
-                        this.isOpenTipBox = true;
-                        setTimeout(() => {
-                            this.isOpenTipBox = false;
-                        }, 3000);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        },
+        
 
         findTripsReportByOneDayMethod(){
             let tempDate = new Date(this.startDate).toDateString()
@@ -5051,10 +4763,7 @@ export default {
                 let end = new Date(this.endDate).toDateString();
                 end = new Date(end).getTime();
                 axios
-                    .post(config.server + "/dayShiftmission/findall", {
-                        startDate: start,
-                        endDate: end
-                    })
+                    .post(config.server + "/dayShiftmission/findall", { startDate: start, endDate: end })
                     .then(doc => {
                         console.log(doc);
                         if (doc.data.code === 1) {
@@ -6250,6 +5959,13 @@ export default {
     justify-content: center;
     align-items: center;
     padding-bottom: 10px;
+}
+
+.table_toparea_button_area_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .report_backmission_title{

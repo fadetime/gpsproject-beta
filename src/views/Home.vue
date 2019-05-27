@@ -3917,7 +3917,6 @@ export default {
 .step-second-item {
     margin: 10px auto;
     flex-basis: 45%;
-    /* text-align: right; */
 }
 
 .step-third-title {
@@ -3951,7 +3950,6 @@ export default {
 }
 
 .container {
-    /* width: 30%; */
     margin: auto;
 }
 

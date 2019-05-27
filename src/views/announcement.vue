@@ -315,6 +315,32 @@
                             </div>
                         </div>
                     </div>
+                    <div class="announcement_notice_front_box_place">
+                        <div class="announcement_notice_front_box_place_item">
+                            <div class="announcement_notice_front_box_place_item_left">
+                                <input id="announcement_show_place_all" type="radio" value="all" v-model="choosePlace">
+                            </div>
+                            <label for="announcement_show_place_all" class="announcement_notice_front_box_place_item_right">
+                                <span>更新全部</span>
+                            </label>
+                        </div>
+                        <div class="announcement_notice_front_box_place_item">
+                            <div class="announcement_notice_front_box_place_item_left">
+                                <input id="announcement_show_place_neight" type="radio" value="night" v-model="choosePlace">
+                            </div>
+                            <label for="announcement_show_place_neight" class="announcement_notice_front_box_place_item_right">
+                                <span>更新夜班公告</span>
+                            </label>
+                        </div>
+                        <div class="announcement_notice_front_box_place_item">
+                            <div class="announcement_notice_front_box_place_item_left">
+                                <input  id="announcement_show_place_day" type="radio" value="day" v-model="choosePlace">
+                            </div>
+                            <label for="announcement_show_place_day" class="announcement_notice_front_box_place_item_right">
+                                <span>更新白班公告</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </transition>
@@ -452,7 +478,8 @@ export default {
             tipsShowColor: null,
             tipsInfo: null,
             isShowTipsBox: null,
-            isShowChNotice:true
+            isShowChNotice:true,
+            choosePlace:'all'
         }
     },
 
@@ -535,6 +562,7 @@ export default {
                         payload.append("textEN", this.textValueEN);
                     payload.append("date", tempDate);
                     payload.append("isShow", this.value);
+                    payload.append("place",this.choosePlace)
                     axios({
                             method: "post",
                             url: config.server + "/announcement/editEN",
@@ -605,6 +633,7 @@ export default {
                     }
                     payload.append("date", tempDate);
                     payload.append("isShow", this.value);
+                    payload.append("place",this.choosePlace)
                     axios({
                             method: "post",
                             url: config.server + "/announcement/edit",
@@ -968,6 +997,7 @@ export default {
     background: #f7f7f7;
     border-radius: 10px;
     overflow: hidden;
+    position: relative;
 }
 
 .announcement_notice_front_box_title{
@@ -1094,6 +1124,32 @@ export default {
     cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.announcement_notice_front_box_place{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 39px;
+    width: 100%;
+}
+
+.announcement_notice_front_box_place_item{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.announcement_notice_front_box_place_item_left input{
+    width: 20px;
+    height: 20px;
+}
+
+.announcement_notice_front_box_place_item_right{
+    height: 30px;
+    line-height: 26px;
+    width: 88px;
+    text-align: left;
 }
 
 .announcement_notice_front_box_body_item_right_note{
@@ -1271,7 +1327,7 @@ export default {
     display: flex;
     display: -webkit-flex;
     justify-content: center;
-    padding-bottom: 24px
+    padding-bottom: 30px
 }
 
 .first_page_body_bottom{
