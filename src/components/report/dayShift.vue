@@ -45,6 +45,14 @@
                     </div>
                     <div class="dayshift_radio_item">
                         <div class="dayshift_radio_item_left">
+                            <input id="dayshift_delivery" type="radio" value="change" v-model="searchType">
+                        </div>
+                        <label for="dayshift_delivery" class="dayshift_radio_item_right">
+                            <span>换货</span>
+                        </label>
+                    </div>
+                    <div class="dayshift_radio_item">
+                        <div class="dayshift_radio_item_left">
                             <input id="dayshift_delivery" type="radio" value="delivery" v-model="searchType">
                         </div>
                         <label for="dayshift_delivery" class="dayshift_radio_item_right">
@@ -137,6 +145,7 @@
                         <div style="flex-basis: 10%;text-align: center;">
                             <span v-if="item.isIncreaseOrder === 'true'">加单</span>
                             <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                            <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
                             <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
                             <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
                             <span v-else>退单</span>

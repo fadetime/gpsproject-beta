@@ -88,87 +88,108 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="customer_addDialog_box_body_right_item_buttonarea customer_addDialog_box_body_right_item">
-                                <div v-if="choiseMode === 'true'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('true')">
-                                    <div>
-                                        <div class="increaseorderimg1-red"></div>
+                            <div>
+                                <div class="customer_changetype_top" style="margin-top: 8px;">
+                                    <div v-if="choiseMode === 'true'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('true')">
+                                        <div>
+                                            <div class="increaseorderimg1-red"></div>
+                                        </div>
+                                        <div>
+                                            <span>加单</span>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <span>加单</span>
+                                    <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('true')">
+                                        <div>
+                                            <div class="increaseorderimg1"></div>
+                                        </div>
+                                        <div style="color:#e0e0e0">
+                                            <span>加单</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('true')">
-                                    <div>
-                                        <div class="increaseorderimg1"></div>
+                                    <div v-if="choiseMode === 'false'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('false')">
+                                        <div>
+                                            <div class="increaseorderimg2-red"></div>
+                                        </div>
+                                        <div>
+                                            <span>补单</span>
+                                        </div>
                                     </div>
-                                    <div style="color:#e0e0e0">
-                                        <span>加单</span>
+                                    <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('false')">
+                                        <div>
+                                            <div class="increaseorderimg2"></div>
+                                        </div>
+                                        <div style="color:#e0e0e0">
+                                            <span>补单</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div v-if="choiseMode === 'false'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('false')">
-                                    <div>
-                                        <div class="increaseorderimg2-red"></div>
+                                    <div v-if="choiseMode === 'return'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('return')">
+                                        <div>
+                                            <div class="increaseorderimg3-red"></div>
+                                        </div>
+                                        <div>
+                                            <span>退单</span>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <span>补单</span>
-                                    </div>
-                                </div>
-                                <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('false')">
-                                    <div>
-                                        <div class="increaseorderimg2"></div>
-                                    </div>
-                                    <div style="color:#e0e0e0">
-                                        <span>补单</span>
-                                    </div>
-                                </div>
-                                <div v-if="choiseMode === 'return'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('return')">
-                                    <div>
-                                        <div class="increaseorderimg3-red"></div>
-                                    </div>
-                                    <div>
-                                        <span>退单</span>
-                                    </div>
-                                </div>
-                                <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('return')">
-                                    <div>
-                                        <div class="increaseorderimg3"></div>
-                                    </div>
-                                    <div style="color:#e0e0e0">
-                                        <span>退单</span>
-                                    </div>
-                                </div>
-                                <div v-if="choiseMode === 'delivery'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('delivery')">
-                                    <div>
-                                        <div class="increaseorderimg5-red"></div>
-                                    </div>
-                                    <div>
-                                        <span>运输</span>
+                                    <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('return')">
+                                        <div>
+                                            <div class="increaseorderimg3"></div>
+                                        </div>
+                                        <div style="color:#e0e0e0">
+                                            <span>退单</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('delivery')">
-                                    <div>
-                                        <div class="increaseorderimg5"></div>
+                                <div class="customer_changetype_bottom" style="margin-top: 8px;">
+                                    <div v-if="choiseMode === 'change'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('change')">
+                                        <div>
+                                            <div class="increaseorderimg_change-red"></div>
+                                        </div>
+                                        <div>
+                                            <span>换货</span>
+                                        </div>
                                     </div>
-                                    <div style="color:#e0e0e0">
-                                        <span>运输</span>
+                                    <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('change')">
+                                        <div>
+                                            <div class="increaseorderimg_change"></div>
+                                        </div>
+                                        <div style="color:#e0e0e0">
+                                            <span>换货</span>
+                                        </div>
+                                    </div>
+                                    <div v-if="choiseMode === 'delivery'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('delivery')">
+                                        <div>
+                                            <div class="increaseorderimg5-red"></div>
+                                        </div>
+                                        <div>
+                                            <span>运输</span>
+                                        </div>
+                                    </div>
+                                    <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('delivery')">
+                                        <div>
+                                            <div class="increaseorderimg5"></div>
+                                        </div>
+                                        <div style="color:#e0e0e0">
+                                            <span>运输</span>
+                                        </div>
+                                    </div>
+                                    <div v-if="choiseMode === 'other'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('other')">
+                                        <div>
+                                            <div class="increaseorderimg4-red"></div>
+                                        </div>
+                                        <div>
+                                            <span>其他</span>
+                                        </div>
+                                    </div>
+                                    <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('other')">
+                                        <div>
+                                            <div class="increaseorderimg4"></div>
+                                        </div>
+                                        <div style="color:#e0e0e0">
+                                            <span>其他</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div v-if="choiseMode === 'other'" class="customer_addDialog_box_body_right_item_frame" style="border:1px solid #d74342" @click="changeMode('other')">
-                                    <div>
-                                        <div class="increaseorderimg4-red"></div>
-                                    </div>
-                                    <div>
-                                        <span>其他</span>
-                                    </div>
-                                </div>
-                                <div v-else class="customer_addDialog_box_body_right_item_frame" @click="changeMode('other')">
-                                    <div>
-                                        <div class="increaseorderimg4"></div>
-                                    </div>
-                                    <div style="color:#e0e0e0">
-                                        <span>其他</span>
-                                    </div>
-                                </div>
+                                
                             </div>
                             <div class="customer_addDialog_box_body_right_item" style="margin-top:12px;">
                                 <div class="customer_addDialog_box_body_right_item_text">
@@ -850,9 +871,8 @@ export default {
 .customer_addDialog_box_body_right_item_textarea{
     border-radius: 10px;
     border: 1px solid rgba(0, 0, 0, 0.2);
-    width: 250px;
+    width: 220px;
     height: 80px;
-    margin-left: 8px;
 }
 
 .customer_addDialog_box_body_left{
@@ -863,8 +883,7 @@ export default {
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     font-size: 16px;
-    width: 250px;
-    margin-left: 8px;
+    width: 220px;
     height: 30px;
     display: flex;
     display: -webkit-flex;
@@ -1011,6 +1030,40 @@ export default {
     transition: 0.2s;
 }
 
+.increaseorderimg_change {
+    background: #e0e0e0;
+    mask-image: url(../../public/img/icons/icon_change.svg);
+    -webkit-mask-image: url(../../public/img/icons/icon_change.svg);
+    width: 36px;
+    height: 36px;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    margin-top: 6px;
+    transition: 0.2s;
+}
+
+.increaseorderimg_change-red {
+    background: #d74342;
+    mask-image: url(../../public/img/icons/icon_change.svg);
+    -webkit-mask-image: url(../../public/img/icons/icon_change.svg);
+    width: 36px;
+    height: 36px;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    margin-top: 6px;
+    transition: 0.2s;
+}
+
 .customer_addDialog_box_bottom{
     display: flex;
     display: -webkit-flex;
@@ -1143,5 +1196,17 @@ export default {
     border-radius: 10px;
     overflow: hidden;
     border: 1px solid #eee;
+}
+
+.customer_changetype_top{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
+.customer_changetype_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
 }
 </style>
