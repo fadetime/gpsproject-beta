@@ -21,6 +21,14 @@
                     </div>
                     <div class="dayshift_radio_item">
                         <div class="dayshift_radio_item_left">
+                            <input id="dayshift_true" type="radio" value="order" v-model="searchType">
+                        </div>
+                        <label for="dayshift_true" class="dayshift_radio_item_right">
+                            <span>订单</span>
+                        </label>
+                    </div>
+                    <div class="dayshift_radio_item">
+                        <div class="dayshift_radio_item_left">
                             <input id="dayshift_true" type="radio" value="true" v-model="searchType">
                         </div>
                         <label for="dayshift_true" class="dayshift_radio_item_right">
@@ -33,6 +41,14 @@
                         </div>
                         <label for="dayshift_false" class="dayshift_radio_item_right">
                             <span>补单</span>
+                        </label>
+                    </div>
+                    <div class="dayshift_radio_item">
+                        <div class="dayshift_radio_item_left">
+                            <input id="dayshift_return" type="radio" value="bun" v-model="searchType">
+                        </div>
+                        <label for="dayshift_return" class="dayshift_radio_item_right">
+                            <span>面食</span>
                         </label>
                     </div>
                     <div class="dayshift_radio_item">
@@ -143,8 +159,10 @@
                             <span>{{item.clientName}}</span>
                         </div>
                         <div style="flex-basis: 10%;text-align: center;">
-                            <span v-if="item.isIncreaseOrder === 'true'">加单</span>
+                            <span v-if="item.isIncreaseOrder === 'order'">订单</span>
+                            <span v-else-if="item.isIncreaseOrder === 'true'">加单</span>
                             <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                            <span v-else-if="item.isIncreaseOrder === 'bun'">面食</span>
                             <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
                             <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
                             <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>

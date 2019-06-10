@@ -763,10 +763,10 @@
                             </div>
                             <div v-for="(item,index) in averageValue" :key="index" class="averagevalue_box">
                                 <div class="averagevalue_box_item">
-                                    <span>{{item.num/item.count}}</span>
+                                    <span>{{Math.round(((item.num/item.count)*100))/100}}</span>
                                 </div>
                                 <div class="averagevalue_box_item">
-                                    <span>{{item.km/item.indexKm}}</span>
+                                    <span>{{Math.round(((item.km/item.indexKm)*100))/100}}</span>
                                 </div>
                             </div>
                         </div>

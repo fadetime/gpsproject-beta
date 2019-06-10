@@ -1284,8 +1284,6 @@ export default {
     transition: 0.2s;
 }
 
-
-
 .staffinfo_body{
     overflow-x: hidden;
     overflow-y: auto;

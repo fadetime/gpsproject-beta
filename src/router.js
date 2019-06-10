@@ -11,6 +11,7 @@ import Log from './views/Log.vue'
 import AuthGuard from './auth-guard'
 import Staff from './views/Staff.vue'
 import Table from './views/table.vue'
+import workStream_home from './views/workStream/workStream_home.vue'
 import customerService from './views/customerService.vue'
 import Announcement from './views/announcement.vue'
 import SearchOrder from './views/SearchOrder.vue'
@@ -89,6 +90,11 @@ export default new Router({
 			path: '/customerService',
 			name: 'customerService',
 			component: customerService
+		},
+		{
+			path: '/workStream_home',
+			name: 'workStream_home',
+			component: workStream_home
 		}
 	]
 })
