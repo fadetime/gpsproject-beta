@@ -146,14 +146,6 @@
                                     <span>线路名(EN)</span>
                                     <input type="text" v-model="timesNameEN">
                                 </div>
-                                <!-- <md-field style="margin:15px auto;width:80%">
-                                    <label style="font-size:16px;color: rgba(0, 0, 0, 0.54);">路线名称</label>
-                                    <md-input v-model="timesname"
-                                              style="border-bottom: 1px solid #000;font-size:16px;height:55px;text-align:center"></md-input>
-                                    <span class="md-helper-text"
-                                          style="font-size:14px;margin: -10px auto;"
-                                          v-if="!timesname">车次标识信息，必填项目</span>
-                                </md-field> -->
                                 
                                 <div class="inputboxclass">
                                     <span>线路备注</span>
@@ -574,59 +566,59 @@
         </md-dialog>
         <!-- Dialog end-->
         <!-- sort dialog start -->
-        <md-dialog :md-active.sync="sortDialog"
-                   style="width:500px"
-                   class="editdialog">
-            <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:4px">
-                <span style="color:#fff">车次管理</span>
-            </md-dialog-title>
-            <md-dialog-content>
-                <div style="box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);margin-top: 10px;">
-                    <div style="display:flex;display:-webkit-flex;font-size:18px;height:40px;line-height:40px;border-bottom: 1px solid rgba(0, 0, 0, 0.2);">
-                        <div style="width:60px;text-align: center;">
-                            <span>序号</span>
-                        </div>
-                        <div style="width:200px;text-align: center;">
-                            <span>线路名称</span>
-                        </div>
-                        <div style="width:200px;text-align: center;">
-                            <span>线路备注</span>
-                        </div>
+        <transition name="trips-sort-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="sortDialog" class="trips_sortbox_back"></div>
+        </transition>
+        <transition name="trips-sort-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="sortDialog" class="trips_sortbox_front" @click.self.prevent="sortDialog = false">
+                <div class="trips_sortbox_box">
+                    <div class="trips_sortbox_box_title">
+                        <span>车次排序</span>
                     </div>
-                    <div>
-                        <draggable v-model="tempAllLineInfo"
+                    <div class="trips_sortbox_box_body">
+                        <div class="trips_sortbox_box_body_top">
+                            <div style="width:60px;text-align: center;">
+                                <span>序号</span>
+                            </div>
+                            <div style="width:200px;text-align: center;">
+                                <span>线路名称</span>
+                            </div>
+                            <div style="width:200px;text-align: center;">
+                                <span>线路备注</span>
+                            </div>
+                        </div>
+                        <div class="trips_sortbox_box_body_bottom">
+                            <draggable v-model="tempAllLineInfo"
                                    :options="{group:'alltimesinfo'}"
                                    @start="drag=true"
                                    @end="drag=false">
-                            <md-card md-with-hover
-                                     v-for="(item,index) in tempAllLineInfo"
-                                     :key="index">
-                                <div style="display:flex;display:-webkit-flex;height:40px;line-height:40px">
-                                    <div style="width:60px;text-align: center;">
-                                        <span>{{index+1}}</span>
-                                    </div>
-                                    <div style="width:200px;text-align: center;">
-                                        <span>{{item.timesname}}</span>
-                                    </div>
-                                    <div style="width:200px;text-align: center;">
-                                        <span>{{item.timesnote}}</span>
+                                <div class="trips_sortbox_box_body_item" v-for="(item,index) in tempAllLineInfo" :key="index">
+                                    <div style="display:flex;display:-webkit-flex;height:40px;line-height:40px">
+                                        <div style="width:60px;text-align: center;">
+                                            <span>{{index+1}}</span>
+                                        </div>
+                                        <div style="width:200px;text-align: center;">
+                                            <span>{{item.timesname}}</span>
+                                        </div>
+                                        <div style="width:200px;text-align: center;">
+                                            <span>{{item.timesnote}}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </md-card>
-                        </draggable>
+                            </draggable>
+                        </div>
+                    </div>
+                    <div class="trips_sortbox_box_bottom">
+                        <div class="times_button_white" @click="sortDialog = false">
+                            <span>取消</span>
+                        </div>
+                        <div class="times_button_white" @click="saveSortMethod" style="margin-left:8px">
+                            <span>确定</span>
+                        </div>
                     </div>
                 </div>
-
-            </md-dialog-content>
-            <md-dialog-actions style="margin:0 auto">
-                <md-button class="md-raised md-primary"
-                           @click="sortDialog = false"
-                           style="font-size:18px;width:80px;height:30px">关闭</md-button>
-                <md-button class="md-raised md-primary"
-                           @click="saveSortMethod"
-                           style="font-size:18px;width:80px;height:30px">存储</md-button>
-            </md-dialog-actions>
-        </md-dialog>
+            </div>
+        </transition>
         <!-- sort dialog end -->
         <!-- remove dialog start-->
         <md-dialog :md-active.sync="removeDialog"
@@ -691,6 +683,7 @@
         <!-- remove dialog end-->
 
         <!-- chose car list dialog start -->
+        
         <md-dialog :md-active.sync="choseCarListDialog">
             <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:4px">
                 <span style="color:#fff">车次管理</span>
@@ -746,9 +739,6 @@
                 </div>
             </md-dialog-content>
             <md-dialog-actions style="margin:0 auto;flex-direction:column">
-                <!-- <div style="padding-bottom: 8px;">
-					<md-button class="md-raised md-primary" @click="dirverChangePageFlag=!dirverChangePageFlag" style="font-size:18px;width:110px;height:30px">查看全部</md-button>
-				</div> -->
                 <div>
                     <md-button class="md-raised md-primary"
                                @click="choseCarListDialog = false"
@@ -1204,11 +1194,11 @@
                                     <div class="times_change_page_info_body_frame" >
                                         <div v-for="(item,index) in topTrips.timesclientb" :key="index" class="times_change_page_info_body_frame_item">
                                             <div class="times_change_page_info_body_frame_item_left">
-                                                <input type="checkbox" :value="item" v-model="changeTripLeftArray_choised">
+                                                <input :id="'change_page_input' + index" type="checkbox" :value="item" v-model="changeTripLeftArray_choised">
                                             </div>
-                                            <div class="times_change_page_info_body_frame_item_right">
+                                            <label :for="'change_page_input' + index" class="times_change_page_info_body_frame_item_right">
                                                 <span>{{item.clientbname}}</span>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="times_change_page_info_body_frame">
@@ -3159,7 +3149,84 @@ export default {
     animation-delay: -0.8s;
 }
 
+.trips_sortbox_back{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+    z-index: 23;
+}
 
+.trips_sortbox_front{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 24;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.trips_sortbox_box{
+    background-color: #fff;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.trips_sortbox_box_title{
+    height: 40px;
+    line-height: 40px;
+    background-color: #d74342;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    color: #fff;
+}
+
+.trips_sortbox_box_body{
+    margin: 12px;
+    padding: 8px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.trips_sortbox_box_body_top{
+    display: -webkit-flex;
+    display: flex;
+    height: 30px;
+    line-height: 30px;
+}
+
+.trips_sortbox_box_body_bottom{
+    height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.trips_sortbox_box_bottom{
+    display: flex;
+    display: -webkit-flex;
+    margin: 0 12px 12px 12px;
+    justify-content: center;
+}
+
+.trips_sortbox_box_body_item{
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.trips_sortbox_box_body_item:hover{
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
 @media screen and (min-width: 1025px) {
     .linedialog {
         width: 828px;
