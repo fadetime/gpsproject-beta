@@ -3,30 +3,37 @@
         <div class="topbutton">
             <div class="topbutton-left">
                 <div style="position:relative">
-                    <input type="text"
-                           class="findbox"
-                           v-model="selectCar"
-                           @keyup.enter="search"
-                           placeholder="搜索车次信息">
-                    <div class="findmore-button"
-                         @click="findlinebyclient">
+                    <input type="text" class="findbox" v-model="selectCar" @keyup.enter="search" placeholder="搜索车次信息">
+                    <div class="findmore-button" @click="findlinebyclient">
                         <span>more</span>
                     </div>
                 </div>
             </div>
             <div class="topbutton-right">
-                <md-button class="md-raised md-primary"
-                           @click="sortLineMethod"
-                           style="font-size:16px;width:80px;height:35px;">
-                    <md-icon style="margin-bottom: 1px;">swap_vert</md-icon>
-                    <span>排序</span>
-                </md-button>
-                <md-button class="md-raised md-primary"
-                           @click="addbutton"
-                           style="font-size:16px;width:80px;height:35px;">
-                    <md-icon style="margin-bottom: 1px;">add</md-icon>
-                    <span>添加</span>
-                </md-button>
+                <div class="times_button_blue" style="margin-right:8px" @click="openChangetripsBoxMethod()">
+                    <div class="times_button_blue_left">
+                        <div class="icon_change" style="width: 24px;height:24px;mask-size: 24px;-webkit-mask-size: 24px;"></div>
+                    </div>
+                    <div class="times_button_blue_right">
+                        <span>客户转移</span>
+                    </div>
+                </div>
+                <div class="times_button_blue" @click="sortLineMethod" style="margin-right:8px">
+                    <div class="times_button_blue_left">
+                        <div class="icon_swap_vert"></div>
+                    </div>
+                    <div class="times_button_blue_right">
+                        <span>车次排序</span>
+                    </div>
+                </div>
+                <div class="times_button_blue" @click="addbutton">
+                    <div class="times_button_blue_left" style="padding-top: unset;">
+                        <span style="font-size:30px;">+</span>
+                    </div>
+                    <div class="times_button_blue_right">
+                        <span>添加添加</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -574,7 +581,6 @@
                 <span style="color:#fff">车次管理</span>
             </md-dialog-title>
             <md-dialog-content>
-
                 <div style="box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);margin-top: 10px;">
                     <div style="display:flex;display:-webkit-flex;font-size:18px;height:40px;line-height:40px;border-bottom: 1px solid rgba(0, 0, 0, 0.2);">
                         <div style="width:60px;text-align: center;">
@@ -1150,6 +1156,148 @@
             </div>
         </transition>
         <!-- find more box end -->
+        <!-- trip change client start -->
+        <transition name="times-transition-change-back" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChangeTimesBox" class="timepick-back"></div>
+        </transition>
+        <transition name="times-transition-change-front" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowChangeTimesBox" @click.self.prevent="isShowChangeTimesBox = false" class="timepick-front">
+                <div class="times_change_box">
+                    <div class="times_change_box_title">
+                        <span>车次客户转移</span>
+                    </div>
+                    <div class="times_change_box_body">
+                        <transition name="times-transition-change-page" enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutLeft faster">
+                            <div v-if="isShowChangeTripsPage === 1" style="position: absolute;top: 0;bottom:0;left: 0;right:0">
+                                <div class="times_change_box_body_title">
+                                    <span>请选择需要交换客户的线路</span>
+                                </div>
+                                <div class="times_change_box_body_frame">
+                                    <div class="times_change_box_body_item" @click="openChooseTripsBoxMethod('top')" style="margin-top:8px;">
+                                        <span v-if="topTrips">{{topTrips.timesname}}</span>
+                                        <span v-else>请选择车次</span>
+                                    </div>
+                                    <div class="times_change_box_body_icon">
+                                        <div class="icon_label" style="background-color:#448aff"></div>
+                                    </div>
+                                    <div class="times_change_box_body_item" @click="openChooseTripsBoxMethod('bottom')">
+                                        <span v-if="bottomTrips">{{bottomTrips.timesname}}</span>
+                                        <span v-else>请选择车次</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </transition>
+                        <transition name="times-transition-change-page" enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutLeft faster">
+                            <div v-if="isShowChangeTripsPage === 2" style="position: absolute;top: 0;bottom:0;left: 0;right:0">
+                                <div class="times_change_page_info_title">
+                                    <div>
+                                        <span>{{topTrips.timesname}}</span>
+                                    </div>
+                                    <div class="times_change_page_info_title_center">
+                                        <div class="icon_change" style="background-color:#448aff"></div>
+                                    </div>
+                                    <div>
+                                        <span>{{bottomTrips.timesname}}</span>
+                                    </div>
+                                </div>
+                                <div class="times_change_page_info_body">
+                                    <div class="times_change_page_info_body_frame" >
+                                        <div v-for="(item,index) in topTrips.timesclientb" :key="index" class="times_change_page_info_body_frame_item">
+                                            <div class="times_change_page_info_body_frame_item_left">
+                                                <input type="checkbox" :value="item" v-model="changeTripLeftArray_choised">
+                                            </div>
+                                            <div class="times_change_page_info_body_frame_item_right">
+                                                <span>{{item.clientbname}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="times_change_page_info_body_frame">
+                                        <div v-for="(item,index) in bottomTrips.timesclientb" :key="index" class="times_change_page_info_body_frame_item">
+                                            <div class="times_change_page_info_body_frame_item_right">
+                                                <span>{{item.clientbname}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </transition>
+                    </div>
+                    <div class="times_change_box_body_bottom">
+                        <div class="times_button_white" @click="isShowChangeTimesBox = false">
+                            <span>取消</span>
+                        </div>
+                        <div v-if="isShowChangeTripsPage === 2" class="times_button_white" style="margin-left: 8px;" @click="isShowChangeTripsPage = 1">
+                            <span>返回</span>
+                        </div>
+                        <div v-if="isShowChangeTripsPage === 1" class="times_button_white" style="margin-left: 8px;" @click="changeTripsNextPageMethod()">
+                            <span>确定</span>
+                        </div>
+                        <div v-if="isShowChangeTripsPage === 2" class="times_button_white" style="margin-left: 8px;" @click="confirmChangeTripsClientMethod()">
+                            <span>提交</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- trip change client end -->
+        <!-- choose trips box start -->
+        <transition name="times-transition-change-back" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChooseTripsBox" class="timepick-back" style="z-index: 25"></div>
+        </transition>
+        <transition name="times-transition-change-front" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowChooseTripsBox" @click.self.prevent="isShowChooseTripsBox = false" class="timepick-front" style="z-index: 26">
+                <div class="times_change_box">
+                    <div class="times_change_box_title">
+                        <span>车次选择</span>
+                    </div>
+                    <div class="times_choose_box_body">
+                        <div v-for="(item,index) in chooseTripsBoxArray" :key="index" class="times_choose_box_body_item" @click="chooseChangeTripPositionMethod(item)">
+                            <span>{{item.timesname}}</span>
+                            <div v-if="topTrips && topTrips._id === item._id" class="times_change_box_body_item_flag_one">
+                                <span>1</span>
+                            </div>
+                            <div v-if="bottomTrips && bottomTrips._id === item._id" class="times_change_box_body_item_flag_one">
+                                <span>2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="times_change_box_body_bottom">
+                        <div class="times_button_white" @click="isShowChooseTripsBox = false">
+                            <span>取消</span>
+                        </div>
+                        <div class="times_button_white" @click="isShowChooseTripsBox = false" style="margin-left: 8px">
+                            <span>确定</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- choose trips box end -->
+
+        <!-- loading animation start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowLoadingAnimation" class="tripcount_loading_back"></div>
+        </transition>
+        <transition name="remove-client-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowLoadingAnimation" class="tripcount_loading_front" @touchmove.prevent>
+                <div class="tripcount_loading_box">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- loading animation end -->
+
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
     </div>
 </template>
 
@@ -1158,10 +1306,12 @@ import axios from "axios";
 import config from "../../public/js/config.js";
 import _ from "lodash";
 import draggable from "vuedraggable";
+import tipsBox from "@/components/tipsBox.vue"
 
 export default {
     components: {
-        draggable
+        draggable,
+        tipsBox
     },
     data() {
         return {
@@ -1237,7 +1387,20 @@ export default {
             advancedfind: null,
             setTimeOutId: null,
             tipsClientName: [],
-            advancedInfo:null
+            advancedInfo:null,
+            isShowChangeTimesBox: false,
+            isShowChooseTripsBox: false,
+            tipsShowColor: null,
+            tipsInfo: null,
+            isShowTipsBox: null,
+            chooseTripsBoxArray: [],
+            topTrips: null,
+            bottomTrips: null,
+            tempChooseTrips: null,
+            showTripsMode: null,
+            isShowChangeTripsPage: 1,
+            changeTripLeftArray_choised:[],
+            isShowLoadingAnimation: false
         };
     },
     mounted() {
@@ -1313,13 +1476,111 @@ export default {
     },
 
     methods: {
+        confirmChangeTripsClientMethod(){
+            this.isShowLoadingAnimation = true
+            axios
+                .post(config.server + "/times/changeTrips",{
+                    chooseArray: this.changeTripLeftArray_choised,
+                    left_id: this.topTrips._id,
+                    right_id: this.bottomTrips._id
+                })
+                .then(doc => {
+                    this.isShowLoadingAnimation = false
+                    if(doc.data.code === 0){
+                        this.isShowChangeTimesBox = false
+                        this.getalltimes();
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = '客户交换成功'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '操作时发生错误'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    this.isShowLoadingAnimation = false
+                    console.log(err)
+                })
+        },
+
+        changeTripsNextPageMethod(){
+            if(this.topTrips === null || this.bottomTrips === null){
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请选择需要交换客户的车次'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 2000);
+            }else{
+                this.isShowChangeTripsPage = 2
+                this.changeTripLeftArray_choised = this.topTrips.timesclientb
+            }
+        },
+
+        chooseChangeTripPositionMethod(item){
+            if(this.showTripsMode === 'top'){
+                this.topTrips = item
+                if(this.topTrips && this.bottomTrips && this.topTrips._id === this.bottomTrips._id){
+                    this.bottomTrips = null
+                }
+            }else{
+                this.bottomTrips = item
+                if(this.topTrips && this.bottomTrips && this.topTrips._id === this.bottomTrips._id){
+                    this.topTrips = null
+                }
+            }
+        },
+
+        openChooseTripsBoxMethod(mode){
+            if(mode === 'top'){
+                this.showTripsMode = 'top'
+            }else{
+                this.showTripsMode = 'bottom'
+            }
+            axios
+                .post(config.server + "/times/get", {
+                    pageSize: 100,
+                    pageNow: 1
+                })
+                .then(res => {
+                    if(res.data.code === 0){
+                        this.isShowChooseTripsBox = true
+                        this.chooseTripsBoxArray = res.data.doc
+                        console.log(res.data)
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '获取车次时发生错误'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2500);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
+        openChangetripsBoxMethod(){
+            this.isShowChangeTripsPage = 1
+            this.isShowChangeTimesBox = true
+            this.topTrips = null
+            this.bottomTrips = null
+        },
+
         findAdvincedClient(clientInfo) {
             axios
                 .post(config.server + "/times/finda", {
                     _id: clientInfo._id
                 })
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.lineInfo === null){
                         doc.data.lineInfo={
                             timesname :'未分配'
@@ -2196,6 +2457,14 @@ export default {
     z-index: 1;
 }
 
+.topbutton-right{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-basis: 50%;
+}
+
 .findbox {
     margin: 5px auto;
     border-radius: 10px;
@@ -2227,11 +2496,7 @@ export default {
     font-size: 16px;
 }
 
-.topbutton-right {
-    margin: 0 auto;
-    flex-basis: 50%;
-    text-align: right;
-}
+
 
 .centertable {
     margin: 15px auto;
@@ -2587,6 +2852,313 @@ export default {
     width: 30px;
     text-align: center;
 }
+
+.times_button_blue{
+    height: 30px;
+    line-height: 30px;
+    width: 88px;
+    border-radius: 5px;
+    background-color: #448aff;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
+.times_button_blue_left{
+    padding-top: 3px;
+}
+
+.icon_change{
+    background: #fff;
+    mask-image: url(../../public/img/icons/icon_forward.svg);
+    -webkit-mask-image: url(../../public/img/icons/icon_forward.svg);
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    mask-size: 30px;
+    -webkit-mask-size: 30px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
+.icon_label{
+    background: #fff;
+    mask-image: url(../../public/img/icons/icon_forward.svg);
+    -webkit-mask-image: url(../../public/img/icons/icon_forward.svg);
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    mask-size: 30px;
+    -webkit-mask-size: 30px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    transform: rotate(90deg)
+}
+
+.icon_swap_vert{
+    background: #fff;
+    mask-image: url(../../public/img/icons/icon_swap_vert.svg);
+    -webkit-mask-image: url(../../public/img/icons/icon_swap_vert.svg);
+    width: 24px;
+    height: 24px;
+    margin: 0 auto;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
+.times_change_box{
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    background-color: #fff;
+}
+
+.times_change_box_title{
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    background-color: #d74342;
+    color: #fff;
+    height: 40px;
+    font-size: 16px;
+    line-height: 40px;
+}
+
+.times_change_box_body{
+    border: 1px solid #eee;
+    margin: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    background-color: #f7f7f7;
+    position: relative;
+    overflow: hidden;
+    width: 392px;
+    height: 216px
+}
+
+.times_change_box_body_item{
+    border: 1px solid #eee;
+    border-radius: 10px;
+    height: 30px;
+    line-height: 30px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    padding: 0 8px;
+    cursor: pointer;
+    background-color: #fff;
+    cursor: pointer;
+    width: 200px;
+}
+
+.times_change_box_body_icon{
+    margin: 8px 0;
+}
+
+.times_button_white{
+    border: 1px solid #eee;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.times_change_box_body_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    padding: 0 12px 12px 12px;
+}
+
+.times_choose_box_body{
+    margin: 8px;
+    padding: 8px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 200px;
+}
+
+.times_choose_box_body_item{
+    height: 30px;
+    line-height: 30px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    margin-bottom: 4px;
+    cursor: pointer;
+    position: relative;
+    width: 180px;
+}
+
+.times_choose_box_body_item:hover{
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.times_change_box_body_item_flag_one{
+    position: absolute;
+    right: 2px;
+    top: 0px;
+    border: 1px solid #eee;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 100%;
+    background-color: green;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.times_change_page_info_title{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-around;
+    height: 30px;
+    line-height: 30px;
+}
+
+.times_change_page_info_title_center{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.times_change_page_info_body{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-around;
+}
+
+.times_change_page_info_body_frame{
+    border: 1px solid #eee;
+    border-radius: 10px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 178px;
+}
+
+.times_change_page_info_body_frame_item{
+    line-height: 26px;
+    height: 26px;
+    padding: 0 4px;
+    display: flex;
+    display: -webkit-flex;
+}
+
+.times_change_page_info_body_frame_item_left input{
+    width: 20px;
+    height: 20px;
+}
+
+.times_change_page_info_body_frame_item_right{
+    width: 148px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.times_change_box_body_title{
+    height: 30px;
+    line-height: 30px;
+    margin-top: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.times_change_box_body_frame{
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 162px;
+}
+
+.tripcount_loading_back {
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.tripcount_loading_front {
+    position: fixed;
+    z-index: 102;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tripcount_loading_box{
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 100%;
+}
+
+.spinner {
+    margin: 32px auto;
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 10px;
+}
+
+.spinner>div {
+    background-color: rgba(212, 50, 49, 1);
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+    margin-right: 4px;
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+}
+
 
 @media screen and (min-width: 1025px) {
     .linedialog {
