@@ -6,7 +6,7 @@ const newController = '//3.1.39.240:4000'
 const softVersion = 'Alpha V0.26.1'
 const softText = 'DELIVERY TO 物流管理系统'
 export default {
-    server : nossl,
+    server : test,
     newC:newController,
     version: softVersion,
     text:softText

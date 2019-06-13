@@ -155,8 +155,9 @@
                                     <div class="staffinfo_body_top_left_item_right">
                                         <div @click="choiseRoleOrDriverID('role')">
                                             <span v-if="userRole === 'leader'">主 管</span>
-                                            <span v-else-if="userRole === 'user'">司 机</span>
-                                            <span v-else-if="userRole === 'dayshift'">白 班</span>
+                                            <span v-else-if="userRole === 'nightShiftLeader'">夜班主管</span>
+                                            <span v-else-if="userRole === 'user'">夜班司机</span>
+                                            <span v-else-if="userRole === 'dayshift'">白班司机</span>
                                             <span v-else-if="userRole === 'dayshiftLeader'">白班主管</span>
                                             <span v-else-if="userRole === 'maintain'">维修员</span>
                                             <span v-else-if="userRole === 'checker'">检查员</span>
@@ -416,23 +417,24 @@
                             <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('leader')">
                                 <span>主 管</span>
                             </div> 
-                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('d')">
-                                <span>司 机</span>
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('dLeader')">
+                                <span>白班主管</span>
                             </div>
                             <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('b')">
-                                <span>白 班</span>
+                                <span>白班司机</span>
                             </div>
                         </div>
                         <div class="rolebox-front-box-body-item_frame">
-                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('dLeader')">
-                                <span>白班主管</span>
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('nightShiftLeader')">
+                                <span>夜班主管</span>
+                            </div>
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('d')">
+                                <span>夜班司机</span>
                             </div>
                             <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('w')">
                                 <span>维修员</span>
                             </div>
-                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('c')">
-                                <span>检察员</span>
-                            </div>
+                            
                         </div>
                         <div class="rolebox-front-box-body-item_frame">
                             <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('bill')">
@@ -448,6 +450,9 @@
                         <div class="rolebox-front-box-body-item_frame">
                             <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('dayShiftChecker')">
                                 <span>白班检察员</span>
+                            </div>
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('c')">
+                                <span>夜班检察员</span>
                             </div>
                         </div>
                     </div>
@@ -554,8 +559,8 @@ export default {
             }
             this.showChoiseRoleBox = true
         },
+        
         choiseRoleEventMethod(role){
-            
             if(role === 'd') {
                 this.userRole = 'user'
             }else if(role === 'leader'){
@@ -564,6 +569,8 @@ export default {
                 this.userRole = 'dayshift'
             }else if( role === 'dLeader') {
                 this.userRole = 'dayshiftLeader'
+            }else if( role === 'nightShiftLeader') {
+                this.userRole = 'nightShiftLeader'
             }else if( role === 'w') {
                 this.userRole = 'maintain'
             }else if( role === 'bill') {
