@@ -5,10 +5,25 @@
         </div>
         <div class="topbutton">
             <div class="topbutton-left">
-                <vue-datepicker-local v-model="selectedDate" />
+                <vue-datepicker-local v-model="selectedDate"/>
             </div>
-            <div class="topbutton-right"
-                 style="padding-top:5px">
+            <div class="topbutton-center">
+                <div style="position: relative">
+                    <div v-if="tempSearchArray.length != 0" class="icon_clear" @click="searchClearMethod()">
+                        <span>x</span>
+                    </div>
+                    <input type="text" v-model="searchKeyWord" @keyup.enter="searchClientMethod()">
+                    <div class="icon_search" @click="searchClientMethod()"></div>
+                    <div v-if="tempSearchArray.length != 0" class="topbutton_search_res">
+                        <div v-for="(item,index) in tempSearchArray" :key="index">
+                            <div class="topbutton_search_res_item" v-for="(name,nameIndex) in item.missionclient" :key="nameIndex" @click="showSearchDetailMethod(item)">
+                                <span>{{name.clientbname}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="topbutton-right" style="padding-top:5px">
                 <div @click="openNoOrderDialog" class="home_top_button pc_version_mission_button" style="margin-right:10px">
                     <span>客户提醒</span>
                 </div>
@@ -1691,6 +1706,75 @@
         </transition>
         <!-- edit mission-date end -->
 
+        <!-- show search detail box start -->
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowSearchDetailBox" class="mapbox-back" style="z-index: 25"></div>
+        </transition>
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowSearchDetailBox" class="mapbox-front" style="z-index: 26" @click.self.prevent="isShowSearchDetailBox = false">
+                <div class="mission_searchbox_box">
+                    <div class="mission_searchbox_box_title">
+                        <span>搜索结果</span>
+                    </div>
+                    <div class="mission_searchbox_box_body">
+                        <div class="mission_searchbox_box_body_title">
+                            {{tempSearchObject.missionline}}
+                        </div>
+                        <div class="mission_searchbox_box_body_item">
+                            <div class="mission_searchbox_box_body_item_left">
+                                <span>任务司机</span>
+                            </div>
+                            <div class="mission_searchbox_box_body_item_right">
+                                <span>{{tempSearchObject.missiondirver}}</span>
+                            </div>
+                        </div>
+                        <div class="mission_searchbox_box_body_item">
+                            <div class="mission_searchbox_box_body_item_left">
+                                <span>任务时间</span>
+                            </div>
+                            <div class="mission_searchbox_box_body_item_right">
+                                <span>{{tempSearchObject.missiondate | datefilter}}</span>
+                            </div>
+                        </div>
+                        <div v-for="(item,index) in tempSearchObject.missionclient" :key="index">
+                            <div class="mission_searchbox_box_body_item">
+                                <div class="mission_searchbox_box_body_item_left">
+                                    <span>客户名称</span>
+                                </div>
+                                <div class="mission_searchbox_box_body_item_right">
+                                    <span>{{item.clientbname}}</span>
+                                </div>
+                            </div>
+                            <div class="mission_searchbox_box_body_item">
+                                <div class="mission_searchbox_box_body_item_left">
+                                    <span>完成日期</span>
+                                </div>
+                                <div class="mission_searchbox_box_body_item_right">
+                                    <span v-if="item.finishdate">{{item.finishdate | datefilter}}</span>
+                                    <span v-else>任务未完成</span>
+                                </div>
+                            </div>
+                            <div class="mission_searchbox_box_body_item">
+                                <div class="mission_searchbox_box_body_item_left">
+                                    <span>完成时间</span>
+                                </div>
+                                <div class="mission_searchbox_box_body_item_right">
+                                    <span v-if="item.finishdate">{{item.finishdate | timefilter}}</span>
+                                    <span v-else>任务未完成</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mission_searchbox_box_bottom">
+                        <div class="mission_button_white" @click="isShowSearchDetailBox = false">
+                            <span>取消</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- show search detail box end -->
+
         <!-- no order client dialog start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -1878,7 +1962,11 @@ export default {
             tipsShowColor:null,
             tipsInfo:null,
             isShowTipsBox:false,
-            choiseEditDriver:null
+            choiseEditDriver:null,
+            searchKeyWord: null,
+            tempSearchArray: [],
+            tempSearchObject: null,
+            isShowSearchDetailBox: false
         };
     },
     computed: {
@@ -1958,6 +2046,49 @@ export default {
     },
 
     methods: {
+        searchClearMethod(){
+            this.tempSearchArray = []
+            this.searchKeyWord = null
+        },
+
+        showSearchDetailMethod(item){
+            this.isShowSearchDetailBox = true
+            this.tempSearchObject = item
+        },
+
+        searchClientMethod(){
+            if(this.searchKeyWord){
+                axios
+                .post(config.server + "/mission/searchClient",{
+                    searchKeyWord: this.searchKeyWord,
+                    selectedDate: this.selectedDate
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.tempSearchArray = doc.data.doc
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '未找到符合条件的结果'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            }else{
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请输入关键字'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 2000);
+            }
+        },
+
         confirmEditDriverMethod(){
             axios
                 .post(config.server + "/mission/editDriver",{
@@ -3844,28 +3975,67 @@ export default {
 }
 
 .topbutton {
-    display: -webkit-flex;
     display: flex;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .topbutton-left {
     padding-top: 10px;
-    flex-basis: 50%;
     text-align: left;
-    margin: 0 auto;
+}
+
+.topbutton-center{
+    padding-top: 10px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.topbutton-center input{
+    height: 35px;
+    border: 1px solid rgb(229, 229, 229);
+    border-radius: 10px;
+    margin: 5px auto;
+    width: 200px;
+    text-align: center;
 }
 
 .topbutton-right {
-    margin: 0 auto;
-    flex-basis: 50%;
     text-align: right;
     display: flex;
-    display: -webkit-flex;
+    padding-top: 10px;
     justify-content: flex-end;
 }
 
+.icon_clear{
+    cursor: pointer;
+    position: absolute;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 100%;
+    top: 10px;
+    left: 6px;
+}
+
+.icon_search{
+    mask-image: url(../../public/img/icons/icon_search.svg);
+    mask-size: 34px;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    width: 34px;
+    height: 34px;
+    background-color: rgba(0, 0, 0, 0.2);
+    position: absolute;
+    right: 4px;
+    top: 6px;
+    cursor: pointer;
+}
 .centertable {
     margin: 5px auto;
 }
@@ -4401,6 +4571,98 @@ export default {
     cursor: pointer;
 }
 
+.topbutton_search_res{
+    position: absolute;
+    background-color: #fff;
+    z-index: 24;
+    border-radius: 10px;
+    left: 0;
+    right: 0;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    overflow: hidden;
+    height: 200px;
+    overflow-y: auto;
+}
+
+.topbutton_search_res_item{
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.topbutton_search_res_item:hover{
+    background-color: #eee;
+}
+
+.mission_searchbox_box{
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.mission_searchbox_box_title{
+    height: 30px;
+    line-height: 30px;
+    background-color: #d74342;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    color: #fff;
+}
+
+.mission_searchbox_box_body{
+    margin: 12px;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.mission_searchbox_box_body_title{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.mission_searchbox_box_body_item{
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+}
+
+.mission_searchbox_box_body_item_left{
+    width: 80px;
+    text-align: right;
+}
+
+.mission_searchbox_box_body_item_right{
+    width: 180px;
+    text-align: left;
+    padding-left: 18px;
+}
+
+.mission_searchbox_box_bottom{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 12px;
+}
+
+.mission_button_white{
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    width: 100px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    cursor: pointer;
+}
 @media screen and (min-width: 1025px) {
     #newmission {
         max-width: 878px;
@@ -4532,6 +4794,9 @@ export default {
 
     .add_mission_button_phone_version {
         display: block;
+    }
+    .topbutton-center{
+        padding-top: unset
     }
 }
 </style>
