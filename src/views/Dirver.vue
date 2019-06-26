@@ -165,6 +165,8 @@
                                             <span v-else-if="userRole === 'countBox'">框数检查</span>
                                             <span v-else-if="userRole === 'breakbox'">坏框申报</span>
                                             <span v-else-if="userRole === 'dayShiftChecker'">白班检查员</span>
+                                            <span v-else-if="userRole === 'dt-leader'">DT主管</span>
+                                            <span v-else-if="userRole === 'dt-driver'">DT司机</span>
                                             <span v-else style="border-bottom: 1px solid rgb(44, 62, 80);">点击获取</span>
                                         </div>
                                     </div>
@@ -455,6 +457,15 @@
                                 <span>夜班检察员</span>
                             </div>
                         </div>
+                        <!-- dt -->
+                        <div class="rolebox-front-box-body-item_frame" style="border-top: 1px solid #eee;margin-top:12px;padding-top:12px;">
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('dt-leader')">
+                                <span>DT主管</span>
+                            </div>
+                            <div class="rolebox-front-box-body-item" @click="choiseRoleEventMethod('dt-driver')">
+                                <span>DT司机</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="rolebox-front-box-footer" @click="showChoiseRoleBox = false">
                         <div class="rolebox-button">取消</div>
@@ -505,7 +516,7 @@ export default {
             driverImage: "",
             showTipDialog: false,
             tipMsg: "",
-            userRole:null,
+            userRole: null,
             showChoiseRoleBox:false,
             isShowStaffInfo:false,
             isShowDriverId:true,
@@ -581,6 +592,10 @@ export default {
                 this.userRole = 'countBox'
             }else if(role === 'dayShiftChecker'){
                 this.userRole = 'dayShiftChecker'
+            }else if(role === 'dt-leader'){
+                this.userRole = 'dt-leader'
+            }else if(role === 'dt-driver'){
+                this.userRole = 'dt-driver'
             }else{
                 this.userRole = 'checker'
             }
