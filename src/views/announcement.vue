@@ -484,6 +484,7 @@ export default {
     },
 
     methods: {
+
         changeToEn(){
             this.isShowChNotice = false
         },

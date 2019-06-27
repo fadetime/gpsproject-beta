@@ -2,14 +2,11 @@
     <div id="dayshift">
         <div class="dayshift_toparea_button">
             <div class="dayshift_toparea_button_area">
-                <div class="whiteButton" style="margin-right:12px" @click="isShowDayShiftMission = !isShowDayShiftMission,isShowDayShiftCheckCar = false">
+                <div class="whiteButton" style="margin-right:12px">
                     <span>任务统计</span>
                 </div>
-                <div class="whiteButton" @click="isShowDayShiftCheckCar = !isShowDayShiftCheckCar,isShowDayShiftMission = false">
-                    <span>车辆检查</span>
-                </div>
             </div>
-            <div v-if="isShowDayShiftMission" style="position: relative;z-index:23;background:#fff;    border-radius: 10px;">
+            <div style="position: relative;z-index:23;background:#fff;    border-radius: 10px;">
                 <div class="dayshift_radio_frame">
                     <div class="dayshift_radio_item">
                         <div class="dayshift_radio_item_left">
@@ -21,9 +18,9 @@
                     </div>
                     <div class="dayshift_radio_item">
                         <div class="dayshift_radio_item_left">
-                            <input id="dayshift_true" type="radio" value="order" v-model="searchType">
+                            <input id="dayshift_order" type="radio" value="order" v-model="searchType">
                         </div>
-                        <label for="dayshift_true" class="dayshift_radio_item_right">
+                        <label for="dayshift_order" class="dayshift_radio_item_right">
                             <span>订单</span>
                         </label>
                     </div>
@@ -45,9 +42,9 @@
                     </div>
                     <div class="dayshift_radio_item">
                         <div class="dayshift_radio_item_left">
-                            <input id="dayshift_return" type="radio" value="bun" v-model="searchType">
+                            <input id="dayshift_bun" type="radio" value="bun" v-model="searchType">
                         </div>
-                        <label for="dayshift_return" class="dayshift_radio_item_right">
+                        <label for="dayshift_bun" class="dayshift_radio_item_right">
                             <span>面食</span>
                         </label>
                     </div>
@@ -61,9 +58,9 @@
                     </div>
                     <div class="dayshift_radio_item">
                         <div class="dayshift_radio_item_left">
-                            <input id="dayshift_delivery" type="radio" value="change" v-model="searchType">
+                            <input id="dayshift_change" type="radio" value="change" v-model="searchType">
                         </div>
-                        <label for="dayshift_delivery" class="dayshift_radio_item_right">
+                        <label for="dayshift_change" class="dayshift_radio_item_right">
                             <span>换货</span>
                         </label>
                     </div>
@@ -94,18 +91,6 @@
                         <div class="dayshift_bluebutton" @click="findDayReport()">
                             <span>查询</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div v-else-if="isShowDayShiftCheckCar" class="dayshift_toparea_button_area_bottom" style="padding-top:8px">
-                <div>
-                    <vue-datepicker-local v-model="startDate" placeholder="开始时间" />
-                    <span> ~ </span>
-                    <vue-datepicker-local v-model="endDate" placeholder="结束时间" />
-                </div>
-                <div style="padding-left:8px">
-                    <div class="dayshift_bluebutton" @click="findDayShiftCheckCarMethod()">
-                        <span>查询</span>
                     </div>
                 </div>
             </div>
@@ -269,7 +254,6 @@ export default {
         },
 
         findDayShiftCheckCarMethod(){
-            console.log('123')
             if (!this.startDate || !this.endDate) {
                 this.tipsShowColor = 'yellow'
                 this.tipsInfo = '请选择开始时间和结束时间'
@@ -446,12 +430,20 @@ export default {
                                 });
                             }, 200);
                             //show chart method end
-                        } else {
-                            this.tipsMsg = "查询数据出现错误";
-                            this.isOpenTipBox = true;
+                        }else if(doc.data.code === 1){
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = '未找到相应数据'
+                            this.isShowTipsBox = true
                             setTimeout(() => {
-                                this.isOpenTipBox = false;
-                            }, 3000);
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        } else {
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = '查询数据时出现错误'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
                         }
                     })
                     .catch(err => {

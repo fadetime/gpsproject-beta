@@ -2160,7 +2160,8 @@
                             <span style="padding-left:16px;padding-right:12px">{{item.finishDate | timefilter}}</span>
                         </div>
                         <div style="min-width: 140px;text-align: left;">
-                            <span style="padding-left:16px;padding-right:12px">{{item.car_id.carid}}</span>
+                            <span v-if="item && item.car_id && item.car_id.carid" style="padding-left:16px;padding-right:12px">{{item.car_id.carid}}</span>
+                            <span style="padding-left:16px;padding-right:12px" v-else>车辆信息错误</span>
                         </div>
                         <div style="flex-basis: 100%;text-align: left;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">
                             <span style="padding-left:16px;padding-right:12px">{{tempDriverCheckCarInfo[index]}}</span>
@@ -3831,9 +3832,16 @@ export default {
         },
 
         openDriverCheckCarInfoDetailMethod(checkInfo) {
-            console.log(checkInfo)
-            this.showDriverCheckCarDetailInfo = true;
-            this.tempInfo = checkInfo;
+            if(isNaN(checkInfo.car_id)){
+                this.tipsMsg = "获取车辆数据异常";
+                this.isOpenTipBox = true;
+                setTimeout(() => {
+                    this.isOpenTipBox = false;
+                }, 2000);
+            }else{
+                this.showDriverCheckCarDetailInfo = true;
+                this.tempInfo = checkInfo;
+            }
         },
 
         allDriverCheckCarMethod() {
@@ -4047,13 +4055,13 @@ export default {
                         this.isOpenTipBox = true;
                         setTimeout(() => {
                             this.isOpenTipBox = false;
-                        }, 3000);
+                        }, 2000);
                     } else {
                         this.tipsMsg = "查询数据出现错误";
                         this.isOpenTipBox = true;
                         setTimeout(() => {
                             this.isOpenTipBox = false;
-                        }, 3000);
+                        }, 2000);
                     }
                 })
                 .catch(err => {
@@ -4131,7 +4139,6 @@ export default {
                         this.tempDriverCheckCarChartLeft.push(otherNum);
                         this.tempDriverCheckCarChartLeft.push(tyreNum);
                         this.tempDriverCheckCarChartLeft.push(wiperNum);
-                        //show shart left
                         setTimeout(() => {
                             let checkertleft = document.getElementById(
                                 "drivercheckertleft"
