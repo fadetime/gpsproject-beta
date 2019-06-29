@@ -1453,8 +1453,14 @@
                                 <div class="client_export_client_detal_box_body_top_title_item" style="width:42px">
                                     <span>No.</span>
                                 </div>
-                                <div class="client_export_client_detal_box_body_top_title_item" style="width:100%">
+                                <div class="client_export_client_detal_box_body_top_title_item" style="width:180px;text-align: left">
                                     <span>客户名称</span>
+                                </div>
+                                <div class="client_export_client_detal_box_body_top_title_item" style="width:180px;text-align: left">
+                                    <span>客户地址</span>
+                                </div>
+                                <div class="client_export_client_detal_box_body_top_title_item" style="width:120px;text-align: left">
+                                    <span>客户电话</span>
                                 </div>
                             </div>
                         </div>
@@ -1463,8 +1469,14 @@
                                 <div class="client_export_client_detal_box_body_bottom_item_left">
                                     <span>{{index + 1}}</span>
                                 </div>
-                                <div class="client_export_client_detal_box_body_bottom_item_right">
+                                <div class="client_export_client_detal_box_body_bottom_item_right" style="width: 180px;text-align: left">
                                     <span>{{item.clientbname}}</span>
+                                </div>
+                                <div class="client_export_client_detal_box_body_bottom_item_right" style="padding-left:12px;width: 180px;text-align: left">
+                                    <span>{{item.clientbaddress}}</span>
+                                </div>
+                                <div class="client_export_client_detal_box_body_bottom_item_right" style="padding-left:12px;width: 120px;text-align: left">
+                                    <span>{{item.clientbphone}}</span>
                                 </div>
                             </div>
                         </div>
@@ -1800,20 +1812,22 @@ export default {
                 }, 2000);
             }else{
                 let option = {}
-                option.fileName = this.lostMode + new Date().getTime()
+                option.fileName = 'No_'+ this.lostMode + new Date().getTime()
                 let rows = []
                 this.lostInfoOfClientArray.forEach((item,index)=>{
                 let row = []
                 row.push(index + 1)
                 row.push(item.clientbname)
+                row.push(item.clientbaddress)
+                row.push(item.clientbphone)
                 row.push(new Date().toLocaleDateString())
                 row.push(new Date().toLocaleTimeString())
                 rows.push(row)
                 })
                 option.datas = [{
-                sheetData:[['No.','客户名称','导出日期','导出时间']].concat(rows),
+                sheetData:[['No.','客户名称','客户地址','客户电话','导出日期','导出时间']].concat(rows),
                 sheetName:'客户信息',
-                columnWidths:[2,10,6,6]
+                columnWidths:[2,10,10,6,6,6]
                 }]
                 let toExcel = new jsExportExcel(option)
                 toExcel.saveExcel()
@@ -3808,7 +3822,10 @@ export default {
 }
 .client_export_client_detal_box_body_bottom_item_right{
     padding-left: 12px;
-    width: 100%;
+    width: 120px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .client_export_client_detal_box_body_info{
     text-align: right;
