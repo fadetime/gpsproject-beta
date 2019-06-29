@@ -2,16 +2,8 @@
     <div id="client">
         <div class="topbutton">
             <div class="topbutton-left">
-                <input type="text"
-                       v-model="searchclientb"
-                       @keyup.enter="searchb"
-                       placeholder="搜索客户名称"
-                       v-if="!clientpage">
-                <input type="text"
-                       v-model="searchclienta"
-                       @keyup.enter="searcha"
-                       placeholder="搜索合作商信息"
-                       v-else>
+                <input type="text" v-model="searchclientb" @keyup.enter="searchb" placeholder="搜索客户名称" v-if="!clientpage">
+                <input type="text" v-model="searchclienta" @keyup.enter="searcha" placeholder="搜索合作商信息" v-else>
             </div>
 
             <div class="topbutton-center">
@@ -25,12 +17,10 @@
             </div>
             <div class="topbutton-right">
                 <div class="addbutton">
-                    <md-button class="md-raised md-primary"
-                               @click="showDialog"
-                               style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
+                    <md-button v-if="!clientpage" class="md-raised md-primary" @click="isShowClientDetailMethod()" style="font-size:16px;width:80px;height:35px;">客户明细</md-button>
+                    <md-button class="md-raised md-primary" @click="showDialog" style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
                 </div>
             </div>
-
         </div>
 
         <div class="centertable">
@@ -1370,8 +1360,7 @@
         <transition name="custom-classes-transition"
                     enter-active-class="animated zoomIn faster"
                     leave-active-class="animated zoomOut faster">
-            <div v-if="showTimePick"
-                 class="timepick-front">
+            <div v-if="showTimePick" class="timepick-front">
                 <div class="timepick-box">
                     <div class="timepick-box-title">
                         时间选择
@@ -1418,6 +1407,93 @@
             </div>
         </transition>
         <!-- pick time box end -->
+
+        <!-- is show export detail client start -->
+        <transition name="client-show_export_client_detail-box-back" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowClientDetailBox" class="client_export_client_detal_back"></div>
+        </transition>
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowClientDetailBox" class="client_export_client_detal_front" @click.self.prevent="isShowClientDetailBox = false">
+                <div class="client_export_client_detal_box">
+                    <div class="timepick-box-title">
+                        <span>遗漏信息查询</span>
+                    </div>
+                    <div class="client_export_client_detal_box_body">
+                        <div class="client_export_client_detal_box_body_button-area">
+                            <div class="client_button_white" @click="findLostInfoOfClientMethod('pic')">
+                                <div>
+                                    <span>无照片客户</span>
+                                </div>
+                                <div>
+                                    <div v-if="lostMode === 'pic'" class="icon_search" style="background-color: green"></div>
+                                    <div v-else class="icon_search"></div>
+                                </div>
+                            </div>
+                            <div class="client_button_white" style="margin: 0 12px;" @click="findLostInfoOfClientMethod('add')">
+                                <div>
+                                    <span>无地址客户</span>
+                                </div>
+                                <div>
+                                    <div v-if="lostMode === 'add'" class="icon_search" style="background-color: green"></div>
+                                    <div v-else class="icon_search"></div>
+                                </div>
+                            </div>
+                            <div class="client_button_white" @click="findLostInfoOfClientMethod('zip')">
+                                <div>
+                                    <span>无邮编客户</span>
+                                </div>
+                                <div>
+                                    <div v-if="lostMode === 'zip'" class="icon_search" style="background-color: green"></div>
+                                    <div v-else class="icon_search"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="lostInfoOfClientArray.length != 0" class="client_export_client_detal_box_body_top">
+                            <div class="client_export_client_detal_box_body_top_title">
+                                <div class="client_export_client_detal_box_body_top_title_item" style="width:42px">
+                                    <span>No.</span>
+                                </div>
+                                <div class="client_export_client_detal_box_body_top_title_item" style="width:100%">
+                                    <span>客户名称</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="lostInfoOfClientArray.length != 0" class="client_export_client_detal_box_body_bottom">
+                            <div v-for="(item,index) in lostInfoOfClientArray" :key="index" class="client_export_client_detal_box_body_bottom_item">
+                                <div class="client_export_client_detal_box_body_bottom_item_left">
+                                    <span>{{index + 1}}</span>
+                                </div>
+                                <div class="client_export_client_detal_box_body_bottom_item_right">
+                                    <span>{{item.clientbname}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="lostInfoOfClientArray.length != 0" class="client_export_client_detal_box_body_info">
+                            <span>共{{lostInfoOfClientArray.length}}条数据</span>
+                        </div>
+                    </div>
+                    <div class="client_export_client_detal_box_footer">
+                        <div class="client_button_white" style="height: 35px;line-height: 35px" @click="isShowClientDetailBox = false">
+                            <div>
+                                <span>取消</span>
+                            </div>
+                            <div>
+                                <div class="icon_reply"></div>
+                            </div>
+                        </div>
+                        <div class="client_button_white" style="height: 35px;line-height: 35px;margin-left: 12px" @click="exportLostInfoOfClientMethod()">
+                            <div>
+                                <span>导出</span>
+                            </div>
+                            <div>
+                                <div class="icon_excel"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- is show export detail client end -->
 
         <!-- edit basket number start -->
         <transition name="custom-classes-transition"
@@ -1482,6 +1558,7 @@ import axios from "axios";
 import config from "../../public/js/config.js";
 import lrz from "lrz";
 import tipsBox from "@/components/tipsBox.vue"
+import jsExportExcel from 'js-export-excel'
 
 export default {
     components:{
@@ -1585,6 +1662,9 @@ export default {
             tipsShowColor:null,
             tipsInfo:null,
             isShowTipsBox:null,
+            isShowClientDetailBox: false,
+            lostInfoOfClientArray: [],
+            lostMode: null
         };
     },
     mounted() {
@@ -1710,6 +1790,72 @@ export default {
         }
     },
     methods: {
+        exportLostInfoOfClientMethod(){
+            if(this.lostInfoOfClientArray.length === 0){
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请选择要查找的缺失信息'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 2000);
+            }else{
+                let option = {}
+                option.fileName = this.lostMode + new Date().getTime()
+                let rows = []
+                this.lostInfoOfClientArray.forEach((item,index)=>{
+                let row = []
+                row.push(index + 1)
+                row.push(item.clientbname)
+                row.push(new Date().toLocaleDateString())
+                row.push(new Date().toLocaleTimeString())
+                rows.push(row)
+                })
+                option.datas = [{
+                sheetData:[['No.','客户名称','导出日期','导出时间']].concat(rows),
+                sheetName:'客户信息',
+                columnWidths:[2,10,6,6]
+                }]
+                let toExcel = new jsExportExcel(option)
+                toExcel.saveExcel()
+            }
+        },
+
+        findLostInfoOfClientMethod(mode){
+            this.lostMode = mode
+            this.lostInfoOfClientArray = []
+            axios
+            .post(config.server + "/clientb/lost", {
+                mode: mode
+            })
+            .then(doc => {
+                console.log(doc)
+                if(doc.data.code === 0){
+                    this.lostInfoOfClientArray = doc.data.doc
+                }else if(doc.data.code === 1){
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '未找到相应信息'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 2000);
+                }else{
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '查找时出现错误'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 2000);
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
+
+        isShowClientDetailMethod(){
+            this.isShowClientDetailBox = true
+        },
+
         choisePartnerMethod(item){
             this.choseaname = item
             this.isShowChoisePartnerBox = false
@@ -3553,6 +3699,126 @@ export default {
     cursor: pointer;
 }
 
+.client_export_client_detal_back {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+    z-index: 23;
+}
+.client_export_client_detal_front{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 24;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.client_export_client_detal_box{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #fff;
+}
+.client_export_client_detal_box_body{
+    padding: 12px;
+    margin: 12px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+.client_export_client_detal_box_body_button-area{
+    display: flex;
+}
+.client_button_white{
+    height: 40px;
+    line-height: 40px;
+    border:1px solid #eee;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    width: 120px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.icon_search{
+    mask-image: url(../../public/img/icons/icon_search.svg);
+    background-color: rgba(0, 0, 0, 0.5);
+    mask-size: 30px;
+    height: 30px;
+    width: 30px;
+    mask-repeat: no-repeat;
+    mask-position: center;
+}
+.icon_excel{
+    mask-image: url(../../public/img/icons/icon_excel.svg);
+    background-color: green;
+    mask-size: 28px;
+    height: 28px;
+    width: 28px;
+    mask-repeat: no-repeat;
+    mask-position: center;
+}
+.icon_reply{
+    mask-image: url(../../public/img/icons/baseline-reply_all-24px.svg);
+    background-color: rgba(0, 0, 0, 0.5);
+    mask-size: 28px;
+    height: 28px;
+    width: 28px;
+    mask-repeat: no-repeat;
+    mask-position: center;
+}
+
+.client_export_client_detal_box_body_top{
+    padding-top: 12px;
+}
+.client_export_client_detal_box_body_top_title{
+    display: flex;
+    font-size: 16px;
+    line-height: 30px;
+    height: 30px;
+    border-bottom: 1px solid #eee;
+}
+.client_export_client_detal_box_body_top_title_item{
+    padding-left: 12px;
+}
+.client_export_client_detal_box_body_bottom{
+    height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.client_export_client_detal_box_body_bottom_item{
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+}
+.client_export_client_detal_box_body_bottom_item_left{
+    padding-left: 12px;
+    width: 42px;
+}
+.client_export_client_detal_box_body_bottom_item_right{
+    padding-left: 12px;
+    width: 100%;
+}
+.client_export_client_detal_box_body_info{
+    text-align: right;
+    color: rgba(0, 0, 0, 0.4);
+}
+.client_export_client_detal_box_footer{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 12px;
+}
 @media screen and (min-width: 1025px) {
     .showDialogbclass {
         width: 600px;

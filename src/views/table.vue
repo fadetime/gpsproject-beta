@@ -3011,7 +3011,7 @@ export default {
             let rows = []
             this.missionDriverReportArray.forEach((item,index)=>{
             let row = []
-            row.push(index)
+            row.push(index + 1)
             row.push(item.missionline)
             row.push(item.missiondirver)
             row.push(new Date(item.missiondate).toLocaleDateString())
