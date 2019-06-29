@@ -2382,9 +2382,11 @@
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
                     leave-active-class="animated fadeOut faster">
-            <div class="centerarea"
-                 v-if="missionDriverReportArray.length != 0">
-                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="missionDriverReportArray=[]">
+            <div class="centerarea" v-if="missionDriverReportArray.length != 0">
+                <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="exportExcelMethod()">
+                    <div class="icon_excel"></div>
+                </div>
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="missionDriverReportArray=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
                 <div class="centerarea-head">
@@ -2420,10 +2422,7 @@
                     </div>
                 </div>
                 <div class="centerarea-body">
-                    <div v-for="(item,index) in missionDriverReportArray"
-                         @click="openMissionDetailMethod(item)"
-                         :key="index"
-                         class="centerarea-body-item">
+                    <div v-for="(item,index) in missionDriverReportArray" @click="openMissionDetailMethod(item)" :key="index" class="centerarea-body-item">
                         <div style="min-width: 60px;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
@@ -2879,6 +2878,7 @@ import config from "../../public/js/config.js";
 import Chart from "chart.js";
 import backItem from "@/components/report/backItem.vue"
 import dayShift from "@/components/report/dayShift.vue"
+import jsExportExcel from 'js-export-excel'
 
 function combination(arr) {
     let obj = {};
@@ -3005,6 +3005,30 @@ export default {
     },
 
     methods: {
+        exportExcelMethod(){
+            let option = {}
+            option.fileName = this.driverText+new Date().getTime()
+            let rows = []
+            this.missionDriverReportArray.forEach((item,index)=>{
+            let row = []
+            row.push(index)
+            row.push(item.missionline)
+            row.push(item.missiondirver)
+            row.push(new Date(item.missiondate).toLocaleDateString())
+            row.push(new Date(item.missiondate).toLocaleTimeString())
+            row.push(item.missionclient.length)
+            row.push(item.complete?'已完成':'未完成')
+            rows.push(row)
+            })
+            option.datas = [{
+            sheetData:[['No.','线路名称','司机姓名','创建日期','创建时间','客户数量','任务状态']].concat(rows),
+            sheetName:'线路列表',
+            columnWidths:[2,10,6,6,6,5,5]
+            }]
+            let toExcel = new jsExportExcel(option)
+            toExcel.saveExcel()
+        },
+
         editTripsInfo(){
             axios
                 .post(config.server + "/report/editTripByDay",{
@@ -6019,5 +6043,15 @@ export default {
     margin: 0 4px;
     padding: 0 4px;
     cursor: pointer;
+}
+
+.icon_excel{
+    mask-image: url(../../public/img/icons/icon_excel.svg);
+    background-color: green;
+    mask-size: 40px;
+    height: 40px;
+    width: 40px;
+    mask-repeat: no-repeat;
+    mask-position: center;
 }
 </style>

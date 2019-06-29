@@ -557,6 +557,7 @@ export default {
         },
     },
     methods: {
+
         choiseDriverId(mode){
             this.dirvercard = mode
             this.showChoiseRoleBox = false

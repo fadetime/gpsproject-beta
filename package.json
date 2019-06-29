@@ -1,6 +1,6 @@
 {
   "name": "gpsproject",
-  "version": "0.28.0",
+  "version": "0.29.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,6 +10,7 @@
     "animate.css": "^3.7.0",
     "axios": "^0.18.0",
     "chart.js": "^2.7.3",
+    "js-export-excel": "^1.1.2",
     "lodash": "^4.17.11",
     "lrz": "^4.9.40",
     "register-service-worker": "^1.0.0",
