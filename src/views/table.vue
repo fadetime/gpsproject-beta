@@ -1608,9 +1608,11 @@
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
                     leave-active-class="animated fadeOut faster">
-            <div class="centerarea"
-                 v-if="billInfo.length != 0">
-                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="billInfo=[]">
+            <div class="centerarea" v-if="billInfo.length != 0">
+                <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="downLoadBillExcelMethod()">
+                    <div class="icon_excel"></div>
+                </div>
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="billInfo=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
                 <div class="centerarea-head">
@@ -1621,7 +1623,7 @@
                         <span>No.</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
-                        <span>司机</span>
+                        <span>人员</span>
                     </div>
                     <div style="flex-basis: 12%;text-align: center;">
                         <span>获取数量</span>
@@ -1669,8 +1671,6 @@
                     </div>
                 </div>
                 <div class="centerarea-bottom">
-                    <!-- <span>客户总数{{countClient}};</span>
-                    <span>客户平均数{{averageClient}};</span> -->
                     <span>共</span>
                     <span>{{billInfo.length}}</span>
                     <span>条数据</span>
@@ -1759,9 +1759,8 @@
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
                     leave-active-class="animated fadeOut faster">
-            <div class="centerarea"
-                 v-if="checkerArray.length != 0">
-                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="checkerArray=[]">
+            <div class="centerarea" v-if="checkerArray.length != 0">
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="checkerArray=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
                 <div class="centerarea-head">
@@ -1859,8 +1858,10 @@
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
                     leave-active-class="animated fadeOut faster">
-            <div class="centerarea"
-                 v-if="carWashArray.length != 0">
+            <div class="centerarea" v-if="carWashArray.length != 0">
+                <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="downLoadCarWashExcelMethod()">
+                    <div class="icon_excel"></div>
+                </div>
                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="carWashArray=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
@@ -1897,10 +1898,7 @@
                     </div>
                 </div>
                 <div class="centerarea-body">
-                    <div v-for="(item,index) in carWashArray"
-                         @click="detailCheckInfo(item)"
-                         :key="index"
-                         class="centerarea-body-item">
+                    <div v-for="(item,index) in carWashArray" @click="detailCheckInfo(item)" :key="index" class="centerarea-body-item">
                         <div style="min-width: 60px;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
@@ -3005,6 +3003,53 @@ export default {
     },
 
     methods: {
+        downLoadCarWashExcelMethod(){
+            let option = {}
+            option.fileName = 'carWash' + new Date().getTime()
+            let rows = []
+            this.carWashArray.forEach((item,index)=>{
+            let row = []
+            row.push(index + 1)
+            row.push(item.creator)
+            row.push(item.createDate)
+            row.push(item.finishDate?new Date(item.finishDate).toLocaleDateString():'未执行')
+            row.push(item.finishDate?new Date(item.finishDate).toLocaleTimeString():'未执行')
+            row.push(item.carPlate)
+            rows.push(row)
+            })
+            option.datas = [{
+            sheetData:[['No.','创建人员','创建日期','执行日期','执行时间','车牌号码']].concat(rows),
+            sheetName:'洗车统计',
+            columnWidths:[2,4,6,6,6,5]
+            }]
+            let toExcel = new jsExportExcel(option)
+            toExcel.saveExcel()
+        },
+
+        downLoadBillExcelMethod(){
+            let option = {}
+            option.fileName = 'bill' + new Date().getTime()
+            let rows = []
+            this.billInfo.forEach((item,index)=>{
+            let row = []
+            row.push(index + 1)
+            row.push(item.driverName)
+            row.push(item.startNum)
+            row.push(item.endNum?item.startNum-item.endNum:'未完成')
+            row.push(item.endNum?item.endNum:'未完成')
+            row.push(new Date(item.date).toLocaleDateString())
+            row.push(new Date(item.date).toLocaleTimeString())
+            rows.push(row)
+            })
+            option.datas = [{
+            sheetData:[['No.','统计人员','获取数量','发出数量','剩余数量','统计日期','统计时间']].concat(rows),
+            sheetName:'账单统计',
+            columnWidths:[2,4,4,4,4,6,6]
+            }]
+            let toExcel = new jsExportExcel(option)
+            toExcel.saveExcel()
+        },
+
         exportExcelMethod(){
             let option = {}
             option.fileName = this.driverText+new Date().getTime()
@@ -3284,7 +3329,11 @@ export default {
                     if(doc.data.code === 0){
                         this.tripsByDay = doc.data.doc
                     }else if(doc.data.code === 1){
-                        console.log('未找到符合条件的数据')
+                        this.tipsMsg = '未找到符合条件的数据'
+                        this.isOpenTipBox = true
+                        setTimeout(() => {
+                            this.isOpenTipBox = false
+                        }, 2000);
                     }else{
                         console.log('查询出错')
                     }

@@ -1429,7 +1429,7 @@
                                     <div v-else class="icon_search"></div>
                                 </div>
                             </div>
-                            <div class="client_button_white" style="margin: 0 12px;" @click="findLostInfoOfClientMethod('add')">
+                            <div class="client_button_white"  @click="findLostInfoOfClientMethod('add')">
                                 <div>
                                     <span>无地址客户</span>
                                 </div>
@@ -3750,6 +3750,7 @@ export default {
 }
 .client_export_client_detal_box_body_button-area{
     display: flex;
+    justify-content: space-around;
 }
 .client_button_white{
     height: 40px;
