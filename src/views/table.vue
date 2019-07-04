@@ -53,29 +53,16 @@
             </div>
         </div>
         
-        <div v-if="showWindow === 'night'"
-             class="toparea">
-
+        <div v-if="showWindow === 'night'" class="toparea">
             <div style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff">
-                <vue-datepicker-local v-model="startDate"
-                                      style="margin-top: 12px;"
-                                      placeholder="开始时间" />
+                <vue-datepicker-local v-model="startDate" style="margin-top: 12px;" placeholder="开始时间" />
                 <span> ~ </span>
-                <vue-datepicker-local v-model="endDate"
-                                      style="margin-top: 12px;"
-                                      placeholder="结束时间" />
-                <md-button class="md-raised md-primary"
-                           @click="findReport"
-                           style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
-                <md-button class="md-raised md-primary"
-                           @click="moreSearchInfo = !moreSearchInfo"
-                           style="font-size:18px;width:80px;height:30px;margin-top:13px">更多</md-button>
+                <vue-datepicker-local v-model="endDate" style="margin-top: 12px;" placeholder="结束时间" />
+                <md-button class="md-raised md-primary" @click="findReport" style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
+                <md-button class="md-raised md-primary" @click="moreSearchInfo = !moreSearchInfo" style="font-size:18px;width:80px;height:30px;margin-top:13px">更多</md-button>
             </div>
-            <transition name="custom-classes-transition"
-                        enter-active-class="animated slideInDown faster"
-                        leave-active-class="animated slideOutUp faster">
-                <div v-if="moreSearchInfo"
-                     style="display:flex;display:-webkit-flex;justify-content: center;padding-bottom:10px">
+            <transition name="custom-classes-transition" enter-active-class="animated slideInDown faster" leave-active-class="animated slideOutUp faster">
+                <div v-if="moreSearchInfo" style="display:flex;display:-webkit-flex;justify-content: center;padding-bottom:10px">
                     <div>
                         <span style="font-size:18px;color:#6a6a6a;line-height: 34px;">选择司机：</span>
                     </div>
@@ -96,27 +83,15 @@
                     <span>多日查询</span>
                 </div>
             </div>
-            <div v-if="isShowRepairCarSingleDay"
-                     style="display:flex;display:-webkit-flex;justify-content: center;padding-bottom:10px">
-                <vue-datepicker-local v-model="startDate"
-                                      style="margin-top: 12px;"
-                                      placeholder="开始时间" />
-                <md-button class="md-raised md-primary"
-                           @click="findTripsReportByOneDayMethod"
-                           style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
+            <div v-if="isShowRepairCarSingleDay" style="display:flex;display:-webkit-flex;justify-content: center;padding-bottom:10px">
+                <vue-datepicker-local v-model="startDate" style="margin-top: 12px;" placeholder="开始时间" />
+                <md-button class="md-raised md-primary" @click="findTripsReportByOneDayMethod" style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
             </div>
-            <div v-if="isShowRepairCarMoreDay"
-                     style="display:flex;display:-webkit-flex;justify-content: center;padding-bottom:10px">
-                <vue-datepicker-local v-model="startDate"
-                                      style="margin-top: 12px;"
-                                      placeholder="开始时间" />
+            <div v-if="isShowRepairCarMoreDay" style="display:flex;display:-webkit-flex;justify-content: center;padding-bottom:10px">
+                <vue-datepicker-local v-model="startDate" style="margin-top: 12px;" placeholder="开始时间" />
                 <span style="line-height:56px"> ~ </span>
-                <vue-datepicker-local v-model="endDate"
-                                      style="margin-top: 12px;"
-                                      placeholder="结束时间" />
-                <md-button class="md-raised md-primary"
-                           @click="findTripsReportByMoreDayMethod"
-                           style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
+                <vue-datepicker-local v-model="endDate" style="margin-top: 12px;" placeholder="结束时间" />
+                <md-button class="md-raised md-primary" @click="findTripsReportByMoreDayMethod" style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
             </div>
         </div>
         <!-- 车次统计部分 end -->
@@ -780,10 +755,11 @@
         <!-- 车次框数多天报表 end -->
 
         <!-- 车辆维修 start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="repairCarArray.length != 0">
+                <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="FixCarExportExcelMethod()">
+                    <div class="icon_excel"></div>
+                </div>
                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="repairCarArray=[]">
                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
@@ -856,9 +832,7 @@
         <!-- 车辆维修 end -->
 
         <!-- 坏框申报 start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="breakBasketArray.length != 0">
                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="breakBasketArray=[]">
                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
@@ -921,9 +895,7 @@
         <!-- 坏框申报 end -->
 
         <!-- 区域框数统计部分 start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="areaBasketArray.length != 0">
                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="areaBasketArray=[]">
                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
@@ -1011,14 +983,10 @@
         <!-- 区域框数统计部分 end -->
 
         <!-- 区域框数统计部分-图片放大 start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
                     <div v-if="isShowBigPic" class="report_bigpic_back"></div>
         </transition>
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated zoomIn faster"
-                    leave-active-class="animated zoomOut faster">
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
                     <div v-if="isShowBigPic" class="report_bigpic_front" @click="isShowBigPic = false">
                         <img :src="picSrc | imgurl">
                     </div>
@@ -1026,292 +994,281 @@
         <!-- 区域框数统计部分-图片放大 end -->
 
         <!-- 坏框申报-详细信息 start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-                    <div v-if="isShowDetailBreakBasket" class="report_bigpic_back"></div>
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowDetailBreakBasket" class="report_bigpic_back"></div>
         </transition>
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated zoomIn faster"
-                    leave-active-class="animated zoomOut faster">
-                    <div v-if="isShowDetailBreakBasket" class="report_bigpic_front" @click.self.prevent="isShowDetailBreakBasket = false">
-                        <div class="report_bigpic_box">
-                            <div class="report_bigpic_box_title">
-                                <span>坏框申报审批详细信息</span>
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowDetailBreakBasket" class="report_bigpic_front" @click.self.prevent="isShowDetailBreakBasket = false">
+                <div class="report_bigpic_box">
+                    <div class="report_bigpic_box_title">
+                        <span>坏框申报审批详细信息</span>
+                    </div>
+                    <div class="report_detial_box_body">
+                        <div class="report_detial_box_body_top">
+                            <div class="report_detial_box_body_top_title">
+                                <div class="report_detial_box_body_top_title_frame">
+                                    <span>详细信息</span>
+                                </div>
                             </div>
-                            <div class="report_detial_box_body">
-                                <div class="report_detial_box_body_top">
-                                    <div class="report_detial_box_body_top_title">
-                                        <div class="report_detial_box_body_top_title_frame">
-                                            <span>详细信息</span>
-                                        </div>
+                            <div class="report_detial_box_body_top_item">
+                                <div class="report_detial_box_body_top_item_left">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>申请人员</span>
                                     </div>
-                                    <div class="report_detial_box_body_top_item">
-                                        <div class="report_detial_box_body_top_item_left">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>申请人员</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.submitter}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="report_detial_box_body_top_item_right">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>申请日期</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.date | datefilter}}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="report_detial_box_body_top_item">
-                                        <div class="report_detial_box_body_top_item_left">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>申请时间</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.date | timefilter}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="report_detial_box_body_top_item_right">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>审批人员</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span v-if="tempInfo.approver">{{tempInfo.approver}}</span>
-                                                <span v-else>未审批</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="report_detial_box_body_top_item">
-                                        <div class="report_detial_box_body_top_item_left">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>审批日期</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span v-if="tempInfo.finishDate">{{tempInfo.finishDate | datefilter}}</span>
-                                                <span v-else>未审批</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="report_detial_box_body_top_item_right">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>审批时间</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span v-if="tempInfo.finishDate">{{tempInfo.finishDate | timefilter}}</span>
-                                                <span v-else>未审批</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="report_detial_box_body_top_item">
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span>{{tempInfo.submitter}}</span>
                                     </div>
                                 </div>
-                                <div class="report_detial_box_body_center">
-                                    <div class="report_detial_box_body_top_title">
-                                        <div class="report_detial_box_body_top_title_frame">
-                                            <span>描述图片</span>
-                                        </div>
+                                <div class="report_detial_box_body_top_item_right">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>申请日期</span>
                                     </div>
-                                    <div>
-                                        <div class="report_detial_box_body_center_pic" style="width:340px;overflow:hidden;justify-content: center;">
-                                            <div class="report_detial_box_body_center_pic_frame">
-                                                <img :src="tempInfo.image | imgurl">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="report_detial_box_body_center">
-                                    <div class="report_detial_box_body_top_title">
-                                        <div class="report_detial_box_body_top_title_frame">
-                                            <span>描述文字</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div style="padding:18px 12px 12px;height:120px;overflow:auto;width: 340px;text-align:left">
-                                            <span>{{tempInfo.note}}</span>
-                                        </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span>{{tempInfo.date | datefilter}}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="report_detial_box_foot">
-                                <div class="arraybasket_searchbar_button" @click="isShowDetailBreakBasket = false">
-                                    <span>关闭</span>
+                            <div class="report_detial_box_body_top_item">
+                                <div class="report_detial_box_body_top_item_left">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>申请时间</span>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span>{{tempInfo.date | timefilter}}</span>
+                                    </div>
+                                </div>
+                                <div class="report_detial_box_body_top_item_right">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>审批人员</span>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span v-if="tempInfo.approver">{{tempInfo.approver}}</span>
+                                        <span v-else>未审批</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="report_detial_box_body_top_item">
+                                <div class="report_detial_box_body_top_item_left">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>审批日期</span>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span v-if="tempInfo.finishDate">{{tempInfo.finishDate | datefilter}}</span>
+                                        <span v-else>未审批</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="report_detial_box_body_top_item_right">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>审批时间</span>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span v-if="tempInfo.finishDate">{{tempInfo.finishDate | timefilter}}</span>
+                                        <span v-else>未审批</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="report_detial_box_body_top_item">
+                            </div>
+                        </div>
+                        <div class="report_detial_box_body_center">
+                            <div class="report_detial_box_body_top_title">
+                                <div class="report_detial_box_body_top_title_frame">
+                                    <span>描述图片</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="report_detial_box_body_center_pic" style="width:340px;overflow:hidden;justify-content: center;">
+                                    <div class="report_detial_box_body_center_pic_frame">
+                                        <img :src="tempInfo.image | imgurl">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="report_detial_box_body_center">
+                            <div class="report_detial_box_body_top_title">
+                                <div class="report_detial_box_body_top_title_frame">
+                                    <span>描述文字</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="padding:18px 12px 12px;height:120px;overflow:auto;width: 340px;text-align:left">
+                                    <span>{{tempInfo.note}}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="report_detial_box_foot">
+                        <div class="arraybasket_searchbar_button" @click="isShowDetailBreakBasket = false">
+                            <span>关闭</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </transition>
         <!-- 坏框申报-详细信息 end -->
 
         <!-- 区域框数统计部分-详细信息 start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-                    <div v-if="isShowDetailAreaBasket" class="report_bigpic_back"></div>
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowDetailAreaBasket" class="report_bigpic_back"></div>
         </transition>
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated zoomIn faster"
-                    leave-active-class="animated zoomOut faster">
-                    <div v-if="isShowDetailAreaBasket" class="report_bigpic_front" @click.self.prevent="isShowDetailAreaBasket = false">
-                        <div class="report_bigpic_box">
-                            <div class="report_bigpic_box_title">
-                                <span>区域框数统计详细信息</span>
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowDetailAreaBasket" class="report_bigpic_front" @click.self.prevent="isShowDetailAreaBasket = false">
+                <div class="report_bigpic_box">
+                    <div class="report_bigpic_box_title">
+                        <span>区域框数统计详细信息</span>
+                    </div>
+                    <div class="report_detial_box_body">
+                        <div class="report_detial_box_body_top">
+                            <div class="report_detial_box_body_top_title">
+                                <div class="report_detial_box_body_top_title_frame">
+                                    <span>详细信息</span>
+                                </div>
                             </div>
-                            <div class="report_detial_box_body">
-                                <div class="report_detial_box_body_top">
-                                    <div class="report_detial_box_body_top_title">
-                                        <div class="report_detial_box_body_top_title_frame">
-                                            <span>详细信息</span>
-                                        </div>
+                            <div class="report_detial_box_body_top_item">
+                                <div class="report_detial_box_body_top_item_left">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>创建人员</span>
                                     </div>
-                                    <div class="report_detial_box_body_top_item">
-                                        <div class="report_detial_box_body_top_item_left">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>创建人员</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.submitter}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="report_detial_box_body_top_item_right">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>创建日期</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.date | datefilter}}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="report_detial_box_body_top_item">
-                                        <div class="report_detial_box_body_top_item_left">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>创建时间</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.date | timefilter}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="report_detial_box_body_top_item_right">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>结束日期</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.finishDate | datefilter}}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="report_detial_box_body_top_item">
-                                        <div class="report_detial_box_body_top_item_left">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>结束时间</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.finishDate | timefilter}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="report_detial_box_body_top_item_right">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>装卸区域</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.area1number}}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="report_detial_box_body_top_item">
-                                        <div class="report_detial_box_body_top_item_left">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>冷库区域</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.area2number}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="report_detial_box_body_top_item_right">
-                                            <div class="report_detial_box_body_top_item_left_name">
-                                                <span>配货区域</span>
-                                            </div>
-                                            <div class="report_detial_box_body_top_item_left_content">
-                                                <span>{{tempInfo.area3number}}</span>
-                                            </div>
-                                        </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span>{{tempInfo.submitter}}</span>
                                     </div>
                                 </div>
-                                <div class="report_detial_box_body_center">
-                                    <div class="report_detial_box_body_top_title">
-                                        <div class="report_detial_box_body_top_title_frame">
-                                            <span>装卸区图片</span>
-                                        </div>
+                                <div class="report_detial_box_body_top_item_right">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>创建日期</span>
                                     </div>
-                                    <div>
-                                        <div v-if="tempInfo.area1imageArray != 0" class="report_detial_box_body_center_pic">
-                                            <div v-for="(item,index) in tempInfo.area1imageArray" :key="index" class="report_detial_box_body_center_pic_frame">
-                                                <img :src="'uploads/countBox/'+item | imgurl">
-                                            </div>
-                                        </div>
-                                        <div v-else class="report_detial_box_body_center_pic">
-                                            <div class="report_detial_box_body_center_pic_frame">
-                                                <img :src="tempInfo.area1image | imgurl">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="report_detial_box_body_center">
-                                    <div class="report_detial_box_body_top_title">
-                                        <div class="report_detial_box_body_top_title_frame">
-                                            <span>冷库区图片</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div v-if="tempInfo.area1imageArray != 0" class="report_detial_box_body_center_pic">
-                                            <div v-for="(item,index) in tempInfo.area2imageArray" :key="index" class="report_detial_box_body_center_pic_frame">
-                                                <img :src="'uploads/countBox/'+item | imgurl">
-                                            </div>
-                                        </div>
-                                        <div v-else class="report_detial_box_body_center_pic">
-                                            <div class="report_detial_box_body_center_pic_frame">
-                                                <img :src="tempInfo.area2image | imgurl">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="report_detial_box_body_center">
-                                    <div class="report_detial_box_body_top_title">
-                                        <div class="report_detial_box_body_top_title_frame">
-                                            <span>配货区图片</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div v-if="tempInfo.area1imageArray.length != 0" class="report_detial_box_body_center_pic">
-                                            <div v-for="(item,index) in tempInfo.area3imageArray" :key="index" class="report_detial_box_body_center_pic_frame">
-                                                <img :src="'uploads/countBox/'+item | imgurl">
-                                            </div>
-                                        </div>
-                                        <div v-else class="report_detial_box_body_center_pic">
-                                            <div class="report_detial_box_body_center_pic_frame">
-                                                <img :src="tempInfo.area3image | imgurl">
-                                            </div>
-                                        </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span>{{tempInfo.date | datefilter}}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="report_detial_box_foot">
-                                <div class="arraybasket_searchbar_button" @click="isShowDetailAreaBasket = false">
-                                    <span>关闭</span>
+                            <div class="report_detial_box_body_top_item">
+                                <div class="report_detial_box_body_top_item_left">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>创建时间</span>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span>{{tempInfo.date | timefilter}}</span>
+                                    </div>
+                                </div>
+                                <div class="report_detial_box_body_top_item_right">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>结束日期</span>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span>{{tempInfo.finishDate | datefilter}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="report_detial_box_body_top_item">
+                                <div class="report_detial_box_body_top_item_left">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>结束时间</span>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span>{{tempInfo.finishDate | timefilter}}</span>
+                                    </div>
+                                </div>
+                                <div class="report_detial_box_body_top_item_right">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>装卸区域</span>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span>{{tempInfo.area1number}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="report_detial_box_body_top_item">
+                                <div class="report_detial_box_body_top_item_left">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>冷库区域</span>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span>{{tempInfo.area2number}}</span>
+                                    </div>
+                                </div>
+                                <div class="report_detial_box_body_top_item_right">
+                                    <div class="report_detial_box_body_top_item_left_name">
+                                        <span>配货区域</span>
+                                    </div>
+                                    <div class="report_detial_box_body_top_item_left_content">
+                                        <span>{{tempInfo.area3number}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="report_detial_box_body_center">
+                            <div class="report_detial_box_body_top_title">
+                                <div class="report_detial_box_body_top_title_frame">
+                                    <span>装卸区图片</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div v-if="tempInfo.area1imageArray != 0" class="report_detial_box_body_center_pic">
+                                    <div v-for="(item,index) in tempInfo.area1imageArray" :key="index" class="report_detial_box_body_center_pic_frame">
+                                        <img :src="'uploads/countBox/'+item | imgurl">
+                                    </div>
+                                </div>
+                                <div v-else class="report_detial_box_body_center_pic">
+                                    <div class="report_detial_box_body_center_pic_frame">
+                                        <img :src="tempInfo.area1image | imgurl">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="report_detial_box_body_center">
+                            <div class="report_detial_box_body_top_title">
+                                <div class="report_detial_box_body_top_title_frame">
+                                    <span>冷库区图片</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div v-if="tempInfo.area1imageArray != 0" class="report_detial_box_body_center_pic">
+                                    <div v-for="(item,index) in tempInfo.area2imageArray" :key="index" class="report_detial_box_body_center_pic_frame">
+                                        <img :src="'uploads/countBox/'+item | imgurl">
+                                    </div>
+                                </div>
+                                <div v-else class="report_detial_box_body_center_pic">
+                                    <div class="report_detial_box_body_center_pic_frame">
+                                        <img :src="tempInfo.area2image | imgurl">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="report_detial_box_body_center">
+                            <div class="report_detial_box_body_top_title">
+                                <div class="report_detial_box_body_top_title_frame">
+                                    <span>配货区图片</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div v-if="tempInfo.area1imageArray.length != 0" class="report_detial_box_body_center_pic">
+                                    <div v-for="(item,index) in tempInfo.area3imageArray" :key="index" class="report_detial_box_body_center_pic_frame">
+                                        <img :src="'uploads/countBox/'+item | imgurl">
+                                    </div>
+                                </div>
+                                <div v-else class="report_detial_box_body_center_pic">
+                                    <div class="report_detial_box_body_center_pic_frame">
+                                        <img :src="tempInfo.area3image | imgurl">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="report_detial_box_foot">
+                        <div class="arraybasket_searchbar_button" @click="isShowDetailAreaBasket = false">
+                            <span>关闭</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </transition>
         <!-- 区域框数统计部分-详细信息 end -->
 
         <!-- check car report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div class="centerarea"
-                 v-if="tableInfo.length != 0">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="tableInfo.length != 0">
                  <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="tableInfo=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
@@ -1363,7 +1320,6 @@
                         <div style="flex-basis: 14%;text-align: center;">
                             <span v-if="item.finishDate === null">未提交</span>
                             <span v-else>{{item.finishDate | timefilter}}</span>
-
                         </div>
                         <div style="flex-basis: 12%;text-align: center;">
                             <span>{{item.boxNum}}</span>
@@ -1372,10 +1328,8 @@
                             <span>{{item.boxNumAgain}}</span>
                         </div>
                         <div style="flex-basis: 7%;text-align: center;">
-                            <md-icon v-if="item.clean"
-                                     style="color:green">check_circle</md-icon>
-                            <md-icon v-else
-                                     style="color:red">cancel</md-icon>
+                            <md-icon v-if="item.clean" style="color:green">check_circle</md-icon>
+                            <md-icon v-else style="color:red">cancel</md-icon>
                         </div>
                     </div>
                 </div>
@@ -1391,12 +1345,9 @@
         <!-- check car report end -->
 
         <!-- mission report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div class="centerarea"
-                 v-if="missionInfo.length != 0">
-                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="missionInfo=[]">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="missionInfo.length != 0">
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="missionInfo=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
                 <div class="centerarea-head">
@@ -1420,9 +1371,7 @@
                     </div>
                 </div>
                 <div class="centerarea-body">
-                    <div v-for="(item,index) in missionInfo"
-                         :key="index"
-                         class="centerarea-body-item">
+                    <div v-for="(item,index) in missionInfo" :key="index" class="centerarea-body-item">
                         <div style="flex-basis: 4%;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
@@ -1452,18 +1401,11 @@
         <!-- mission report end -->
 
         <!-- driver choise box start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div v-if="isOpenDriverBox"
-                 class="driverbox-back"></div>
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isOpenDriverBox" class="driverbox-back"></div>
         </transition>
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated zoomIn faster"
-                    leave-active-class="animated zoomOut faster">
-            <div v-if="isOpenDriverBox"
-                 class="driverbox-front"
-                 @click.self.prevent="isOpenDriverBox = false">
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isOpenDriverBox" class="driverbox-front" @click.self.prevent="isOpenDriverBox = false">
                 <div class="driver-front-box">
                     <div class="driver-front-box-title">
                         <span>司机选择</span>
@@ -1479,10 +1421,7 @@
                             </div>
                         </div>
                         <div style="height:40vh;overflow-y: auto;">
-                            <div class="driver-front-box-body-center"
-                                 v-for="(item,index) in driverArray"
-                                 :key="index"
-                                 @click="choiseDriverMethod(item)">
+                            <div class="driver-front-box-body-center" v-for="(item,index) in driverArray" :key="index" @click="choiseDriverMethod(item)">
                                 <div class="driver-front-box-body-left">
                                     <span>{{index + 1}}</span>
                                 </div>
@@ -1503,18 +1442,11 @@
         <!-- driver choise box end -->
 
         <!-- line choise box start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div v-if="isOpenLineBox"
-                 class="driverbox-back"></div>
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isOpenLineBox" class="driverbox-back"></div>
         </transition>
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated zoomIn faster"
-                    leave-active-class="animated zoomOut faster">
-            <div v-if="isOpenLineBox"
-                 class="driverbox-front"
-                 @click.self.prevent="isOpenLineBox = false">
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isOpenLineBox" class="driverbox-front" @click.self.prevent="isOpenLineBox = false">
                 <div class="driver-front-box">
                     <div class="driver-front-box-title">
                         <span>线路选择</span>
@@ -1556,18 +1488,11 @@
         <!-- line choise box end -->
 
         <!-- client choise box start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div v-if="isOpenClientBox"
-                 class="driverbox-back"></div>
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isOpenClientBox" class="driverbox-back"></div>
         </transition>
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated zoomIn faster"
-                    leave-active-class="animated zoomOut faster">
-            <div v-if="isOpenClientBox"
-                 class="driverbox-front"
-                 @click.self.prevent="isOpenClientBox = false">
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isOpenClientBox" class="driverbox-front" @click.self.prevent="isOpenClientBox = false">
                 <div class="driver-front-box">
                     <div class="driver-front-box-title">
                         <span>客户选择</span>
@@ -1602,12 +1527,8 @@
         </transition>
         <!-- client choise box end -->
 
-        
-
         <!-- bill report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="billInfo.length != 0">
                 <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="downLoadBillExcelMethod()">
                     <div class="icon_excel"></div>
@@ -1680,12 +1601,9 @@
         <!-- bill report end -->
 
         <!-- basket report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div class="centerarea"
-                 v-if="basketInfo.length != 0">
-                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="basketInfo=[]">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="basketInfo.length != 0">
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="basketInfo=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
                 <div class="centerarea-head">
@@ -1713,9 +1631,7 @@
                     </div>
                 </div>
                 <div class="centerarea-body">
-                    <div v-for="(item,index) in basketInfo"
-                         :key="index"
-                         class="centerarea-body-item">
+                    <div v-for="(item,index) in basketInfo" :key="index" class="centerarea-body-item">
                         <div style="min-width: 60px;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
@@ -1735,14 +1651,10 @@
                 </div>
                 <div style="display:flex;justify-content: space-around;display:-webkit-flex;padding: 20px 0;">
                     <div class="chartBox">
-                        <canvas id="basketleft"
-                                width="400px"
-                                height="400px"></canvas>
+                        <canvas id="basketleft" width="400px" height="400px"></canvas>
                     </div>
                     <div class="chartBox">
-                        <canvas id="basketright"
-                                width="400px"
-                                height="400px"></canvas>
+                        <canvas id="basketright" width="400px" height="400px"></canvas>
                     </div>
                 </div>
 
@@ -1756,9 +1668,7 @@
         <!-- basket report end -->
 
         <!-- checker report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="checkerArray.length != 0">
                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="checkerArray=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
@@ -1800,10 +1710,7 @@
                     </div>
                 </div>
                 <div class="centerarea-body">
-                    <div v-for="(item,index) in checkerArray"
-                         @click="detailCheckInfo(item)"
-                         :key="index"
-                         class="centerarea-body-item">
+                    <div v-for="(item,index) in checkerArray" @click="detailCheckInfo(item)" :key="index" class="centerarea-body-item">
                         <div style="min-width: 60px;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
@@ -1834,14 +1741,10 @@
                 </div>
                 <div style="display:flex;justify-content: space-around;display:-webkit-flex;padding: 20px 0;">
                     <div class="chartBox">
-                        <canvas id="checkertleft"
-                                width="400px"
-                                height="400px"></canvas>
+                        <canvas id="checkertleft" width="400px" height="400px"></canvas>
                     </div>
                     <div class="chartBox">
-                        <canvas id="checkertright"
-                                width="400px"
-                                height="400px"></canvas>
+                        <canvas id="checkertright" width="400px" height="400px"></canvas>
                     </div>
                 </div>
 
@@ -1855,9 +1758,7 @@
         <!-- checker report end -->
 
         <!-- car wash report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="carWashArray.length != 0">
                 <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="downLoadCarWashExcelMethod()">
                     <div class="icon_excel"></div>
@@ -1935,18 +1836,11 @@
         <!-- car wash report end -->
 
         <!-- check detail information box start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div v-if="showDetailCheckInfo"
-                 class="checkditailbox-back"></div>
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="showDetailCheckInfo" class="checkditailbox-back"></div>
         </transition>
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated zoomIn faster"
-                    leave-active-class="animated zoomOut faster">
-            <div v-if="showDetailCheckInfo"
-                 class="checkditailbox-front"
-                 @click.self.prevent="showDetailCheckInfo = false">
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="showDetailCheckInfo" class="checkditailbox-front" @click.self.prevent="showDetailCheckInfo = false">
                 <div class="checkditailbox-front-box">
                     <div class="checkditailbox-front-box-top">
                         <span>详细信息</span>
@@ -1983,11 +1877,8 @@
                                 </div>
                             </div>
                             <div style="overflow:auto;height:500px">
-                                <div v-for="(item,index) in tempInfo.missionList "
-                                    class="checkditailbox-body-center-item"
-                                    :key="index">
-                                    <div class="checkditailbox-body-center-item-carid"
-                                        style="min-width:120px;margin-left:4px">
+                                <div v-for="(item,index) in tempInfo.missionList " class="checkditailbox-body-center-item" :key="index">
+                                    <div class="checkditailbox-body-center-item-carid" style="min-width:120px;margin-left:4px">
                                         <span>{{item.carPlate}}</span>
                                     </div>
                                     <div class="checkditailbox-body-center-item-check_res">
@@ -2051,14 +1942,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="checkditailbox-body-center-state"
-                                        style="min-width:93px">
+                                    <div class="checkditailbox-body-center-state" style="min-width:93px">
                                         <span v-if="item.isFinish && item.checkDate === null" style="color:#ff9800">已跳过</span> 
                                         <span v-else-if="item.isFinish" style="color:#2f9514">已检查</span>
                                         <span v-else>未检查</span>
                                     </div>
-                                    <div class="checkditailbox-body-center-item-content"
-                                        style="width:120px;line-height: 30px;text-align: left;padding-left:12px">
+                                    <div class="checkditailbox-body-center-item-content" style="width:120px;line-height: 30px;text-align: left;padding-left:12px">
                                         <div v-if="item.isFinish && item.checkDate === null" style="line-height: 60px;">
                                             <span>未记录</span> 
                                         </div> 
@@ -2069,15 +1958,12 @@
                                             <div style="height:30px">
                                                 <span>{{item.checkDate | timefilter}}</span>
                                             </div>
-                                            
                                         </div> 
                                         <div v-else style="line-height: 60px;">
                                             <span>未提交</span>
                                         </div>
-                                        
                                     </div>
-                                    <div class="checkditailbox-body-center-item-content"
-                                        style="width:300px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+                                    <div class="checkditailbox-body-center-item-content" style="width:300px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
                                         <span v-if="item.note === null">无备注</span>
                                         <span v-else>{{item.note}}</span>
                                     </div>
@@ -2087,9 +1973,7 @@
                         </div>
                     </div>
                     <div>
-                        <md-button class="md-raised md-primary"
-                                   @click="showDetailCheckInfo = false"
-                                   style="font-size:18px;width:80px;height:30px">取消</md-button>
+                        <md-button class="md-raised md-primary" @click="showDetailCheckInfo = false" style="font-size:18px;width:80px;height:30px">取消</md-button>
                     </div>
                 </div>
             </div>
@@ -2097,11 +1981,8 @@
         <!-- check detail information box end -->
 
         <!-- driver check car report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div class="centerarea"
-                 v-if="driverCheckCarInfo.length != 0">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="driverCheckCarInfo.length != 0">
                  <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="driverCheckCarInfo=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
@@ -2168,17 +2049,12 @@
                 </div>
                 <div style="display:flex;justify-content: space-around;display:-webkit-flex;padding: 20px 0;">
                     <div class="chartBox">
-                        <canvas id="drivercheckertleft"
-                                width="400px"
-                                height="400px"></canvas>
+                        <canvas id="drivercheckertleft" width="400px" height="400px"></canvas>
                     </div>
                     <div class="chartBox">
-                        <canvas id="drivercheckertright"
-                                width="400px"
-                                height="400px"></canvas>
+                        <canvas id="drivercheckertright" width="400px" height="400px"></canvas>
                     </div>
                 </div>
-
                 <div class="centerarea-bottom">
                     <span>共</span>
                     <span>{{driverCheckCarInfo.length}}</span>
@@ -2189,11 +2065,8 @@
         <!-- driver check car report end -->
 
         <!-- all driver check car report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div class="centerarea"
-                 v-if="allDriverCheckCarInfo.length != 0">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="allDriverCheckCarInfo.length != 0">
                  <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="allDriverCheckCarInfo=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
@@ -2226,10 +2099,7 @@
                     </div>
                 </div>
                 <div class="centerarea-body">
-                    <div v-for="(item,index) in allDriverCheckCarInfo"
-                         @click="openDriverCheckCarInfoDetailMethod(item)"
-                         :key="index"
-                         class="centerarea-body-item">
+                    <div v-for="(item,index) in allDriverCheckCarInfo" @click="openDriverCheckCarInfoDetailMethod(item)" :key="index" class="centerarea-body-item">
                         <div style="min-width: 60px;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
@@ -2262,17 +2132,12 @@
                 </div>
                 <div style="display:flex;justify-content: space-around;display:-webkit-flex;padding: 20px 0;">
                     <div class="chartBox">
-                        <canvas id="alldrivercheckertleft"
-                                width="400px"
-                                height="400px"></canvas>
+                        <canvas id="alldrivercheckertleft" width="400px" height="400px"></canvas>
                     </div>
                     <div class="chartBox">
-                        <canvas id="alldrivercheckertright"
-                                width="400px"
-                                height="400px"></canvas>
+                        <canvas id="alldrivercheckertright" width="400px" height="400px"></canvas>
                     </div>
                 </div>
-
                 <div class="centerarea-bottom">
                     <span>共</span>
                     <span>{{allDriverCheckCarInfo.length}}</span>
@@ -2283,11 +2148,8 @@
         <!-- all driver check car report end -->
 
         <!-- mission report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div class="centerarea"
-                 v-if="missionReportArray.length != 0">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div class="centerarea" v-if="missionReportArray.length != 0">
                  <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="missionReportArray=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
@@ -2347,26 +2209,19 @@
                             <span style="padding-left:16px;padding-right:12px">{{item.missionclient.length}}</span>
                         </div>
                         <div style="min-width: 140px;text-align: left;">
-                            <span v-if="item.complete"
-                                  style="padding-left:16px;padding-right:12px">已完成</span>
-                            <span v-else
-                                  style="padding-left:16px;padding-right:12px">未完成</span>
+                            <span v-if="item.complete" style="padding-left:16px;padding-right:12px">已完成</span>
+                            <span v-else style="padding-left:16px;padding-right:12px">未完成</span>
                         </div>
                     </div>
                 </div>
                 <div style="display:flex;justify-content: space-around;display:-webkit-flex;padding: 20px 0;">
                     <div class="chartBox">
-                        <canvas id="missionreportleft"
-                                width="400px"
-                                height="400px"></canvas>
+                        <canvas id="missionreportleft" width="400px" height="400px"></canvas>
                     </div>
                     <div class="chartBox">
-                        <canvas id="missionreportright"
-                                width="400px"
-                                height="400px"></canvas>
+                        <canvas id="missionreportright" width="400px" height="400px"></canvas>
                     </div>
                 </div>
-
                 <div class="centerarea-bottom">
                     <span>共</span>
                     <span>{{missionReportArray.length}}</span>
@@ -2377,9 +2232,7 @@
         <!-- mission report end -->
 
         <!-- mission-driver report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="missionDriverReportArray.length != 0">
                 <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="exportExcelMethod()">
                     <div class="icon_excel"></div>
@@ -3003,6 +2856,37 @@ export default {
     },
 
     methods: {
+        FixCarExportExcelMethod(){
+            let option = {}
+            option.fileName = 'repair' + new Date().getTime()
+            let rows = []
+            this.repairCarArray.forEach((item,index)=>{
+            let row = []
+            let trouble = null
+            trouble = item.wiper === 1?'雨刷 ':''
+            trouble += item.headlight === 1?'大灯':''
+            trouble += item.mirror === 1?'倒车镜':''
+            trouble += item.tyre === 1?'车胎':''
+            trouble += item.backup === 1?'备胎':''
+            trouble += item.brake === 1?'刹车':''
+            trouble += item.other === 1?'其他':''
+            row.push(index + 1)
+            row.push(item.car_id.carid)
+            row.push(new Date(item.logStartTime).toLocaleDateString())
+            row.push(trouble)
+            row.push(item.note)
+            row.push(item.worker?item.worker:'未处理')
+            rows.push(row)
+            })
+            option.datas = [{
+            sheetData:[['No.','车牌号码','提交日期','包含问题','描述文字','维修员']].concat(rows),
+            sheetName:'洗车统计',
+            columnWidths:[2,4,6,6,8,5]
+            }]
+            let toExcel = new jsExportExcel(option)
+            toExcel.saveExcel()
+        },
+
         downLoadCarWashExcelMethod(){
             let option = {}
             option.fileName = 'carWash' + new Date().getTime()
