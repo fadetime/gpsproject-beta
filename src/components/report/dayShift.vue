@@ -97,10 +97,11 @@
         </div>
 
         <!-- dayShift report start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="dayShiftInfo.length != 0">
+                <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="exportDayShiftExcelMethod()">
+                    <div class="icon_excel"></div>
+                </div>
                  <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="dayShiftInfo=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
@@ -131,9 +132,7 @@
                     </div>
                 </div>
                 <div class="centerarea-body">
-                    <div v-for="(item,index) in dayShiftInfo"
-                         :key="index"
-                         class="centerarea-body-item">
+                    <div v-for="(item,index) in dayShiftInfo" :key="index" class="centerarea-body-item">
                         <div style="flex-basis: 5%;text-align: center;">
                             <span>{{index + 1}}</span>
                         </div>
@@ -186,6 +185,7 @@ import VueDatepickerLocal from "vue-datepicker-local";
 import tipsBox from "@/components/tipsBox.vue"
 import axios from "axios";
 import config from "../../../public/js/config.js";
+import jsExportExcel from 'js-export-excel'
 
 export default {
     components:{
@@ -209,6 +209,47 @@ export default {
     },
 
     methods:{
+        exportDayShiftExcelMethod(){
+            let option = {}
+            option.fileName = 'dayShift' + new Date().getTime()
+            let rows = []
+            let type = null
+            this.dayShiftInfo.forEach((item,index)=>{
+            if(item.isIncreaseOrder === 'order'){
+                type = '订单'
+            }else if(item.isIncreaseOrder === 'true'){
+                type = '加单'
+            }else if(item.isIncreaseOrder === 'false'){
+                type = '补单'
+            }else if(item.isIncreaseOrder === 'bun'){
+                type = '面食'
+            }else if(item.isIncreaseOrder === 'change'){
+                type = '换货'
+            }else if(item.isIncreaseOrder === 'delivery'){
+                type = '运输'
+            }else if(item.isIncreaseOrder === 'other'){
+                type = '其他'
+            }else{
+                type = '退单'
+            }
+            let row = []
+            row.push(index + 1)
+            row.push(item.driverName)
+            row.push(item.clientName)
+            row.push(type)
+            row.push(new Date(item.orderDate).toLocaleDateString())
+            row.push(new Date(item.orderDate).toLocaleTimeString())
+            row.push(item.finishDate?new Date(item.finishDate).toLocaleTimeString():'未送达')
+            rows.push(row)
+            })
+            option.datas = [{
+            sheetData:[['No.','司机姓名','客户名称','任务类型','任务日期','生成时间','结束时间']].concat(rows),
+            sheetName:'任务统计',
+            columnWidths:[2,5,6,4,5,5,5]
+            }]
+            let toExcel = new jsExportExcel(option)
+            toExcel.saveExcel()
+        },
         findDayReport() {
             if (!this.startDate || !this.endDate) {
                 this.tipsShowColor = 'yellow'
@@ -592,6 +633,16 @@ export default {
     text-align: right;
     height: 30px;
     line-height: 30px;
+}
+
+.icon_excel{
+    mask-image: url(../../../public/img/icons/icon_excel.svg);
+    background-color: green;
+    mask-size: 40px;
+    height: 40px;
+    width: 40px;
+    mask-repeat: no-repeat;
+    mask-position: center;
 }
 </style>
 

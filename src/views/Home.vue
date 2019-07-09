@@ -12,7 +12,7 @@
                     <div v-if="tempSearchArray.length != 0" class="icon_clear" @click="searchClearMethod()">
                         <span>x</span>
                     </div>
-                    <input type="text" v-model="searchKeyWord" @keyup.enter="searchClientMethod()">
+                    <input type="text" v-model="searchKeyWord" @keyup.enter="searchClientMethod()" placeholder="任务中的客户搜索">
                     <div class="icon_search" @click="searchClientMethod()"></div>
                     <div v-if="tempSearchArray.length != 0" class="topbutton_search_res">
                         <div v-for="(item,index) in tempSearchArray" :key="index">
@@ -3661,6 +3661,19 @@ export default {
                     };
                 }
             });
+            let receiptArray = []
+            axios
+                .post(config.newC + '/driverTasks/getWaiting')
+                .then(doc =>{
+                    console.log(doc)
+                    if(doc.data.status === 0){
+                        console.log('api if')
+                        receiptArray = doc.data.payload
+                    }else{
+                        receiptArray = []
+                        console.log('获取财务收款数据异常')
+                    }
+                
             if (this.missionDateModeButtonCSS1) {
                 let dateToday = new Date().toISOString();
                 query = {
@@ -3677,20 +3690,85 @@ export default {
                     Car_id: this.selectorCar._id,
                     logOperator: localStorage.getItem("name"),
                     missionclient: this.aLineInfo.timesclientb.map(item => {
-                        let obj = {
-                            clientbname: item.clientbname,
-                            clientbnameEN: item.clientbnameEN,
-                            clientbaddress: item.clientbaddress,
-                            clientbphone: item.clientbphone,
-                            clientbpostcode: item.clientbpostcode,
-                            clientbserve: item.clientbserve.clientaname,
-                            image: item.image,
-                            isNeedPic: item.isNeedPic,
-                            note: item.note,
-                            noteEN: item.noteEN,
-                            timeLimit: item.timeLimit
-                        };
-                        return obj;
+                        if(receiptArray.length === 0){
+                            console.log('receipt enter if')
+                            let obj = {
+                                clientbname: item.clientbname,
+                                clientbnameEN: item.clientbnameEN,
+                                clientbaddress: item.clientbaddress,
+                                clientbphone: item.clientbphone,
+                                clientbpostcode: item.clientbpostcode,
+                                clientbserve: item.clientbserve.clientaname,
+                                image: item.image,
+                                isNeedPic: item.isNeedPic,
+                                note: item.note,
+                                noteEN: item.noteEN,
+                                timeLimit: item.timeLimit
+                            };
+                            return obj;
+                        }else{
+                            console.log('receipt enter else')
+                            let flag = false
+                            let tempItem = null
+                            receiptArray.some(receiptInfo => {
+                                if(item.clientbname === receiptInfo.customer){
+                                    flag = true
+                                    tempItem = {
+                                        _id: receiptInfo._id,
+                                        remark: receiptInfo.remark,
+                                        image: receiptInfo.image
+                                    }
+                                    axios
+                                        .post(config.newC + '/driverTasks/update/'+ receiptInfo._id,{
+                                            driver: this.selectorDriver.dirvername,
+                                            status: '处理中'
+                                        })
+                                        .then(doc =>{
+                                            console.log('change receipt status')
+                                        })
+                                        .catch(err => {
+                                            console.log('change receipt status catch error')
+                                            console.log(err)
+                                        })
+                                    return true
+                                }
+                            })
+                            if(flag){
+                                let obj = {
+                                    clientbname: item.clientbname,
+                                    clientbnameEN: item.clientbnameEN,
+                                    clientbaddress: item.clientbaddress,
+                                    clientbphone: item.clientbphone,
+                                    clientbpostcode: item.clientbpostcode,
+                                    clientbserve: item.clientbserve.clientaname,
+                                    image: item.image,
+                                    isNeedPic: item.isNeedPic,
+                                    note: item.note,
+                                    noteEN: item.noteEN,
+                                    timeLimit: item.timeLimit,
+                                    receipt_id: tempItem._id, //财务收款任务ID
+                                    receipt_finish: false, //财务收款任务是否完成
+                                    receipt_remark: tempItem.remark, //财务收款任务留言
+                                    receipt_image: tempItem.image//财务收款任务图片
+                                };
+                                return obj;
+                            }else{
+                                let obj = {
+                                    clientbname: item.clientbname,
+                                    clientbnameEN: item.clientbnameEN,
+                                    clientbaddress: item.clientbaddress,
+                                    clientbphone: item.clientbphone,
+                                    clientbpostcode: item.clientbpostcode,
+                                    clientbserve: item.clientbserve.clientaname,
+                                    image: item.image,
+                                    isNeedPic: item.isNeedPic,
+                                    note: item.note,
+                                    noteEN: item.noteEN,
+                                    timeLimit: item.timeLimit
+                                };
+                                return obj;
+                            }
+                        }
                     })
                 };
             } else if (this.missionDateModeButtonCSS2) {
@@ -3706,19 +3784,69 @@ export default {
                     Car_id: this.selectorCar._id,
                     logOperator: localStorage.getItem("name"),
                     missionclient: this.aLineInfo.timesclientb.map(item => {
-                        let obj = {
-                            clientbname: item.clientbname,
-                            clientbnameEN: item.clientbnameEN,
-                            clientbaddress: item.clientbaddress,
-                            clientbphone: item.clientbphone,
-                            clientbpostcode: item.clientbpostcode,
-                            clientbserve: item.clientbserve.clientaname,
-                            image: item.image,
-                            isNeedPic: item.isNeedPic,
-                            note: item.note,
-                            timeLimit: item.timeLimit
-                        };
-                        return obj;
+                        if(receiptArray.length = 0){
+                            let obj = {
+                                clientbname: item.clientbname,
+                                clientbnameEN: item.clientbnameEN,
+                                clientbaddress: item.clientbaddress,
+                                clientbphone: item.clientbphone,
+                                clientbpostcode: item.clientbpostcode,
+                                clientbserve: item.clientbserve.clientaname,
+                                image: item.image,
+                                isNeedPic: item.isNeedPic,
+                                note: item.note,
+                                timeLimit: item.timeLimit
+                            };
+                            return obj;
+                        }else{
+                            let flag = false
+                            let tempItem = null
+                            receiptArray.some(item => {
+                                if(item.clientbname === receiptInfo.customer){
+                                    flag = true
+                                    tempItem = {
+                                        _id: receiptInfo._id,
+                                        remark: receiptInfo.remark,
+                                        image: receiptInfo.image
+                                    }
+                                    return true
+                                }
+                            })
+                            if(flag){
+                                let obj = {
+                                    clientbname: item.clientbname,
+                                    clientbnameEN: item.clientbnameEN,
+                                    clientbaddress: item.clientbaddress,
+                                    clientbphone: item.clientbphone,
+                                    clientbpostcode: item.clientbpostcode,
+                                    clientbserve: item.clientbserve.clientaname,
+                                    image: item.image,
+                                    isNeedPic: item.isNeedPic,
+                                    note: item.note,
+                                    noteEN: item.noteEN,
+                                    timeLimit: item.timeLimit,
+                                    receipt_id: tempItem._id, //财务收款任务ID
+                                    receipt_finish: false, //财务收款任务是否完成
+                                    receipt_remark: tempItem.remark //财务收款任务留言
+                                };
+                                return obj;
+                            }else{
+                                let obj = {
+                                    clientbname: item.clientbname,
+                                    clientbnameEN: item.clientbnameEN,
+                                    clientbaddress: item.clientbaddress,
+                                    clientbphone: item.clientbphone,
+                                    clientbpostcode: item.clientbpostcode,
+                                    clientbserve: item.clientbserve.clientaname,
+                                    image: item.image,
+                                    isNeedPic: item.isNeedPic,
+                                    note: item.note,
+                                    noteEN: item.noteEN,
+                                    timeLimit: item.timeLimit
+                                };
+                                return obj;
+                            }
+                        }
                     })
                 };
             } else {
@@ -3736,19 +3864,69 @@ export default {
                     Car_id: this.selectorCar._id,
                     logOperator: localStorage.getItem("name"),
                     missionclient: this.aLineInfo.timesclientb.map(item => {
-                        let obj = {
-                            clientbname: item.clientbname,
-                            clientbnameEN: item.clientbnameEN,
-                            clientbaddress: item.clientbaddress,
-                            clientbphone: item.clientbphone,
-                            clientbpostcode: item.clientbpostcode,
-                            clientbserve: item.clientbserve.clientaname,
-                            image: item.image,
-                            isNeedPic: item.isNeedPic,
-                            note: item.note,
-                            timeLimit: item.timeLimit
-                        };
-                        return obj;
+                        if(receiptArray.length = 0){
+                            let obj = {
+                                clientbname: item.clientbname,
+                                clientbnameEN: item.clientbnameEN,
+                                clientbaddress: item.clientbaddress,
+                                clientbphone: item.clientbphone,
+                                clientbpostcode: item.clientbpostcode,
+                                clientbserve: item.clientbserve.clientaname,
+                                image: item.image,
+                                isNeedPic: item.isNeedPic,
+                                note: item.note,
+                                timeLimit: item.timeLimit
+                            };
+                            return obj;
+                        }else{
+                            let flag = false
+                            let tempItem = null
+                            receiptArray.some(item => {
+                                if(item.clientbname === receiptInfo.customer){
+                                    flag = true
+                                    tempItem = {
+                                        _id: receiptInfo._id,
+                                        remark: receiptInfo.remark,
+                                        image: receiptInfo.image
+                                    }
+                                    return true
+                                }
+                            })
+                            if(flag){
+                                let obj = {
+                                    clientbname: item.clientbname,
+                                    clientbnameEN: item.clientbnameEN,
+                                    clientbaddress: item.clientbaddress,
+                                    clientbphone: item.clientbphone,
+                                    clientbpostcode: item.clientbpostcode,
+                                    clientbserve: item.clientbserve.clientaname,
+                                    image: item.image,
+                                    isNeedPic: item.isNeedPic,
+                                    note: item.note,
+                                    noteEN: item.noteEN,
+                                    timeLimit: item.timeLimit,
+                                    receipt_id: tempItem._id, //财务收款任务ID
+                                    receipt_finish: false, //财务收款任务是否完成
+                                    receipt_remark: tempItem.remark //财务收款任务留言
+                                };
+                                return obj;
+                            }else{
+                                let obj = {
+                                    clientbname: item.clientbname,
+                                    clientbnameEN: item.clientbnameEN,
+                                    clientbaddress: item.clientbaddress,
+                                    clientbphone: item.clientbphone,
+                                    clientbpostcode: item.clientbpostcode,
+                                    clientbserve: item.clientbserve.clientaname,
+                                    image: item.image,
+                                    isNeedPic: item.isNeedPic,
+                                    note: item.note,
+                                    noteEN: item.noteEN,
+                                    timeLimit: item.timeLimit
+                                };
+                                return obj;
+                            }
+                        }
                     })
                 };
             }
@@ -3780,6 +3958,11 @@ export default {
                         this.error = false;
                     }, 3000);
                 });
+            })
+            .catch(err => {
+                receiptArray = []
+                console.log(err)
+            })
         }
     }
 };

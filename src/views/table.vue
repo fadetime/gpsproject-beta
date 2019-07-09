@@ -665,10 +665,11 @@
         <!-- 车辆、司机选择窗口 end -->
 
         <!-- 车次框数多天报表 start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="moreDayTripsArray.length != 0">
+                <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="tripsExportExcelMethod()">
+                    <div class="icon_excel"></div>
+                </div>
                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="moreDayTripsArray = []">
                     <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
@@ -745,11 +746,8 @@
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
-                
-                
             </div>
         </transition>
         <!-- 车次框数多天报表 end -->
@@ -1670,6 +1668,9 @@
         <!-- checker report start -->
         <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="checkerArray.length != 0">
+                <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="downLoadCheckCarExcelMethod()">
+                    <div class="icon_excel"></div>
+                </div>
                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="checkerArray=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
@@ -2150,7 +2151,10 @@
         <!-- mission report start -->
         <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="missionReportArray.length != 0">
-                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="missionReportArray=[]">
+                <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="downLoadMissionExcelMethod()">
+                    <div class="icon_excel"></div>
+                </div>
+                <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="missionReportArray=[]">
                      <md-icon class="md-size-2x" style="color:red">highlight_off</md-icon>
                 </div>
                 <div class="centerarea-head">
@@ -2166,7 +2170,7 @@
                     </div>
                     <div class="centerarea-title-item"
                          style="min-width: 140px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
-                        <span>司机</span>
+                        <span>司机姓名</span>
                     </div>
                     <div class="centerarea-title-item"
                          style="min-width: 120px;text-align: left;border-left: 4px solid #e0e0e0;height: 30px;line-height: 30px;">
@@ -2234,7 +2238,7 @@
         <!-- mission-driver report start -->
         <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div class="centerarea" v-if="missionDriverReportArray.length != 0">
-                <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="exportExcelMethod()">
+                <div style="position:absolute;top: 10px;left: 10px;cursor: pointer;" @click="downLoadMissionExcelMethod()">
                     <div class="icon_excel"></div>
                 </div>
                 <div style="position:absolute;top: 10px;right: 10px;cursor: pointer;" @click="missionDriverReportArray=[]">
@@ -2856,6 +2860,97 @@ export default {
     },
 
     methods: {
+        tripsExportExcelMethod(){
+            let option = {}
+            option.fileName = 'mission' + new Date().getTime()
+            let rows = []
+            let tempTitle = []
+            tempTitle.push('车次')
+            this.moreDayTripsArray.forEach(tripInfo => {
+                    tempTitle.push(new Date(tripInfo.missionDate).getDate()+'日(车牌号码)')
+                    tempTitle.push(new Date(tripInfo.missionDate).getDate()+'日(带走框数)')
+                    tempTitle.push(new Date(tripInfo.missionDate).getDate()+'日(带回框数)')
+                    tempTitle.push(new Date(tripInfo.missionDate).getDate()+'日(公里平均)')
+            })
+            for (let index = 0; index < this.tripsNum; index++) {
+                let row = []
+                row.push(index + 1)
+                // console.log('trips info ----------')
+                // console.log(this.moreDayTripsArray)
+                // console.log(index)
+                // this.moreDayTripsArray.forEach(item => {
+                //     row.push(item.missionArray[index].carNo)
+                //     row.push(item.missionArray[index].out)
+                //     row.push(item.missionArray[index].in)
+                //     row.push(item.missionArray[index].inKm && item.missionArray[index].outKm?item.missionArray[index].inKm - item.missionArray[index].outKm:null)
+                // });
+                this.averageValue.forEach(average => {
+                    row.push(Math.round(((average.num/average.count)*100))/100)
+                    row.push(Math.round(((average.num/average.indexKm)*100))/100)
+                })
+                rows.push(row)
+            }
+            console.log('%c'+rows,'color: red')
+            tempTitle.push('平均框数')
+            tempTitle.push('平均公里数')
+            option.datas = [{
+            sheetData:[tempTitle].concat(rows),
+            sheetName:'任务统计',
+            columnWidths:[2,6,6,6,6,4,4]
+            }]
+            let toExcel = new jsExportExcel(option)
+            toExcel.saveExcel()
+        },
+
+        downLoadMissionExcelMethod(){
+            let option = {}
+            option.fileName = 'mission' + new Date().getTime()
+            let rows = []
+            this.missionReportArray.forEach((item,index)=>{
+            let row = []
+            row.push(index + 1)
+            row.push(item.missionline)
+            row.push(item.missiondirver)
+            row.push(new Date(item.missiondate).toLocaleDateString())
+            row.push(new Date(item.missiondate).toLocaleTimeString())
+            row.push(item.missionclient&&item.missionclient.length?item.missionclient.length:'error')
+            row.push(item.complete?'已完成':'未完成')
+            rows.push(row)
+            })
+            option.datas = [{
+            sheetData:[['No.','线路名称','司机姓名','创建日期','创建时间','客户数量','任务状态']].concat(rows),
+            sheetName:'任务统计',
+            columnWidths:[2,6,6,6,6,4,4]
+            }]
+            let toExcel = new jsExportExcel(option)
+            toExcel.saveExcel()
+        },
+
+        downLoadCheckCarExcelMethod(){
+            let option = {}
+            option.fileName = 'checkCar' + new Date().getTime()
+            let rows = []
+            this.checkerArray.forEach((item,index)=>{
+            let row = []
+            row.push(index + 1)
+            row.push(item.missionCreator)
+            row.push(new Date(item.createDate).toLocaleDateString())
+            row.push(new Date(item.createDate).toLocaleTimeString())
+            row.push(item.finishDate?new Date(item.finishDate).toLocaleDateString():'未完成')
+            row.push(item.finishDate?new Date(item.finishDate).toLocaleTimeString():'未完成')
+            row.push(item.missionList&&item.missionList.length?item.missionList.length:'error')
+            row.push(this.wrongNumArray[index])
+            rows.push(row)
+            })
+            option.datas = [{
+            sheetData:[['No.','检查员','创建日期','创建时间','结束日期','结束时间','车辆数量','错误数量']].concat(rows),
+            sheetName:'车辆检查',
+            columnWidths:[2,4,6,6,6,6,4,4]
+            }]
+            let toExcel = new jsExportExcel(option)
+            toExcel.saveExcel()
+        },
+
         FixCarExportExcelMethod(){
             let option = {}
             option.fileName = 'repair' + new Date().getTime()
@@ -2880,7 +2975,7 @@ export default {
             })
             option.datas = [{
             sheetData:[['No.','车牌号码','提交日期','包含问题','描述文字','维修员']].concat(rows),
-            sheetName:'洗车统计',
+            sheetName:'维修统计',
             columnWidths:[2,4,6,6,8,5]
             }]
             let toExcel = new jsExportExcel(option)
