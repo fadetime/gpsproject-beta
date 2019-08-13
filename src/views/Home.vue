@@ -954,8 +954,7 @@
         </transition>
         <!-- small tips for phone version end -->
         <!-- detail dialog start -->
-        <md-dialog class="detaildialog"
-                   :md-active.sync="detaildialog">
+        <md-dialog class="detaildialog" :md-active.sync="detaildialog">
             <div style="text-align:center;box-shadow:0px 1px 5px #000;background-color:#d74342;height:40px;line-height:40px;margin-bottom:20px;font-size:18px">
                 <div class="detaildialog-title-www">
                     <span style="color:#fff">{{missionline}}</span>
@@ -992,9 +991,9 @@
                     <div class="oldertitle"
                          style="flex-basis:25%;text-align:left;margin:0 auto;">
                         <span v-if="checkCarInfo.boxNum">出车框数:{{checkCarInfo.boxNum}}</span>
+                        <span v-else-if="checkCarInfo.boxNum === 0">出车框数: 0</span>
                         <span v-else>出车框数:未提交</span>
                     </div>
-
                 </div>
 
                 <div style="display:-webkit-flex;display:flex;-webkit-flex-flow:row wrap;flex-flow:row wrap;width:90%;margin:0 auto;border-bottom:1px solid;padding:5px 0">
@@ -1014,6 +1013,7 @@
                     <div class="oldertitle"
                          style="flex-basis:25%;text-align:left;margin:0 auto">
                         <span v-if="checkCarInfo.boxNumAgain">收车框数:{{checkCarInfo.boxNumAgain}}</span>
+                        <span v-else-if="checkCarInfo.boxNumAgain === 0">收车框数: 0</span>
                         <span v-else>收车框数:未提交</span>
                     </div>
 
@@ -3665,7 +3665,9 @@ export default {
             axios
                 .post(config.newC + '/driverTasks/getWaiting')
                 .then(doc =>{
+                    console.log('qq waiting tasks')
                     console.log(doc)
+                    console.log('qq waiting tasks')
                     if(doc.data.status === 0){
                         console.log('api if')
                         receiptArray = doc.data.payload
@@ -3721,7 +3723,7 @@ export default {
                                     axios
                                         .post(config.newC + '/driverTasks/update/'+ receiptInfo._id,{
                                             driver: this.selectorDriver.dirvername,
-                                            status: '处理中'
+                                            status: '未处理'
                                         })
                                         .then(doc =>{
                                             console.log('change receipt status')

@@ -410,31 +410,20 @@
                                             <span>信息</span>
                                         </div>
                                     </div>
-
                                     <div class="tab4-body">
-                                        <md-card md-with-hover
-                                                 v-for="(item,index) in clientBInfoTable"
-                                                 :key="index"
-                                                 style="background-color: #f4f4f4">
+                                        <md-card md-with-hover v-for="(item,index) in clientBInfoTable" :key="index" style="background-color: #f4f4f4">
                                             <md-card-content>
                                                 <div style="display:flex">
-                                                    <label :for="index"
-                                                           class="step-third-title">
-                                                        <input type="checkbox"
-                                                               :id="index"
-                                                               :value="item"
-                                                               v-model="choiceclientb"
-                                                               style="width:25px;height:25px">
-                                                        <span class="step-third-title-item"
-                                                              style="width:180px">{{item.clientbname}}</span>
-                                                        <span class="step-third-title-item"
-                                                              style="width:50px">{{item.clientbserve.clientaname}}</span>
-                                                        <span class="step-third-title-item"
-                                                              style="width:50px">{{item.clientbarea.areaName}}</span>
+                                                    <label :for="index" class="step-third-title">
+                                                        <input type="checkbox" :id="index" :value="item" v-model="choiceclientb" style="width:25px;height:25px">
+                                                        <span class="step-third-title-item" style="width:172px">{{item.clientbname}}</span>
+                                                        <span v-if="item.clientbserve && item.clientbserve.clientaname === '无合作商'" class="step-third-title-item" style="width:50px"> </span>
+                                                        <span v-else class="step-third-title-item" style="width:50px">{{item.clientbserve.clientaname}}</span>
+                                                        <span v-if="item.clientbarea && item.clientbarea.areaName === '无区域'" class="step-third-title-item" style="width:50px"> </span>
+                                                        <span v-else class="step-third-title-item" style="width:50px">{{item.clientbarea.areaName}}</span>
                                                     </label>
                                                     <div @click="clientInfoMethod(item)">
-                                                        <md-icon class="step-third-title-item"
-                                                                 style="width:50px">info</md-icon>
+                                                        <md-icon class="step-third-title-item" style="width:50px">info</md-icon>
                                                     </div>
                                                 </div>
                                             </md-card-content>
@@ -1752,6 +1741,8 @@ export default {
         },
         //sort client end
         choiceNCNum(carNum) {
+            console.log('carNum')
+            console.log(carNum)
             this.NcNumber = carNum;
         },
         getNewControllerLine() {
@@ -2307,6 +2298,8 @@ export default {
             }
         },
         confirmEdit() {
+            console.log('choiceclientb')
+            console.log(this.choiceclientb)
             if (!this.timesname) {
                 this.errorMessage = "请填写必要信息";
                 this.error = true;
@@ -2338,6 +2331,7 @@ export default {
                         if (res.data.code == 0) {
                             this.getalltimes();
                             this.showDialog = false;
+                            this.changeClientServiceTripsNumberMethod()
                         }
                     })
                     .catch(err => {
@@ -2350,6 +2344,24 @@ export default {
                     });
             }
         },
+        //change client service trips number start
+        changeClientServiceTripsNumberMethod(){
+            if(this.NcNumber === 0) return
+            this.choiceclientb.forEach(item => {
+                axios
+                .post(config.newC + "/customers/changeCar", {
+                    "carNumber": this.NcNumber,
+                    "companyName": item.clientbname
+                })
+                .then(doc => {
+                    console.log(doc)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            })
+        },
+        //change client service trips number end
         removebutton(item) {
             this.removeDialog = true;
             this._id = item._id;

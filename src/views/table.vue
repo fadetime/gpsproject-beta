@@ -2872,25 +2872,19 @@ export default {
                     tempTitle.push(new Date(tripInfo.missionDate).getDate()+'日(带回框数)')
                     tempTitle.push(new Date(tripInfo.missionDate).getDate()+'日(公里平均)')
             })
-            for (let index = 0; index < this.tripsNum; index++) {
+            for (let index = 0; index < this.tripsNum - 1; index++) {
                 let row = []
                 row.push(index + 1)
-                // console.log('trips info ----------')
-                // console.log(this.moreDayTripsArray)
-                // console.log(index)
-                // this.moreDayTripsArray.forEach(item => {
-                //     row.push(item.missionArray[index].carNo)
-                //     row.push(item.missionArray[index].out)
-                //     row.push(item.missionArray[index].in)
-                //     row.push(item.missionArray[index].inKm && item.missionArray[index].outKm?item.missionArray[index].inKm - item.missionArray[index].outKm:null)
-                // });
-                this.averageValue.forEach(average => {
-                    row.push(Math.round(((average.num/average.count)*100))/100)
-                    row.push(Math.round(((average.num/average.indexKm)*100))/100)
-                })
+                this.moreDayTripsArray.forEach(item => {
+                    row.push(item.missionArray[index].carNo)
+                    row.push(item.missionArray[index].out)
+                    row.push(item.missionArray[index].in)
+                    row.push(item.missionArray[index].inKm && item.missionArray[index].outKm?item.missionArray[index].inKm - item.missionArray[index].outKm:null)
+                });
+                row.push(Math.round(((this.averageValue[index].num/this.averageValue[index].count)*100))/100)
+                row.push(Math.round(((this.averageValue[index].km/this.averageValue[index].indexKm)*100))/100)
                 rows.push(row)
             }
-            console.log('%c'+rows,'color: red')
             tempTitle.push('平均框数')
             tempTitle.push('平均公里数')
             option.datas = [{
@@ -3064,7 +3058,7 @@ export default {
                     out:this.tripsDate.out,
                     outKm:this.tripsDate.outKm,
                     in:this.tripsDate.out,
-                    inKm:this.tripsDate.outKm,
+                    inKm:this.tripsDate.inKm,
                     lastEditDate:new Date().toISOString()
                 })
                 .then(doc => {
