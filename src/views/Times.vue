@@ -5,7 +5,7 @@
                 <div style="position:relative">
                     <input type="text" class="findbox" v-model="selectCar" @keyup.enter="search" placeholder="搜索车次信息">
                     <div class="findmore-button" @click="findlinebyclient">
-                        <span>more</span>
+                        <span>客户搜索</span>
                     </div>
                 </div>
             </div>
@@ -946,14 +946,12 @@
                          :md-content="errorMessage"
                          md-confirm-text="关闭" />
         <!-- error end -->
+        
         <!-- tip box start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated slideInUp"
-                    leave-active-class="animated slideOutLeft">
-            <div class="tipDialog"
-                 v-if="showTipDialog">
-                <div>
-                    <span> {{tipMsg}}</span>
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div style="position:fixed;top: 0;bottom: 0;left: 0;right: 0;display: flex;justify-content: center;align-items:center;z-index: 100" v-if="showTipDialog">
+                <div style="background-color: rgba(192, 230, 22, 0.6);width: 200px;height: 40px;line-height: 40px;-webkit-box-shadow: 1px 1px 5px;box-shadow: 1px 1px 5px;border-radius: 5px">
+                    <span>{{tipMsg}}</span>
                 </div>
             </div>
         </transition>
@@ -2298,8 +2296,6 @@ export default {
             }
         },
         confirmEdit() {
-            console.log('choiceclientb')
-            console.log(this.choiceclientb)
             if (!this.timesname) {
                 this.errorMessage = "请填写必要信息";
                 this.error = true;

@@ -2903,8 +2903,15 @@ export default {
                             this.isShowClientDialog = false
                             this.isNeedPic = false;
                             this.getallclientb();
+                        }else if(doc.data.code == 1){
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = '客户名称重复'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false;
+                            }, 3000);
                         }else{
-                            this.tipsShowColor = 'green'
+                            this.tipsShowColor = 'yellow'
                             this.tipsInfo = '修改时出现错误'
                             this.isShowTipsBox = true
                             setTimeout(() => {
