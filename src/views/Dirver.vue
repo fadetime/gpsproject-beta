@@ -2,37 +2,38 @@
     <div id="dirver">
         <div class="topbutton">
             <div class="topbutton-left">
-                <input type="text"
-                       v-model="searchDirver"
-                       @keyup.enter="search"
-                       placeholder="搜索司机信息">
+                <input type="text" v-model="searchDirver" @keyup.enter="search" :placeholder="lang === 'en'?'Search driver':'搜索司机信息'">
             </div>
             <div class="topbutton-right">
-                <md-button class="md-raised md-primary"
-                           @click="adddirverbutton"
-                           style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
+                <md-button class="md-raised md-primary" @click="adddirverbutton" style="font-size:16px;width:80px;height:35px;">
+                    <span v-if="lang === 'en'">+ New</span>
+                    <span v-else>+ 添加</span>
+                </md-button>
             </div>
         </div>
-
         <div class="centertable">
-
             <md-card style="background-color: #eff3f5">
                 <md-card-content>
                     <div class="tabletitle">
                         <div class="tabletitle-item">
-                            <span>姓名</span>
+                            <span v-if="lang === 'en'">Name</span>
+                            <span v-else>姓名</span>
                         </div>
                         <div class="tabletitle-item">
-                            <span>准证号码</span>
+                            <span v-if="lang === 'en'">Number</span>
+                            <span v-else>准证号码</span>
                         </div>
                         <div class="tabletitle-item">
-                            <span>联系方式</span>
+                            <span v-if="lang === 'en'">Phone</span>
+                            <span v-else>联系方式</span>
                         </div>
                         <div class="tabletitle-item">
-                            <span>驾照类型</span>
+                            <span v-if="lang === 'en'">DirverCard</span>
+                            <span v-else>驾照类型</span>
                         </div>
                         <div class="tabletitle-item">
-                            <span>操作</span>
+                            <span v-if="lang === 'en'"></span>
+                            <span v-else>操作</span>
                         </div>
                     </div>
                 </md-card-content>
@@ -108,14 +109,16 @@
             <div v-if="isShowStaffInfo" class="rolebox-front" @click.self.prevent="isShowStaffInfo = false">
                 <div class="rolebox-front-box">
                     <div class="rolebox-front-box-title">
-                        <span>人员管理</span>
+                        <span v-if="lang === 'en'">Driver</span>
+                        <span v-else>人员管理</span>
                     </div>
                     <div class="staffinfo_body">
                         <div class="staffinfo_body_top">
                             <div class="staffinfo_body_top_left">
                                 <div class="staffinfo_body_top_left_item">
                                     <div class="staffinfo_body_top_left_item_left">
-                                        <span>人员姓名</span>
+                                        <span v-if="lang === 'en'">Name(CH)</span>
+                                        <span v-else>人员姓名</span>
                                     </div>
                                     <div class="staffinfo_body_top_left_item_right">
                                         <input type="text" v-model="dirvername">
@@ -123,7 +126,8 @@
                                 </div>
                                 <div class="staffinfo_body_top_left_item">
                                     <div class="staffinfo_body_top_left_item_left">
-                                        <span>英文姓名</span>
+                                        <span v-if="lang === 'en'">Name(EN)</span>
+                                        <span v-else>英文姓名</span>
                                     </div>
                                     <div class="staffinfo_body_top_left_item_right">
                                         <input type="text" v-model="name_en">
@@ -131,7 +135,8 @@
                                 </div>
                                 <div class="staffinfo_body_top_left_item">
                                     <div class="staffinfo_body_top_left_item_left">
-                                        <span>驾照类型</span>
+                                        <span v-if="lang === 'en'">DriverCard</span>
+                                        <span v-else>驾照类型</span>
                                     </div>
                                     <div class="staffinfo_body_top_left_item_right">
                                         <div @click="choiseRoleOrDriverID('driverId')">
@@ -142,7 +147,8 @@
                                 </div>
                                 <div class="staffinfo_body_top_left_item">
                                     <div class="staffinfo_body_top_left_item_left">
-                                        <span>联系方式</span>
+                                        <span v-if="lang === 'en'">Phone</span>
+                                        <span v-else>联系方式</span>
                                     </div>
                                     <div class="staffinfo_body_top_left_item_right">
                                         <input type="text" v-model="dirverphone">
@@ -150,7 +156,8 @@
                                 </div>
                                 <div class="staffinfo_body_top_left_item">
                                     <div class="staffinfo_body_top_left_item_left">
-                                        <span>所属权限</span>
+                                        <span v-if="lang === 'en'">Position</span>
+                                        <span v-else>所属权限</span>
                                     </div>
                                     <div class="staffinfo_body_top_left_item_right">
                                         <div @click="choiseRoleOrDriverID('role')">
@@ -202,7 +209,8 @@
                             <div class="staffinfo_body_bottom_item" >
                                 <div class="staffinfo_body_bottom_item_frame" style="margin-right: 24px;">
                                     <div class="staffinfo_body_bottom_item_frame_title">
-                                        <span>用户名</span>
+                                        <span v-if="lang === 'en'">Username</span>
+                                        <span v-else>用户名</span>
                                     </div>
                                     <div class="staffinfo_body_bottom_item_frame_content">
                                         <input type="text" v-model="dirverusername">
@@ -210,7 +218,8 @@
                                 </div>
                                 <div class="staffinfo_body_bottom_item_frame">
                                     <div class="staffinfo_body_bottom_item_frame_title">
-                                        <span>准证号码</span>
+                                        <span v-if="lang === 'en'">ID</span>
+                                        <span v-else>准证号码</span>
                                     </div>
                                     <div class="staffinfo_body_bottom_item_frame_content">
                                         <input type="text" v-model="dirverid">
@@ -220,7 +229,8 @@
                             <div class="staffinfo_body_bottom_item">
                                 <div class="staffinfo_body_bottom_item_frame" style="margin-right: 24px;">
                                     <div class="staffinfo_body_bottom_item_frame_title">
-                                        <span>登录密码</span>
+                                        <span v-if="lang === 'en'">Password</span>
+                                        <span v-else>登录密码</span>
                                     </div>
                                     <div class="staffinfo_body_bottom_item_frame_content">
                                         <input type="password" v-model="dirverpsw">
@@ -228,7 +238,8 @@
                                 </div>
                                 <div class="staffinfo_body_bottom_item_frame">
                                     <div class="staffinfo_body_bottom_item_frame_title">
-                                        <span>人员备注</span>
+                                        <span v-if="lang === 'en'">Remark</span>
+                                        <span v-else>人员备注</span>
                                     </div>
                                     <div class="staffinfo_body_bottom_item_frame_content">
                                         <input type="text" v-model="dirvernote">
@@ -239,13 +250,16 @@
                     </div>
                     <div class="staffinfo_body_bottom_footer" >
                         <div class="white_button" @click="isShowStaffInfo = false">
-                            <span>取消</span>
+                            <span v-if="lang === 'en'">Cancel</span>
+                            <span v-else>取消</span>
                         </div>
                         <div v-if="savemode" class="white_button" style="margin-left:12px" @click="adddirver">
-                            <span>保存</span>
+                            <span v-if="lang === 'en'">Save</span>
+                            <span v-else>保存</span>
                         </div>
                         <div v-else class="white_button" style="margin-left:12px" @click="confirmedit">
-                            <span>确定</span>
+                            <span v-if="lang === 'en'">Confirm</span>
+                            <span v-else>确定</span>
                         </div>
                      </div>
                 </div>
@@ -533,6 +547,9 @@ export default {
     },
 
     computed: {
+        lang(){
+			return this.$store.state.language
+		},
         pages: function() {
             let pag = [];
             if (this.pageNow < this.showItem) {
@@ -1338,7 +1355,8 @@ export default {
 .staffinfo_body_top_left_item_left{
     font-size: 16px;
     margin-right: 12px;
-    width: 66px;
+    width: 88px;
+    text-align: right;
 }
 
 .staffinfo_body_top_left_item_right input{
@@ -1394,7 +1412,7 @@ export default {
 .staffinfo_body_bottom_item_frame_title{
     font-size: 16px;
     margin-right: 12px;
-    width: 66px;
+    width: 88px;
     text-align: right;
 }
 

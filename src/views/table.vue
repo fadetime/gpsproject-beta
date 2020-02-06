@@ -1,65 +1,79 @@
 <template>
     <div id="tablepage">
         <div class="topbuttonarea">
-            <div :class="leftButtonStyle"
-                 style="border-top-left-radius:10px;border-bottom-left-radius:10px;"
-                 @click="reportModeButtonMethod('night')">
-                <span>夜班统计</span>
+            <div :class="leftButtonStyle" style="border-top-left-radius:10px;border-bottom-left-radius:10px;" @click="reportModeButtonMethod('night')">
+                <span v-if="lang === 'en'">Night shift</span>
+                <span v-else>夜班统计</span>
             </div>
             <div :class="tripsButtonStyle"
                  style="margin-left:10px"
                  @click="reportModeButtonMethod('trips')">
-                <span>车次统计</span>
+                 <span v-if="lang === 'en'">Trips</span>
+                <span v-else>车次统计</span>
             </div>
             <div :class="centerButtonStyle"
                  style="margin-left:10px"
                  @click="reportModeButtonMethod('day')">
-                <span>白班统计</span>
+                 <span v-if="lang === 'en'">Day shift</span>
+                <span v-else>白班统计</span>
             </div>
             <div :class="backButtonStyle"
                  style="margin-left:10px"
                  @click="reportModeButtonMethod('backMission')">
-                <span>退还统计</span>
+                 <span v-if="lang === 'en'">Return</span>
+                <span v-else>退还统计</span>
             </div>
             <div :class="missionButtonStyle"
                  style="margin-left:10px;"
                  @click="reportModeButtonMethod('mission')">
-                <span>任务统计</span>
+                <span v-if="lang === 'en'">Mission</span>
+                <span v-else>任务统计</span>
             </div>
             <div :class="checkCarButtonStyle"
                  style="margin-left:10px;"
                  @click="reportModeButtonMethod('checkCar')">
-                <span>车辆检查</span>
+                <span v-if="lang === 'en'">Car check</span>
+                <span v-else>车辆检查</span>
             </div>
             <div :class="repairCarButtonStyle"
                  style="margin-left:10px;"
                  @click="reportModeButtonMethod('repairCar')">
-                <span>车辆维修</span>
+                <span v-if="lang === 'en'">Repair</span>
+                <span v-else>车辆维修</span>
             </div>
             <div :class="basketButtonStyle"
                  style="margin-left:10px;margin-right:10px"
                  @click="reportModeButtonMethod('basket')">
-                <span>菜框统计</span>
+                <span v-if="lang === 'en'">Basket</span>
+                <span v-else>菜框统计</span>
             </div>
             <div :class="carWashButtonStyle"
                  style="margin-right:10px"
                  @click="reportModeButtonMethod('carWash')">
-                <span>洗车统计</span>
+                <span v-if="lang === 'en'">car wash</span>
+                <span v-else>洗车统计</span>
             </div>
             <div :class="rightButtonStyle"
                  style="border-top-right-radius:10px;border-bottom-right-radius:10px;"
                  @click="reportModeButtonMethod('bill')">
-                <span>账单统计</span>
+                <span v-if="lang === 'en'">Bill</span>
+                <span v-else>账单统计</span>
             </div>
         </div>
         
         <div v-if="showWindow === 'night'" class="toparea">
             <div style="height: 58px;position: relative;z-index:23;padding-left:6px;background:#fff">
-                <vue-datepicker-local v-model="startDate" style="margin-top: 12px;" placeholder="开始时间" />
+                <vue-datepicker-local v-model="startDate" style="margin-top: 12px;" :placeholder="lang === 'en'?'Start time':'开始时间'" />
                 <span> ~ </span>
-                <vue-datepicker-local v-model="endDate" style="margin-top: 12px;" placeholder="结束时间" />
-                <md-button class="md-raised md-primary" @click="findReport" style="font-size:18px;width:80px;height:30px;margin-top:13px">查询</md-button>
-                <md-button class="md-raised md-primary" @click="moreSearchInfo = !moreSearchInfo" style="font-size:18px;width:80px;height:30px;margin-top:13px">更多</md-button>
+                <vue-datepicker-local v-model="endDate" style="margin-top: 12px;" :placeholder="lang === 'en'?'End time':'结束时间'" />
+                <md-button class="md-raised md-primary" @click="findReport" style="font-size:18px;width:80px;height:30px;margin-top:13px">
+                    <span v-if="lang === 'en'">Search</span>
+                    <span v-else>查询</span>
+                </md-button>
+                <md-button class="md-raised md-primary" @click="moreSearchInfo = !moreSearchInfo" style="font-size:18px;width:80px;height:30px;margin-top:13px">
+                    <span v-if="lang === 'en'">More</span>
+                    <span v-else>更多</span>
+                </md-button>
             </div>
             <transition name="custom-classes-transition" enter-active-class="animated slideInDown faster" leave-active-class="animated slideOutUp faster">
                 <div v-if="moreSearchInfo" style="display:flex;display:-webkit-flex;justify-content: center;padding-bottom:10px">
@@ -2760,6 +2774,11 @@ export default {
         VueDatepickerLocal,
         backItem,
         dayShift
+    },
+    computed:{
+        lang(){
+			return this.$store.state.language
+		}
     },
     data() {
         return {

@@ -2,48 +2,46 @@
     <div id="car">
         <div class="topbutton">
             <div class="topbutton-left">
-                <input type="text"
-                       v-model="selectedCar"
-                       @keyup.enter="search"
-                       placeholder="搜索车牌信息">
+                <input type="text" v-model="selectedCar" @keyup.enter="search" :placeholder="lang === 'en'?'Search for car':'搜索车牌信息'">
             </div>
             <div class="topbutton-right">
-                <md-button class="md-raised md-primary"
-                           @click="newCar"
-                           style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
+                <md-button class="md-raised md-primary" @click="newCar" style="font-size:16px;width:80px;height:35px;">
+                    <span v-if="lang === 'en'">+ New</span>
+                    <span v-else>+ 添加</span>
+                </md-button>
             </div>
         </div>
         <div class="centertable">
             <md-card style="background-color: #eff3f5">
                 <md-card-content>
                     <div class="tabletitle">
-                        <div class="tabletitle-item"
-                             style="font-size:18px;line-height: 35px;">
-                            <span>车牌</span>
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+                            <span v-if="lang === 'en'">Number</span>
+                            <span v-else>车牌</span>
                         </div>
-                        <div class="tabletitle-item"
-                             style="font-size:18px;line-height: 35px;">
-                            <span>车型</span>
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+                            <span v-if="lang === 'en'">Type</span>
+                            <span v-else>车型</span>
                         </div>
-                        <div class="tabletitle-item"
-                             style="font-size:18px;line-height: 35px;">
-                            <span>包含尾门</span>
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+                            <span v-if="lang === 'en'">TailGate</span>
+                            <span v-else>包含尾门</span>
                         </div>
-                        <div class="tabletitle-item"
-                             style="font-size:18px;line-height: 35px;">
-                            <span>包含冷藏</span>
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+                            <span v-if="lang === 'en'">CoolStore</span>
+                            <span v-else>包含冷藏</span>
                         </div>
-                        <div class="tabletitle-item"
-                             style="font-size:18px;line-height: 35px;">
-                            <span>备注</span>
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+                            <span v-if="lang === 'en'">Remark</span>
+                            <span v-else>备注</span>
                         </div>
-                        <div class="tabletitle-item"
-                             style="font-size:18px;line-height: 35px;">
-                            <span>检查记录</span>
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+                            <span v-if="lang === 'en'">Check Log</span>
+                            <span v-else>检查记录</span>
                         </div>
-                        <div class="tabletitle-item"
-                             style="font-size:18px;line-height: 35px;">
-                            <span>操作</span>
+                        <div class="tabletitle-item" style="font-size:18px;line-height: 35px;">
+                            <span v-if="lang === 'en'"></span>
+                            <span v-else>操作</span>
                         </div>
                     </div>
                 </md-card-content>
@@ -94,20 +92,19 @@
                      v-if="pageCount!=1">
                     <ul style="width:410px">
                         <li @click="pageButton('A')">
-                            <span>上一页</span>
+                            <span v-if="lang === 'ch'">Previous</span>
+                            <span v-else>上一页</span>
                         </li>
-                        <li v-for="(item,index) in pages"
-                            :key="index"
-                            @click="pageButton(item)"
-                            :class="{'active':pageNow == item}">
+                        <li v-for="(item,index) in pages" :key="index" @click="pageButton(item)" :class="{'active':pageNow == item}">
                             <span>{{item}}</span>
                         </li>
                         <li @click="pageButton('B')">
-                            <span>下一页</span>
+                            <span v-if="lang === 'en'">Next</span>
+                            <span v-else>下一页</span>
                         </li>
                         <li>
-                            <span>共
-                                <i>{{pageCount}}</i>页</span>
+                            <span v-if="lang === 'en'">ALL <i>{{pageCount}}</i></span>
+                            <span v-else>共 <i>{{pageCount}}</i>页</span>
                         </li>
                     </ul>
                 </div>
@@ -132,14 +129,16 @@
             <div class="checkcar-front" v-if="isOpenCarInfoDialog" @click.self.prevent="isOpenCarInfoDialog = false">
                 <div class="car-front-box" >
                     <div class="checkcar-front-box-title">
-                        <span>车辆信息</span>
+                        <span v-if="lang === 'en'">Car</span>
+                        <span v-else>车辆信息</span>
                     </div>
                     <div class="car_front_box_body">
                         <div class="car_front_box_body_top">
                             <div class="car_front_box_body_top_right">
                                 <div class="car_front_box_body_top_right_item">
                                     <div class="car_front_box_body_top_right_item_left">
-                                        <span>车牌号码</span>
+                                        <span v-if="lang === 'en'">Number</span>
+                                        <span v-else>车牌号码</span>
                                     </div>
                                     <div class="car_front_box_body_top_right_item_right">
                                         <input type="text" v-model="carid">
@@ -147,18 +146,23 @@
                                 </div>
                                 <div class="car_front_box_body_top_right_item">
                                     <div class="car_front_box_body_top_right_item_left">
-                                        <span>车辆型号</span>
+                                        <span v-if="lang === 'en'">Type</span>
+                                        <span v-else>车辆型号</span>
                                     </div>
                                     <div class="car_front_box_body_top_right_item_right">
                                         <div class="car_front_box_body_top_right_item_right_div" @click="isOpenCarTypeDialog = true">
-                                            <span v-if="!cartype" style="border-bottom: 1px solid #2c3e50;">请选择</span>
+                                            <span v-if="!cartype" style="border-bottom: 1px solid #2c3e50;">
+                                                <span v-if="lang === 'en'">Choose</span>
+                                                <span v-else>请选择</span>
+                                            </span>
                                             <span v-else>{{cartype}}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="car_front_box_body_top_right_item" style="margin-top:12px;margin-bottom:0">
                                     <div class="car_front_box_body_top_right_item_left">
-                                        <span>备注信息</span>
+                                        <span v-if="lang === 'en'">Remark</span>
+                                        <span v-else>备注信息</span>
                                     </div>
                                     <div class="car_front_box_body_top_right_item_right">
                                         <textarea v-model="carnote"></textarea>
@@ -181,12 +185,12 @@
                                             alt="newimg">
                                 </div>
                             </div>
-                            
                         </div>
                         <div class="car_front_box_body_center">
                             <div class="car_front_box_body_center_item">
                                 <div class="car_front_box_body_center_name">
-                                    <span>尾门</span>
+                                    <span v-if="lang === 'en'">TailGate</span>
+                                    <span v-else>尾门</span>
                                 </div>
                                 <div class="car_front_box_body_center_radio">
                                     <div class="dialog-body-radio-item">
@@ -215,7 +219,8 @@
                             </div>
                             <div class="car_front_box_body_center_item">
                                 <div class="car_front_box_body_center_name">
-                                    <span>冷藏</span>
+                                    <span v-if="lang === 'en'">CoolStore</span>
+                                    <span v-else>冷藏</span>
                                 </div>
                                 <div class="car_front_box_body_center_radio">
                                     <div class="dialog-body-radio-item">
@@ -246,7 +251,8 @@
                         <div class="car_front_box_body_bottom">
                             <div class="kelometerbox">
                                 <div class="car_front_box_body_bottom_item_left">
-                                    <span>车辆行驶公里数</span>
+                                    <span v-if="lang === 'en'">kilometers</span>
+                                    <span v-else>车辆行驶公里数</span>
                                 </div>
                                 <div class="kelometerbox_right" @click="changeKmMethod('km')">
                                     <span>{{kelometer}}</span><span>Km</span>
@@ -254,7 +260,8 @@
                             </div>
                             <div class="kelometerbox">
                                 <div class="car_front_box_body_bottom_item_left">
-                                    <span>上一次更换机油</span>
+                                    <span v-if="lang === 'en'">Engine Oil</span>
+                                    <span v-else>上一次更换机油</span>
                                 </div>
                                 <div class="kelometerbox_right" @click="changeKmMethod('oil')">
                                     <span v-if="lastOilKelometer">{{lastOilKelometer}}Km</span>
@@ -265,13 +272,16 @@
                     </div>
                     <div class="car_front_box_bottom">
                         <div class="car_front_box_bottom_button" @click="isOpenCarInfoDialog = false">
-                            <span>取消</span>
+                            <span v-if="lang === 'en'">Cancel</span>
+                            <span v-else>取消</span>
                         </div>
                         <div v-if="addmode" class="car_front_box_bottom_button" @click="addcar" style="margin-left:8px">
-                            <span>保存</span>
+                            <span v-if="lang === 'en'">Save</span>
+                            <span v-else>保存</span>
                         </div>
                         <div v-else class="car_front_box_bottom_button" @click="confirmedit" style="margin-left:8px">
-                            <span>修改</span>
+                            <span v-if="lang === 'en'">Edit</span>
+                            <span v-else>修改</span>
                         </div>
                     </div>
                 </div>
@@ -718,6 +728,9 @@ export default {
             }
             return pag;
         },
+        lang(){
+			return this.$store.state.language
+		}
     },
     methods: {
         changeCarKmMethod(){
@@ -1542,6 +1555,8 @@ export default {
 .car_front_box_body_top_right_item_left{
     font-size: 16px;
     margin-right: 12px;
+    width: 68px;
+    text-align: right;
 }
 
 .car_front_box_body_top_right_item_right input{
@@ -1592,6 +1607,8 @@ export default {
     height: 30px;
     line-height: 30px;
     margin-right: 12px;
+    width: 68px;
+    text-align: right;
 }
 
 .car_front_box_body_center_radio{
@@ -1602,7 +1619,7 @@ export default {
     line-height: 30px;
     border-radius: 5px;
     padding: 0 12px;
-    width: 140px;
+    width: 160px;
 }
 
 .car_front_box_body_center_radio_text{

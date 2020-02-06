@@ -2,23 +2,29 @@
     <div id="client">
         <div class="topbutton">
             <div class="topbutton-left">
-                <input type="text" v-model="searchclientb" @keyup.enter="searchb" placeholder="搜索客户名称" v-if="!clientpage">
-                <input type="text" v-model="searchclienta" @keyup.enter="searcha" placeholder="搜索合作商信息" v-else>
+                <input type="text" v-model="searchclientb" @keyup.enter="searchb" :placeholder="lang === 'en'?'Search for customer':'搜索客户名称'" v-if="!clientpage">
+                <input type="text" v-model="searchclienta" @keyup.enter="searcha" :placeholder="lang === 'en'?'Search for supplier':'搜索合作商信息'" v-else>
             </div>
-
             <div class="topbutton-center">
-                <md-button :class="classA"
-                           @click="changepageA"
-                           style="font-size:16px;width:80px;height:35px;">合作商页</md-button>
-                <md-button :class="classB"
-                           @click="changepageB"
-                           style="font-size:16px;width:80px;height:35px;">客户页面</md-button>
-
+                <md-button :class="classA" @click="changepageA" style="font-size:16px;width:80px;height:35px;">
+                    <span style="font-size: 14px" v-if="lang === 'en'">Supplier</span>
+                    <span v-else>合作商页</span>
+                </md-button>
+                <md-button :class="classB" @click="changepageB" style="font-size:16px;width:80px;height:35px;">
+                    <span style="font-size: 14px" v-if="lang === 'en'">Customer</span>
+                    <span v-else>客户页面</span>
+                </md-button>
             </div>
             <div class="topbutton-right">
                 <div class="addbutton">
-                    <md-button v-if="!clientpage" class="md-raised md-primary" @click="isShowClientDetailMethod()" style="font-size:16px;width:80px;height:35px;">客户明细</md-button>
-                    <md-button class="md-raised md-primary" @click="showDialog" style="font-size:16px;width:80px;height:35px;">+ 添加</md-button>
+                    <md-button v-if="!clientpage" class="md-raised md-primary" @click="isShowClientDetailMethod()" style="font-size:16px;width:80px;height:35px;">
+                        <span v-if="lang === 'en'">Filter</span>
+                        <span v-else>客户明细</span>
+                    </md-button>
+                    <md-button class="md-raised md-primary" @click="showDialog" style="font-size:16px;width:80px;height:35px;">
+                        <span v-if="lang === 'en'">+ New</span>
+                        <span v-else>+ 添加</span>
+                    </md-button>
                 </div>
             </div>
         </div>
@@ -29,29 +35,29 @@
                 <md-card style="background-color: #eff3f5;">
                     <md-card-content>
                         <div class="tabletitle">
-                            <div class="tabletitle-item"
-                                 style="flex-basis:150px">
-                                <span>名称</span>
+                            <div class="tabletitle-item" style="flex-basis:150px">
+                                <span v-if="lang === 'en'">Name</span>
+                                <span v-else>名称</span>
                             </div>
-                            <div class="tabletitle-item"
-                                 style="flex-basis:450px">
-                                <span>送货地址</span>
+                            <div class="tabletitle-item" style="flex-basis:450px">
+                                <span v-if="lang === 'en'">Address</span>
+                                <span v-else>送货地址</span>
                             </div>
-                            <div class="tabletitle-item"
-                                 style="flex-basis:100px">
-                                <span>联系电话</span>
+                            <div class="tabletitle-item" style="flex-basis:100px">
+                                <span v-if="lang === 'en'">Phone</span>
+                                <span v-else>联系电话</span>
                             </div>
-                            <div class="tabletitle-item"
-                                 style="flex-basis:100px">
-                                <span>邮编</span>
+                            <div class="tabletitle-item" style="flex-basis:100px">
+                                <span v-if="lang === 'en'">Postcode</span>
+                                <span v-else>邮编</span>
                             </div>
-                            <div class="tabletitle-item"
-                                 style="flex-basis:100px">
-                                <span>状态</span>
+                            <div class="tabletitle-item" style="flex-basis:100px">
+                                <span v-if="lang === 'en'">State</span>
+                                <span v-else>状态</span>
                             </div>
-                            <div class="tabletitle-item"
-                                 style="flex-basis:100px">
-                                <span>操作</span>
+                            <div class="tabletitle-item" style="flex-basis:100px">
+                                <span v-if="lang === 'en'"></span>
+                                <span v-else>操作</span>
                             </div>
                         </div>
                     </md-card-content>
@@ -109,33 +115,33 @@
                 <md-card style="background-color: #eff3f5">
                     <md-card-content>
                         <div class="tabletitle">
-                            <div class="tabletitle-item"
-                                 style="flex-basis:100px">
-                                <span>名称</span>
+                            <div class="tabletitle-item" style="flex-basis:100px">
+                                <span v-if="lang === 'en'">Name</span>
+                                <span v-else>名称</span>
                             </div>
-                            <div class="tabletitle-item"
-                                 style="flex-basis:300px">
-                                <span>送货地址</span>
+                            <div class="tabletitle-item" style="flex-basis:300px">
+                                <span v-if="lang === 'en'">Address</span>
+                                <span v-else>地址</span>
                             </div>
-                            <div class="tabletitle-item"
-                                 style="flex-basis:100px">
-                                <span>联系电话</span>
+                            <div class="tabletitle-item" style="flex-basis:100px">
+                                <span v-if="lang === 'en'">Phone</span>
+                                <span v-else>联系电话</span>
                             </div>
-                            <div class="tabletitle-item"
-                                 style="flex-basis:200px">
-                                <span>邮箱</span>
+                            <div class="tabletitle-item" style="flex-basis:200px">
+                                <span v-if="lang === 'en'">E-Mail</span>
+                                <span v-else>邮箱</span>
                             </div>
-                            <div class="tabletitle-item"
-                                 style="flex-basis:150px">
-                                <span>合同起始时间</span>
+                            <div class="tabletitle-item" style="flex-basis:150px">
+                                <span v-if="lang === 'en'">Contract Start</span>
+                                <span v-else>合同起始时间</span>
                             </div>
-                            <div class="tabletitle-item"
-                                 style="flex-basis:100px">
-                                <span>合同期限</span>
+                            <div class="tabletitle-item" style="flex-basis:100px">
+                                <span v-if="lang === 'en'">Contract Period</span>
+                                <span v-else>合同期限</span>
                             </div>
-                            <div class="tabletitle-item"
-                                 style="flex-basis:100px">
-                                <span>操作</span>
+                            <div class="tabletitle-item" style="flex-basis:100px">
+                                <span v-if="lang === 'en'"></span>
+                                <span v-else>操作</span>
                             </div>
                         </div>
                     </md-card-content>
@@ -196,7 +202,8 @@
                 <div class="page-bar">
                     <ul style="width:455px">
                         <li @click="pageButtonA('A')">
-                            <span>上一页</span>
+                            <span v-if="lang === 'en'">Previous</span>
+                            <span v-else>上一页</span>
                         </li>
                         <li v-for="(item,index) in pagesA"
                             :key="index"
@@ -205,12 +212,12 @@
                             <span v-else>{{item}}</span>
                         </li>
                         <li @click="pageButtonA('B')">
-                            <span>下一页</span>
+                            <span v-if="lang === 'en'">Next</span>
+                            <span v-else>下一页</span>
                         </li>
                         <li>
-                            <span>
-                                共<i>{{pageCountA}}</i>页
-                            </span>
+                            <span v-if="lang === 'en'">共<i>{{pageCountA}}</i>页</span>
+                            <span v-else>All<i>{{pageCountA}}</i></span>
                         </li>
                     </ul>
                 </div>
@@ -222,7 +229,8 @@
                 <div class="page-bar">
                     <ul style="width:455px">
                         <li @click="pageButtonB('A')">
-                            <span>上一页</span>
+                            <span v-if="lang === 'en'">Previous</span>
+                            <span v-else>上一页</span>
                         </li>
                         <li v-for="(item,index) in pages"
                             :key="index"
@@ -231,10 +239,12 @@
                             <span v-else>{{item}}</span>
                         </li>
                         <li @click="pageButtonB('B')">
-                            <span>下一页</span>
+                            <span v-if="lang === 'en'">Next</span>
+                            <span v-else>下一页</span>
                         </li>
                         <li>
-                            <span>共<i>{{pageCount}}</i>页</span>
+                            <span v-if="lang === 'en'">共<i>{{pageCount}}</i>页</span>
+                            <span v-else>ALL<i>{{pageCount}}</i></span>
                         </li>
                     </ul>
                 </div>
@@ -254,14 +264,16 @@
             <div v-if="isShowClientDialog" class="client_dialog_front" @click.self.prevent="isShowClientDialog = false">
                 <div class="client_dialog_box">
                     <div class="client_dialog_box_title">
-                        <span>客户管理</span>
+                        <span v-if="lang === 'en'">Customer</span>
+                        <span v-else>客户管理</span>
                     </div>
                     <div class="client_dialog_box_body">
                         <div class="client_dialog_box_body_top">
                             <div class="client_dialog_box_body_left">
                                 <div class="client_dialog_box_body_left_item">
                                     <div class="client_dialog_box_body_left_item_text">
-                                        <span>客户名称</span>
+                                        <span v-if="lang === 'en'">Name(CH)</span>
+                                        <span v-else>客户名称</span>
                                     </div>
                                     <div class="client_dialog_box_body_left_item_content">
                                         <input type="text" v-model="clientbname" style="text-align:center">
@@ -269,7 +281,8 @@
                                 </div>
                                 <div class="client_dialog_box_body_left_item">
                                     <div class="client_dialog_box_body_left_item_text">
-                                        <span>英文名称</span>
+                                        <span v-if="lang === 'en'">Name(EN)</span>
+                                        <span v-else>英文名称</span>
                                     </div>
                                     <div class="client_dialog_box_body_left_item_content">
                                         <input type="text" v-model="clientbnameEN" style="text-align:center">
@@ -277,27 +290,31 @@
                                 </div>
                                 <div class="client_dialog_box_body_left_item">
                                     <div class="client_dialog_box_body_left_item_text">
-                                        <span>所属地区</span>
+                                        <span v-if="lang === 'en'">Part</span>
+                                        <span v-else>所属地区</span>
                                     </div>
                                     <div class="client_dialog_box_body_left_item_content"  style="display:flex;display:-webkit-flex">
                                         <div class="client_dialog_choosebox">
                                             <div style="width:100px;display:flex;display:-webkit-flex;justify-content: center;" @click="openChoiseAreaBoxMethod()">
                                                 <div v-if="!choseArea" class="client_dialog_choosebox_line" style="width: 60px;">
-                                                    <span>请选择</span>
+                                                    <span v-if="lang === 'en'">Choose</span>
+                                                    <span v-else>请选择</span>
                                                 </div>
                                                 <div v-else>
                                                     <span>{{choseArea.areaName}}</span>
                                                 </div>
                                             </div>
                                             <div class="client_dialog_white_button" style="width:60px;height:28px;line-height:28px;" @click="openAreaWindow">
-                                                <span>区域</span>
+                                                <span v-if="lang === 'en'">List</span>
+                                                <span v-else>区域</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="client_dialog_box_body_left_item">
                                     <div class="client_dialog_box_body_left_item_text">
-                                        <span>备注信息</span>
+                                        <span v-if="lang === 'en'">Remark</span>
+                                        <span v-else>备注信息</span>
                                     </div>
                                     <div class="client_dialog_box_body_left_item_content" style="height: 100px">
                                         <textarea style="width: 160px;border-radius: 5px;height:100px;" v-model="clientNote"></textarea>
@@ -335,7 +352,8 @@
                             <div class="client_dialog_box_body_bottom_left">
                                 <div class="client_dialog_box_body_left_item" style="margin-top:0">
                                     <div class="client_dialog_box_body_left_item_text">
-                                        <span>客户地址</span>
+                                        <span v-if="lang === 'en'">Address</span>
+                                        <span v-else>客户地址</span>
                                     </div>
                                     <div class="client_dialog_box_body_left_item_content">
                                         <input type="text" v-model="clientbaddress" style="text-align:center">
@@ -343,7 +361,8 @@
                                 </div>
                                 <div class="client_dialog_box_body_left_item">
                                     <div class="client_dialog_box_body_left_item_text">
-                                        <span>客户电话</span>
+                                        <span v-if="lang === 'en'">Phone</span>
+                                        <span v-else>客户电话</span>
                                     </div>
                                     <div class="client_dialog_box_body_left_item_content">
                                         <input type="number" v-model="clientbphone" style="text-align:center">
@@ -351,7 +370,8 @@
                                 </div>
                                 <div class="client_dialog_box_body_left_item">
                                     <div class="client_dialog_box_body_left_item_text">
-                                        <span>服务商</span>
+                                        <span v-if="lang === 'en'">Supplier</span>
+                                        <span v-else>服务商</span>
                                     </div>
                                     <div class="client_dialog_box_body_left_item_content">
                                         <div class="client_dialog_choosebox" @click="isShowChoisePartnerBox = true">
@@ -359,14 +379,16 @@
                                                 <span>{{choseaname.clientaname}}</span>
                                             </div>
                                             <div v-else class="client_dialog_choosebox_line">
-                                                <span>请选择</span>
+                                                <span v-if="lang === 'en'">Choose</span>
+                                                <span v-else>请选择</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="client_dialog_box_body_left_item">
                                     <div class="client_dialog_box_body_left_item_text">
-                                        <span>必要拍照</span>
+                                        <span v-if="lang === 'en'">PIC</span>
+                                        <span v-else>必要拍照</span>
                                     </div>
                                     <div class="client_dialog_box_body_left_item_content">
                                         <div class="client_dialog_choosebox" style="justify-content:space-around">
@@ -376,7 +398,8 @@
                                                 </div>
                                                 <label for="radio_need_pic_true">
                                                     <div>
-                                                        <span>是</span>
+                                                        <span v-if="lang === 'en'">Yes</span>
+                                                        <span v-else>是</span>
                                                     </div>
                                                 </label>
                                             </div>
@@ -386,7 +409,8 @@
                                                 </div>
                                                 <label for="radio_need_pic_false">
                                                     <div>
-                                                        <span>否</span>
+                                                        <span v-if="lang === 'en'">No</span>
+                                                        <span v-else>>否</span>
                                                     </div>
                                                 </label>
                                             </div>
@@ -397,12 +421,14 @@
                             <div class="client_dialog_box_body_bottom_right">
                                 <div class="client_dialog_box_body_left_item" style="margin-top:0">
                                     <div class="client_dialog_box_body_left_item_text">
-                                        <span>要求时间</span>
+                                        <span v-if="lang === 'en'">Time</span>
+                                        <span v-else>>要求时间</span>
                                     </div>
                                     <div class="client_dialog_box_body_left_item_content"  @click="showTimePick = true">
                                         <div class="client_dialog_choosebox">
                                             <div v-if="!timeLimit" class="client_dialog_choosebox_line">
-                                                <span>请选择</span>
+                                                <span v-if="lang === 'en'">Choose</span>
+                                                <span v-else>>请选择</span>
                                             </div>
                                             <div v-else>
                                                 <span>{{timeLimit}}</span>
@@ -412,7 +438,8 @@
                                 </div>
                                 <div class="client_dialog_box_body_left_item">
                                     <div class="client_dialog_box_body_left_item_text">
-                                        <span>客户邮编</span>
+                                        <span v-if="lang === 'en'">Postcode</span>
+                                        <span v-else>>客户邮编</span>
                                     </div>
                                     <div class="client_dialog_box_body_left_item_content">
                                         <input type="text" v-model="clientbpostcode" style="text-align:center">
@@ -420,7 +447,8 @@
                                 </div>
                                 <div class="client_dialog_box_body_left_item">
                                     <div class="client_dialog_box_body_left_item_text">
-                                        <span>客户状态</span>
+                                        <span v-if="lang === 'en'">State</span>
+                                        <span v-else>>客户状态</span>
                                     </div>
                                     <div class="client_dialog_box_body_left_item_content">
                                         <div class="client_dialog_choosebox">
@@ -449,31 +477,38 @@
                                 </div>
                                 <div class="client_dialog_box_body_bottom_basketframe">
                                     <div class="client_dialog_box_body_bottom_basketframe_text">
-                                        <span>拖欠框数</span>
+                                        <span v-if="lang === 'en'">Basket</span>
+                                        <span v-else>拖欠框数</span>
                                     </div>
                                     <div class="client_dialog_box_body_bottom_basketframe_content">
                                         <div style="width:100px">
                                             <span v-if="basketNumber">{{basketNumber}}</span>
-                                            <span v-else>未输入</span>
+                                            <span v-else>
+                                                <span v-if="lang === 'en'">Please input</span>
+                                                <span v-else>未输入</span>
+                                            </span>
                                         </div>
                                         <div class="client_dialog_white_button" style="width:60px;height:26px;font-size:14px;line-height:26px;border: 1px solid #eee;border-radius: 5px;" @click="openEditBasketNumMethod">
-                                            <span>修改</span>
+                                            <span v-if="lang === 'en'">Edit</span>
+                                            <span v-else>修改</span>
                                         </div>
                                     </div>
-                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="client_dialog_box_bottom">
                         <div class="client_dialog_white_button" @click="isShowClientDialog = false">
-                            <span>取消</span>
+                            <span v-if="lang === 'en'">Cancel</span>
+                            <span v-else>取消</span>
                         </div>
                         <div v-if="savemodeb" class="client_dialog_white_button" style="margin-left:12px" @click="addclientb">
-                            <span>保存</span>
+                            <span v-if="lang === 'en'">Save</span>
+                            <span v-else>保存</span>
                         </div>
                         <div v-else class="client_dialog_white_button" style="margin-left:12px" @click="confirmEditClientB">
-                            <span>修改</span>
+                            <span v-if="lang === 'en'">Edit</span>
+                            <span v-else>修改</span>
                         </div>
                     </div>
                 </div>
@@ -493,7 +528,8 @@
             <div v-if="isShowChoiseAreaBox" class="client_dialog_front" style="z-index:26" @click.self.prevent="isShowChoiseAreaBox = false">
                 <div class="client_dialog_box">
                     <div class="client_dialog_box_title">
-                        <span>区域选择</span>
+                        <span v-if="lang === 'en'">Area</span>
+                        <span v-else>区域选择</span>
                     </div>
                     <div class="client_dialog_body">
                         <div class="client_dialog_white_button" style="margin-bottom:8px;margin-left:4px;margin-right:4px;" v-for="(item,index) in allAreaArray" :key="index" @click="choiseAreaMethod(item)">
@@ -502,7 +538,8 @@
                     </div>
                     <div class="client_dialog_box_bottom">
                         <div class="client_dialog_white_button" @click="isShowChoiseAreaBox = false">
-                            <span>取消</span>
+                            <span v-if="lang === 'en'">Cancel</span>
+                            <span v-else>取消</span>
                         </div>
                     </div>
                 </div>
@@ -1685,6 +1722,9 @@ export default {
         this.getAllarea();
     },
     computed: {
+        lang(){
+			return this.$store.state.language
+		},
         pagesA: function() {
             let pag = [];
             if (this.pageNow < this.showItem) {

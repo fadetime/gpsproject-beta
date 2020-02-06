@@ -1,33 +1,38 @@
 <template>
-    <div id="announcement"
-         ref="announcement"> 
+    <div id="announcement" ref="announcement"> 
         <div class="announcement_top">
             <div class="announcement_top_button" @click="showFirstPageDialog = true">
                 <div v-if="value" class="little_light"></div>
                 <div v-else class="little_light" style="border-left: 3px solid #ff5252;"></div>
-                <span>首页公告</span>
+                <span v-if="lang === 'en'" style="font-size: 14px;">First Page</span>
+                <span v-else>首页公告</span>
             </div>
             <div class="announcement_top_button"
                  style="margin-left:10px;margin-right:20px;"
                  @click="NoticeMethod('open')">
-                <span>通知公告</span>
+                <span v-if="lang === 'en'" style="font-size: 14px;">Notification</span>
+                <span v-else>通知公告</span>
             </div>
         </div>
         <div class="announcement_boxframe">
             <div class="announcement_secondbox">
                 <div class="announcement_title">
-                    <span>首页公告记录</span>
+                    <span v-if="lang === 'en'">First Page Notification log</span>
+                    <span v-else>首页公告记录</span>
                 </div>
                 <div class="announcement_center">
                     <div class="announcement_center_title">
                         <div class="announcement_center_title_item_index">
-                            <span>序号</span>
+                            <span v-if="lang === 'en'">No.</span>
+                            <span v-else>序号</span>
                         </div>
                         <div class="announcement_center_title_item">
-                            <span>公告时间</span>
+                            <span v-if="lang === 'en'">Date</span>
+                            <span v-else>公告时间</span>
                         </div>
                         <div class="announcement_center_title_item" style="width:500px;padding-left:24px;text-align:left;">
-                            <span>公告内容</span>
+                            <span v-if="lang === 'en'">Content</span>
+                            <span v-else>公告内容</span>
                         </div>
                         <div class="announcement_center_title_item_allstaff">
                             <span>公告图片</span>
@@ -53,30 +58,38 @@
             </div>
             <div class="announcement_secondbox">
                 <div class="announcement_title">
-                    <span>通知公告记录</span>
+                    <span v-if="lang === 'en'">Notification log</span>
+                    <span v-else>通知公告记录</span>
                 </div>
                 <div class="announcement_center">
                     <div class="announcement_center_title">
                         <div class="announcement_center_title_item_index">
-                            <span>序号</span>
+                            <span v-if="lang === 'en'">No.</span>
+                            <span v-else>序号</span>
                         </div>
                         <div class="announcement_center_title_item">
-                            <span>公告时间</span>
+                            <span v-if="lang === 'en'">Date</span>
+                            <span v-else>公告时间</span>
                         </div>
                         <div class="announcement_center_title_item">
-                            <span>公告标题</span>
+                            <span v-if="lang === 'en'">Title</span>
+                            <span v-else>公告标题</span>
                         </div>
                         <div class="announcement_center_title_item_content">
-                            <span>公告内容</span>
+                            <span v-if="lang === 'en'">Contant</span>
+                            <span v-else>公告内容</span>
                         </div>
                         <div class="announcement_center_title_item_allstaff">
-                            <span>包含员工</span>
+                            <span v-if="lang === 'en'">Staff</span>
+                            <span v-else>包含员工</span>
                         </div>
                         <div class="announcement_center_title_item_leftstaff">
-                            <span>未读员工</span>
+                            <span v-if="lang === 'en'">UnRead</span>
+                            <span v-else>未读员工</span>
                         </div>
                         <div class="announcement_center_title_item_state">
-                            <span>公告状态</span>
+                            <span v-if="lang === 'en'">State</span>
+                            <span v-else>公告状态</span>
                         </div>
                     </div>
                 </div>
@@ -122,12 +135,14 @@
                  @click.self.prevent="showNoticeDialog = false">
                  <div class="announcement_notice_front_box">
                      <div class="announcement_notice_front_box_title">
-                         <span>添加通知公告</span>
+                         <span v-if="lang === 'en'">New</span>
+                         <span v-else>添加通知公告</span>
                      </div>
                      <div class="announcement_notice_front_box_body">
                          <div class="announcement_notice_front_box_body_item">
                              <div class="announcement_notice_front_box_body_item_left">
-                                <span>公告标题</span>
+                                <span v-if="lang === 'en'">Title</span>
+                                <span v-else>公告标题</span>
                             </div>
                             <div class="announcement_notice_front_box_body_item_right">
                                 <input type="text" v-model="noticeTitle">
@@ -135,7 +150,8 @@
                          </div>
                          <div class="announcement_notice_front_box_body_item">
                              <div class="announcement_notice_front_box_body_item_left">
-                                 <span>公告内容</span>
+                                <span v-if="lang === 'en'">Contant</span>
+                                <span v-else>公告内容</span>
                              </div>
                              <div class="announcement_notice_front_box_body_item_right">
                                  <textarea name="announcement_notice" v-model="noticeContent"></textarea>
@@ -143,7 +159,8 @@
                          </div>
                          <div class="announcement_notice_front_box_body_item">
                              <div class="announcement_notice_front_box_body_item_left">
-                                 <span>包含人员</span>
+                                <span v-if="lang === 'en'">Staff</span>
+                                <span v-else>包含人员</span>
                              </div>
                              
                              <div class="announcement_notice_front_box_body_item_right" @click="editNoticeStaff">
@@ -164,7 +181,8 @@
                          </div>
                          <div class="announcement_notice_front_box_body_item">
                              <div class="announcement_notice_front_box_body_item_left">
-                                 <span>公告状态</span>
+                                <span v-if="lang === 'en'">State</span>
+                                <span v-else>公告状态</span>
                              </div>
                              <div class="announcement_notice_front_box_body_item_right">
                                  <div class="announcement_notice_front_box_body_item_right_note">
@@ -180,10 +198,12 @@
                      </div>
                      <div class="announcement_notice_front_box_bottom">
                          <div class="announcement_notice_front_box_bottom_button" @click="noticeButton('cancel')">
-                             <span>取消</span>
+                            <span v-if="lang === 'en'">Cancel</span>
+                            <span v-else>取消</span>
                          </div>
                          <div class="announcement_notice_front_box_bottom_button" @click="noticeButton('confirm')">
-                             <span>确定</span>
+                            <span v-if="lang === 'en'">Confirm</span>
+                            <span v-else>确定</span>
                          </div>
                      </div>
                  </div>
@@ -205,7 +225,8 @@
                  @click.self.prevent="showFirstPageDialog = false">
                 <div class="announcement_notice_front_box">
                     <div class="announcement_notice_front_box_title">
-                        <span>首页公告</span>
+                        <span v-if="lang === 'en'">First page notification</span>
+                        <span v-else>首页公告</span>
                         <div class="notice_first_swich">
                             <div class="onoffswitch">
                                 <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked v-model="value">
@@ -218,10 +239,12 @@
                     </div>
                     <div class="first_page_topswich">
                         <div class="first_page_topswich_left" @click="changeToEn()">
-                            <span>英文公告</span>
+                            <span v-if="lang === 'en'">English</span>
+                            <span v-else>英文公告</span>
                         </div>
                         <div class="first_page_topswich_right" @click="changeToCn()">
-                            <span>中文公告</span>
+                            <span v-if="lang === 'en'">Chinese</span>
+                            <span v-else>中文公告</span>
                         </div>
                     </div>
                     <div v-if="isShowChNotice">
@@ -230,7 +253,8 @@
                                 <div class="first_page_body_left">
                                     <div class="first_page_body_left_title">
                                         <div>
-                                            <span>公告图片(CH)</span>
+                                            <span v-if="lang === 'en'">Pic(CH)</span>
+                                            <span v-else>公告图片(CH)</span>
                                         </div>
                                     </div>
                                     <div class="first_page_body_left_frame" @mouseenter="isShowClearButton = true" @mouseleave="isShowClearButton = false">
@@ -251,7 +275,8 @@
                                 <div class="first_page_body_right">
                                     <div class="first_page_body_right_title">
                                         <div>
-                                            <span>公告文字(CH)</span>
+                                            <span v-if="lang === 'en'">Text(CH)</span>
+                                            <span v-else>公告文字(CH)</span>
                                         </div>
                                     </div>
                                     <div>
@@ -262,10 +287,12 @@
                         </div>
                         <div class="announcement_notice_front_box_bottom">
                             <div class="announcement_notice_front_box_bottom_button" @click="firstPageButtonMethod('cancel')">
-                                <span>取消</span>
+                                <span v-if="lang === 'en'">Cancel</span>
+                                <span v-else>取消</span>
                             </div>
                             <div class="announcement_notice_front_box_bottom_button" @click="firstPageButtonMethod('submit')" style="margin-left:8px;">
-                                <span>确定</span>
+                                <span v-if="lang === 'en'">Confirm</span>
+                                <span v-else>确定</span>
                             </div>
                         </div>
                     </div>
@@ -275,7 +302,8 @@
                                 <div class="first_page_body_left">
                                     <div class="first_page_body_left_title">
                                         <div>
-                                            <span>公告图片(EN)</span>
+                                            <span v-if="lang === 'en'">Pic(EN)</span>
+                                            <span v-else>公告图片(EN)</span>
                                         </div>
                                     </div>
                                     <div class="first_page_body_left_frame" @mouseenter="isShowClearButtonEN = true" @mouseleave="isShowClearButtonEN = false">
@@ -297,7 +325,8 @@
                                 <div class="first_page_body_right">
                                     <div class="first_page_body_right_title">
                                         <div>
-                                            <span>公告文字(EN)</span>
+                                            <span v-if="lang === 'en'">Text(EN)</span>
+                                            <span v-else>公告文字(EN)</span>
                                         </div>
                                     </div>
                                     <div>
@@ -308,10 +337,12 @@
                         </div>
                         <div class="announcement_notice_front_box_bottom">
                             <div class="announcement_notice_front_box_bottom_button" @click="firstPageButtonMethod('cancel')">
-                                <span>取消</span>
+                                <span v-if="lang === 'en'">Cancel</span>
+                                <span v-else>取消</span>
                             </div>
                             <div class="announcement_notice_front_box_bottom_button" @click="firstPageButtonMethodEN('submit')" style="margin-left:8px;">
-                                <span>确定</span>
+                                <span v-if="lang === 'en'">Confirm</span>
+                                <span v-else>确定</span>
                             </div>
                         </div>
                     </div>
@@ -321,7 +352,8 @@
                                 <input id="announcement_show_place_all" type="radio" value="all" v-model="choosePlace">
                             </div>
                             <label for="announcement_show_place_all" class="announcement_notice_front_box_place_item_right">
-                                <span>更新全部</span>
+                                <span v-if="lang === 'en'">Update all</span>
+                                <span v-else>更新全部</span>
                             </label>
                         </div>
                         <div class="announcement_notice_front_box_place_item">
@@ -329,7 +361,8 @@
                                 <input id="announcement_show_place_neight" type="radio" value="night" v-model="choosePlace">
                             </div>
                             <label for="announcement_show_place_neight" class="announcement_notice_front_box_place_item_right">
-                                <span>更新夜班公告</span>
+                                <span v-if="lang === 'en'">Update night shift</span>
+                                <span v-else>更新夜班公告</span>
                             </label>
                         </div>
                         <div class="announcement_notice_front_box_place_item">
@@ -337,7 +370,8 @@
                                 <input  id="announcement_show_place_day" type="radio" value="day" v-model="choosePlace">
                             </div>
                             <label for="announcement_show_place_day" class="announcement_notice_front_box_place_item_right">
-                                <span>更新白班公告</span>
+                                <span v-if="lang === 'en'">Update day shift</span>
+                                <span v-else>更新白班公告</span>
                             </label>
                         </div>
                     </div>
@@ -445,7 +479,11 @@ export default {
         this.getFirstPageNoticeMethod()
         this.getFirstPageNoticeInfoMethod()
     },
-
+    computed:{
+        lang(){
+			return this.$store.state.language
+		}
+    },
     data(){
         return{
             showNoticeDialog:false,

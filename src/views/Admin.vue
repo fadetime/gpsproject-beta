@@ -1,9 +1,7 @@
 <template>
     <div id="admin">
         <div style="padding-top:10px">
-            <img src="../../public/img/ebuyLogo.png"
-                 alt="ebuylogo"
-                 style="width:300px">
+            <img src="../../public/img/ebuyLogo.png" alt="ebuylogo" style="width:300px">
         </div>
         <div style="padding-top:10px">
             <span>{{softText}}</span>
@@ -14,21 +12,24 @@
         <div class="itemflex"
              style="margin-bottom:10px">
             <div class="item1">
-                <div class="item1-title"
-                     style="text-align: left;">
-                    <span>客服管理</span>
+                <div class="item1-title" style="text-align: left;">
+                    <span v-if="lang === 'en'">CS Control</span>
+                    <span v-else>客服管理</span>
                 </div>
                 <div style="display:flex;display:-webkit-flex;justify-content:center">
                     <div class="admin_userbox">
                         <div class="admin_userbox_title">
                             <div style="width:100px;">
-                                <span>用户姓名</span>
+                                <span v-if="lang === 'en'">User</span>
+                                <span v-else>用户姓名</span>
                             </div>
                             <div style="width:100px;border-left:1px solid #eee;border-right:1px solid #eee;">
-                                <span>用户名</span>
+                                <span v-if="lang === 'en'">UserName</span>
+                                <span v-else>用户名</span>
                             </div>
                             <div style="width:100px;">
-                                <span>生成时间</span>
+                                <span v-if="lang === 'en'">Date</span>
+                                <span v-else>生成时间</span>
                             </div>
                         </div>
                         <div class="admin_userbox_body">
@@ -47,25 +48,26 @@
                     </div>
                 </div>
                 <div style="display:flex;display:-webkit-flex;justify-content:center">
-                    <div class="admin_white_button"
-                         @click="openAddUserBox()">
-                        <span>增加</span>
+                    <div class="admin_white_button" @click="openAddUserBox()">
+                        <span v-if="lang === 'en'">New</span>
+                        <span v-else>增加</span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="itemflex">
             <div :class="boxborder1">
-                <div :class="titleclass1"
-                     style="text-align: left;">
-                    <span>
-                        修改管理员密码
-                    </span>
+                <div :class="titleclass1" style="text-align: left;">
+                    <span v-if="lang === 'en'">Change password</span>
+                    <span v-else>修改管理员密码</span>
                 </div>
                 <div class="itemflex">
                     <md-field style="width:400px"
                               :class="oldpasswordErrClass">
-                        <label>原始密码</label>
+                        <label>
+                            <span v-if="lang === 'en'">Old password</span>
+                            <span v-else>原始密码</span>
+                        </label>
                         <md-input v-model="oldpassword"
                                   type="password"
                                   @focus="getfocus('l1')"
@@ -77,7 +79,10 @@
                 <div class="itemflex">
                     <md-field style="width:400px"
                               :class="newpasswordErrClass">
-                        <label>新密码</label>
+                        <label>
+                            <span v-if="lang === 'en'">New password</span>
+                            <span v-else>新密码</span>
+                        </label>
                         <md-input v-model="newpassword"
                                   type="password"
                                   @focus="getfocus('l1')"
@@ -89,7 +94,10 @@
                 <div class="itemflex">
                     <md-field style="width:400px"
                               :class="confirmpasswordErrClass">
-                        <label>密码确认</label>
+                        <label>
+                            <span v-if="lang === 'en'">Confirm password</span>
+                            <span v-else>密码确认</span>
+                        </label>
                         <md-input v-model="confirmpassword"
                                   type="password"
                                   @focus="getfocus('l1')"
@@ -109,18 +117,17 @@
         <div class="itemflex"
              style="margin:10px 0 0 0">
             <div :class="boxborder2">
-                <div :class="titleclass2"
-                     style="text-align: left;">
-                    <span>
-                        车辆检查
-                    </span>
+                <div :class="titleclass2" style="text-align: left;">
+                    <span v-if="lang === 'en'">Car check</span>
+                    <span v-else>车辆检查</span>
                 </div>
 
                 <div class="item_carcheck"
                      style="color:#696969;line-height:52px;flex-direction: column;">
                     <div style="display:flex;justify-content:space-between;align-items: center;">
                         <div style="text-align:left">
-                            <span style="font-size:16px;">机油报警值(Km)</span>
+                            <span v-if="lang === 'en'" style="font-size:16px;">Engine oil(Km)</span>
+                            <span v-else style="font-size:16px;">机油报警值(Km)</span>
                         </div>
                         <div style="display:flex;justify-content:right;">
                             <input type="number"
@@ -131,7 +138,8 @@
                     </div>
                     <div style="display:flex;justify-content:space-between;align-items: center;">
                         <div style="text-align:left">
-                            <span style="font-size:16px;">新机油可运行(Km)</span>
+                            <span v-if="lang === 'en'" style="font-size:16px;">Value(Km)</span>
+                            <span v-else style="font-size:16px;">新机油可运行(Km)</span>
                         </div>
                         <div style="display:flex;justify-content:right;">
                             <input type="number"
@@ -153,25 +161,29 @@
             <div :class="boxborder2">
                 <div :class="titleclass2"
                      style="text-align: left;">
-                    <span>
-                        页面设置
-                    </span>
+                    <span v-if="lang === 'en'" >Page setup</span>
+                    <span v-else >页面设置</span>
                 </div>
 
                 <div class="itemflex"
                      style="color:#696969;line-height:52px">
                     <div style="width:400px;display:flex;justify-content:space-between">
                         <div style="text-align:left">
-                            <span style="font-size:16px;">动态LOGO显示</span>
+                            <span v-if="lang === 'en'" style="font-size:16px;">Show logo</span>
+                            <span v-else style="font-size:16px;">动态LOGO显示</span>
                         </div>
                         <div style="display:flex;justify-content:right;">
                             <md-switch v-model="showLogo"
                                        style="margin:16px 5px 16px 0"
                                        @change="checkDisable('switch')">
-                                <span v-if="showLogo"
-                                      style="font-size:18px;color:#448aff">开启</span>
-                                <span v-else
-                                      style="font-size:18px;">关闭</span>
+                                <span v-if="showLogo" style="font-size:18px;color:#448aff">
+                                    <span v-if="lang === 'en'">ON</span>
+                                    <span v-else>开启</span>
+                                </span>
+                                <span v-else style="font-size:18px;">
+                                    <span v-if="lang === 'en'">OFF</span>
+                                    <span v-else>关闭</span>
+                                </span>
                                 <md-icon style="color:#448aff;padding-left:10px"
                                          class="tipstart">contact_support</md-icon>
                                 <div class="tipbox">
@@ -187,25 +199,57 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="itemflex"
              style="margin:10px 0 0 0">
             <div :class="boxborder2">
-                <div :class="titleclass2"
-                     style="text-align: left;">
-                    <span>
-                        日志设置
-                    </span>
+                <div :class="titleclass2" style="text-align: left;">
+                    <span v-if="lang === 'en'">Language</span>
+                    <span v-else>语言设置</span>
                 </div>
                 <div class="itemflex"
                      style="color:#696969;line-height:52px">
                     <div style="width:400px;display:flex;justify-content:space-between">
                         <div style="text-align:left">
-                            <span style="font-size:16px;">日志查看</span>
+                            <span v-if="lang === 'en'" style="font-size:16px;">Display language</span>
+                            <span v-else style="font-size:16px;">显示语言</span>
                         </div>
                         <div style="display:flex;justify-content:right;">
-                            <md-button class="md-raised"
-                                       @click="goLogPage('journal')">开启</md-button>
+                            <md-button class="md-raised" @click="changeLanguageMethod()">
+                                <span v-if="lang === 'en'">中文</span>
+                                <span v-else>English</span>
+                            </md-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="itemflex"
+                     style="height:20px">
+                    <!-- 底部占位符 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="itemflex"
+             style="margin:10px 0 0 0">
+            <div :class="boxborder2">
+                <div :class="titleclass2" style="text-align: left;">
+                    <span v-if="lang === 'en'">Log setup</span>
+                    <span v-else>日志设置</span>
+                </div>
+                <div class="itemflex"
+                     style="color:#696969;line-height:52px">
+                    <div style="width:400px;display:flex;justify-content:space-between">
+                        <div style="text-align:left">
+                            <span style="font-size:16px;">
+                                <span v-if="lang === 'en'">Show Log</span>
+                                <span v-else>日志查看</span>
+                            </span>
+                        </div>
+                        <div style="display:flex;justify-content:right;">
+                            <md-button class="md-raised" @click="goLogPage('journal')">
+                                <span v-if="lang === 'en'">Open</span>
+                                <span v-else>开启</span>
+                            </md-button>
                         </div>
                     </div>
                 </div>
@@ -217,19 +261,21 @@
             <div :class="boxborder2">
                 <div :class="titleclass2"
                      style="text-align: left;">
-                    <span>
-                        初始化
-                    </span>
+                    <span v-if="lang === 'en'">Initialization</span>
+                    <span v-else>初始化</span>
                 </div>
                 <div class="itemflex"
                      style="color:#696969;line-height:52px">
                     <div style="width:400px;display:flex;justify-content:space-between">
                         <div style="text-align:left">
-                            <span style="font-size:16px;">初始化设置(初装或新功能缺失时使用)</span>
+                            <span v-if="lang === 'en'" style="font-size:16px;">If its first times you can run this button</span>
+                            <span v-else style="font-size:16px;">初始化设置(初装或新功能缺失时使用)</span>
                         </div>
                         <div style="display:flex;justify-content:right;">
-                            <md-button class="md-raised"
-                                       @click="setInitMethod">启动</md-button>
+                            <md-button class="md-raised"  @click="setInitMethod">
+                                <span v-if="lang === 'en'">Start</span>
+                                <span v-else>启动</span>
+                            </md-button>
                         </div>
                     </div>
                 </div>
@@ -237,20 +283,19 @@
         </div>
 
         <div style="margin:10px 0 0 0">
-            <md-button class="md-raised md-accent"
-                       @click="logout">
-                <span style="font-size:20px">退出登陆</span>
+            <md-button class="md-raised md-accent" @click="logout">
+                <span v-if="lang === 'en'" style="font-size:20px">Logout</span>
+                <span v-else style="font-size:20px">退出登陆</span>
             </md-button>
         </div>
         <div style="margin:10px 0 0 0">
-            <md-button class="md-raised">
-                <span style="font-size:20px"
-                      @click="cancelbutton">取消</span>
+            <md-button class="md-raised" @click="cancelbutton">
+                <span v-if="lang === 'en'" style="font-size:20px">Cancel</span>
+                <span v-else style="font-size:20px">取消</span>
             </md-button>
-            <md-button class="md-raised md-primary"
-                       :disabled="disableButton"
-                       @click="submitbutton">
-                <span style="font-size:20px">修改</span>
+            <md-button class="md-raised md-primary" :disabled="disableButton" @click="submitbutton">
+                <span v-if="lang === 'en'" style="font-size:20px">Edit</span>
+                <span v-else style="font-size:20px">修改</span>
             </md-button>
         </div>
 
@@ -445,9 +490,19 @@ export default {
             return {
                 "md-invalid": this.comfirmpswErrMsg
             };
+        },
+        lang(){
+            return this.$store.state.language
         }
     },
     methods: {
+        changeLanguageMethod(){
+            if(this.lang == 'en'){
+				this.$store.dispatch('setLanguage', 'ch')
+			}else{
+				this.$store.dispatch('setLanguage', 'en')
+			}
+        },
 		confirmEditUserInfo(){
 			console.log(this.user_id)
 			axios

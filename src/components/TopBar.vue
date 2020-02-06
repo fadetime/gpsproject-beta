@@ -12,37 +12,44 @@
                     <router-link to="/"
                              class="buttomarea-item"
                              style="color: aliceblue;">
-                    <span class="titlefont">今日任务</span>
+                    <span v-if="lang === 'en'" class="titlefont">MISSION</span>
+                    <span v-else class="titlefont">今日任务</span>
                     </router-link>
                     <router-link to="/times"
                                 class="buttomarea-item"
                                 style="color: aliceblue;">
-                        <span class="titlefont">车次管理</span>
+                        <span v-if="lang === 'en'" class="titlefont">TRIPS</span>
+                        <span v-else class="titlefont">车次管理</span>
                     </router-link>
                     <router-link to="/client"
                                 class="buttomarea-item"
                                 style="color: aliceblue;">
-                        <span class="titlefont">客户管理</span>
+                        <span v-if="lang === 'en'" class="titlefont">CLIENT</span>
+                        <span v-else class="titlefont">客户管理</span>
                     </router-link>
                     <router-link to="/dirver"
                                 class="buttomarea-item"
                                 style="color: aliceblue;">
-                        <span class="titlefont">人员管理</span>
+                        <span v-if="lang === 'en'" class="titlefont">DRIVER</span>
+                        <span v-else class="titlefont">人员管理</span>
                     </router-link>
                     <router-link to="/car"
                                 class="buttomarea-item"
                                 style="color: aliceblue;">
-                        <span class="titlefont">车辆管理</span>
+                        <span v-if="lang === 'en'" class="titlefont">CAR</span>
+                        <span v-else class="titlefont">车辆管理</span>
                     </router-link>
                     <router-link to="/announcement"
                                 class="buttomarea-item"
                                 style="color: aliceblue;">
-                        <span class="titlefont">公告管理</span>
+                        <span v-if="lang === 'en'" class="titlefont">NOTIFICATION</span>
+                        <span v-else class="titlefont">公告管理</span>
                     </router-link>
                     <router-link to="/table"
                                 class="buttomarea-item"
                                 style="color: aliceblue;">
-                        <span class="titlefont">报表统计</span>
+                        <span v-if="lang === 'en'" class="titlefont">REPORT</span>
+                        <span v-else class="titlefont">报表统计</span>
                     </router-link>
                 </div>
                 <div v-else class="topbar_topuserinfo">
@@ -114,18 +121,20 @@
 <script>
 export default {
     name: "TopBar",
-
+    computed:{
+        lang(){
+            return this.$store.state.language
+        }
+    },
     data() {
         return {
             showLeftMenu: false,
             role:null
         };
     },
-
     mounted(){
         this.role = localStorage.name
     },
-
     methods: {
         logoutMethod(){
             this.$router.push("/login");

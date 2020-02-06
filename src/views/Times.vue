@@ -3,18 +3,29 @@
         <div class="topbutton">
             <div class="topbutton-left">
                 <div style="position:relative">
-                    <input type="text" class="findbox" v-model="selectCar" @keyup.enter="search" placeholder="搜索车次信息">
+                    <input type="text" class="findbox" v-model="selectCar" @keyup.enter="search" :placeholder="lang === 'en'?'Search for trips':'搜索车次信息'">
                     <div class="findmore-button" @click="findlinebyclient">
-                        <span>客户搜索</span>
+                        <span v-if="lang === 'en'">Customer</span>
+                        <span v-else>客户搜索</span>
                     </div>
                 </div>
             </div>
             <div class="topbutton-right">
+                <div class="times_button_blue" style="margin-right:8px" @click="openDoubleCheckMethod()">
+                    <div class="times_button_blue_left">
+                        <div class="icon_change" style="width: 24px;height:24px;mask-size: 24px;-webkit-mask-size: 24px;"></div>
+                    </div>
+                    <div class="times_button_blue_right">
+                        <span style="font-size:10px" v-if="lang === 'en'">double check</span>
+                        <span v-else>重复检查</span>
+                    </div>
+                </div>
                 <div class="times_button_blue" style="margin-right:8px" @click="openChangetripsBoxMethod()">
                     <div class="times_button_blue_left">
                         <div class="icon_change" style="width: 24px;height:24px;mask-size: 24px;-webkit-mask-size: 24px;"></div>
                     </div>
                     <div class="times_button_blue_right">
+                        <span style="font-size:10px" v-if="lang === 'en'">Exc customer</span>
                         <span>客户转移</span>
                     </div>
                 </div>
@@ -23,7 +34,8 @@
                         <div class="icon_swap_vert"></div>
                     </div>
                     <div class="times_button_blue_right">
-                        <span>车次排序</span>
+                        <span style="font-size:13px" v-if="lang === 'en'">Trips sort</span>
+                        <span v-else>车次排序</span>
                     </div>
                 </div>
                 <div class="times_button_blue" @click="addbutton">
@@ -31,7 +43,8 @@
                         <span style="font-size:30px;">+</span>
                     </div>
                     <div class="times_button_blue_right">
-                        <span>添加添加</span>
+                        <span v-if="lang === 'en'">New</span>
+                        <span v-else>添加</span>
                     </div>
                 </div>
             </div>
@@ -41,25 +54,28 @@
             <md-card style="background-color: #eff3f5">
                 <md-card-content>
                     <div class="tabletitle">
-                        <div class="tabletitle-item"
-                             style="flex-basis:150px">
-                            <span>路线名称</span>
+                        <div class="tabletitle-item" style="flex-basis:150px">
+                            <span v-if="lang === 'en'">Name</span>
+                            <span v-else>路线名称</span>
                         </div>
-                        <div class="tabletitle-item"
-                             style="flex-basis:100px">
-                            <span>客户数量</span>
+                        <div class="tabletitle-item" style="flex-basis:100px">
+                            <span style="font-size: 13px" v-if="lang === 'en'">Customer Num</span>
+                            <span v-else>客户数量</span>
                         </div>
                         <div class="tabletitle-item"
                              style="flex-basis:200px">
-                            <span>备注</span>
+                             <span v-if="lang === 'en'">Remark</span>
+                            <span v-else>备注</span>
                         </div>
                         <div class="tabletitle-item"
                              style="flex-basis:100px">
-                            <span>出车次数</span>
+                            <span style="font-size: 13px" v-if="lang === 'en'">Trips count</span>
+                            <span v-else>出车次数</span>
                         </div>
                         <div class="tabletitle-item"
                              style="flex-basis:100px">
-                            <span>操作</span>
+                            <span style="font-size: 13px" v-if="lang === 'en'"></span>
+                            <span v-else>操作</span>
                         </div>
                     </div>
                 </md-card-content>
@@ -109,7 +125,8 @@
                  v-if="pageCount>1">
                 <ul style="width:410px">
                     <li @click="pageButton('A')">
-                        <span>上一页</span>
+                        <span v-if="lang === 'en'">Previous</span>
+                        <span v-else>上一页</span>
                     </li>
                     <li v-for="(item,index) in pages"
                         :key="index"
@@ -118,10 +135,12 @@
                         <span>{{item}}</span>
                     </li>
                     <li @click="pageButton('B')">
-                        <span>下一页</span>
+                        <span v-if="lang === 'en'">Next</span>
+                        <span v-else>下一页</span>
                     </li>
                     <li>
-                        <span>共<i>{{pageCount}}</i>页</span>
+                        <span v-if="lang === 'en'">ALL{{pageCount}}</span>
+                        <span v-else>共<i>{{pageCount}}</i>页</span>
                     </li>
                 </ul>
             </div>
@@ -130,105 +149,64 @@
         <md-dialog :md-active.sync="showDialog"
                    class="linedialog">
             <md-dialog-title style="font-size:20px;box-shadow:0px 1px 5px #000;background-color:#d74342;padding:12px 0 12px 24px;margin-bottom:4px">
-                <span style="color:#fff">车次管理</span>
+                <span style="color:#fff" v-if="lang === 'en'">Trips</span>
+                <span style="color:#fff" v-else>车次管理</span>
             </md-dialog-title>
-            <md-dialog-content style="padding: 0 24px 0px 24px;">
+            <md-dialog-content style="padding: 0 24px 0px 24px;width:828px">
                 <md-tabs md-dynamic-height>
-                    <md-tab md-label="添加车次"
-                            style="color:#000">
+                    <md-tab :md-label="lang === 'en'?'Info':'添加车次'" style="color:#000;height: 308px">
                         <div style="display:flex;display:-webkit-flex;justify-content: space-evenly;">
                             <div style="border: 3px dashed #448aff;flex-basis: 45%;">
                                 <div class="inputboxclass" style="margin-top:10px">
-                                    <span>线路名(CH)</span>
+                                    <span v-if="lang === 'en'">Name(CH)</span>
+                                    <span v-else>线路名(CH)</span>
                                     <input type="text" v-model="timesname">
                                 </div>
                                 <div class="inputboxclass">
-                                    <span>线路名(EN)</span>
+                                    <span v-if="lang === 'en'">name(EN)</span>
+                                    <span v-else>线路名(EN)</span>
                                     <input type="text" v-model="timesNameEN">
                                 </div>
                                 
                                 <div class="inputboxclass">
-                                    <span>线路备注</span>
+                                    <span v-if="lang === 'en'">Remark</span>
+                                    <span v-else>线路备注</span>
                                     <input type="text" v-model="timesnote">
                                 </div>
-
-                                <!-- <md-field style="margin:15px auto;width:80%">
-                                    <label style="font-size:16px;color: rgba(0, 0, 0, 0.54);">备注</label>
-                                    <md-input v-model="timesnote"
-                                              style="border-bottom: 1px solid #000;font-size:16px;height:55px;text-align:center"></md-input>
-                                </md-field> -->
-
                                 <div style="display:flex;display:-webkit-flex;justify-content: space-evenly;margin-bottom:10px">
                                     <div class="inputboxwithiconclass" @click="openTimePickMethod('start')">
-                                        <span class="inputboxwithiconclass-left">预计出车</span>
-                                        <!-- <input type="text" v-model="startTimeLimit" disabled> -->
+                                        <span v-if="lang === 'en'" class="inputboxwithiconclass-left">Start</span>
+                                        <span v-else class="inputboxwithiconclass-left">预计出车</span>
                                         <div>{{startTimeLimit}}</div>
                                         <span class="inputboxwithiconclass-right"><md-icon style="font-size:24px!important">access_time</md-icon></span>
                                     </div>
                                     <div class="inputboxwithiconclass" @click="openTimePickMethod('end')">
-                                        <span class="inputboxwithiconclass-left">预计收车</span>
+                                        <span v-if="lang === 'en'" class="inputboxwithiconclass-left">End</span>
+                                        <span v-else class="inputboxwithiconclass-left">预计收车</span>
                                         <!-- <input type="text" v-model="endTimeLimit"> -->
                                         <div>{{endTimeLimit}}</div>
                                         <span class="inputboxwithiconclass-right"><md-icon style="font-size:24px!important">access_time</md-icon></span>
                                     </div>
                                 </div>
-                                
-
-                                <!-- <div style="margin:8px auto;width: 268px;display:flex;display:-webkit-flex;justify-content: space-between;">
-                                    <div style="flex-basis:45%;border-bottom: 1px solid rgb(0, 0, 0);">
-                                        <div style="font-size:16px;color: rgba(0, 0, 0, 0.54);padding-bottom: 7px;">
-                                            <span>预计出车</span>
-                                        </div>
-                                        <div style="display:flex;display:-webkit-flex;height:32px;cursor: pointer;"
-                                             @click="openTimePickMethod('start')">
-                                            <div style="font-size:18px;flex-basis: 80%;text-align: center;line-height: 32px;">
-                                                <span style="padding-left: 10px;"
-                                                      v-if="startTimeLimit">{{startTimeLimit}}</span>
-                                                <span style="padding-left: 10px;"
-                                                      v-else>Null</span>
-                                            </div>
-                                            <div style="flex-basis: 20%;text-align:center;line-height: 32px;">
-                                                <md-icon style="font-size:30px!important">access_time</md-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div style="flex-basis:45%;border-bottom: 1px solid rgb(0, 0, 0); */">
-                                        <div style="font-size:16px;color: rgba(0, 0, 0, 0.54);padding-bottom: 7px;">
-                                            <span>预计收车</span>
-                                        </div>
-                                        <div style="display:flex;display:-webkit-flex;height:32px;cursor: pointer;"
-                                             @click="openTimePickMethod('end')">
-                                            <div style="font-size:18px;flex-basis: 80%;text-align: center;line-height: 32px;">
-                                                <span style="padding-left: 10px;"
-                                                      v-if="endTimeLimit">{{endTimeLimit}}</span>
-                                                <span style="padding-left: 10px;"
-                                                      v-else>Null</span>
-                                            </div>
-                                            <div style="flex-basis: 20%;text-align:center;line-height: 32px;">
-                                                <md-icon style="font-size:30px!important">access_time</md-icon>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div> -->
                             </div>
                             <div style="border: 3px dashed #448aff;flex-basis: 45%;">
                                 <div>
                                     <div style="background:#448aff;color:#fff;text-align: center;">
-                                        <span>对应客服后台车次</span>
+                                        <span v-if="lang === 'en'">Client Service Trips</span>
+                                        <span v-else>对应客服后台车次</span>
                                     </div>
                                 </div>
                                 <div style="display:flex;display:-webkit-flex;flex-wrap: wrap;">
                                     <div v-for="(item,index) in newLine"
                                          :key="index">
-                                        <md-button v-if="NcNumber === 0 && item.carNumber === '暂无车次'"
-                                                   class="md-raised md-accent"
-                                                   style="font-size:16px;min-width:66px;height:30px;"
-                                                   @click="choiceNCNum(0)">暂无</md-button>
-                                        <md-button v-else-if="item.carNumber === '暂无车次'"
-                                                   class="md-raised md-primary"
-                                                   style="font-size:16px;min-width:66px;height:30px;"
-                                                   @click="choiceNCNum(0)">暂无</md-button>
+                                        <md-button v-if="NcNumber === 0 && item.carNumber === '暂无车次'" class="md-raised md-accent" style="font-size:16px;min-width:66px;height:30px;" @click="choiceNCNum(0)">
+                                            <span v-if="lang === 'en'">None</span>
+                                            <span v-else>暂无</span>
+                                        </md-button>
+                                        <md-button v-else-if="item.carNumber === '暂无车次'" class="md-raised md-primary" style="font-size:16px;min-width:66px;height:30px;" @click="choiceNCNum(0)">
+                                            <span v-if="lang === 'en'">None</span>
+                                            <span v-else>暂无</span>
+                                        </md-button>
                                         <md-button v-else-if="NcNumber == item.carNumber"
                                                    class="md-raised md-accent"
                                                    style="font-size:16px;min-width:66px;height:30px;"
@@ -242,8 +220,7 @@
                             </div>
                         </div>
                     </md-tab>
-                    <md-tab md-label="配置车辆"
-                            style="font-size:18px;color:#000">
+                    <md-tab :md-label="lang === 'en'?'Car':'配置车辆'" style="font-size:18px;color:#000">
                         <div class="dialog-3"
                              style="border: 3px dashed #448aff;padding: 5px;">
                             <div @click="openChoiceList('car')"
@@ -266,16 +243,19 @@
                                         </div>
                                         <div v-else>
                                             <div style="font-size:20px;padding: 16px 0 16px 16px;">
-                                                <span>车牌：</span>
+                                                <span v-if="lang === 'en'">Number: </span>
+                                                <span v-else>车牌：</span>
                                                 <span>{{acarinfo.carid}}</span>
                                             </div>
                                             <div style="font-size:18px;display:-webkit-flex;display: flex;-webkit-flex-flow: row;flex-flow: row;">
                                                 <div style="padding: 0 36px 0 16px;">
-                                                    <span>尾门：</span>
+                                                    <span v-if="lang === 'en'">Tail: </span>
+                                                    <span v-else>尾门：</span>
                                                     <span>{{acarinfo.tailgate}}</span>
                                                 </div>
                                                 <div>
-                                                    <span>冷藏：</span>
+                                                    <span v-if="lang === 'en'">CSoolstore: </span>
+                                                    <span v-else>冷藏：</span>
                                                     <span>{{acarinfo.coolstore}}</span>
                                                 </div>
                                             </div>
@@ -286,8 +266,7 @@
                         </div>
 
                     </md-tab>
-                    <md-tab md-label="配置司机"
-                            style="font-size:18px;color:#000">
+                    <md-tab :md-label="lang === 'en'?'Driver':'配置司机'" style="font-size:18px;color:#000">
                         <div class="dialog-3"
                              style="border: 3px dashed #448aff;padding: 5px;">
 
@@ -311,20 +290,22 @@
                                         </div>
                                         <div v-else>
                                             <div style="font-size:20px;padding: 16px 0 16px 16px;">
-                                                <span>姓名：</span>
+                                                <span v-if="lang === 'en'">Name: </span>
+                                                <span v-else>姓名：</span>
                                                 <span>{{adirverinfo.dirvername}}</span>
                                             </div>
                                             <div style="font-size:18px;display:-webkit-flex;display: flex;-webkit-flex-flow: row;flex-flow: row;">
                                                 <div style="padding: 0 36px 0 16px;">
-                                                    <span>驾照：</span>
+                                                    <span v-if="lang === 'en'">Number: </span>
+                                                    <span v-else>驾照：</span>
                                                     <span>{{adirverinfo.dirvercard}}</span>
                                                 </div>
                                                 <div>
-                                                    <span>电话：</span>
+                                                    <span v-if="lang === 'en'">Phone: </span>
+                                                    <span v-else>电话：</span>
                                                     <span>{{adirverinfo.dirverphone}}</span>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -332,24 +313,15 @@
                         </div>
 
                     </md-tab>
-                    <md-tab md-label="配置客户"
-                            style="padding: 0;">
+                    <md-tab :md-label="lang === 'en'?'Customer':'客户'" style="padding: 0;">
                         <div style="display:flex;display: -webkit-flex;padding-bottom: 8px;justify-content: space-between;">
                             <div>
-                                <input class="clientsearch"
-                                       type="text"
-                                       v-model="searchClient"
-                                       @keyup.enter="searClientMethods"
-                                       placeholder="搜索客户名称">
+                                <input class="clientsearch" type="text" v-model="searchClient" @keyup.enter="searClientMethods" :placeholder="lang === 'en'?'Search':'搜索客户名称'">
                             </div>
-
                             <div style="display: -webkit-flex;display: flex;">
                                 <div style="width:160px;padding-left: 10px;">
                                     <md-field style="padding-top:16px;margin: 0;">
-                                        <md-select v-model="clientServe"
-                                                   name="clientServe"
-                                                   id="clientServe"
-                                                   placeholder="筛选服务商">
+                                        <md-select v-model="clientServe" name="clientServe" id="clientServe" :placeholder="lang === 'en'?'Sort':'筛选服务商'">
                                             <md-option :value="item._id"
                                                        v-for="(item,index) in allclientainfo"
                                                        :key="index">{{item.clientaname}}</md-option>
@@ -362,7 +334,7 @@
                                         <md-select v-model="clientArea"
                                                    name="clientArea"
                                                    id="clientArea"
-                                                   placeholder="筛选客户地区">
+                                                   :placeholder="lang === 'en'?'Sort Customer':'筛选客户地区'">
                                             <md-option :value="item._id"
                                                        v-for="(item,index) in areaArray"
                                                        :key="index">{{item.areaName}}</md-option>
@@ -374,8 +346,14 @@
                                     <md-button class="md-raised"
                                                @click="changeSortModeMethod"
                                                style="font-size:16px;width:80px;height:30px;margin:0">
-                                        <span v-if="isShowNcSort">出车排序</span>
-                                        <span v-else>客服排序</span>
+                                        <span v-if="isShowNcSort">
+                                            <span v-if="lang === 'en'">Normal list</span>
+                                            <span v-else>出车排序</span>
+                                        </span>
+                                        <span v-else>
+                                            <span v-if="lang === 'en'">CS list</span>
+                                            <span v-else>客服排序</span>
+                                        </span>
                                     </md-button>
                                 </div>
                             </div>
@@ -383,10 +361,10 @@
                         <div style="display: -webkit-flex;display: flex;padding-top:20px;justify-content:space-around">
                             <!-- left window start-->
                             <div style="width:400px">
-
-                                <div style="border: 3px dashed #448aff;padding:10px;position: relative;">
+                                <div style="border: 3px dashed #448aff;padding:10px;position: relative;height: 471px;">
                                     <div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 90px;top:-24px">
-                                        <span style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff;font-size:16px">所有客户</span>
+                                        <span v-if="lang === 'en'" style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff;font-size:16px">Customer</span>
+                                        <span v-else style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff;font-size:16px">所有客户</span>
                                     </div>
                                     <div class="tab4-title"
                                          style="height:32px;line-height:30px;margin-bottom: 2px;">
@@ -395,19 +373,20 @@
                                         </div>
                                         <div class="step-third-title-item"
                                              style="width:170px">
-                                            <span>客户名称</span>
+                                            <span v-if="lang === 'en'">Name</span>
+                                            <span v-else>客户名称</span>
                                         </div>
-                                        <div class="step-third-title-item"
-                                             style="width:50px">
-                                            <span>服务商</span>
+                                        <div class="step-third-title-item" style="width:50px">
+                                            <span v-if="lang === 'en'">Service</span>
+                                            <span v-else>服务商</span>
                                         </div>
-                                        <div class="step-third-title-item"
-                                             style="width:50px">
-                                            <span>区域</span>
+                                        <div class="step-third-title-item" style="width:50px">
+                                            <span v-if="lang === 'en'">Part</span>
+                                            <span v-else>区域</span>
                                         </div>
-                                        <div class="step-third-title-item"
-                                             style="width:50px">
-                                            <span>信息</span>
+                                        <div class="step-third-title-item" style="width:50px">
+                                            <span v-if="lang === 'en'">Info</span>
+                                            <span v-else>信息</span>
                                         </div>
                                     </div>
                                     <div class="tab4-body">
@@ -437,32 +416,41 @@
                             <div style="padding-left:10px">
                                 <div style="border: 3px dashed #448aff;padding:10px;position: relative;">
                                     <div style="background-color: #448aff;border-radius: 20px;width: 200px;position: absolute;margin-left: 86px;top:-24px">
-                                        <span v-if="!isShowNcSort"
-                                              style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">已选客户</span>
-                                        <span v-else
-                                              style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">客服顺序</span>
+                                        <span v-if="!isShowNcSort" style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">
+                                            <span v-if="lang === 'en'">Choosed</span>
+                                            <span v-else>已选客户</span>
+                                        </span>
+                                        <span v-else style="line-height:32px;margin:0 auto;margin: 10px 64px;color:#fff">
+                                            <span v-if="lang === 'en'">CS Sort</span>
+                                            <span v-else>客服顺序</span>
+                                        </span>
                                     </div>
                                     <div class="tab4-title"
                                          style="height:32px;line-height:30px;margin-bottom: 2px;">
 
-                                        <div class="step-third-title-item"
-                                             style="width:120px;padding-left:16px;text-align:left">
-                                            <span>客户名称</span>
+                                        <div class="step-third-title-item" style="width:120px;padding-left:16px;text-align:left">
+                                            <span v-if="lang === 'en'">Name</span>
+                                            <span v-else>客户名称</span>
                                         </div>
                                         <div style="width:45px;padding-left:5px">
-                                            <span>拍照</span>
+                                            <span v-if="lang === 'en'">Pic</span>
+                                            <span v-else>拍照</span>
                                         </div>
                                         <div style="width:45px;padding-left:5px">
-                                            <span>置顶</span>
+                                            <span v-if="lang === 'en'">Top</span>
+                                            <span v-else>置顶</span>
                                         </div>
                                         <div style="width:45px;padding-left:5px">
-                                            <span>置底</span>
+                                            <span v-if="lang === 'en'">Bot</span>
+                                            <span v-else>置底</span>
                                         </div>
                                         <div style="width:45px;padding-left:5px">
-                                            <span>信息</span>
+                                            <span v-if="lang === 'en'">Info</span>
+                                            <span v-else>信息</span>
                                         </div>
                                         <div style="width:45px;padding-left:5px">
-                                            <span>删除</span>
+                                            <span v-if="lang === 'en'"></span>
+                                            <span v-else>删除</span>
                                         </div>
                                     </div>
                                     <div class="tab4-body"
@@ -519,7 +507,8 @@
                                  v-if=" ClientTablePageCount != 1 && ClientTablePageCount">
                                 <ul style="width:455px;margin-top: 5px;">
                                     <li @click="clientTablePageButton('A')">
-                                        <span>上一页</span>
+                                        <span v-if="lang === 'en'">Previous</span>
+                                        <span v-else>上一页</span>
                                     </li>
                                     <li v-for="(item,index) in clientPages"
                                         :key="index"
@@ -528,10 +517,12 @@
                                         <span>{{item}}</span>
                                     </li>
                                     <li @click="clientTablePageButton('B')">
-                                        <span>下一页</span>
+                                        <span v-if="lang === 'en'">Next</span>
+                                        <span v-else>下一页</span>
                                     </li>
                                     <li>
-                                        <span>共<i>{{ClientTablePageCount}}</i>页</span>
+                                        <span v-if="lang === 'en'">ALL<i>{{ClientTablePageCount}}</i></span>
+                                        <span v-else>共<i>{{ClientTablePageCount}}</i>页</span>
                                     </li>
                                 </ul>
                             </div>
@@ -540,17 +531,18 @@
                 </md-tabs>
             </md-dialog-content>
             <md-dialog-actions style="margin:0 auto">
-                <md-button class="md-raised md-primary"
-                           @click="showDialog = false"
-                           style="font-size:18px;width:80px;height:30px">取消</md-button>
-                <md-button class="md-raised md-primary"
-                           v-if="savemode"
-                           @click="addtimes"
-                           style="font-size:18px;width:80px;height:30px">保存</md-button>
-                <md-button class="md-raised md-primary"
-                           v-else
-                           @click="confirmEdit"
-                           style="font-size:18px;width:80px;height:30px">修改</md-button>
+                <md-button class="md-raised md-primary" @click="showDialog = false" style="font-size:18px;width:80px;height:30px">
+                    <span v-if="lang === 'en'">Cancel</span>
+                    <span v-else>取消</span>
+                </md-button>
+                <md-button class="md-raised md-primary" v-if="savemode" @click="addtimes" style="font-size:18px;width:80px;height:30px">
+                    <span v-if="lang === 'en'">Save</span>
+                    <span v-else>保存</span>
+                </md-button>
+                <md-button class="md-raised md-primary" v-else @click="confirmEdit" style="font-size:18px;width:80px;height:30px">
+                    <span v-if="lang === 'en'">Edit</span>
+                    <span v-else>修改</span>
+                </md-button>
             </md-dialog-actions>
         </md-dialog>
         <!-- Dialog end-->
@@ -562,7 +554,8 @@
             <div v-if="sortDialog" class="trips_sortbox_front" @click.self.prevent="sortDialog = false">
                 <div class="trips_sortbox_box">
                     <div class="trips_sortbox_box_title">
-                        <span>车次排序</span>
+                        <span v-if="lang === 'en'">Sort Trips</span>
+                        <span v-else>车次排序</span>
                     </div>
                     <div class="trips_sortbox_box_body">
                         <div class="trips_sortbox_box_body_top">
@@ -1251,6 +1244,38 @@
         </transition>
         <!-- choose trips box end -->
 
+        <!-- show trips double check client box start -->
+        <transition name="times-transition-change-back" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowDoubleCheckClientBox" class="timepick-back" style="z-index: 25"></div>
+        </transition>
+        <transition name="times-transition-change-front" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowDoubleCheckClientBox" @click.self.prevent="isShowChooseTripsBox = false" class="timepick-front" style="z-index: 26">
+                <div class="times_change_box">
+                    <div class="times_change_box_title">
+                        <span>重复检查</span>
+                    </div>
+                    <div class="times_choose_box_body">
+                        <div v-for="(item,index) in doubleCheckArray" :key="index">
+                            <div class="times_double_title">
+                                <span>{{item.clientName}}</span>
+                            </div>
+                            <div class="times_double_body">
+                                <div class="times_double_item" v-for="(trip,tripIndex) in item.alerts" :key="tripIndex">
+                                    <span>{{trip.tripsName}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="times_change_box_body_bottom">
+                        <div class="times_button_white" @click="isShowDoubleCheckClientBox = false">
+                            <span>取消</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- show trips double check client box end -->
+
         <!-- loading animation start -->
         <transition name="remove-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -1377,7 +1402,9 @@ export default {
             showTripsMode: null,
             isShowChangeTripsPage: 1,
             changeTripLeftArray_choised:[],
-            isShowLoadingAnimation: false
+            isShowLoadingAnimation: false,
+            isShowDoubleCheckClientBox: false,
+            doubleCheckArray: []
         };
     },
     mounted() {
@@ -1435,7 +1462,10 @@ export default {
                 }
             }
             return pag;
-        }
+        },
+        lang(){
+			return this.$store.state.language
+		}
     },
     watch: {
         clientArea: function() {
@@ -1453,6 +1483,21 @@ export default {
     },
 
     methods: {
+        openDoubleCheckMethod(){
+            console.log('1')
+            axios
+                .post(config.server + "/times/doubleCheck")
+                .then(doc =>{
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.doubleCheckArray = doc.data.doc
+                        this.isShowDoubleCheckClientBox = true
+                    }
+                })
+                .catch(err =>{
+                    console.log(err)
+                })
+        },
         confirmChangeTripsClientMethod(){
             this.isShowLoadingAnimation = true
             axios
@@ -2700,7 +2745,7 @@ export default {
 .findmore-button {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-    width: 60px;
+    width: 66px;
     border-radius: 10px;
     border: 1px solid #e0e0e0;
     height: 30px;
@@ -2854,7 +2899,7 @@ export default {
 .times_button_blue{
     height: 30px;
     line-height: 30px;
-    width: 88px;
+    width: 99px;
     border-radius: 5px;
     background-color: #448aff;
     color: #fff;
@@ -3234,6 +3279,26 @@ export default {
 .trips_sortbox_box_body_item:hover{
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.times_double_title{
+    font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+    margin: 0 10px 10px 10px;
+}
+.times_double_body{
+    padding-bottom: 10px;
+}
+.times_double_item{
+    height: 24px;
+    line-height: 24px;
+}
+.tab4-body{
+    overflow-y: auto;
+    height: 419px;
+    overflow-x: hidden;
 }
 @media screen and (min-width: 1025px) {
     .linedialog {
